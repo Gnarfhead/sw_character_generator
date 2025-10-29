@@ -1,13 +1,20 @@
-# Virtuelle Umgebung
+# Bytecode / Cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# Virtual Environment
 .venv/
 
-# Bytecode-Dateien
-__pycache__/
-
-# VS Code Settings
+# VSCode
 .vscode/
 
-# Cache, Logs, temporäre Dateien
-*.log
-*.tmp
+# Build / Distribution
+build/
+dist/
+*.egg-info/
 
+# Environment
+.env

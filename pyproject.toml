@@ -1,0 +1,9 @@
+[project]
+name = "sw_character_generator"
+version = "0.1.0"
+description = "Ein Charakter-Generator für das Pen & Paper Rollenspiel 'Swords & Wizardry'"
+authors = [{ name="Daniel Theuerkauff", email="dtheuerk@proton.me" }]
+dependencies = ["pytest"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
