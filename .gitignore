@@ -16,5 +16,27 @@ build/
 dist/
 *.egg-info/
 
-# Environment
-.env
+# Virtual environments
+venv/
+env/
+ENV/
+.env/
+
+# Tkinter related
+*.tcl
+*.tk
+
+# OS Dateien
+.DS_Store
+Thumbs.db
+
+# Logs and databases
+*.log
+*.sqlite3
+
+# Python wheel
+*.whl
+
+# PyInstaller
+*.manifest
+*.spec
