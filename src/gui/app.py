@@ -23,6 +23,26 @@ class Application:
         self.lblStrength = tk.Label(self.root, text="Stärke", fg="blue", width=12)
         self.lblStrength.grid(row=0, column=0)
 
+        # Label for Dex
+        self.lblDex = tk.Label(self.root, text="Geschicklichkeit", fg="blue", width=12)
+        self.lblDex.grid(row=1, column=0)
+
+        # Label for Con
+        self.lblCon = tk.Label(self.root, text="Konstitution", fg="blue", width=12)
+        self.lblCon.grid(row=2, column=0)
+
+        # Label for Wis
+        self.lblWis = tk.Label(self.root, text="Wisdom", fg="blue", width=12)
+        self.lblWis.grid(row=3, column=0)
+
+        # Label for Int
+        self.lblInt = tk.Label(self.root, text="Intelligenz", fg="blue", width=12)
+        self.lblInt.grid(row=4, column=0)
+
+        # Label for Char
+        self.lblChar = tk.Label(self.root, text="Charisma", fg="blue", width=12)
+        self.lblChar.grid(row=5, column=0)
+
         # Button for Strength
         self.btnStrength = tk.Button(self.root, text="X", command=self.on_button_click)
         self.btnStrength.grid(row=0, column=1)
