@@ -1,4 +1,4 @@
-from character import PlayerCharacter
+from src.sw_character_generator.classes.character import PlayerCharacter
 
 class Fighter(PlayerCharacter):
     def __init__(
@@ -10,15 +10,16 @@ class Fighter(PlayerCharacter):
         allowedAlignment: str = "all",
         allowedRaces: str = "all",
         allowedArmor: str = "all",
-        allowedWeapon = "all"
+        allowedWeapon: str = "all"
+        #statStr
     ):
         super().__init__(
-            characterName=characterName,
-            #playerClass=playerClass,
-            mainStat=mainStat
-        )
+            characterName=characterName
+            )
+        
         self.playerClass = playerClass
         self.tpDice = tpDice
+        self.mainStat = mainStat
         self.allowedAlignment = allowedAlignment
         self.allowedRaces = allowedRaces
         self.allowedArmor = allowedArmor
@@ -29,3 +30,4 @@ class Fighter(PlayerCharacter):
 bob = Fighter("Bob")
 print(bob.characterName)
 print(bob.playerClass)
+print(bob.statStr)
