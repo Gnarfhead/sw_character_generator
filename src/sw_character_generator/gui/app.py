@@ -1,5 +1,5 @@
 import tkinter as tk
-from src.sw_character_generator.functions.roleDice import wuerfle_3d6
+from sw_character_generator.functions.role_dice import wuerfle_3d6
 
 class Application:
     """Hauptklasse der Tkinter-Anwendung"""
