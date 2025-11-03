@@ -16,7 +16,9 @@ def wuerfle_3d6(dropLow=None):
     summe = sum(wuerfe)
     return summe, wuerfe
 
+"""
 # Beispielaufruf
 summe, gesamt = wuerfle_3d6(dropLow=None)
 print(f"Würfe: {gesamt}")
 print(f"Summe: {summe}")
+"""
