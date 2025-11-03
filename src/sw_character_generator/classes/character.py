@@ -1,44 +1,45 @@
 from functions.roleDice import wuerfle_3d6
+from functions.genCharStatMods import strengthMod
+from dataclasses import dataclass, field
 
-class PlayerCharacter:
-    def __init__(
-        self,
-        playerName: str = "",
-        characterName: str = "",
-        alignment: str = "",
-        level: int = 1,
-        race: str = "",
-        gender: str = "",
-        god: str = "",
-        age: int = 18,
-        epBonus: int = 0,
-        xp: int = 0,
-        tp: int = 0, 
-        savThrow: int = 0,
-        ac: int = 10,
-        inventory: list = None,
-        statStr: int = 0,
-        statDex: int = 0,
-        statCon: int = 0,
-        statWis: int = 0,
-        statInt: int = 0,
-        statChar: int = 0
-    ):
-        self.playerName = playerName
-        self.characterName = characterName
-        self.alignment = alignment
-        self.level = level
-        self.race = race
-        self.gender = gender
-        self.god = god
-        self.age = age
-        self.epBonus = epBonus
-        self.xp = xp
-        self.tp = tp
-        self.savThrow = savThrow
-        self.ac = ac
-        self.inventory = inventory if inventory is not None else []
-        self.statStr = wuerfle_3d6()
+@dataclass
+class Character:
+    playerName: str = "Unknown"
+    characterName: str = "Unnamed Hero"
+    alignment: str = "Neutral"
+    level: int = 1
+    race: str = "Human"
+    gender: str = "Undefined"
+    god: str = "None"
+    age: int = 18
+    epBonus: int = 0
+    xp: int = 0
+    tp: int = 0,
+    saveThrow: int = 0
+    ac: int = 10
+    inventory: list = None
+    statStr: int = wuerfle_3d6()
+    statDex: int = wuerfle_3d6()
+    statCon: int = wuerfle_3d6()
+    statWis: int = wuerfle_3d6()
+    statInt: int = wuerfle_3d6()
+    statChar: int = wuerfle_3d6()
+    inventory: list[str] = field(default_factory=list)
+    atckBon: int = strengthMod(statStr)
+    dmgBon: int = 0
+    carryBon: int = 0
+    crackDoorBon: int = 0
+    rangeBon: int = 0
+    acBon: int = 0
+    tpBon: int = 0
+    raiseDeadBon: int = 0
+    addLangs: list[str] = field(default_factory=list)
+    capSpecHirelings: int = 0
+    treasure: list[str] = field(default_factory=list)
+    coins: int = 0
+
+    
+    
 
 
 

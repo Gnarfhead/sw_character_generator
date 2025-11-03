@@ -6,8 +6,7 @@ if __name__ == "__main__":
     app.run()
 """
 
-from classes.character import PlayerCharacter
+from classes.character import Character
 
-bob = PlayerCharacter("Bob")
-print(bob.playerName)
-print(bob.statStr)
+bob = Character(characterName="Bob")
+print(bob)
