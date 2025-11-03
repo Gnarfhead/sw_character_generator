@@ -1,4 +1,4 @@
-from src.sw_character_generator.classes.character import PlayerCharacter
+from classes.character import PlayerCharacter
 
 class Fighter(PlayerCharacter):
     def __init__(
