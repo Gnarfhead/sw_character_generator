@@ -75,5 +75,38 @@ def door_crack_mod(strength: int):
         return 5
     
 
-
+def ranged_atck_mod(dexterity: int):
+    """Calculate ranged attack modifier based on dexterity score."""
+    if dexterity <= 8 and dexterity >= 3:
+        return -1
+    elif dexterity <= 12 and dexterity >= 9:
+        return 0
+    elif dexterity <= 18 and dexterity >= 13:
+        return +1
         
+def armor_class_mod(dexterity: int):
+    """Calculate armor class modifier based on dexterity score."""
+    if dexterity <= 8 and dexterity >= 3:
+        return -1
+    elif dexterity <= 12 and dexterity >= 9:
+        return 0
+    elif dexterity <= 18 and dexterity >= 13:
+        return +1
+    
+def tp_mod(constitution: int):
+    """Calculate TP modifier based on constitution score."""
+    if constitution <= 8 and constitution >= 3:
+        return -1
+    elif constitution <= 12 and constitution >= 9:
+        return 0
+    elif constitution <= 18 and constitution >= 13:
+        return +1
+    
+def raise_dead_mod(constitution: int):
+    """Calculate raise dead modifier based on constitution score."""
+    if constitution <= 8 and constitution >= 3:
+        return 50
+    elif constitution <= 12 and constitution >= 9:
+        return 75
+    elif constitution <= 18 and constitution >= 13:
+        return 100

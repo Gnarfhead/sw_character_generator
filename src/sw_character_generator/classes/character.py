@@ -1,5 +1,5 @@
 from functions.role_dice import wuerfle_3d6
-from functions.gen_char_stat_mods import door_crack_mod,strength_atck_mod, strength_damage_mod, carry_capacity_mod
+from functions.gen_char_stat_mods import strength_atck_mod, strength_damage_mod, carry_capacity_mod, door_crack_mod, ranged_atck_mod, tp_mod, armor_class_mod
 from dataclasses import dataclass, field
 
 @dataclass
@@ -29,9 +29,9 @@ class Character:
     dmgBon: int = strength_damage_mod(statStr)
     carryBon: float = carry_capacity_mod(statStr)
     crackDoorBon: int = door_crack_mod(statStr)
-    rangeBon: int = 0
-    acBon: int = 0
-    tpBon: int = 0
+    rangeBon: int = ranged_atck_mod(statDex)
+    acBon: int = armor_class_mod(statDex)
+    tpBon: int = tp_mod(statCon)
     raiseDeadBon: int = 0
     addLangs: list[str] = field(default_factory=list)
     capSpecHirelings: int = 0
