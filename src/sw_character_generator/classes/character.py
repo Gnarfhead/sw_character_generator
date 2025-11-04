@@ -50,12 +50,12 @@ class Character:
             self.door_crack_mod
         ) = analyze_mod_str(self.stat_str)
         (
-            self.tp_bon,
-            self.raise_dead_mod
-        ) = analyze_mod_dex(self.stat_dex)
-        (
             self.ranged_atck_mod,
             self.ac_bon
+        ) = analyze_mod_dex(self.stat_dex)
+        (
+            self.tp_bon,
+            self.raise_dead_mod
         ) = analyze_mod_con(self.stat_con)
         (
             self.max_add_langs,

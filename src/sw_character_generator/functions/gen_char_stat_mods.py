@@ -9,19 +9,19 @@ def analyze_mod_str(strength: float):
     elif strength <= 6 and strength >= 5:
         strength_atck_mod = -1
         strength_damage_mod = 0
-        carry_capacity_mod = -2,5
+        carry_capacity_mod = -2.5
         door_crack_mod = 1
         return strength_atck_mod, strength_damage_mod, carry_capacity_mod, door_crack_mod
     elif strength <= 8 and strength >= 7:
         strength_atck_mod = 0
         strength_damage_mod = 0
         carry_capacity_mod = 0
-        door_crack_mod =2
+        door_crack_mod = 2
         return strength_atck_mod, strength_damage_mod, carry_capacity_mod, door_crack_mod
     elif strength <= 12 and strength >= 9:
         strength_atck_mod = 0
         strength_damage_mod = 0 
-        carry_capacity_mod = +2,5
+        carry_capacity_mod = +2.5
         door_crack_mod = 2
         return strength_atck_mod, strength_damage_mod, carry_capacity_mod, door_crack_mod
     elif strength <= 15 and strength >= 13:
@@ -33,7 +33,7 @@ def analyze_mod_str(strength: float):
     elif strength == 16:
         strength_atck_mod = +1
         strength_damage_mod = +1
-        carry_capacity_mod = +7,5
+        carry_capacity_mod = +7.5
         door_crack_mod = 3
         return strength_atck_mod, strength_damage_mod, carry_capacity_mod, door_crack_mod
     elif strength == 17:
