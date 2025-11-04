@@ -40,3 +40,7 @@ Thumbs.db
 # PyInstaller
 *.manifest
 *.spec
+
+# Testverzeichnisse
+saved_data/
+blubb/
