@@ -6,10 +6,23 @@ if __name__ == "__main__":
     app.run()
 """
 
+from dataclasses import make_dataclass, asdict
 from classes.character import Character
+from classes.fighter import Fighter
 
-bob = Character(characterName="Bob")
-#print(f"{bob.characterName} created with the following stats:")
-#print(f"{bob.statStr} STR   {bob.statDex} DEX   {bob.statCon} CON  {bob.statWis} WIS   {bob.statInt} INT   {bob.statChar} CHAR")
-#print(f"{bob.statStr} - {bob.atckBon}")
-print(bob)
+#def main():
+player_character = Character(playerName="Alice", characterName="Thorin")
+#player_class = Fighter(playerClass="Fighter")
+player_class = Fighter(playerClass="Fighter")
+
+merged_character = asdict(player_class) | asdict(player_character)
+FinalPlayerCharacter = make_dataclass("FinalPlayerCharacter", merged_character.keys())
+final_character_instance = FinalPlayerCharacter(**merged_character)
+
+print(final_character_instance)
+print(f"Character Details: {final_character_instance.characterName}, Class: {final_character_instance.playerClass}")
+print(final_character_instance.characterName, final_character_instance.playerClass)
+
+
+    
+

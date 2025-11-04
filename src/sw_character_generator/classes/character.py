@@ -1,5 +1,5 @@
 from functions.role_dice import wuerfle_3d6
-from functions.gen_char_stat_mods import strength_atck_mod, strength_damage_mod, carry_capacity_mod, door_crack_mod
+from functions.gen_char_stat_mods import door_crack_mod,strength_atck_mod, strength_damage_mod, carry_capacity_mod
 from dataclasses import dataclass, field
 
 @dataclass
@@ -13,8 +13,8 @@ class Character:
     god: str = "None"
     age: int = 18
     epBonus: int = 0
-    xp: int = 0
-    tp: int = 0,
+    xp: int =0
+    tp: int = 0
     saveThrow: int = 0
     ac: int = 10
     inventory: list = None
