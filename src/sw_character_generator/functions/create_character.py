@@ -1,4 +1,4 @@
-from dataclasses import asdict, make_dataclass
+from dataclasses import asdict
 from classes.character import Character
 from classes.fighter import Fighter
 

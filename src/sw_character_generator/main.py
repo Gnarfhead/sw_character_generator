@@ -1,7 +1,6 @@
 from functions.create_character import create_character
 from functions.save_character import save_character
 
-
 if __name__ == "__main__":
 
     testcharacter = {
