@@ -1,42 +1,73 @@
 from functions.role_dice import wuerfle_3d6
-from functions.gen_char_stat_mods import strength_atck_mod, strength_damage_mod, carry_capacity_mod, door_crack_mod, ranged_atck_mod, tp_mod, armor_class_mod
+from functions.gen_char_stat_mods import analyze_mod_str, analyze_mod_dex, analyze_mod_con, analyze_mod_int, analyze_mod_char
 from dataclasses import dataclass, field
 
 @dataclass
 class Character:
-    playerName: str = "Unknown"
-    characterName: str = "Unnamed Hero"
+    player_name: str = "Unknown"
+    character_name: str = "Unnamed Hero"
     alignment: str = "Neutral"
     level: int = 1
     race: str = "Human"
     gender: str = "Undefined"
     god: str = "None"
     age: int = 18
-    epBonus: int = 0
+    ep_bonus: int = 0
     xp: int =0
     tp: int = 0
-    saveThrow: int = 0
+    save_throw: int = 0
     ac: int = 10
-    inventory: list = None
-    statStr: int = wuerfle_3d6()
-    statDex: int = wuerfle_3d6()
-    statCon: int = wuerfle_3d6()
-    statWis: int = wuerfle_3d6()
-    statInt: int = wuerfle_3d6()
-    statChar: int = wuerfle_3d6()
+    stat_str: int = wuerfle_3d6()
+    stat_dex: int = wuerfle_3d6()
+    stat_con: int = wuerfle_3d6()
+    stat_wis: int = wuerfle_3d6()
+    stat_int: int = wuerfle_3d6()
+    stat_char: int = wuerfle_3d6()
     inventory: list[str] = field(default_factory=list)
-    atckBon: int = strength_atck_mod(statStr)
-    dmgBon: int = strength_damage_mod(statStr)
-    carryBon: float = carry_capacity_mod(statStr)
-    crackDoorBon: int = door_crack_mod(statStr)
-    rangeBon: int = ranged_atck_mod(statDex)
-    acBon: int = armor_class_mod(statDex)
-    tpBon: int = tp_mod(statCon)
-    raiseDeadBon: int = 0
-    addLangs: list[str] = field(default_factory=list)
-    capSpecHirelings: int = 0
+    strength_atck_mod: float = field(init=False)
+    strength_damage_mod: float = field(init=False)
+    carry_capacity_mod: float = field(init=False)
+    door_crack_mod: float = field(init=False)
+    ranged_atck_mod: int = field(init=False)
+    ac_bon: int = field(init=False)
+    tp_bon: int = field(init=False)
+    raise_dead_mod: int = field(init=False)
+    max_add_langs: int = field(init=False)
+    highest_spell_level: int = field(init=False)
+    understand_spell: int = field(init=False)
+    min_spells_per_level: int = field(init=False)
+    max_spells_per_level: int = field(init=False)
+    add_langs: list[str] = field(default_factory=list)
+    cap_spec_hirelings: int = field(init=False)
     treasure: list[str] = field(default_factory=list)
     coins: int = 0
+
+    def __post_init__(self):
+        (
+            self.strength_atck_mod,
+            self.strength_damage_mod,
+            self.carry_capacity_mod,
+            self.door_crack_mod
+        ) = analyze_mod_str(self.stat_str)
+        (
+            self.tp_bon,
+            self.raise_dead_mod
+        ) = analyze_mod_dex(self.stat_dex)
+        (
+            self.ranged_atck_mod,
+            self.ac_bon
+        ) = analyze_mod_con(self.stat_con)
+        (
+            self.max_add_langs,
+            self.highest_spell_level,
+            self.understand_spell,
+            self.min_spells_per_level,
+            self.max_spells_per_level
+        ) = analyze_mod_int(self.stat_int)
+        (
+            self.cap_spec_hirelings
+        ) = analyze_mod_char(self.stat_char)
+        
 
     
     

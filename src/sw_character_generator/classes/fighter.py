@@ -2,11 +2,11 @@ from dataclasses import dataclass
 
 @dataclass
 class Fighter:
-    playerClass: str = "Fighter"
-    tpDice: int = 8
-    mainStat: str = "strength"
-    allowedAlignment: str = "all"
-    allowedRaces: str = "all"
-    allowedArmor: str = "all"
-    allowedWeapon: str = "all"
+    player_class: str = "Fighter"
+    tp_dice: int = 8
+    main_stat: str = "strength"
+    allowed_alignment: str = "all"
+    allowed_races: str = "all"
+    allowed_armor: str = "all"
+    allowed_weapon: str = "all"
     
