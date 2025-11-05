@@ -1,6 +1,8 @@
 """Fighter profession module."""
 from classes.professions import Profession
 from functions.role_dice import wuerfle_1d10
+from classes.mainstat import MainStat
+
 
 
 class Fighter(Profession):
@@ -11,7 +13,7 @@ class Fighter(Profession):
     def apply_class_modifiers(self, character):
         """Apply fighter-specific modifiers to the character."""
         character.tp_dice = 10
-        character.main_stat = "strength"
+        character.main_stats = [MainStat.STRENGTH]
         character.allowed_weapon = "all"
         character.allowed_armor = "heavy"
     

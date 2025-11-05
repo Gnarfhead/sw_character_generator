@@ -1,7 +1,7 @@
 """Assassin profession module."""
 from classes.professions import Profession
 from functions.role_dice import wuerfle_1d6
-from classes.playerclass import MainStat
+from classes.mainstat import MainStat
 
 
 class Assassin(Profession):

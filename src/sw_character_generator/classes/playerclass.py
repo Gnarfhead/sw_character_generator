@@ -1,19 +1,10 @@
 from dataclasses import dataclass, field
-from enum import Enum
 from typing import Set
 from functions.role_dice import wuerfle_3d6
 from functions.gen_char_stat_mods import analyze_mod_str, analyze_mod_dex, analyze_mod_con, analyze_mod_int, analyze_mod_char
 from classes.fighter import Fighter
 from classes.professions import Profession
-
-
-class MainStat(Enum):
-    STRENGTH = "strength"
-    DEXTERITY = "dexterity"
-    CONSTITUTION = "constitution"
-    INTELLIGENCE = "intelligence"
-    WISDOM = "wisdom"
-    CHARISMA = "charisma"
+from classes.mainstat import MainStat
 
 @dataclass
 class PlayerClass:
