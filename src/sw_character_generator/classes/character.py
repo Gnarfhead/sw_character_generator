@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from functions.role_dice import wuerfle_3d6
-from functions.gen_char_stat_mods import analyze_mod_str, analyze_mod_dex, analyze_mod_con, analyze_mod_int, analyze_mod_char
+#from functions.gen_char_stat_mods import analyze_mod_str, analyze_mod_dex, analyze_mod_con, analyze_mod_int, analyze_mod_char
 
 
 @dataclass
@@ -43,7 +43,8 @@ class Character:
     cap_spec_hirelings: int = field(init=False)
     treasure: list[str] = field(default_factory=list)
     coins: int = 0
-
+    
+    """
     def __post_init__(self):
         (
             self.strength_atck_mod,
@@ -69,3 +70,4 @@ class Character:
         (
             self.cap_spec_hirelings
         ) = analyze_mod_char(self.stat_char)
+    """

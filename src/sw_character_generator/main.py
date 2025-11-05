@@ -7,7 +7,7 @@ if __name__ == "__main__":
 
     testcharacter = Character(
         player_name="Bob",
-        character_name="BobtheBrave"
+        character_name="Frodo the Brave"
     )
 
     testcharacterclass = Fighter(
@@ -15,9 +15,7 @@ if __name__ == "__main__":
     )
 
     Blubb = create_character(testcharacter, testcharacterclass)
-    print(Blubb.character.player_name)
-    print(Blubb.character_class.player_class)
-    print("Blubb: ", Blubb)
+    print(Blubb)
 
     # Save the final character data to a JSON file
-    save_character(Blubb)
+    #save_character(Blubb)
