@@ -3,6 +3,7 @@ from classes.playerclass import PlayerClass
 from classes.fighter import Fighter
 from classes.wizard import Wizard
 from classes.thief import Thief
+from classes.assassin import Assassin
 
 if __name__ == "__main__":
 
@@ -10,7 +11,7 @@ if __name__ == "__main__":
     Blubb = PlayerClass(
         player_name="Bert",
         character_name="Hiob the Bold",
-        profession=Fighter(),
+        profession=Assassin(),
         coins=100
     )
     # Print the character details

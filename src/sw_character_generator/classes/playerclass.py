@@ -1,8 +1,19 @@
 from dataclasses import dataclass, field
+from enum import Enum
+from typing import Set
 from functions.role_dice import wuerfle_3d6
 from functions.gen_char_stat_mods import analyze_mod_str, analyze_mod_dex, analyze_mod_con, analyze_mod_int, analyze_mod_char
 from classes.fighter import Fighter
 from classes.professions import Profession
+
+
+class MainStat(Enum):
+    STRENGTH = "strength"
+    DEXTERITY = "dexterity"
+    CONSTITUTION = "constitution"
+    INTELLIGENCE = "intelligence"
+    WISDOM = "wisdom"
+    CHARISMA = "charisma"
 
 @dataclass
 class PlayerClass:
@@ -11,7 +22,7 @@ class PlayerClass:
     character_name: str = "Unnamed Hero"
     profession: Profession = field(default_factory=Fighter)
     tp_dice: int = 8
-    main_stat: str = "strength"
+    main_stats: Set[MainStat] = field(default_factory=lambda: {MainStat.STRENGTH})
     alignment: str = "Neutral"
     level: int = 1
     race: str = "Human"
@@ -54,6 +65,7 @@ class PlayerClass:
     
     
     def __post_init__(self):
+        """Initialize derived attributes and apply class modifiers."""
 
         self.profession.apply_class_modifiers(self)
         #Calculate and set all STR derived modifiers after initialization."""
@@ -110,29 +122,31 @@ class PlayerClass:
 
     
     def __repr__(self):
-            return (
-                f"PlayerName={self.player_name}\n"
-                f"CharacterName={self.character_name}\n"
-                f"Class={self.profession.name}, "
-                f"Level={self.level}  TP_Dice=d{self.tp_dice}  MainStat={self.main_stat}\n"
-                f"xp={self.xp}  xp_bonus={self.xp_bonus}%  TP={self.tp}\n"
-                f"STR: {self.stat_str}    STR_mod: Attack={self.strength_atck_mod}, Damage={self.strength_damage_mod}, "
-                f"Carry Capacity={self.carry_capacity_mod}, Door Crack={self.door_crack_mod}\n"
-                f"DEX: {self.stat_dex}    DEX_mod: Ranged Attack={self.ranged_atck_mod}, AC Bonus={self.ac_mod}\n"
-                f"CON: {self.stat_con}    CON_mod: HP Bonus={self.tp_mod}, Raise Dead Chance={self.raise_dead_mod}%\n"
-                f"INT: {self.stat_int}    INT_mod: Languages={self.max_add_langs}, Spell Level={self.highest_spell_level}, "
-                f"Understands Spell={self.understand_spell}, "
-                f"min/max Spells per Level={self.min_spells_per_level}/{self.max_spells_per_level}\n"
-                f"WIS: {self.stat_wis}\n"
-                f"CHA: {self.stat_char}    CHA_mod: Max Hirelings={self.cap_spec_hirelings}"
-            )
+        """Return a string representation of the PlayerClass instance."""
+        return (
+            f"PlayerName={self.player_name}\n"
+            f"CharacterName={self.character_name}\n"
+            f"Class={self.profession.name}, "
+            f"Level={self.level}, TP_Dice=d{self.tp_dice}, MainStats={[stat.value for stat in self.main_stats]}\n"
+            f"xp={self.xp}  xp_bonus={self.xp_bonus}%  TP={self.tp}\n"
+            f"STR: {self.stat_str}    STR_mod: Attack={self.strength_atck_mod}, Damage={self.strength_damage_mod}, "
+            f"Carry Capacity={self.carry_capacity_mod}, Door Crack={self.door_crack_mod}\n"
+            f"DEX: {self.stat_dex}    DEX_mod: Ranged Attack={self.ranged_atck_mod}, AC Bonus={self.ac_mod}\n"
+            f"CON: {self.stat_con}    CON_mod: HP Bonus={self.tp_mod}, Raise Dead Chance={self.raise_dead_mod}%\n"
+            f"INT: {self.stat_int}    INT_mod: Languages={self.max_add_langs}, Spell Level={self.highest_spell_level}, "
+            f"Understands Spell={self.understand_spell}, "
+            f"min/max Spells per Level={self.min_spells_per_level}/{self.max_spells_per_level}\n"
+            f"WIS: {self.stat_wis}\n"
+            f"CHA: {self.stat_char}    CHA_mod: Max Hirelings={self.cap_spec_hirelings}"
+        )
     
     def to_dict(self):
+        """Convert the PlayerClass instance to a dictionary."""
         return {
             "player_name": self.player_name,
             "character_name": self.character_name,
             "profession": self.profession.name,
-            "main_stat": self.main_stat,
+            "main_stats": [stat.value for stat in self.main_stats],
             "tp_dice": self.tp_dice,
             "level": self.level,
             "alignment": self.alignment,
