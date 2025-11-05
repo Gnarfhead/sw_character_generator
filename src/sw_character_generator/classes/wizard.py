@@ -1,5 +1,6 @@
 """Wizard profession module."""
 from classes.professions import Profession
+from functions.role_dice import wuerfle_1d4
 
 
 class Wizard(Profession):
@@ -13,3 +14,7 @@ class Wizard(Profession):
         character.main_stat = "intelligence"
         character.allowed_weapon = "staff, dagger"
         character.allowed_armor = "none"
+
+    def apply_stat_dependent_modifiers(self, character):
+        """Apply stat-dependent modifiers for Wizard."""
+        character.tp = wuerfle_1d4(1) + character.tp_mod

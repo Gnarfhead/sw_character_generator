@@ -103,6 +103,11 @@ class PlayerClass:
             self.stat_char,
             self.profession
         )
+        # Re-apply class modifiers that depend on stats
+        self.profession.apply_class_modifiers(self)
+        # calculate stat modifiers...
+        self.profession.apply_stat_dependent_modifiers(self)
+
     
     def __repr__(self):
             return (
