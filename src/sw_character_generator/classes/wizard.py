@@ -1,7 +1,7 @@
 """Wizard profession module."""
 from classes.professions import Profession
 from functions.role_dice import wuerfle_1d4
-from classes.stat_enums import MainStat
+from classes.stat_enums import AllowedAlignments, AllowedRaces, MainStat
 
 
 class Wizard(Profession):
@@ -13,6 +13,8 @@ class Wizard(Profession):
         """Apply wizard-specific modifiers to the character."""
         character.tp_dice = 4
         character.main_stats = [MainStat.INTELLIGENCE]
+        character.allowed_alignment = [AllowedAlignments.NEUTRAL, AllowedAlignments.EVIL]
+        character.alowed_races = [AllowedRaces.HUMAN, AllowedRaces.HALFELF, AllowedRaces.ELF]
         character.allowed_weapon = "staff, dagger"
         character.allowed_armor = "none"
 

@@ -1,7 +1,7 @@
 """Thief profession module."""
 from classes.professions import Profession
 from functions.role_dice import wuerfle_1d6
-from classes.stat_enums import MainStat
+from classes.stat_enums import AllowedAlignments, AllowedRaces, MainStat
 
 
 class Thief(Profession):
@@ -13,6 +13,8 @@ class Thief(Profession):
         """Apply thief-specific modifiers to the character."""
         character.tp_dice = 6
         character.main_stats = [MainStat.DEXTERITY]
+        character.allowed_alignment = [AllowedAlignments.NEUTRAL, AllowedAlignments.EVIL]
+        character.alowed_races = [AllowedRaces.HUMAN, AllowedRaces.HALFLING, AllowedRaces.ELF, AllowedRaces.DwARF]
         character.allowed_weapon = "light weapons"
         character.allowed_armor = "light"
 

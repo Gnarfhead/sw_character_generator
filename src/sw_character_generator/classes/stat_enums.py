@@ -15,6 +15,7 @@ class AllowedRaces(Enum):
     ELF = "elf"
     DWARF = "dwarf"
     HALFLING = "halfling"
+    HALFELF = "halfelf"
 
 class AllowedAlignments(Enum):
     """Enumeration for allowed alignments."""

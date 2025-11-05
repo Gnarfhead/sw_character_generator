@@ -1,7 +1,7 @@
 """Fighter profession module."""
 from classes.professions import Profession
 from functions.role_dice import wuerfle_1d10
-from classes.stat_enums import MainStat
+from classes.stat_enums import AllowedAlignments, AllowedRaces, MainStat
 
 
 
@@ -14,6 +14,8 @@ class Fighter(Profession):
         """Apply fighter-specific modifiers to the character."""
         character.tp_dice = 10
         character.main_stats = [MainStat.STRENGTH]
+        character.allowed_alignment = [AllowedAlignments.NEUTRAL, AllowedAlignments.EVIL, AllowedAlignments.GOOD]
+        character.alowed_races = [AllowedRaces.HUMAN, AllowedRaces.HALFLING, AllowedRaces.ELF, AllowedRaces.DWARF, AllowedRaces.HALFELF ]
         character.allowed_weapon = "all"
         character.allowed_armor = "heavy"
     
