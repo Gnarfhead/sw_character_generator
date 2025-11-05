@@ -1,30 +1,30 @@
 def analyze_mod_str(strength: float):
-    """Calculate attack modifier based on strength score."""
-    if strength <= 4 and strength >= 3:
+    """Calculate modifiers based on strength score for attack, damage, carrying capacity, and door breaking."""
+    if 3 <= strength <= 4:
         strength_atck_mod = -2
         strength_damage_mod = -1
         carry_capacity_mod = -5
         door_crack_mod = 1
         return strength_atck_mod, strength_damage_mod, carry_capacity_mod, door_crack_mod
-    elif strength <= 6 and strength >= 5:
+    elif 5 <= strength <= 6:
         strength_atck_mod = -1
         strength_damage_mod = 0
         carry_capacity_mod = -2.5
         door_crack_mod = 1
         return strength_atck_mod, strength_damage_mod, carry_capacity_mod, door_crack_mod
-    elif strength <= 8 and strength >= 7:
+    elif 7 <= strength <= 8:
         strength_atck_mod = 0
         strength_damage_mod = 0
         carry_capacity_mod = 0
         door_crack_mod = 2
         return strength_atck_mod, strength_damage_mod, carry_capacity_mod, door_crack_mod
-    elif strength <= 12 and strength >= 9:
+    elif 9 <= strength <= 12:
         strength_atck_mod = 0
         strength_damage_mod = 0 
         carry_capacity_mod = +2.5
         door_crack_mod = 2
         return strength_atck_mod, strength_damage_mod, carry_capacity_mod, door_crack_mod
-    elif strength <= 15 and strength >= 13:
+    elif 13 <= strength <= 15:
         strength_atck_mod = +1
         strength_damage_mod = 0
         carry_capacity_mod = +5
@@ -48,41 +48,47 @@ def analyze_mod_str(strength: float):
         carry_capacity_mod = +25
         door_crack_mod = 5
         return strength_atck_mod, strength_damage_mod, carry_capacity_mod, door_crack_mod
+    else:
+        return None
+
     
 def analyze_mod_dex(dexterity: int):
     """Calculate attack modifier based on strength score."""
-    if dexterity <= 8 and dexterity >= 3:
+    if 3 <= dexterity <= 8:
         ranged_atck_mod = -1
         ac_bon = -1
         return ranged_atck_mod, ac_bon
-    elif dexterity <= 12 and dexterity >= 9:
+    elif 9 <= dexterity <= 12:
         ranged_atck_mod = 0
         ac_bon = 0
         return ranged_atck_mod, ac_bon
-    elif dexterity <= 18 and dexterity >= 13:
+    elif 13 <= dexterity <= 18:
         ranged_atck_mod = +1
         ac_bon = +1
         return ranged_atck_mod, ac_bon
+    else:
+        return None
 
 def analyze_mod_con(constitution: int):
     """Calculate constitution based modifiers."""
-    if constitution <= 8 and constitution >= 3:
+    if 3 <= constitution <= 8:
         tp_bon = -1
         raise_dead_mod = 50
         return tp_bon, raise_dead_mod
-    elif constitution <= 12 and constitution >= 9:
+    elif 9 <= constitution <= 12:
         tp_bon = 0
         raise_dead_mod = 75
         return tp_bon, raise_dead_mod
-    elif constitution <= 18 and constitution >= 13:
+    elif 13 <= constitution <= 18:
         tp_bon = +1
         raise_dead_mod = 100
         return tp_bon, raise_dead_mod
-    
+    else:
+        return None    
 
 def analyze_mod_int(intelligence: int):
     """Calculate analyze modifier based on intelligence score."""
-    if intelligence <= 7 and intelligence >= 3:
+    if 3 <= intelligence <= 7:
         max_add_langs = 0
         highest_spell_level = 4
         understand_spell = 30
@@ -166,30 +172,31 @@ def analyze_mod_int(intelligence: int):
         min_spells_per_level = 8
         max_spells_per_level = 100
         return max_add_langs, highest_spell_level, understand_spell, min_spells_per_level, max_spells_per_level
+    else:
+        return None
     
 def analyze_mod_char(charisma: int):
     """Calculate constitution based modifiers."""
-    if charisma <= 4 and charisma >= 3:
+    if 3 <= charisma <= 4:
         cap_spec_hirelings = 1
         return cap_spec_hirelings
-    elif charisma <= 6 and charisma >= 5:
+    elif 5 <= charisma <= 6:
         cap_spec_hirelings = 2
         return cap_spec_hirelings
-    elif charisma <= 8 and charisma >= 7:
+    elif 7 <= charisma <= 8:
         cap_spec_hirelings = 3
         return cap_spec_hirelings
-    elif charisma <= 12 and charisma >= 9:
+    elif 9 <= charisma <= 12:
         cap_spec_hirelings = 4
         return cap_spec_hirelings
-    elif charisma <= 15 and charisma >= 13:
+    elif 13 <= charisma <= 15:
         cap_spec_hirelings = 5
         return cap_spec_hirelings
-    elif charisma <= 17 and charisma >= 16:
+    elif 16 <= charisma <= 17:
         cap_spec_hirelings = 6
         return cap_spec_hirelings
     elif charisma == 18:
         cap_spec_hirelings = 7
         return cap_spec_hirelings
-    
-
-
+    else:
+        return None

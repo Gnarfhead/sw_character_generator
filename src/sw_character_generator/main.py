@@ -1,7 +1,7 @@
 from functions.create_character import create_character
 from functions.save_character import save_character
 from classes.character import Character
-from classes.fighter import Fighter 
+from classes.fighter import Fighter
 
 if __name__ == "__main__":
 
@@ -15,12 +15,9 @@ if __name__ == "__main__":
     )
 
     Blubb = create_character(testcharacter, testcharacterclass)
-    print(Blubb.character.player_name)     
+    print(Blubb.character.player_name)
     print(Blubb.character_class.player_class)
     print("Blubb: ", Blubb)
 
     # Save the final character data to a JSON file
     save_character(Blubb)
-
-
-
