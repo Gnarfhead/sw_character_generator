@@ -9,7 +9,6 @@ class PlayerClass:
     """Class representing a character in the game."""
     player_name: str = "Unknown"
     character_name: str = "Unnamed Hero"
-    #player_class: str = "Fighter"
     profession: Profession = field(default_factory=Fighter)
     tp_dice: int = 8
     main_stat: str = "strength"
@@ -19,7 +18,7 @@ class PlayerClass:
     gender: str = "Undefined"
     god: str = "None"
     age: int = 18
-    ep_bonus: int = 0
+    xp_bonus: int = 0
     xp: int =0
     tp: int = 0
     save_throw: int = 0
@@ -109,7 +108,9 @@ class PlayerClass:
             return (
                 f"PlayerName={self.player_name}\n"
                 f"CharacterName={self.character_name}\n"
-                f"Class={self.profession}\n"
+                f"Class={self.profession.name}, "
+                f"Level={self.level}  TP_Dice=d{self.tp_dice}  MainStat={self.main_stat}\n"
+                f"xp={self.xp}  xp_bonus={self.xp_bonus}%  TP={self.tp}\n"
                 f"STR: {self.stat_str}    STR_mod: Attack={self.strength_atck_mod}, Damage={self.strength_damage_mod}, "
                 f"Carry Capacity={self.carry_capacity_mod}, Door Crack={self.door_crack_mod}\n"
                 f"DEX: {self.stat_dex}    DEX_mod: Ranged Attack={self.ranged_atck_mod}, AC Bonus={self.ac_mod}\n"
@@ -135,6 +136,7 @@ class PlayerClass:
             "god": self.god,
             "age": self.age,
             "xp": self.xp,
+            "xp_bonus": self.xp_bonus,
             "tp": self.tp,
             "save_throw": self.save_throw,
             "ac": self.ac,

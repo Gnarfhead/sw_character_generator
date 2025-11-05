@@ -4,7 +4,6 @@ from classes.fighter import Fighter
 from classes.wizard import Wizard
 from classes.thief import Thief
 
-
 if __name__ == "__main__":
 
     Blubb = PlayerClass(
@@ -16,6 +15,7 @@ if __name__ == "__main__":
 
 
     print(Blubb)
+
 
     # Save the final character data to a JSON file
     save_character(Blubb)
