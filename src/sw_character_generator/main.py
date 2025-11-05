@@ -10,7 +10,8 @@ if __name__ == "__main__":
     Blubb = PlayerClass(
         player_name="Bert",
         character_name="Hiob the Bold",
-        profession=Fighter()
+        profession=Fighter(),
+        coins=100
     )
 
 

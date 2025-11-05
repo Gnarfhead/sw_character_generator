@@ -155,10 +155,10 @@ class PlayerClass:
                 },
                 "dexterity": {
                     "ranged_attack": self.ranged_atck_mod,
-                    "ac_bonus": self.ac_mod
+                    "ac_mod": self.ac_mod
                 },
                 "constitution": {
-                    "hp_bonus": self.tp_mod,
+                    "hp_mod": self.tp_mod,
                     "raise_dead_chance": self.raise_dead_mod
                 },
                 "intelligence": {
