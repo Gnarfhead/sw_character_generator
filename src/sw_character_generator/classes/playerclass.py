@@ -57,7 +57,7 @@ class PlayerClass:
     add_langs: list[str] = field(default_factory=list)
     cap_spec_hirelings: int = field(init=False)
     treasure: list[str] = field(default_factory=list)
-    coins: int = wuerfle_3d6() * 10 #
+    _coins: int = wuerfle_3d6() * 10 #
     allowed_alignment: str = "all"
     allowed_races: str = "all"
     allowed_armor: str = "all"
@@ -128,7 +128,7 @@ class PlayerClass:
             f"CharacterName={self.character_name}\n"
             f"Class={self.profession.name}, "
             f"Level={self.level}, TP_Dice=d{self.tp_dice}, MainStats={[stat.value for stat in self.main_stats]}\n"
-            f"xp={self.xp}, xp_bonus={self.xp_bonus}%, TP={self.tp}, Coins={self.coins}\n"
+            f"xp={self.xp}, xp_bonus={self.xp_bonus}%, TP={self.tp}, Coins={self._coins}\n"
             f"STR: {self.stat_str}    STR_mod: Attack={self.strength_atck_mod}, Damage={self.strength_damage_mod}, "
             f"Carry Capacity={self.carry_capacity_mod}, Door Crack={self.door_crack_mod}\n"
             f"DEX: {self.stat_dex}    DEX_mod: Ranged Attack={self.ranged_atck_mod}, AC Bonus={self.ac_mod}\n"
@@ -195,7 +195,7 @@ class PlayerClass:
             },
             "inventory": self.inventory,
             "treasure": self.treasure,
-            "coins": self.coins,
+            "coins": self._coins,
             "allowed_alignment": self.allowed_alignment,
             "allowed_races": self.allowed_races,
             "allowed_armor": self.allowed_armor,
