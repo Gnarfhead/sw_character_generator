@@ -1,4 +1,3 @@
-from functions.create_character import create_character
 from functions.save_character import save_character
 from classes.playerclass import Character
 
