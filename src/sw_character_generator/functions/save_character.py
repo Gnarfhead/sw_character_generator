@@ -1,18 +1,12 @@
-import json, os
-from functions.create_character import FullCharacter
+import json
+import os
 from dataclasses import asdict
+from functions.create_character import FullCharacter
+
 
 def save_character(character_data: FullCharacter) -> None:
-    
-    """"
-    if not isinstance(character_data, dict):
-        raise TypeError("character_data muss ein Dictionary sein.")
-    if isinstance(character_data, dict):
-        print("character_data ist ein Dictionary.")
-    """
-
+    """Save the FullCharacter data to a JSON file."""
     print("debug save: ", character_data.character.character_name)
-
     hero_name = character_data.character.character_name
     #print(f"Saving character: {hero_name}")
     filename = f"{hero_name}.json"

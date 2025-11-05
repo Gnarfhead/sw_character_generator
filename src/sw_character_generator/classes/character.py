@@ -1,9 +1,11 @@
+from dataclasses import dataclass, field
 from functions.role_dice import wuerfle_3d6
 from functions.gen_char_stat_mods import analyze_mod_str, analyze_mod_dex, analyze_mod_con, analyze_mod_int, analyze_mod_char
-from dataclasses import dataclass, field
+
 
 @dataclass
 class Character:
+    """Class representing a character in the game."""
     player_name: str = "Unknown"
     character_name: str = "Unnamed Hero"
     alignment: str = "Neutral"
@@ -67,11 +69,3 @@ class Character:
         (
             self.cap_spec_hirelings
         ) = analyze_mod_char(self.stat_char)
-        
-
-    
-    
-
-
-
-
