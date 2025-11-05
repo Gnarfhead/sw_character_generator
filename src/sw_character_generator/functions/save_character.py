@@ -1,10 +1,10 @@
 import json
 import os
 from dataclasses import asdict
-from classes.playerclass import Character
+from classes.playerclass import PlayerClass
 
 
-def save_character(character_data: Character) -> None:
+def save_character(character_data: PlayerClass) -> None:
     """Save the Character data to a JSON file."""
     data = character_data.to_dict()
     filename = f"{data['character_name']}.json"

@@ -5,7 +5,7 @@ from classes.fighter import Fighter
 from classes.professions import Profession
 
 @dataclass
-class Character:
+class PlayerClass:
     """Class representing a character in the game."""
     player_name: str = "Unknown"
     character_name: str = "Unnamed Hero"
@@ -36,8 +36,8 @@ class Character:
     carry_capacity_mod: float = field(init=False)
     door_crack_mod: float = field(init=False)
     ranged_atck_mod: int = field(init=False)
-    ac_bon: int = field(init=False)
-    tp_bon: int = field(init=False)
+    ac_mod: int = field(init=False)
+    tp_mod: int = field(init=False)
     raise_dead_mod: int = field(init=False)
     max_add_langs: int = field(init=False)
     highest_spell_level: int = field(init=False)
@@ -71,7 +71,7 @@ class Character:
         #Calculate and set all DEX derived modifiers after initialization."""
         (
             self.ranged_atck_mod,
-            self.ac_bon
+            self.ac_mod
         ) = analyze_mod_dex(
             self.stat_dex,
             self.profession
@@ -79,7 +79,7 @@ class Character:
 
         #Calculate and set all CON derived modifiers after initialization."""
         (
-            self.tp_bon,
+            self.tp_mod,
             self.raise_dead_mod
         ) = analyze_mod_con(
             self.stat_con,
@@ -112,8 +112,8 @@ class Character:
                 f"Class={self.profession}\n"
                 f"STR: {self.stat_str}    STR_mod: Attack={self.strength_atck_mod}, Damage={self.strength_damage_mod}, "
                 f"Carry Capacity={self.carry_capacity_mod}, Door Crack={self.door_crack_mod}\n"
-                f"DEX: {self.stat_dex}    DEX_mod: Ranged Attack={self.ranged_atck_mod}, AC Bonus={self.ac_bon}\n"
-                f"CON: {self.stat_con}    CON_mod: HP Bonus={self.tp_bon}, Raise Dead Chance={self.raise_dead_mod}%\n"
+                f"DEX: {self.stat_dex}    DEX_mod: Ranged Attack={self.ranged_atck_mod}, AC Bonus={self.ac_mod}\n"
+                f"CON: {self.stat_con}    CON_mod: HP Bonus={self.tp_mod}, Raise Dead Chance={self.raise_dead_mod}%\n"
                 f"INT: {self.stat_int}    INT_mod: Languages={self.max_add_langs}, Spell Level={self.highest_spell_level}, "
                 f"Understands Spell={self.understand_spell}, "
                 f"min/max Spells per Level={self.min_spells_per_level}/{self.max_spells_per_level}\n"
@@ -155,10 +155,10 @@ class Character:
                 },
                 "dexterity": {
                     "ranged_attack": self.ranged_atck_mod,
-                    "ac_bonus": self.ac_bon
+                    "ac_bonus": self.ac_mod
                 },
                 "constitution": {
-                    "hp_bonus": self.tp_bon,
+                    "hp_bonus": self.tp_mod,
                     "raise_dead_chance": self.raise_dead_mod
                 },
                 "intelligence": {

@@ -12,19 +12,19 @@ def analyze_mod_str(strength: float, character_class: str):
     elif 9 <= strength <= 12:
         return 0, 0, 2.5, 2
     elif 13 <= strength <= 15:
-        strength_atck_mod = 1 if character_class.lower() == "fighter" else 0
+        strength_atck_mod = 1 if character_class.name.lower() == "fighter" else 0
         return strength_atck_mod, 0, 5, 2
     elif strength == 16:
-        strength_atck_mod = 1 if character_class.lower() == "fighter" else 0
-        strength_damage_mod = 1 if character_class.lower() == "fighter" else 0
+        strength_atck_mod = 1 if character_class.name.lower() == "fighter" else 0
+        strength_damage_mod = 1 if character_class.name.lower() == "fighter" else 0
         return strength_atck_mod, strength_damage_mod, 7.5, 3
     elif strength == 17:
-        strength_atck_mod = 2 if character_class.lower() == "fighter" else 0
-        strength_damage_mod = 2 if character_class.lower() == "fighter" else 0
+        strength_atck_mod = 2 if character_class.name.lower() == "fighter" else 0
+        strength_damage_mod = 2 if character_class.name.lower() == "fighter" else 0
         return strength_atck_mod, strength_damage_mod, 15, 4
     elif strength == 18:
-        strength_atck_mod = 2 if character_class.lower() == "fighter" else 0
-        strength_damage_mod = 3 if character_class.lower() == "fighter" else 0
+        strength_atck_mod = 2 if character_class.name.lower() == "fighter" else 0
+        strength_damage_mod = 3 if character_class.name.lower() == "fighter" else 0
         return strength_atck_mod, strength_damage_mod, 25, 5
     else:
         return None

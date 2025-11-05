@@ -1,5 +1,5 @@
 from functions.save_character import save_character
-from classes.playerclass import Character
+from classes.playerclass import PlayerClass
 from classes.fighter import Fighter
 from classes.wizard import Wizard
 from classes.thief import Thief
@@ -7,10 +7,10 @@ from classes.thief import Thief
 
 if __name__ == "__main__":
 
-    Blubb = Character(
+    Blubb = PlayerClass(
         player_name="Bert",
-        character_name="Mauser the Sneaky",
-        profession=Thief()
+        character_name="Hiob the Bold",
+        profession=Fighter()
     )
 
 
