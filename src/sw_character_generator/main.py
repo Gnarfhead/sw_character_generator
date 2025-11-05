@@ -15,7 +15,8 @@ if __name__ == "__main__":
     )
 
     print("Wurf 1d6:", wuerfle_1d6(1))
-    print("Wurf 3d6:", wuerfle_3d6(drop_low=1))
+    print("Wurf 3d6:", wuerfle_3d6())
+    print("Wurf 3d6dl:", wuerfle_3d6(drop_low=1))
     print("Wurf 1d4:", wuerfle_1d4(1))
     print("Wurf 1d8:", wuerfle_1d8(1))
     print("Wurf 1d10:", wuerfle_1d10(1))
