@@ -4,8 +4,10 @@ def wuerfle_3d6(drop_low = None):
     """Würfelt 4 sechsseitige Würfel und gibt die Summe der höchsten 3 zurück, wenn drop_low gesetzt ist."""
     if drop_low is None:
         wuerfe = [random.randint(1, 6) for _ in range(3)]
+        print("Würfe:", wuerfe)
     else:
         wuerfe = [random.randint(1, 6) for _ in range(4)]
+        print("Würfe:", wuerfe, "-> niedrigster Wurf wird entfernt.")
         wuerfe.remove(min(wuerfe))
     summe = sum(wuerfe)
     return summe
