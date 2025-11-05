@@ -12,7 +12,6 @@ if __name__ == "__main__":
         player_name="Bert",
         character_name="Hiob the Bold",
         profession=Assassin(),
-        coins=100
     )
     # Print the character details
     print(Blubb)
