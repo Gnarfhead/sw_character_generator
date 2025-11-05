@@ -1,7 +1,7 @@
 """Thief profession module."""
 from classes.professions import Profession
 from functions.role_dice import wuerfle_1d6
-from classes.mainstat import MainStat
+from classes.stat_enums import MainStat
 
 
 class Thief(Profession):
@@ -9,7 +9,7 @@ class Thief(Profession):
     def __init__(self):
         self.name = "Thief"
 
-    def apply_class_modifiers(self, character):
+    def apply_profession_modifiers(self, character):
         """Apply thief-specific modifiers to the character."""
         character.tp_dice = 6
         character.main_stats = [MainStat.DEXTERITY]

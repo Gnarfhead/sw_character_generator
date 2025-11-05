@@ -11,7 +11,7 @@ if __name__ == "__main__":
     Blubb = PlayerClass(
         player_name="Bert",
         character_name="Hiob the Bold",
-        profession=Thief(),
+        profession=Assassin(),
     )
     # Print the character details
     print(Blubb)

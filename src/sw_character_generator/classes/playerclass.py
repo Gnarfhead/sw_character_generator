@@ -4,7 +4,8 @@ from functions.role_dice import wuerfle_3d6
 from functions.gen_char_stat_mods import analyze_mod_str, analyze_mod_dex, analyze_mod_con, analyze_mod_int, analyze_mod_char
 from classes.fighter import Fighter
 from classes.professions import Profession
-from classes.mainstat import MainStat
+from classes.stat_enums import MainStat, AllowedAlignments, AllowedRaces
+
 
 @dataclass
 class PlayerClass:
@@ -49,8 +50,8 @@ class PlayerClass:
     cap_spec_hirelings: int = field(init=False)
     treasure: list[str] = field(default_factory=list)
     _coins: int = wuerfle_3d6() * 10 #
-    allowed_alignment: str = "all"
-    allowed_races: str = "all"
+    allowed_alignment: Set[AllowedAlignments] = field(default_factory=lambda: {AllowedAlignments.GOOD})
+    allowed_races: Set[AllowedRaces] = field(default_factory=lambda: {AllowedRaces.HUMAN})
     allowed_armor: str = "all"
     allowed_weapon: str = "all"
     
@@ -58,7 +59,7 @@ class PlayerClass:
     def __post_init__(self):
         """Initialize derived attributes and apply class modifiers."""
 
-        self.profession.apply_class_modifiers(self)
+        self.profession.apply_profession_modifiers(self)
         #Calculate and set all STR derived modifiers after initialization."""
         (
             self.strength_atck_mod,
@@ -107,7 +108,7 @@ class PlayerClass:
             self.profession
         )
         # Re-apply class modifiers that depend on stats
-        self.profession.apply_class_modifiers(self)
+        self.profession.apply_profession_modifiers(self)
         # calculate stat modifiers...
         self.profession.apply_stat_dependent_modifiers(self)
 
@@ -187,8 +188,8 @@ class PlayerClass:
             "inventory": self.inventory,
             "treasure": self.treasure,
             "coins": self._coins,
-            "allowed_alignment": self.allowed_alignment,
-            "allowed_races": self.allowed_races,
+            "allowed_alignment": [stat.value for stat in self.allowed_alignment],
+            "allowed_races": [stat.value for stat in self.allowed_races],
             "allowed_armor": self.allowed_armor,
             "allowed_weapon": self.allowed_weapon
         }

@@ -1,7 +1,7 @@
 """Fighter profession module."""
 from classes.professions import Profession
 from functions.role_dice import wuerfle_1d10
-from classes.mainstat import MainStat
+from classes.stat_enums import MainStat
 
 
 
@@ -10,7 +10,7 @@ class Fighter(Profession):
     def __init__(self):
         self.name = "Fighter"
 
-    def apply_class_modifiers(self, character):
+    def apply_profession_modifiers(self, character):
         """Apply fighter-specific modifiers to the character."""
         character.tp_dice = 10
         character.main_stats = [MainStat.STRENGTH]
