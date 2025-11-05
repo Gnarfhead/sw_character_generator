@@ -5,7 +5,7 @@ from classes.mainstat import MainStat
 
 
 class Assassin(Profession):
-    """Assassin profession class."""
+
     def __init__(self):
         self.name = "Assassin"
 
