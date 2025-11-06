@@ -1,16 +1,16 @@
 from dataclasses import dataclass, field
 from typing import Set
-from functions.role_dice import wuerfle_3d6
-from functions.gen_char_stat_mods import analyze_mod_str, analyze_mod_dex, analyze_mod_con, analyze_mod_int, analyze_mod_char
-from classes.fighter import Fighter
-from classes.professions import Profession
-from classes.player_enums import MainStat, Alignments, Races, PlayerStates, Profession
-from classes.races import Race
-from classes.elf import Elf
-from classes.halfling import Halfling
-from classes.assassin import Assassin
-from classes.thief import Thief
-from classes.wizard import Wizard
+from sw_character_generator.functions.role_dice import wuerfle_3d6
+from sw_character_generator.functions.gen_char_stat_mods import analyze_mod_str, analyze_mod_dex, analyze_mod_con, analyze_mod_int, analyze_mod_char
+from sw_character_generator.classes.fighter import Fighter
+from sw_character_generator.classes.professions import Profession
+from sw_character_generator.classes.player_enums import MainStat, Alignments, Races, PlayerStates, Profession
+from sw_character_generator.classes.races import Race
+from sw_character_generator.classes.elf import Elf
+from sw_character_generator.classes.halfling import Halfling
+from sw_character_generator.classes.assassin import Assassin
+from sw_character_generator.classes.thief import Thief
+from sw_character_generator.classes.wizard import Wizard
 
 # Mapping Enum → Klassen
 PROFESSION_CLASS_MAP = {

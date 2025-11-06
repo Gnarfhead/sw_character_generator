@@ -1,12 +1,13 @@
-from functions.save_character import save_character
-from classes.playerclass import PlayerClass
-from classes.fighter import Fighter
-from classes.wizard import Wizard
-from classes.thief import Thief
-from classes.assassin import Assassin
-from classes.player_enums import Profession, Races
-from classes.elf import Elf
-from classes.halfling import Halfling
+from sw_character_generator.functions.save_character import save_character
+from sw_character_generator.classes.playerclass import PlayerClass
+from sw_character_generator.classes.fighter import Fighter
+from sw_character_generator.classes.wizard import Wizard
+from sw_character_generator.classes.thief import Thief
+from sw_character_generator.classes.assassin import Assassin
+from sw_character_generator.classes.player_enums import Profession, Races
+from sw_character_generator.classes.elf import Elf
+from sw_character_generator.classes.halfling import Halfling
+
 
 
 if __name__ == "__main__":
@@ -15,7 +16,7 @@ if __name__ == "__main__":
     Blubb2 = PlayerClass(
         player_name="Anna",
         character_name="Luna the Wise",
-        #race=Halfling(),
+        race=Halfling(),
         profession=Profession.WIZARD
     )
     print(Blubb2)

@@ -1,6 +1,6 @@
 
 """Functions to analyze character stats and return corresponding modifiers."""
-from classes.player_enums import Profession
+from sw_character_generator.classes.player_enums import Profession
 
 
 def analyze_mod_str(strength: float, character_class: str):
