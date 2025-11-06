@@ -5,9 +5,6 @@ class Race:
         self.name = name
 
     """Apply race-specific modifiers to the character."""
-    #def apply_profession_modifiers(self, character):
-    #    pass  # will be overridden in subclasses
+    def apply_race_dependent_modifiers(self, character):
+        pass  # will be overridden in subclasses
 
-    """Apply stat-dependent modifiers to the character."""
-    #def apply_stat_dependent_modifiers(self, character):
-    #    pass

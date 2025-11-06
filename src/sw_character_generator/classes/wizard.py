@@ -9,15 +9,15 @@ class Wizard(Profession):
     def __init__(self):
         self.name = "Wizard"
 
-    def apply_profession_modifiers(self, character):
+    def apply_profession_dependent_modifiers(self, character):
         """Apply wizard-specific modifiers to the character."""
         character.tp_dice = 4
         character.main_stats = [MainStat.INTELLIGENCE]
-        character.allowed_alignment = [Alignments.NEUTRAL, Alignments.EVIL]
+        character.allowed_alignment = [Alignments.GOOD, Alignments.NEUTRAL, Alignments.EVIL]
         character.allowed_races = [Races.HUMAN, Races.HALFELF, Races.ELF]
         character.allowed_weapon = "staff, dagger"
         character.allowed_armor = "none"
 
     def apply_stat_dependent_modifiers(self, character):
         """Apply stat-dependent modifiers for Wizard."""
-        character.tp = wuerfle_1d4(1) + character.tp_mod
+        character.tp = wuerfle_1d4("TP", 1) + character.tp_mod

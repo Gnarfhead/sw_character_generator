@@ -10,7 +10,7 @@ class Fighter(Profession):
     def __init__(self):
         self.name = "Fighter"
 
-    def apply_profession_modifiers(self, character):
+    def apply_profession_dependent_modifiers(self, character):
         """Apply fighter-specific modifiers to the character."""
         character.tp_dice = 10
         character.main_stats = [MainStat.STRENGTH]
@@ -21,4 +21,4 @@ class Fighter(Profession):
     
     def apply_stat_dependent_modifiers(self, character):
         """Apply stat-dependent modifiers for Fighter."""
-        character.tp = wuerfle_1d10(1) + character.tp_mod
+        character.tp = wuerfle_1d10("TP", 1) + character.tp_mod

@@ -5,6 +5,9 @@ from functions.gen_char_stat_mods import analyze_mod_str, analyze_mod_dex, analy
 from classes.fighter import Fighter
 from classes.professions import Profession
 from classes.player_enums import MainStat, Alignments, Races, PlayerStates
+from classes.races import Race
+from classes.elf import Elf
+from classes.halfling import Halfling
 
 
 @dataclass
@@ -18,7 +21,7 @@ class PlayerClass:
     player_state: Set[PlayerStates] = field(default_factory=lambda: {PlayerStates.ALIVE})
     alignment: Alignments = Alignments.GOOD
     level: int = 1
-    race: Races = Races.HUMAN   
+    race: Race = field(default_factory=Elf)
     gender: str = "Undefined"
     god: str = "None"
     age: int = 18
@@ -28,13 +31,14 @@ class PlayerClass:
     save_throw: int = 0
     save_bonuses: tuple[str, ...] = field(default_factory=tuple)
     immunity: tuple[str, ...] = field(default_factory=tuple)
+    special_abilities: tuple[str, ...] = field(default_factory=tuple)
     ac: int = 10
-    stat_str: int = field(default_factory=wuerfle_3d6)
-    stat_dex: int = field(default_factory=wuerfle_3d6)
-    stat_con: int = field(default_factory=wuerfle_3d6)
-    stat_wis: int = field(default_factory=wuerfle_3d6)
-    stat_int: int = field(default_factory=wuerfle_3d6)
-    stat_char: int = field(default_factory=wuerfle_3d6)
+    stat_str: int = field(default_factory=lambda: wuerfle_3d6(str_desc="Strength"))
+    stat_dex: int = field(default_factory=lambda: wuerfle_3d6(str_desc="Dexterity"))
+    stat_con: int = field(default_factory=lambda: wuerfle_3d6(str_desc="Constitution"))
+    stat_wis: int = field(default_factory=lambda: wuerfle_3d6(str_desc="Wisdom"))
+    stat_int: int = field(default_factory=lambda: wuerfle_3d6(str_desc="Intelligence"))
+    stat_char: int = field(default_factory=lambda: wuerfle_3d6(str_desc="Charisma"))
     inventory: list[str] = field(default_factory=list)
     strength_atck_mod: float = field(init=False)
     strength_damage_mod: float = field(init=False)
@@ -49,10 +53,10 @@ class PlayerClass:
     understand_spell: int = field(init=False)
     min_spells_per_level: int = field(init=False)
     max_spells_per_level: int = field(init=False)
-    add_langs: list[str] = field(default_factory=list)
+    add_langs: tuple[str, ...] = field(default_factory=tuple)
     cap_spec_hirelings: int = field(init=False)
     treasure: list[str] = field(default_factory=list)
-    coins: int = field(default_factory=lambda: wuerfle_3d6() * 10)
+    coins: int = field(default_factory=lambda: wuerfle_3d6(str_desc="Starting Coins") * 10)
     allowed_alignment: Set[Alignments] = field(default_factory=lambda: {Alignments.GOOD})
     allowed_races: Set[Races] = field(default_factory=lambda: {Races.HUMAN})
     allowed_armor: str = "all"
@@ -69,10 +73,6 @@ class PlayerClass:
     
     
     def __post_init__(self):
-        """Initialize derived attributes and apply class modifiers."""
-        # Apply profession-specific modifiers
-        self.profession.apply_profession_modifiers(self)
-
         # Calculate and set all STR derived modifiers after initialization."""
         (
             self.strength_atck_mod,
@@ -120,10 +120,15 @@ class PlayerClass:
             self.stat_char,
             self.profession
         )
+        
         # Re-apply class modifiers that depend on stats
-        #self.profession.apply_profession_modifiers(self)
-        # calculate stat modifiers...
+        self.profession.apply_profession_dependent_modifiers(self)
+
+        # calculate profession stat modifiers...
         self.profession.apply_stat_dependent_modifiers(self)
+
+        # calculate race stat modifiers...
+        self.race.apply_race_dependent_modifiers(self)
 
     
     def __repr__(self):
@@ -138,13 +143,15 @@ class PlayerClass:
             f"Carry Capacity={self.carry_capacity_mod}, Door Crack={self.door_crack_mod}\n"
             f"DEX: {self.stat_dex}    DEX_mod: Ranged Attack={self.ranged_atck_mod}, AC Bonus={self.ac_mod}\n"
             f"CON: {self.stat_con}    CON_mod: HP Bonus={self.tp_mod}, Raise Dead Chance={self.raise_dead_mod}%\n"
-            f"INT: {self.stat_int}    INT_mod: Languages={self.max_add_langs}, Spell Level={self.highest_spell_level}, "
+            f"INT: {self.stat_int}    INT_mod: max. Languages={self.max_add_langs}, Spell Level={self.highest_spell_level}, "
             f"Understands Spell={self.understand_spell}%, "
             f"min/max Spells per Level={self.min_spells_per_level}/{self.max_spells_per_level}\n"
             f"WIS: {self.stat_wis}\n"
             f"CHA: {self.stat_char}    CHA_mod: Max Hirelings={self.cap_spec_hirelings}\n"
-            f"State: {[stat.value for stat in self.player_state]}, Alignment: {self.alignment.value}, Race: {self.race.value}, Gender: {self.gender}, God: {self.god}, Age: {self.age}\n"
+            f"State: {[stat.value for stat in self.player_state]}, Alignment: {self.alignment.value}, Race: {self.race.name}, Gender: {self.gender}, God: {self.god}, Age: {self.age}\n"
             f"Save Throw: {self.save_throw}, Save Bonuses: {list(self.save_bonuses)}, Immunity: {list(self.immunity)}, AC: {self.ac}\n"
+            f"Special Abilities: {list(self.special_abilities)}\n"
+            f"Languages: {list(self.add_langs)}\n"
             f"Inventory: {self.inventory}\n"
             f"Treasure: {self.treasure}\n"
             f"darkvision: {self.darkvision}, parry: {self.parry}\n"
@@ -155,11 +162,6 @@ class PlayerClass:
         )
     
     def to_dict(self):
-
-        def dump_enum_list(enum_list, all_enum):
-            # alle Werte erlauben -> gib "all", sonst gib Liste aus
-            return "all" if set(enum_list) == set(all_enum) else [e.value for e in enum_list]
-
         """Convert the PlayerClass instance to a dictionary."""
         return {
             "player_name": self.player_name,
@@ -169,7 +171,7 @@ class PlayerClass:
             "tp_dice": self.tp_dice,
             "level": self.level,
             "alignment": self.alignment.value,
-            "race": self.race.value,
+            "race": self.race.name,
             "gender": self.gender,
             "god": self.god,
             "age": self.age,
@@ -179,6 +181,8 @@ class PlayerClass:
             "save_throw": self.save_throw,
             "save_bonuses": list(self.save_bonuses),
             "immunity": list(self.immunity),
+            "special_abilities": list(self.special_abilities),
+            "languages": list(self.add_langs),
             "ac": self.ac,
             "stats": {
                 "str": self.stat_str,

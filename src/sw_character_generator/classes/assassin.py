@@ -9,7 +9,7 @@ class Assassin(Profession):
     def __init__(self):
         self.name = "Assassin"
 
-    def apply_profession_modifiers(self, character):
+    def apply_profession_dependent_modifiers(self, character):
         """Apply Assassin-specific modifiers to the character."""
         character.tp_dice = 6
         character.main_stats = [MainStat.STRENGTH, MainStat.DEXTERITY, MainStat.INTELLIGENCE]
@@ -20,4 +20,4 @@ class Assassin(Profession):
 
     def apply_stat_dependent_modifiers(self, character):
         """Apply stat-dependent modifiers for Assassin."""
-        character.tp = wuerfle_1d6(1) + character.tp_mod
+        character.tp = wuerfle_1d6("TP", 1) + character.tp_mod

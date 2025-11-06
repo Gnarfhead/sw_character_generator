@@ -9,7 +9,7 @@ class Thief(Profession):
     def __init__(self):
         self.name = "Thief"
 
-    def apply_profession_modifiers(self, character):
+    def apply_profession_dependent_modifiers(self, character):
         """Apply thief-specific modifiers to the character."""
         character.tp_dice = 6
         character.main_stats = [MainStat.DEXTERITY]
@@ -20,4 +20,4 @@ class Thief(Profession):
 
     def apply_stat_dependent_modifiers(self, character):
         """Apply stat-dependent modifiers for Thief."""
-        character.tp = wuerfle_1d6(1) + character.tp_mod
+        character.tp = wuerfle_1d6("TP", 1) + character.tp_mod
