@@ -1,7 +1,7 @@
 """Assassin profession module."""
 from classes.professions import Profession
 from functions.role_dice import wuerfle_1d6
-from classes.stat_enums import MainStat, AllowedAlignments, AllowedRaces
+from classes.player_enums import MainStat, AllowedAlignments, AllowedRaces
 
 
 class Assassin(Profession):

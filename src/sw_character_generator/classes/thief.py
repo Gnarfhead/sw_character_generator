@@ -1,7 +1,7 @@
 """Thief profession module."""
 from classes.professions import Profession
 from functions.role_dice import wuerfle_1d6
-from classes.stat_enums import AllowedAlignments, AllowedRaces, MainStat
+from classes.player_enums import AllowedAlignments, AllowedRaces, MainStat
 
 
 class Thief(Profession):

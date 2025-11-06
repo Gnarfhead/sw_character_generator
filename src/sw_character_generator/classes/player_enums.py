@@ -22,3 +22,14 @@ class AllowedAlignments(Enum):
     GOOD = "good"
     NEUTRAL = "neutral"
     EVIL = "evil"
+
+class PlayerStates(Enum):
+    """Enumeration for player states."""
+    ALIVE = "alive"
+    DEAD = "dead"
+    UNCONSCIOUS = "unconscious"
+    POISONED = "poisoned"
+    STUNNED = "stunned"
+    PARALYZED = "paralyzed"
+    CONFUSED = "confused"
+    BLIND = "blind"

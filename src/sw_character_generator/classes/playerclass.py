@@ -4,7 +4,7 @@ from functions.role_dice import wuerfle_3d6
 from functions.gen_char_stat_mods import analyze_mod_str, analyze_mod_dex, analyze_mod_con, analyze_mod_int, analyze_mod_char
 from classes.fighter import Fighter
 from classes.professions import Profession
-from classes.stat_enums import MainStat, AllowedAlignments, AllowedRaces
+from classes.player_enums import MainStat, AllowedAlignments, AllowedRaces, PlayerStates
 
 
 @dataclass
@@ -15,6 +15,7 @@ class PlayerClass:
     profession: Profession = field(default_factory=Fighter)
     tp_dice: int = 8
     main_stats: Set[MainStat] = field(default_factory=lambda: {MainStat.STRENGTH})
+    player_state: PlayerStates = field(default_factory=PlayerStates.ALIVE)
     alignment: str = "Neutral"
     level: int = 1
     race: str = "Human"
@@ -25,6 +26,8 @@ class PlayerClass:
     xp: int =0
     tp: int = 0
     save_throw: int = 0
+    save_bonuses: list[str] = field(default_factory=list)
+    immunity: list[str] = field(default_factory=list)
     ac: int = 10
     stat_str: int = wuerfle_3d6()
     stat_dex: int = wuerfle_3d6()
@@ -54,6 +57,15 @@ class PlayerClass:
     allowed_races: Set[AllowedRaces] = field(default_factory=lambda: {AllowedRaces.HUMAN})
     allowed_armor: str = "all"
     allowed_weapon: str = "all"
+    delicate_tasks: int = 0
+    climb_walls: int = 0
+    hear_sounds: int = 0
+    hide_in_shadows: int = 0
+    move_silently: int = 0 
+    open_locks: int = 0
+    surprised: int = 2
+    darkvision: bool = False
+    parry: int = 0
     
     
     def __post_init__(self):
@@ -150,6 +162,8 @@ class PlayerClass:
             "xp_bonus": self.xp_bonus,
             "tp": self.tp,
             "save_throw": self.save_throw,
+            "save_bonuses": self.save_bonuses,
+            "immunity": self.immunity,
             "ac": self.ac,
             "stats": {
                 "str": self.stat_str,
@@ -191,5 +205,14 @@ class PlayerClass:
             "allowed_alignment": [stat.value for stat in self.allowed_alignment],
             "allowed_races": [stat.value for stat in self.allowed_races],
             "allowed_armor": self.allowed_armor,
-            "allowed_weapon": self.allowed_weapon
+            "allowed_weapon": self.allowed_weapon,
+            "delicate_tasks": self.delicate_tasks,
+            "climb_walls": self.climb_walls,
+            "hear_sounds": self.hear_sounds,
+            "hide_in_shadows": self.hide_in_shadows,
+            "move_silently": self.move_silently,
+            "open_locks": self.open_locks,
+            "surprised": self.surprised,
+            "darkvision": self.darkvision,
+            "parry": self.parry
         }

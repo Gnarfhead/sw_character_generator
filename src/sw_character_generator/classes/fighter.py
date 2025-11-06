@@ -1,7 +1,7 @@
 """Fighter profession module."""
 from classes.professions import Profession
 from functions.role_dice import wuerfle_1d10
-from classes.stat_enums import AllowedAlignments, AllowedRaces, MainStat
+from classes.player_enums import AllowedAlignments, AllowedRaces, MainStat
 
 
 
