@@ -1,7 +1,7 @@
 """Assassin profession module."""
 from classes.professions import Profession
 from functions.role_dice import wuerfle_1d6
-from classes.player_enums import MainStat, AllowedAlignments, AllowedRaces
+from classes.player_enums import MainStat, Alignments, Races
 
 
 class Assassin(Profession):
@@ -13,8 +13,8 @@ class Assassin(Profession):
         """Apply Assassin-specific modifiers to the character."""
         character.tp_dice = 6
         character.main_stats = [MainStat.STRENGTH, MainStat.DEXTERITY, MainStat.INTELLIGENCE]
-        character.allowed_alignment = [AllowedAlignments.NEUTRAL, AllowedAlignments.EVIL]
-        character.alowed_races = [AllowedRaces.HUMAN]
+        character.allowed_alignment = [Alignments.NEUTRAL, Alignments.EVIL]
+        character.allowed_races = [Races.HUMAN]
         character.allowed_weapon = "light weapons"
         character.allowed_armor = "light"
 

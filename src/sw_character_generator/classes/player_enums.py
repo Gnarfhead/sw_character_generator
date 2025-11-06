@@ -9,7 +9,7 @@ class MainStat(Enum):
     WISDOM = "wisdom"
     CHARISMA = "charisma"
 
-class AllowedRaces(Enum):
+class Races(Enum):
     """Enumeration for allowed races."""
     HUMAN = "human"
     ELF = "elf"
@@ -17,7 +17,7 @@ class AllowedRaces(Enum):
     HALFLING = "halfling"
     HALFELF = "halfelf"
 
-class AllowedAlignments(Enum):
+class Alignments(Enum):
     """Enumeration for allowed alignments."""
     GOOD = "good"
     NEUTRAL = "neutral"

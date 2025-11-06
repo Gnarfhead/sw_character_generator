@@ -4,7 +4,7 @@ from functions.role_dice import wuerfle_3d6
 from functions.gen_char_stat_mods import analyze_mod_str, analyze_mod_dex, analyze_mod_con, analyze_mod_int, analyze_mod_char
 from classes.fighter import Fighter
 from classes.professions import Profession
-from classes.player_enums import MainStat, AllowedAlignments, AllowedRaces, PlayerStates
+from classes.player_enums import MainStat, Alignments, Races, PlayerStates
 
 
 @dataclass
@@ -18,7 +18,7 @@ class PlayerClass:
     player_state: Set[PlayerStates] = field(default_factory=lambda: {PlayerStates.ALIVE})
     alignment: str = "Neutral"
     level: int = 1
-    race: str = "Human"
+    race: Races = Races.HUMAN
     gender: str = "Undefined"
     god: str = "None"
     age: int = 18
@@ -26,8 +26,8 @@ class PlayerClass:
     xp: int =0
     tp: int = 0
     save_throw: int = 0
-    save_bonuses: list[str] = field(default_factory=list)
-    immunity: list[str] = field(default_factory=list)
+    save_bonuses: tuple[str, ...] = field(default_factory=tuple)
+    immunity: tuple[str, ...] = field(default_factory=tuple)
     ac: int = 10
     stat_str: int = field(default_factory=wuerfle_3d6)
     stat_dex: int = field(default_factory=wuerfle_3d6)
@@ -53,8 +53,8 @@ class PlayerClass:
     cap_spec_hirelings: int = field(init=False)
     treasure: list[str] = field(default_factory=list)
     coins: int = field(default_factory=lambda: wuerfle_3d6() * 10)
-    allowed_alignment: Set[AllowedAlignments] = field(default_factory=lambda: {AllowedAlignments.GOOD})
-    allowed_races: Set[AllowedRaces] = field(default_factory=lambda: {AllowedRaces.HUMAN})
+    allowed_alignment: Set[Alignments] = field(default_factory=lambda: {Alignments.GOOD})
+    allowed_races: Set[Races] = field(default_factory=lambda: {Races.HUMAN})
     allowed_armor: str = "all"
     allowed_weapon: str = "all"
     delicate_tasks: int = 0
@@ -143,7 +143,7 @@ class PlayerClass:
             f"WIS: {self.stat_wis}\n"
             f"CHA: {self.stat_char}    CHA_mod: Max Hirelings={self.cap_spec_hirelings}\n"
             f"State: {[stat.value for stat in self.player_state]}, Alignment: {self.alignment}, Race: {self.race}, Gender: {self.gender}, God: {self.god}, Age: {self.age}\n"
-            f"Save Throw: {self.save_throw}, Save Bonuses: {self.save_bonuses}, Immunity: {self.immunity}, AC: {self.ac}\n"
+            f"Save Throw: {self.save_throw}, Save Bonuses: {list(self.save_bonuses)}, Immunity: {list(self.immunity)}, AC: {self.ac}\n"
             f"Inventory: {self.inventory}\n"
             f"Treasure: {self.treasure}\n"
             f"darkvision: {self.darkvision}, parry: {self.parry}\n"
@@ -170,8 +170,8 @@ class PlayerClass:
             "xp_bonus": self.xp_bonus,
             "tp": self.tp,
             "save_throw": self.save_throw,
-            "save_bonuses": self.save_bonuses,
-            "immunity": self.immunity,
+            "save_bonuses": list(self.save_bonuses),
+            "immunity": list(self.immunity),
             "ac": self.ac,
             "stats": {
                 "str": self.stat_str,
@@ -210,8 +210,8 @@ class PlayerClass:
             "inventory": self.inventory,
             "treasure": self.treasure,
             "coins": self.coins,
-            "allowed_alignment": [stat.value for stat in self.allowed_alignment],
-            "allowed_races": [stat.value for stat in self.allowed_races],
+            "allowed_alignment": [stat.value for stat in self.alignment],
+            "allowed_races": [stat.value for stat in self.race],
             "allowed_armor": self.allowed_armor,
             "allowed_weapon": self.allowed_weapon,
             "delicate_tasks": self.delicate_tasks,
