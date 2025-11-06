@@ -15,7 +15,7 @@ class PlayerClass:
     profession: Profession = field(default_factory=Fighter)
     tp_dice: int = 8
     main_stats: Set[MainStat] = field(default_factory=lambda: {MainStat.STRENGTH})
-    player_state: PlayerStates = field(default_factory=PlayerStates.ALIVE)
+    player_state: Set[PlayerStates] = field(default_factory=lambda: {PlayerStates.ALIVE})
     alignment: str = "Neutral"
     level: int = 1
     race: str = "Human"
@@ -128,8 +128,7 @@ class PlayerClass:
     def __repr__(self):
         """Return a string representation of the PlayerClass instance."""
         return (
-            f"PlayerName={self.player_name}\n"
-            f"CharacterName={self.character_name}\n"
+            f"PlayerName={self.player_name}, CharacterName={self.character_name}\n"
             f"Class={self.profession.name}, "
             f"Level={self.level}, TP_Dice=d{self.tp_dice}, MainStats={[stat.value for stat in self.main_stats]}\n"
             f"xp={self.xp}, xp_bonus={self.xp_bonus}%, TP={self.tp}, Coins={self._coins}\n"
@@ -141,7 +140,14 @@ class PlayerClass:
             f"Understands Spell={self.understand_spell}, "
             f"min/max Spells per Level={self.min_spells_per_level}/{self.max_spells_per_level}\n"
             f"WIS: {self.stat_wis}\n"
-            f"CHA: {self.stat_char}    CHA_mod: Max Hirelings={self.cap_spec_hirelings}"
+            f"CHA: {self.stat_char}    CHA_mod: Max Hirelings={self.cap_spec_hirelings}\n"
+            f"State: {[stat.value for stat in self.player_state]}, Alignment: {self.alignment}, Race: {self.race}, Gender: {self.gender}, God: {self.god}, Age: {self.age}\n"
+            f"Save Throw: {self.save_throw}, Save Bonuses: {self.save_bonuses}, Immunity: {self.immunity}, AC: {self.ac}\n"
+            f"Inventory: {self.inventory}\n"
+            f"Treasure: {self.treasure}\n"
+            f"darkvision: {self.darkvision}, parry: {self.parry}\n"
+            f"delicate_tasks: {self.delicate_tasks}, climb_walls: {self.climb_walls}, hear_sounds: {self.hear_sounds}\n"
+            f"hide_in_shadows: {self.hide_in_shadows}, move_silently: {self.move_silently}, open_locks: {self.open_locks}, surprised: {self.surprised}:6\n" 
         )
     
     def to_dict(self):
