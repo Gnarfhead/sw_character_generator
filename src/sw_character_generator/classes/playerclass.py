@@ -29,12 +29,12 @@ class PlayerClass:
     save_bonuses: list[str] = field(default_factory=list)
     immunity: list[str] = field(default_factory=list)
     ac: int = 10
-    stat_str: int = wuerfle_3d6()
-    stat_dex: int = wuerfle_3d6()
-    stat_con: int = wuerfle_3d6()
-    stat_wis: int = wuerfle_3d6()
-    stat_int: int = wuerfle_3d6()
-    stat_char: int = wuerfle_3d6()
+    stat_str: int = field(default_factory=wuerfle_3d6)
+    stat_dex: int = field(default_factory=wuerfle_3d6)
+    stat_con: int = field(default_factory=wuerfle_3d6)
+    stat_wis: int = field(default_factory=wuerfle_3d6)
+    stat_int: int = field(default_factory=wuerfle_3d6)
+    stat_char: int = field(default_factory=wuerfle_3d6)
     inventory: list[str] = field(default_factory=list)
     strength_atck_mod: float = field(init=False)
     strength_damage_mod: float = field(init=False)
@@ -52,7 +52,7 @@ class PlayerClass:
     add_langs: list[str] = field(default_factory=list)
     cap_spec_hirelings: int = field(init=False)
     treasure: list[str] = field(default_factory=list)
-    _coins: int = wuerfle_3d6() * 10 #
+    coins: int = field(default_factory=lambda: wuerfle_3d6() * 10)
     allowed_alignment: Set[AllowedAlignments] = field(default_factory=lambda: {AllowedAlignments.GOOD})
     allowed_races: Set[AllowedRaces] = field(default_factory=lambda: {AllowedRaces.HUMAN})
     allowed_armor: str = "all"
@@ -71,7 +71,7 @@ class PlayerClass:
     def __post_init__(self):
         """Initialize derived attributes and apply class modifiers."""
 
-        self.profession.apply_profession_modifiers(self)
+        #self.profession.apply_profession_modifiers(self)
         #Calculate and set all STR derived modifiers after initialization."""
         (
             self.strength_atck_mod,
@@ -120,18 +120,19 @@ class PlayerClass:
             self.profession
         )
         # Re-apply class modifiers that depend on stats
-        self.profession.apply_profession_modifiers(self)
+        #self.profession.apply_profession_modifiers(self)
         # calculate stat modifiers...
-        self.profession.apply_stat_dependent_modifiers(self)
+        #self.profession.apply_stat_dependent_modifiers(self)
 
     
     def __repr__(self):
         """Return a string representation of the PlayerClass instance."""
         return (
+            f"{self.__class__.__name__}("
             f"PlayerName={self.player_name}, CharacterName={self.character_name}\n"
             f"Class={self.profession.name}, "
             f"Level={self.level}, TP_Dice=d{self.tp_dice}, MainStats={[stat.value for stat in self.main_stats]}\n"
-            f"xp={self.xp}, xp_bonus={self.xp_bonus}%, TP={self.tp}, Coins={self._coins}\n"
+            f"xp={self.xp}, xp_bonus={self.xp_bonus}%, TP={self.tp}, Coins={self.coins}\n"
             f"STR: {self.stat_str}    STR_mod: Attack={self.strength_atck_mod}, Damage={self.strength_damage_mod}, "
             f"Carry Capacity={self.carry_capacity_mod}, Door Crack={self.door_crack_mod}\n"
             f"DEX: {self.stat_dex}    DEX_mod: Ranged Attack={self.ranged_atck_mod}, AC Bonus={self.ac_mod}\n"
@@ -148,6 +149,7 @@ class PlayerClass:
             f"darkvision: {self.darkvision}, parry: {self.parry}\n"
             f"delicate_tasks: {self.delicate_tasks}, climb_walls: {self.climb_walls}, hear_sounds: {self.hear_sounds}\n"
             f"hide_in_shadows: {self.hide_in_shadows}, move_silently: {self.move_silently}, open_locks: {self.open_locks}, surprised: {self.surprised}:6\n" 
+            f")"
         )
     
     def to_dict(self):
@@ -207,7 +209,7 @@ class PlayerClass:
             },
             "inventory": self.inventory,
             "treasure": self.treasure,
-            "coins": self._coins,
+            "coins": self.coins,
             "allowed_alignment": [stat.value for stat in self.allowed_alignment],
             "allowed_races": [stat.value for stat in self.allowed_races],
             "allowed_armor": self.allowed_armor,
