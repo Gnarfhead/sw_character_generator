@@ -16,7 +16,7 @@ class PlayerClass:
     tp_dice: int = 8
     main_stats: Set[MainStat] = field(default_factory=lambda: {MainStat.STRENGTH})
     player_state: Set[PlayerStates] = field(default_factory=lambda: {PlayerStates.ALIVE})
-    alignment: str = "Neutral"
+    alignment: Alignments = Alignments.GOOD
     level: int = 1
     race: Races = Races.HUMAN
     gender: str = "Undefined"
@@ -142,13 +142,14 @@ class PlayerClass:
             f"min/max Spells per Level={self.min_spells_per_level}/{self.max_spells_per_level}\n"
             f"WIS: {self.stat_wis}\n"
             f"CHA: {self.stat_char}    CHA_mod: Max Hirelings={self.cap_spec_hirelings}\n"
-            f"State: {[stat.value for stat in self.player_state]}, Alignment: {self.alignment}, Race: {self.race}, Gender: {self.gender}, God: {self.god}, Age: {self.age}\n"
+            f"State: {[stat.value for stat in self.player_state]}, Alignment: {self.alignment.value}, Race: {self.race.value}, Gender: {self.gender}, God: {self.god}, Age: {self.age}\n"
             f"Save Throw: {self.save_throw}, Save Bonuses: {list(self.save_bonuses)}, Immunity: {list(self.immunity)}, AC: {self.ac}\n"
             f"Inventory: {self.inventory}\n"
             f"Treasure: {self.treasure}\n"
             f"darkvision: {self.darkvision}, parry: {self.parry}\n"
             f"delicate_tasks: {self.delicate_tasks}, climb_walls: {self.climb_walls}, hear_sounds: {self.hear_sounds}\n"
-            f"hide_in_shadows: {self.hide_in_shadows}, move_silently: {self.move_silently}, open_locks: {self.open_locks}, surprised: {self.surprised}:6\n" 
+            f"hide_in_shadows: {self.hide_in_shadows}, move_silently: {self.move_silently}, open_locks: {self.open_locks}, surprised: {self.surprised}:6\n"
+            f"allowed_alignment: {[stat.value for stat in self.allowed_alignment]}, allowed_races: {[stat.value for stat in self.allowed_races]}"
             f")"
         )
     
@@ -161,8 +162,8 @@ class PlayerClass:
             "main_stats": [stat.value for stat in self.main_stats],
             "tp_dice": self.tp_dice,
             "level": self.level,
-            "alignment": self.alignment,
-            "race": self.race,
+            "alignment": self.alignment.value,
+            "race": self.race.value,
             "gender": self.gender,
             "god": self.god,
             "age": self.age,
@@ -210,8 +211,8 @@ class PlayerClass:
             "inventory": self.inventory,
             "treasure": self.treasure,
             "coins": self.coins,
-            "allowed_alignment": [stat.value for stat in self.alignment],
-            "allowed_races": [stat.value for stat in self.race],
+            "allowed_alignment": [stat.value for stat in self.allowed_alignment],
+            "allowed_races": [stat.value for stat in self.allowed_races],
             "allowed_armor": self.allowed_armor,
             "allowed_weapon": self.allowed_weapon,
             "delicate_tasks": self.delicate_tasks,

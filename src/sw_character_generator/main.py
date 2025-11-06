@@ -19,6 +19,7 @@ if __name__ == "__main__":
     Blubb2 = PlayerClass(   
         player_name= "Anna",
         character_name= "Luna the Wise",
+        race=Races.ELF,
         profession=Wizard(),     
     )
     print(Blubb2)
