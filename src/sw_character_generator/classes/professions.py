@@ -4,10 +4,10 @@ class Profession:
     def __init__(self, name: str):
         self.name = name
 
-    """Apply profession-specific modifiers to the character."""
     def apply_profession_dependent_modifiers(self, character):
+        """Apply profession-specific modifiers to the character."""
         pass  # will be overridden in subclasses
 
-    """Apply stat-dependent modifiers to the character."""
     def apply_stat_dependent_modifiers(self, character):
-        pass
+        """Apply stat-dependent modifiers to the character."""
+        pass  # will be overridden in subclasses

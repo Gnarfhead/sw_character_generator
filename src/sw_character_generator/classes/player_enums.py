@@ -33,3 +33,13 @@ class PlayerStates(Enum):
     PARALYZED = "paralyzed"
     CONFUSED = "confused"
     BLIND = "blind"
+
+class Profession(Enum):
+    """Enumeration for player professions."""
+    FIGHTER = "fighter"
+    WIZARD = "wizard"
+    THIEF = "thief"
+    ASSASSIN = "assassin"
+    CLERIC = "cleric"
+    DRUID = "druid"
+    PALADIN = "paladin"

@@ -4,24 +4,46 @@ from functions.role_dice import wuerfle_3d6
 from functions.gen_char_stat_mods import analyze_mod_str, analyze_mod_dex, analyze_mod_con, analyze_mod_int, analyze_mod_char
 from classes.fighter import Fighter
 from classes.professions import Profession
-from classes.player_enums import MainStat, Alignments, Races, PlayerStates
+from classes.player_enums import MainStat, Alignments, Races, PlayerStates, Profession
 from classes.races import Race
 from classes.elf import Elf
 from classes.halfling import Halfling
+from classes.assassin import Assassin
+from classes.thief import Thief
+from classes.wizard import Wizard
 
+# Mapping Enum → Klassen
+PROFESSION_CLASS_MAP = {
+    Profession.FIGHTER: Fighter,
+    Profession.WIZARD: Wizard,
+    Profession.THIEF: Thief,
+    Profession.ASSASSIN: Assassin,
+    #Profession.CLERIC: Cleric,
+    #Profession.DRUID: Druid,
+    #Profession.PALADIN: Paladin,
+}
+
+# Mapping Enum → Klassen
+RACE_CLASS_MAP = {
+    Races.ELF: Elf,
+    Races.HALFLING: Halfling,
+    #Races.DWARF: Dwarf,
+    #Races.HUMAN: Human,
+    #Races.HALFELF: HalfElf,
+}
 
 @dataclass
 class PlayerClass:
     """Class representing a character in the game."""
     player_name: str = "Unknown"
     character_name: str = "Unnamed Hero"
-    profession: Profession = field(default_factory=Fighter)
+    profession: object = field(default_factory=Fighter)
     tp_dice: int = 8
     main_stats: Set[MainStat] = field(default_factory=lambda: {MainStat.STRENGTH})
     player_state: Set[PlayerStates] = field(default_factory=lambda: {PlayerStates.ALIVE})
     alignment: Alignments = Alignments.GOOD
     level: int = 1
-    race: Race = field(default_factory=Elf)
+    race: object = field(default_factory=Elf)
     gender: str = "Undefined"
     god: str = "None"
     age: int = 18
@@ -73,6 +95,12 @@ class PlayerClass:
     
     
     def __post_init__(self):
+
+        # Wenn profession noch ein Enum ist, wandel um
+        if isinstance(self.profession, Profession):
+            klass = PROFESSION_CLASS_MAP[self.profession]
+            self.profession = klass()
+
         # Calculate and set all STR derived modifiers after initialization."""
         (
             self.strength_atck_mod,
@@ -83,6 +111,7 @@ class PlayerClass:
             self.stat_str,
             self.profession
         )
+        print("DEBUG analyze_mod_str: ", self.stat_str, self.profession)
 
         #Calculate and set all DEX derived modifiers after initialization."""
         (
@@ -92,6 +121,7 @@ class PlayerClass:
             self.stat_dex,
             self.profession
         )
+        print("DEBUG analyze_mod_dex: ", self.stat_dex, self.profession)
 
         #Calculate and set all CON derived modifiers after initialization."""
         (
@@ -101,6 +131,7 @@ class PlayerClass:
             self.stat_con,
             self.profession
         )
+        print("DEBUG analyze_mod_con: ", self.stat_con, self.profession)
 
         #Calculate and set all INT derived modifiers after initialization."""
         (
@@ -113,14 +144,17 @@ class PlayerClass:
             self.stat_int,
             self.profession
         )
-
+        print("DEBUG analyze_mod_int: ", self.stat_int, self.profession)
+        
+        #Calculate and set all CHAR derived modifiers after initialization."""
         (
             self.cap_spec_hirelings
         ) = analyze_mod_char(
             self.stat_char,
             self.profession
         )
-        
+        print("DEBUG analyze_mod_char: ", self.stat_char, self.profession)
+
         # Re-apply class modifiers that depend on stats
         self.profession.apply_profession_dependent_modifiers(self)
 
