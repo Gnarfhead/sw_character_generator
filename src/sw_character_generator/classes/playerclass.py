@@ -18,12 +18,12 @@ class PlayerClass:
     player_state: Set[PlayerStates] = field(default_factory=lambda: {PlayerStates.ALIVE})
     alignment: Alignments = Alignments.GOOD
     level: int = 1
-    race: Races = Races.HUMAN
+    race: Races = Races.HUMAN   
     gender: str = "Undefined"
     god: str = "None"
     age: int = 18
     xp_bonus: int = 0
-    xp: int =0
+    xp: int = 0
     tp: int = 0
     save_throw: int = 0
     save_bonuses: tuple[str, ...] = field(default_factory=tuple)
@@ -70,9 +70,10 @@ class PlayerClass:
     
     def __post_init__(self):
         """Initialize derived attributes and apply class modifiers."""
+        # Apply profession-specific modifiers
+        self.profession.apply_profession_modifiers(self)
 
-        #self.profession.apply_profession_modifiers(self)
-        #Calculate and set all STR derived modifiers after initialization."""
+        # Calculate and set all STR derived modifiers after initialization."""
         (
             self.strength_atck_mod,
             self.strength_damage_mod,
@@ -122,7 +123,7 @@ class PlayerClass:
         # Re-apply class modifiers that depend on stats
         #self.profession.apply_profession_modifiers(self)
         # calculate stat modifiers...
-        #self.profession.apply_stat_dependent_modifiers(self)
+        self.profession.apply_stat_dependent_modifiers(self)
 
     
     def __repr__(self):
@@ -138,7 +139,7 @@ class PlayerClass:
             f"DEX: {self.stat_dex}    DEX_mod: Ranged Attack={self.ranged_atck_mod}, AC Bonus={self.ac_mod}\n"
             f"CON: {self.stat_con}    CON_mod: HP Bonus={self.tp_mod}, Raise Dead Chance={self.raise_dead_mod}%\n"
             f"INT: {self.stat_int}    INT_mod: Languages={self.max_add_langs}, Spell Level={self.highest_spell_level}, "
-            f"Understands Spell={self.understand_spell}, "
+            f"Understands Spell={self.understand_spell}%, "
             f"min/max Spells per Level={self.min_spells_per_level}/{self.max_spells_per_level}\n"
             f"WIS: {self.stat_wis}\n"
             f"CHA: {self.stat_char}    CHA_mod: Max Hirelings={self.cap_spec_hirelings}\n"
@@ -147,13 +148,18 @@ class PlayerClass:
             f"Inventory: {self.inventory}\n"
             f"Treasure: {self.treasure}\n"
             f"darkvision: {self.darkvision}, parry: {self.parry}\n"
-            f"delicate_tasks: {self.delicate_tasks}, climb_walls: {self.climb_walls}, hear_sounds: {self.hear_sounds}\n"
-            f"hide_in_shadows: {self.hide_in_shadows}, move_silently: {self.move_silently}, open_locks: {self.open_locks}, surprised: {self.surprised}:6\n"
+            f"delicate_tasks: {self.delicate_tasks}%, climb_walls: {self.climb_walls}%, hear_sounds: {self.hear_sounds}%\n"
+            f"hide_in_shadows: {self.hide_in_shadows}%, move_silently: {self.move_silently}%, open_locks: {self.open_locks}%, surprised: {self.surprised}:6\n"
             f"allowed_alignment: {[stat.value for stat in self.allowed_alignment]}, allowed_races: {[stat.value for stat in self.allowed_races]}"
             f")"
         )
     
     def to_dict(self):
+
+        def dump_enum_list(enum_list, all_enum):
+            # alle Werte erlauben -> gib "all", sonst gib Liste aus
+            return "all" if set(enum_list) == set(all_enum) else [e.value for e in enum_list]
+
         """Convert the PlayerClass instance to a dictionary."""
         return {
             "player_name": self.player_name,
