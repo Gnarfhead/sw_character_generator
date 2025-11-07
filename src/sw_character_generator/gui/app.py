@@ -5,24 +5,24 @@ from typing import Optional, Dict, Any, Type, List
 import enum as _enum
 
 # Importiere die Enums aus dem vorhandenen Modul.
-# Erwartete Namen: Race, Profession, Alignment.
-# Falls dein Modul andere Namen verwendet, passe die Importe entsprechend an.
+# Erwartete Namen in repo: Races, Professions, Alignments.
 try:
-    from sw_character_generator.classes.player_enums import Race, Profession, Alignment
+    from sw_character_generator.classes.player_enums import Races, Professions, Alignments
 except Exception as exc:
     raise ImportError(
-        "Konnte die Enums Race, Profession, Alignment aus "
+        "Konnte die Enums Races, Professions, Alignments aus "
         "sw_character_generator.classes.player_enums nicht importieren. "
         "Bitte prüfe die Modul- und Klassennamen."
     ) from exc
 
-dataclass
+@dataclass
 class CharacterParams:
     player_name: str = ""
     character_name: str = ""
-    race: Optional[Race] = None
-    profession: Optional[Profession] = None
-    alignment: Optional[Alignment] = None
+    race: Optional[Races] = None
+    profession: Optional[Professions] = None
+    alignment: Optional[Alignments] = None
+
 
 def enum_values(enum_cls: Type[_enum.Enum]) -> List[str]:
     """
@@ -38,6 +38,7 @@ def enum_values(enum_cls: Type[_enum.Enum]) -> List[str]:
             values.append(member.name)
     return values
 
+
 def parse_enum(enum_cls: Type[_enum.Enum], selected: str) -> _enum.Enum:
     """
     Konvertiert den ausgewählten String zurück in das Enum-Mitglied.
@@ -52,6 +53,7 @@ def parse_enum(enum_cls: Type[_enum.Enum], selected: str) -> _enum.Enum:
             if member.name == selected:
                 return member
     raise ValueError(f"{selected!r} ist kein gültiges Mitglied von {enum_cls}")
+
 
 class CharacterCreator(tk.Tk):
     """
@@ -96,7 +98,7 @@ class CharacterCreator(tk.Tk):
 
         # Race (aus Enum)
         ttk.Label(frame, text="Race:").grid(row=2, column=0, sticky="w", **pad)
-        race_values = enum_values(Race)
+        race_values = enum_values(Races)
         initial_race = ""
         if isinstance(self.initial.race, _enum.Enum):
             initial_race = getattr(self.initial.race, "value", None) or self.initial.race.name
@@ -108,7 +110,7 @@ class CharacterCreator(tk.Tk):
 
         # Profession (aus Enum)
         ttk.Label(frame, text="Profession:").grid(row=3, column=0, sticky="w", **pad)
-        prof_values = enum_values(Profession)
+        prof_values = enum_values(Professions)
         initial_prof = ""
         if isinstance(self.initial.profession, _enum.Enum):
             initial_prof = getattr(self.initial.profession, "value", None) or self.initial.profession.name
@@ -120,7 +122,7 @@ class CharacterCreator(tk.Tk):
 
         # Alignment (aus Enum)
         ttk.Label(frame, text="Alignment:").grid(row=4, column=0, sticky="w", **pad)
-        align_values = enum_values(Alignment)
+        align_values = enum_values(Alignments)
         initial_align = ""
         if isinstance(self.initial.alignment, _enum.Enum):
             initial_align = getattr(self.initial.alignment, "value", None) or self.initial.alignment.name
@@ -145,11 +147,10 @@ class CharacterCreator(tk.Tk):
 
     def _on_save(self):
         try:
-            race_member = parse_enum(Race, self.race_var.get())
-            prof_member = parse_enum(Profession, self.prof_var.get())
-            align_member = parse_enum(Alignment, self.align_var.get())
-        except ValueError as e:
-            # Falls ein unerwarteter Wert auftaucht, setze None und schließe trotzdem.
+            race_member = parse_enum(Races, self.race_var.get())
+            prof_member = parse_enum(Professions, self.prof_var.get())
+            align_member = parse_enum(Alignments, self.align_var.get())
+        except ValueError:
             race_member = None
             prof_member = None
             align_member = None
@@ -161,7 +162,6 @@ class CharacterCreator(tk.Tk):
             profession=prof_member,
             alignment=align_member,
         )
-        # Hier könnten Validierungen ergänzt werden
         self.destroy()
 
     def _on_cancel(self):
@@ -172,17 +172,8 @@ class CharacterCreator(tk.Tk):
         self.mainloop()
         return self.result
 
+
 def launch_gui(initial: Optional[CharacterParams] = None) -> Optional[Dict[str, Any]]:
-    """
-    Convenience-Funktion, die ein dict mit den Parametern zurückgibt oder None bei Abbruch.
-    Für race/profession/alignment werden die tatsächlichen Enum-Mitglieder zurückgegeben.
-    Beispiel:
-      from sw_character_generator.gui import launch_gui
-      params = launch_gui()
-      if params:
-          print(params['player_name'])
-          print(params['race'])  # Enum-Mitglied
-    """
     app = CharacterCreator(initial=initial)
     result = app.run()
     if result is None:

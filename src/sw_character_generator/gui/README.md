@@ -1,3 +1,4 @@
+```markdown
 # GUI (Tkinter) — sw_character_generator
 
 Diese GUI ist ein erster, einfacher Dialog zum Erfassen von:
@@ -9,11 +10,12 @@ Diese GUI ist ein erster, einfacher Dialog zum Erfassen von:
 
 Wichtig:
 - Die Dropdowns nutzen die Enums aus `sw_character_generator.classes.player_enums`.
-  Erwartete Klassennamen: `Race`, `Profession`, `Alignment`.
+  Erwartete Klassennamen: `Races`, `Professions`, `Alignments`.
   Falls eure Enums andere Namen haben, passe `app.py` entsprechend an.
 
 Dateien:
-- sw_character_generator/gui/app.py: Haupt-UI + `launch_gui()` Funktion
+- src/sw_character_generator/gui/app.py: Haupt-UI + `launch_gui()` Funktion
+- src/sw_character_generator/gui/__init__.py: Package-Export
 
 Integration:
 - Importiere `launch_gui` und nutze das zurückgelieferte dict, z.B.:
@@ -30,5 +32,6 @@ else:
     print(params["player_name"], params["race"])
 ```
 
-Zukünftig:
-- Validierung, Persistenz, Theme-Unterstützung, Erweiterung um weitere Felder.
+Testen:
+- PYTHONPATH=src python -m sw_character_generator.main --gui
+```
