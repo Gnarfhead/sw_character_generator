@@ -1,12 +1,6 @@
 from sw_character_generator.classes.player_enums import Alignments, Professions, Races
 from sw_character_generator.functions.save_character import save_character
 from sw_character_generator.classes.playerclass import PlayerClass
-from sw_character_generator.classes.profession.fighter import Fighter
-from sw_character_generator.classes.profession.wizard import Wizard
-from sw_character_generator.classes.profession.thief import Thief
-from sw_character_generator.classes.profession.assassin import Assassin
-from sw_character_generator.classes.race.elf import Elf
-from sw_character_generator.classes.race.halfling import Halfling
 
 import argparse
 import enum as _enum
