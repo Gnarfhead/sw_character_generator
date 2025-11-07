@@ -21,44 +21,21 @@ from sw_character_generator.classes.profession.monk import Monk
 from sw_character_generator.classes.profession.paladin import Paladin
 from sw_character_generator.classes.profession.ranger import Ranger
 
-# Mapping Enum → Classes
-PROFESSION_CLASS_MAP = {
-    Professions.FIGHTER: Fighter,
-    Professions.WIZARD: Wizard,
-    Professions.THIEF: Thief,
-    Professions.ASSASSIN: Assassin,
-    Professions.CLERIC: Cleric,
-    Professions.DRUID: Druid,
-    Professions.PALADIN: Paladin,
-    Professions.MONK: Monk,
-    Professions.RANGER: Ranger,
-}
 
-# Mapping Enum → Classes
-RACE_CLASS_MAP = {
-    Races.ELF: Elf,
-    Races.HALFLING: Halfling,
-    Races.DWARF: Dwarf,
-    Races.HUMAN: Human,
-    Races.HALFELF: Halfelf,
-}
 
-# Reverse mappings für einfache Erkennung von Enum für Instanzklassen
-CLASS_TO_PROFESSION = {v: k for k, v in PROFESSION_CLASS_MAP.items()}
-CLASS_TO_RACE = {v: k for k, v in RACE_CLASS_MAP.items()}
 
 @dataclass
 class PlayerClass:
     """Class representing a character in the game."""
     player_name: str = "Unknown"
     character_name: str = "Unnamed Hero"
-    profession: object = field(default_factory=Fighter)
+    profession: str = "fighter"
     tp_dice: int = 8
-    main_stats: Set[MainStats] = field(default_factory=lambda: {MainStats.STRENGTH})
-    player_state: Set[PlayerStates] = field(default_factory=lambda: {PlayerStates.ALIVE})
-    alignment: Alignments = Alignments.GOOD
+    main_stats: str = "strength"
+    player_state: str = "alive"
+    alignment: str = "neutral"
     level: int = 1
-    race: object = field(default_factory=Elf)
+    race: str = "elf"
     gender: str = "Undefined"
     god: str = "None"
     age: int = 18
@@ -94,8 +71,8 @@ class PlayerClass:
     cap_spec_hirelings: int = field(init=False)
     treasure: list[str] = field(default_factory=list)
     coins: int = field(default_factory=lambda: wuerfle_3d6(str_desc="Starting Coins") * 10)
-    allowed_alignment: Set[Alignments] = field(default_factory=lambda: {Alignments.GOOD})
-    allowed_races: Set[Races] = field(default_factory=lambda: {Races.HUMAN})
+    allowed_alignment: str = "good"
+    allowed_races: str = "all"
     allowed_armor: str = "all"
     allowed_weapon: str = "all"
     delicate_tasks: int = 0
@@ -108,88 +85,8 @@ class PlayerClass:
     darkvision: bool = False
     parry: int = 0
     
-    def _enum_for_profession_instance(self):
-        """Falls self.profession eine Instanz der Profession-Klasse ist, liefere das zugehörige Enum."""
-        if isinstance(self.profession, Professions):
-            return self.profession
-        for klass, enum_member in CLASS_TO_PROFESSION.items():
-            if isinstance(self.profession, klass):
-                return enum_member
-        return None
-
-    def _enum_for_race_instance(self):
-        """Falls self.race eine Instanz der Race-Klasse ist, liefere das zugehörige Enum."""
-        if isinstance(self.race, Races):
-            return self.race
-        for klass, enum_member in CLASS_TO_RACE.items():
-            if isinstance(self.race, klass):
-                return enum_member
-        return None
-
-    def validate_allowed(self) -> None:
-        """
-        Prüft, ob self.alignment und self.race zu den erlaubten Sets passen.
-        Wir vereinigen:
-          - allowed_alignment / allowed_races von PlayerClass (selbst)
-          - optional: allowed sets, die von profession- oder race-Objekten bereitgestellt werden (wenn vorhanden)
-        Wir werfen ValueError mit erklärender Nachricht bei Ungültigkeit.
-        """
-        # Alignments prüfen
-        allowed_alignments = set(self.allowed_alignment or set())
-
-        # optional: professionelle Einschränkungen (Konvention: profession.allowed_alignment oder allowed_alignments)
-        prof_allowed = getattr(self.profession, "allowed_alignment", None) or getattr(self.profession, "allowed_alignments", None)
-        if prof_allowed:
-            allowed_alignments |= set(prof_allowed)
-
-        # optional: rassen-spezifische Einschränkungen (falls Race-Klasse sowas definiert)
-        race_allowed_align = getattr(self.race, "allowed_alignment", None) or getattr(self.race, "allowed_alignments", None)
-        if race_allowed_align:
-            allowed_alignments |= set(race_allowed_align)
-
-        if allowed_alignments:
-            if self.alignment not in allowed_alignments:
-                raise ValueError(
-                    f"Alignment '{self.alignment.value}' ist für Klasse '{getattr(self.profession, 'name', type(self.profession).__name__)}' "
-                    f"und Rasse '{getattr(self.race, 'name', getattr(self.race, '__class__', None))}' nicht erlaubt. Erlaubt: {[a.value for a in allowed_alignments]}"
-                )
-
-        # Races prüfen (wir vergleichen Enum-Member)
-        allowed_races = set(self.allowed_races or set())
-
-        # optional: profession kann Einschränkungen bzgl. Rasse haben
-        prof_allowed_races = getattr(self.profession, "allowed_races", None)
-        if prof_allowed_races:
-            allowed_races |= set(prof_allowed_races)
-
-        # optional: race-Klasse kann explizite erlaubte Races mitbringen (selten nötig)
-        race_allowed_races = getattr(self.race, "allowed_races", None)
-        if race_allowed_races:
-            allowed_races |= set(race_allowed_races)
-
-        # bestimme enum für die aktuelle race-instanz
-        race_enum = self._enum_for_race_instance()
-        if allowed_races and race_enum is not None:
-            if race_enum not in allowed_races:
-                raise ValueError(
-                    f"Rasse '{race_enum.value}' ist nicht erlaubt für Klasse '{getattr(self.profession, 'name', type(self.profession).__name__)}'. "
-                    f"Erlaubte Rassen: {[r.value for r in allowed_races]}"
-                )
-
-    
     def __post_init__(self):
-        """Post-initialization processing for PlayerClass."""
-        
-        # if profession is still an Enum, convert it
-        if isinstance(self.profession, Professions):
-            klass = PROFESSION_CLASS_MAP[self.profession]
-            self.profession = klass()
-
-        # if race is still an Enum, convert it
-        if isinstance(self.race, Races):
-            klass = RACE_CLASS_MAP[self.race]
-            self.race = klass()
-            
+        """Post-initialization processing to set derived attributes."""            
 
         # Calculate and set all STR derived modifiers after initialization."""
         (
@@ -253,11 +150,7 @@ class PlayerClass:
 
         # calculate race stat modifiers...
         self.race.apply_race_dependent_modifiers(self)
-
-        # validieren; wir wollen fehlschlagen, falls Kombination nicht zulässig ist
-        self.validate_allowed()
-
-    
+   
     def __repr__(self):
         """Return a string representation of the PlayerClass instance."""
         return (
