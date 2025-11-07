@@ -1,16 +1,19 @@
 from dataclasses import dataclass, field
 from typing import Set
+
 from sw_character_generator.functions.role_dice import wuerfle_3d6
 from sw_character_generator.functions.gen_char_stat_mods import analyze_mod_str, analyze_mod_dex, analyze_mod_con, analyze_mod_int, analyze_mod_char
-from sw_character_generator.classes.profession.fighter import Fighter
 from sw_character_generator.classes.player_enums import MainStats, Alignments, MainStats, Professions, Races, PlayerStates
+
 from sw_character_generator.classes.race.elf import Elf
 from sw_character_generator.classes.race.halfling import Halfling
+
 from sw_character_generator.classes.profession.assassin import Assassin
 from sw_character_generator.classes.profession.thief import Thief
 from sw_character_generator.classes.profession.wizard import Wizard
+from sw_character_generator.classes.profession.fighter import Fighter
 
-# Mapping Enum → Klassen
+# Mapping Enum → Classes
 PROFESSION_CLASS_MAP = {
     Professions.FIGHTER: Fighter,
     Professions.WIZARD: Wizard,
@@ -21,7 +24,7 @@ PROFESSION_CLASS_MAP = {
     #Professions.PALADIN: Paladin,
 }
 
-# Mapping Enum → Klassen
+# Mapping Enum → Classes
 RACE_CLASS_MAP = {
     Races.ELF: Elf,
     Races.HALFLING: Halfling,
@@ -29,6 +32,7 @@ RACE_CLASS_MAP = {
     #Races.HUMAN: Human,
     #Races.HALFELF: HalfElf,
 }
+
 
 @dataclass
 class PlayerClass:
@@ -93,11 +97,18 @@ class PlayerClass:
     
     
     def __post_init__(self):
-
-        # Wenn profession noch ein Enum ist, wandel um
+        """Post-initialization processing for PlayerClass."""
+        
+        # if profession is still an Enum, convert it
         if isinstance(self.profession, Professions):
             klass = PROFESSION_CLASS_MAP[self.profession]
             self.profession = klass()
+
+        # if race is still an Enum, convert it
+        if isinstance(self.race, Races):
+            klass = RACE_CLASS_MAP[self.race]
+            self.race = klass()
+            
 
         # Calculate and set all STR derived modifiers after initialization."""
         (
@@ -109,7 +120,7 @@ class PlayerClass:
             self.stat_str,
             self.profession
         )
-        print("DEBUG analyze_mod_str: ", self.stat_str, self.profession)
+        #print("DEBUG analyze_mod_str: ", self.stat_str, self.profession)
 
         #Calculate and set all DEX derived modifiers after initialization."""
         (
@@ -119,7 +130,7 @@ class PlayerClass:
             self.stat_dex,
             self.profession
         )
-        print("DEBUG analyze_mod_dex: ", self.stat_dex, self.profession)
+        #print("DEBUG analyze_mod_dex: ", self.stat_dex, self.profession)
 
         #Calculate and set all CON derived modifiers after initialization."""
         (
@@ -129,7 +140,7 @@ class PlayerClass:
             self.stat_con,
             self.profession
         )
-        print("DEBUG analyze_mod_con: ", self.stat_con, self.profession)
+        #print("DEBUG analyze_mod_con: ", self.stat_con, self.profession)
 
         #Calculate and set all INT derived modifiers after initialization."""
         (
@@ -142,7 +153,7 @@ class PlayerClass:
             self.stat_int,
             self.profession
         )
-        print("DEBUG analyze_mod_int: ", self.stat_int, self.profession)
+        #print("DEBUG analyze_mod_int: ", self.stat_int, self.profession)
         
         #Calculate and set all CHAR derived modifiers after initialization."""
         (
@@ -151,7 +162,7 @@ class PlayerClass:
             self.stat_char,
             self.profession
         )
-        print("DEBUG analyze_mod_char: ", self.stat_char, self.profession)
+        #print("DEBUG analyze_mod_char: ", self.stat_char, self.profession)
 
         # Re-apply class modifiers that depend on stats
         self.profession.apply_profession_dependent_modifiers(self)
