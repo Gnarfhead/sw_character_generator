@@ -1,11 +1,11 @@
 """Fighter profession module."""
-from sw_character_generator.classes.professions import Profession
+from sw_character_generator.classes.profession.profession import ProfessionBase
 from sw_character_generator.functions.role_dice import wuerfle_1d10
-from sw_character_generator.classes.player_enums import Alignments, Races, MainStat
+from sw_character_generator.classes.player_enums import Alignments, Races, MainStats
 
 
 
-class Fighter(Profession):
+class Fighter(ProfessionBase):
     """Fighter profession class."""
     def __init__(self):
         self.name = "Fighter"
@@ -13,7 +13,7 @@ class Fighter(Profession):
     def apply_profession_dependent_modifiers(self, character):
         """Apply fighter-specific modifiers to the character."""
         character.tp_dice = 10
-        character.main_stats = [MainStat.STRENGTH]
+        character.main_stats = [MainStats.STRENGTH]
         character.allowed_alignment = [Alignments.NEUTRAL, Alignments.EVIL, Alignments.GOOD]
         character.allowed_races = [Races.HUMAN, Races.HALFLING, Races.ELF, Races.DWARF, Races.HALFELF]
         character.allowed_weapon = "all"

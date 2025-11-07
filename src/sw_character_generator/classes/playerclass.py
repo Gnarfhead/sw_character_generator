@@ -2,25 +2,23 @@ from dataclasses import dataclass, field
 from typing import Set
 from sw_character_generator.functions.role_dice import wuerfle_3d6
 from sw_character_generator.functions.gen_char_stat_mods import analyze_mod_str, analyze_mod_dex, analyze_mod_con, analyze_mod_int, analyze_mod_char
-from sw_character_generator.classes.fighter import Fighter
-from sw_character_generator.classes.professions import Profession
-from sw_character_generator.classes.player_enums import MainStat, Alignments, Races, PlayerStates, Profession
-from sw_character_generator.classes.races import Race
-from sw_character_generator.classes.elf import Elf
-from sw_character_generator.classes.halfling import Halfling
-from sw_character_generator.classes.assassin import Assassin
-from sw_character_generator.classes.thief import Thief
-from sw_character_generator.classes.wizard import Wizard
+from sw_character_generator.classes.profession.fighter import Fighter
+from sw_character_generator.classes.player_enums import MainStats, Alignments, MainStats, Professions, Races, PlayerStates
+from sw_character_generator.classes.race.elf import Elf
+from sw_character_generator.classes.race.halfling import Halfling
+from sw_character_generator.classes.profession.assassin import Assassin
+from sw_character_generator.classes.profession.thief import Thief
+from sw_character_generator.classes.profession.wizard import Wizard
 
 # Mapping Enum → Klassen
 PROFESSION_CLASS_MAP = {
-    Profession.FIGHTER: Fighter,
-    Profession.WIZARD: Wizard,
-    Profession.THIEF: Thief,
-    Profession.ASSASSIN: Assassin,
-    #Profession.CLERIC: Cleric,
-    #Profession.DRUID: Druid,
-    #Profession.PALADIN: Paladin,
+    Professions.FIGHTER: Fighter,
+    Professions.WIZARD: Wizard,
+    Professions.THIEF: Thief,
+    Professions.ASSASSIN: Assassin,
+    #Professions.CLERIC: Cleric,
+    #Professions.DRUID: Druid,
+    #Professions.PALADIN: Paladin,
 }
 
 # Mapping Enum → Klassen
@@ -39,7 +37,7 @@ class PlayerClass:
     character_name: str = "Unnamed Hero"
     profession: object = field(default_factory=Fighter)
     tp_dice: int = 8
-    main_stats: Set[MainStat] = field(default_factory=lambda: {MainStat.STRENGTH})
+    main_stats: Set[MainStats] = field(default_factory=lambda: {MainStats.STRENGTH})
     player_state: Set[PlayerStates] = field(default_factory=lambda: {PlayerStates.ALIVE})
     alignment: Alignments = Alignments.GOOD
     level: int = 1
@@ -97,7 +95,7 @@ class PlayerClass:
     def __post_init__(self):
 
         # Wenn profession noch ein Enum ist, wandel um
-        if isinstance(self.profession, Profession):
+        if isinstance(self.profession, Professions):
             klass = PROFESSION_CLASS_MAP[self.profession]
             self.profession = klass()
 

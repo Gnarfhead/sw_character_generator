@@ -1,4 +1,4 @@
-from sw_character_generator.classes.races import Race
+from sw_character_generator.classes.race.race import Race
 
 class Elf(Race):
     """Define Elf race class."""

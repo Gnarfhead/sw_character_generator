@@ -1,9 +1,18 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "sw_character_generator"
-version = "0.1.0"
-description = "Ein Charakter-Generator für das Pen & Paper Rollenspiel 'Swords & Wizardry'"
-authors = [{ name="Daniel Theuerkauff", email="dtheuerk@proton.me" }]
-dependencies = ["pytest"]
+version = "0.0.1"
+description = "A Character-Generator for the Pen & Paper RPG 'Swords & Wizardry'"
+readme = "README.md"
+requires-python = ">=3.8"
+authors = [{ name = "Gnarfhead" }]
+dependencies = []
+
+[tool.setuptools]
+package-dir = { "" = "src" }
 
 [tool.setuptools.packages.find]
 where = ["src"]

@@ -1,6 +1,6 @@
 from enum import Enum
 
-class MainStat(Enum):
+class MainStats(Enum):
     """Enumeration for main statistics."""
     STRENGTH = "strength"
     DEXTERITY = "dexterity"
@@ -34,7 +34,7 @@ class PlayerStates(Enum):
     CONFUSED = "confused"
     BLIND = "blind"
 
-class Profession(Enum):
+class Professions(Enum):
     """Enumeration for player professions."""
     FIGHTER = "fighter"
     WIZARD = "wizard"

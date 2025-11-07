@@ -1,10 +1,10 @@
 """Thief profession module."""
-from sw_character_generator.classes.professions import Profession
+from sw_character_generator.classes.profession.profession import ProfessionBase
 from sw_character_generator.functions.role_dice import wuerfle_1d6
-from sw_character_generator.classes.player_enums import Alignments, Races, MainStat
+from sw_character_generator.classes.player_enums import Alignments, Races, MainStats
 
 
-class Thief(Profession):
+class Thief(ProfessionBase):
     """Thief profession class."""
     def __init__(self):
         self.name = "Thief"
@@ -12,7 +12,7 @@ class Thief(Profession):
     def apply_profession_dependent_modifiers(self, character):
         """Apply thief-specific modifiers to the character."""
         character.tp_dice = 6
-        character.main_stats = [MainStat.DEXTERITY]
+        character.main_stats = [MainStats.DEXTERITY]
         character.allowed_alignment = [Alignments.NEUTRAL, Alignments.EVIL]
         character.allowed_races = [Races.HUMAN, Races.HALFLING, Races.ELF, Races.DWARF]
         character.allowed_weapon = "light weapons"
