@@ -115,6 +115,9 @@ def _interactive_cli() -> Optional[dict]:
                     )
                     save_character(char)
                     print("Charakter gespeichert.")
+                except ValueError as e:
+                    print("Fehler bei der Charaktererstellung:", e)
+                    return                
                 except Exception as e:
                     print("Fehler beim Speichern:", e)
                 break
@@ -174,13 +177,17 @@ def main():
             print("Warnung: Alignment konnte nicht geparst werden:", e)
             align_enum = None
 
-        char = PlayerClass(
-            player_name=player_name,
-            character_name=character_name,
-            race=race_enum,
-            profession=prof_enum,
-            alignment=align_enum,
-        )
+        try:
+            char = PlayerClass(
+                player_name=player_name,
+                character_name=character_name,
+                race=race_enum,
+                profession=prof_enum,
+                alignment=align_enum,
+            )
+        except ValueError as e:
+            print("Fehler bei der Charaktererstellung:", e)
+            return    
         print(char)
         # In GUI-Version ruft die GUI bereits save_character beim Klick auf Save auf,
         # hier speichern wir zusätzlich, falls GUI nur Werte zurückliefert aber nicht gespeichert hat.

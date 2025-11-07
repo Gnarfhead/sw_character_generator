@@ -43,6 +43,9 @@ RACE_CLASS_MAP = {
     Races.HALFELF: Halfelf,
 }
 
+# Reverse mappings für einfache Erkennung von Enum für Instanzklassen
+CLASS_TO_PROFESSION = {v: k for k, v in PROFESSION_CLASS_MAP.items()}
+CLASS_TO_RACE = {v: k for k, v in RACE_CLASS_MAP.items()}
 
 @dataclass
 class PlayerClass:
@@ -105,6 +108,74 @@ class PlayerClass:
     darkvision: bool = False
     parry: int = 0
     
+    def _enum_for_profession_instance(self):
+        """Falls self.profession eine Instanz der Profession-Klasse ist, liefere das zugehörige Enum."""
+        if isinstance(self.profession, Professions):
+            return self.profession
+        for klass, enum_member in CLASS_TO_PROFESSION.items():
+            if isinstance(self.profession, klass):
+                return enum_member
+        return None
+
+    def _enum_for_race_instance(self):
+        """Falls self.race eine Instanz der Race-Klasse ist, liefere das zugehörige Enum."""
+        if isinstance(self.race, Races):
+            return self.race
+        for klass, enum_member in CLASS_TO_RACE.items():
+            if isinstance(self.race, klass):
+                return enum_member
+        return None
+
+    def validate_allowed(self) -> None:
+        """
+        Prüft, ob self.alignment und self.race zu den erlaubten Sets passen.
+        Wir vereinigen:
+          - allowed_alignment / allowed_races von PlayerClass (selbst)
+          - optional: allowed sets, die von profession- oder race-Objekten bereitgestellt werden (wenn vorhanden)
+        Wir werfen ValueError mit erklärender Nachricht bei Ungültigkeit.
+        """
+        # Alignments prüfen
+        allowed_alignments = set(self.allowed_alignment or set())
+
+        # optional: professionelle Einschränkungen (Konvention: profession.allowed_alignment oder allowed_alignments)
+        prof_allowed = getattr(self.profession, "allowed_alignment", None) or getattr(self.profession, "allowed_alignments", None)
+        if prof_allowed:
+            allowed_alignments |= set(prof_allowed)
+
+        # optional: rassen-spezifische Einschränkungen (falls Race-Klasse sowas definiert)
+        race_allowed_align = getattr(self.race, "allowed_alignment", None) or getattr(self.race, "allowed_alignments", None)
+        if race_allowed_align:
+            allowed_alignments |= set(race_allowed_align)
+
+        if allowed_alignments:
+            if self.alignment not in allowed_alignments:
+                raise ValueError(
+                    f"Alignment '{self.alignment.value}' ist für Klasse '{getattr(self.profession, 'name', type(self.profession).__name__)}' "
+                    f"und Rasse '{getattr(self.race, 'name', getattr(self.race, '__class__', None))}' nicht erlaubt. Erlaubt: {[a.value for a in allowed_alignments]}"
+                )
+
+        # Races prüfen (wir vergleichen Enum-Member)
+        allowed_races = set(self.allowed_races or set())
+
+        # optional: profession kann Einschränkungen bzgl. Rasse haben
+        prof_allowed_races = getattr(self.profession, "allowed_races", None)
+        if prof_allowed_races:
+            allowed_races |= set(prof_allowed_races)
+
+        # optional: race-Klasse kann explizite erlaubte Races mitbringen (selten nötig)
+        race_allowed_races = getattr(self.race, "allowed_races", None)
+        if race_allowed_races:
+            allowed_races |= set(race_allowed_races)
+
+        # bestimme enum für die aktuelle race-instanz
+        race_enum = self._enum_for_race_instance()
+        if allowed_races and race_enum is not None:
+            if race_enum not in allowed_races:
+                raise ValueError(
+                    f"Rasse '{race_enum.value}' ist nicht erlaubt für Klasse '{getattr(self.profession, 'name', type(self.profession).__name__)}'. "
+                    f"Erlaubte Rassen: {[r.value for r in allowed_races]}"
+                )
+
     
     def __post_init__(self):
         """Post-initialization processing for PlayerClass."""
@@ -182,6 +253,9 @@ class PlayerClass:
 
         # calculate race stat modifiers...
         self.race.apply_race_dependent_modifiers(self)
+
+        # validieren; wir wollen fehlschlagen, falls Kombination nicht zulässig ist
+        self.validate_allowed()
 
     
     def __repr__(self):
