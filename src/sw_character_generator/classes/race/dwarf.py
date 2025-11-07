@@ -1,6 +1,6 @@
 from sw_character_generator.classes.race.race import Race
 
-class dwarf(Race):
+class Dwarf(Race):
     """Define Dwarf race class."""
     def __init__(self):
         super().__init__(name="Dwarf")

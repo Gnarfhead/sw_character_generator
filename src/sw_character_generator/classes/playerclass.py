@@ -7,7 +7,7 @@ from sw_character_generator.classes.player_enums import MainStats, Alignments, M
 
 from sw_character_generator.classes.race.elf import Elf
 from sw_character_generator.classes.race.halfling import Halfling
-from sw_character_generator.classes.race.halfling import HalfElf
+from sw_character_generator.classes.race.halfelff import Halfelf
 from sw_character_generator.classes.race.dwarf import Dwarf
 from sw_character_generator.classes.race.human import Human
 
@@ -40,7 +40,7 @@ RACE_CLASS_MAP = {
     Races.HALFLING: Halfling,
     Races.DWARF: Dwarf,
     Races.HUMAN: Human,
-    Races.HALFELF: HalfElf,
+    Races.HALFELF: Halfelf,
 }
 
 
