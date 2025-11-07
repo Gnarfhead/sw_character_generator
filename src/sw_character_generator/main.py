@@ -4,16 +4,18 @@ from sw_character_generator.classes.race.human import Human
 from sw_character_generator.functions import save_character
 
 def main():
-    character = PlayerClass(
+
+    Blubb = PlayerClass(
         player_name="Test Player",
         character_name="Aragorn",
         profession="ranger",
         race="human",
         alignment="good"
     )
-    print(character)
+    #save_character(Blubb)
+    
+    print(Blubb)
 
-save_character(character)
 
 if __name__ == "__main__":
     main()
