@@ -8,8 +8,10 @@ class CombatMixin:
         return dealt_ranged_damage
 
     def get_damage(self, damage: int) -> int:
-        tp = self.tp - damage
-        return tp
+        self.tp -= damage
+
+    def heal(self, amount: int) -> None:
+        self.hp += amount
 
     def melee_attack_roll(self) -> int:
         rolled_value = self.roll_dice(1, 20)
