@@ -10,7 +10,7 @@ from sw_character_generator.classes.race.halfling import Halfling
 
 import argparse
 import enum as _enum
-from typing import Any
+from typing import Any, Optional
 
 # Die GUI-Funktion importieren (wird im feature-Branch hinzugefügt)
 try:
@@ -19,7 +19,7 @@ except Exception:
     launch_gui = None  # type: ignore
 
 
-def _to_enum(target_enum: Any, value: Any):
+def _to_enum(target_enum: Any, value: Any) -> Optional[_enum.Enum]:
     """
     Versucht, `value` in ein Mitglied von `target_enum` zu überführen.
     Akzeptiert:
@@ -52,9 +52,99 @@ def _to_enum(target_enum: Any, value: Any):
     raise ValueError(f"Kann {value!r} nicht in {target_enum} umwandeln.")
 
 
+def _choose_from_enum(enum_cls: Any, prompt: str) -> Any:
+    """
+    Interaktives CLI-Auswahlmenü für Enum-Werte.
+    Gibt das ausgewählte Enum-Mitglied zurück.
+    """
+    members = list(enum_cls)
+    # Anzeige (nummeriert)
+    print(f"\n{prompt}")
+    for idx, m in enumerate(members, start=1):
+        label = getattr(m, "value", None) or m.name
+        print(f"  {idx}) {label}")
+    while True:
+        sel = input("Wähle eine Zahl oder gib den Namen ein: ").strip()
+        if not sel:
+            print("Bitte eine Auswahl treffen.")
+            continue
+        # Zahl?
+        if sel.isdigit():
+            i = int(sel)
+            if 1 <= i <= len(members):
+                return members[i - 1]
+            print("Ungültige Zahl.")
+            continue
+        # Name oder value versuchen
+        # Versuche Name
+        try:
+            return enum_cls[sel]
+        except Exception:
+            # Versuche Value match
+            for m in members:
+                if getattr(m, "value", None) == sel:
+                    return m
+            print("Ungültige Auswahl, versuche es erneut.")
+
+
+def _interactive_cli() -> Optional[dict]:
+    """
+    Fragt per CLI die fünf Parameter ab und bietet an, zu speichern.
+    Liefert dict wie launch_gui oder None bei Abbruch.
+    """
+    try:
+        print("Interaktive Charaktererstellung (CLI). Leere Eingabe bricht ab.")
+        player_name = input("Player name: ").strip()
+        if player_name == "":
+            print("Abbruch.")
+            return None
+        character_name = input("Character name: ").strip()
+        if character_name == "":
+            print("Abbruch.")
+            return None
+
+        race = _choose_from_enum(Races, "Rassen:")
+        profession = _choose_from_enum(Professions, "Professionen:")
+        alignment = _choose_from_enum(Alignments, "Alignment:")
+
+        # Bestätigung und optionales Speichern
+        while True:
+            save = input("Charakter speichern? (y/N): ").strip().lower()
+            if save in ("y", "yes"):
+                try:
+                    char = PlayerClass(
+                        player_name=player_name,
+                        character_name=character_name,
+                        race=race,
+                        profession=profession,
+                        alignment=alignment,
+                    )
+                    save_character(char)
+                    print("Charakter gespeichert.")
+                except Exception as e:
+                    print("Fehler beim Speichern:", e)
+                break
+            if save in ("", "n", "no"):
+                print("Nicht gespeichert.")
+                break
+            print("Bitte 'y' oder 'n' eingeben.")
+
+        return {
+            "player_name": player_name,
+            "character_name": character_name,
+            "race": race,
+            "profession": profession,
+            "alignment": alignment,
+        }
+    except (KeyboardInterrupt, EOFError):
+        print("\nAbbruch.")
+        return None
+
+
 def main():
     parser = argparse.ArgumentParser(description="sw_character_generator")
     parser.add_argument("--gui", action="store_true", help="Starte die Tkinter-GUI für die Charaktererstellung")
+    parser.add_argument("--cli", action="store_true", help="Starte die interaktive CLI für die Charaktererstellung")
     args = parser.parse_args()
 
     if args.gui:
@@ -98,8 +188,24 @@ def main():
             alignment=align_enum,
         )
         print(char)
-        save_character(char)
+        # In GUI-Version ruft die GUI bereits save_character beim Klick auf Save auf,
+        # hier speichern wir zusätzlich, falls GUI nur Werte zurückliefert aber nicht gespeichert hat.
+        try:
+            save_character(char)
+            print("Charakter gespeichert.")
+        except Exception as e:
+            print("Fehler beim Speichern:", e)
         return
+
+    if args.cli:
+        params = _interactive_cli()
+        if params is None:
+            return
+        # Falls CLI schon gespeichert hat, ist das fine; wir geben die Werte aus.
+        print("Eingaben:", params)
+        return
+
+print("Bitte --gui oder --cli angeben.")
 
 
 if __name__ == "__main__":

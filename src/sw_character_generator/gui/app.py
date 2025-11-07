@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
 from dataclasses import dataclass
 from typing import Optional, Dict, Any, Type, List
 import enum as _enum
@@ -14,6 +14,14 @@ except Exception as exc:
         "sw_character_generator.classes.player_enums nicht importieren. "
         "Bitte prüfe die Modul- und Klassennamen."
     ) from exc
+
+# Optional: save_character und PlayerClass werden nur für direkte Save-Integration gebraucht.
+try:
+    from sw_character_generator.functions.save_character import save_character
+    from sw_character_generator.classes.playerclass import PlayerClass
+except Exception:
+    save_character = None  # type: ignore
+    PlayerClass = None  # type: ignore
 
 @dataclass
 class CharacterParams:
@@ -150,10 +158,9 @@ class CharacterCreator(tk.Tk):
             race_member = parse_enum(Races, self.race_var.get())
             prof_member = parse_enum(Professions, self.prof_var.get())
             align_member = parse_enum(Alignments, self.align_var.get())
-        except ValueError:
-            race_member = None
-            prof_member = None
-            align_member = None
+        except ValueError as e:
+            messagebox.showerror("Invalid selection", f"Ungültige Auswahl: {e}")
+            return
 
         self.result = CharacterParams(
             player_name=self.player_var.get().strip(),
@@ -162,6 +169,22 @@ class CharacterCreator(tk.Tk):
             profession=prof_member,
             alignment=align_member,
         )
+
+        # Wenn save_character verfügbar ist, speichere direkt und bestätige dem Nutzer
+        if save_character is not None and PlayerClass is not None:
+            try:
+                char = PlayerClass(
+                    player_name=self.result.player_name,
+                    character_name=self.result.character_name,
+                    race=self.result.race,
+                    profession=self.result.profession,
+                    alignment=self.result.alignment,
+                )
+                save_character(char)
+                messagebox.showinfo("Saved", "Charakter erfolgreich gespeichert.")
+            except Exception as e:
+                messagebox.showerror("Save error", f"Fehler beim Speichern: {e}")
+        # Fenster schließen (unabhängig vom Save)
         self.destroy()
 
     def _on_cancel(self):
@@ -174,6 +197,10 @@ class CharacterCreator(tk.Tk):
 
 
 def launch_gui(initial: Optional[CharacterParams] = None) -> Optional[Dict[str, Any]]:
+    """
+    Convenience-Funktion, die ein dict mit den Parametern zurückgibt oder None bei Abbruch.
+    Für race/profession/alignment werden die tatsächlichen Enum-Mitglieder zurückgegeben.
+    """
     app = CharacterCreator(initial=initial)
     result = app.run()
     if result is None:
