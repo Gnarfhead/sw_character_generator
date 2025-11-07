@@ -79,14 +79,53 @@ class PlayerClass:
     climb_walls: int = 0
     hear_sounds: int = 0
     hide_in_shadows: int = 0
-    move_silently: int = 0 
+    move_silently: int = 0
     open_locks: int = 0
     surprised: int = 2
     darkvision: bool = False
     parry: int = 0
     
     def __post_init__(self):
-        """Post-initialization processing to set derived attributes."""            
+        """Post-initialization processing to set derived attributes."""        
+
+                # Helper maps to turn strings or enum members into class instances
+        _prof_map = {
+            "assassin": Assassin,
+            "thief": Thief,
+            "wizard": Wizard,
+            "fighter": Fighter,
+            "cleric": Cleric,
+            "druid": Druid,
+            "monk": Monk,
+            "paladin": Paladin,
+            "ranger": Ranger
+        }
+        _race_map = {
+            "elf": Elf,
+            "halfling": Halfling,
+            "halfelf": Halfelf,
+            "dwarf": Dwarf,
+            "human": Human
+        }
+
+        # Normalize and convert profession to an instance if needed
+        if not hasattr(self.profession, "apply_profession_dependent_modifiers"):
+            # accept enum member with .value, plain string, or capitalized strings
+            prof_key = self.profession.value if hasattr(self.profession, "value") else str(self.profession)
+            prof_key = prof_key.lower()
+            ProfClass = _prof_map.get(prof_key)
+            if ProfClass is None:
+                raise ValueError(f"Unknown profession: {self.profession!s}")
+            self.profession = ProfClass()
+
+        # Normalize and convert race to an instance if needed
+        if not hasattr(self.race, "apply_race_dependent_modifiers"):
+            race_key = self.race.value if hasattr(self.race, "value") else str(self.race)
+            race_key = race_key.lower()
+            RaceClass = _race_map.get(race_key)
+            if RaceClass is None:
+                raise ValueError(f"Unknown race: {self.race!s}")
+            self.race = RaceClass()    
 
         # Calculate and set all STR derived modifiers after initialization."""
         (
@@ -154,10 +193,10 @@ class PlayerClass:
     def __repr__(self):
         """Return a string representation of the PlayerClass instance."""
         return (
-            f"{self.__class__.__name__}("
+            #f"{self.__class__.__name__}("
             f"PlayerName={self.player_name}, CharacterName={self.character_name}\n"
             f"Class={self.profession.name}, "
-            f"Level={self.level}, TP_Dice=d{self.tp_dice}, MainStats={[stat.value for stat in self.main_stats]}\n"
+            f"Level={self.level}, TP_Dice=d{self.tp_dice}, MainStats={self.main_stats}\n"
             f"xp={self.xp}, xp_bonus={self.xp_bonus}%, TP={self.tp}, Coins={self.coins}\n"
             f"STR: {self.stat_str}    STR_mod: Attack={self.strength_atck_mod}, Damage={self.strength_damage_mod}, "
             f"Carry Capacity={self.carry_capacity_mod}, Door Crack={self.door_crack_mod}\n"
@@ -168,7 +207,7 @@ class PlayerClass:
             f"min/max Spells per Level={self.min_spells_per_level}/{self.max_spells_per_level}\n"
             f"WIS: {self.stat_wis}\n"
             f"CHA: {self.stat_char}    CHA_mod: Max Hirelings={self.cap_spec_hirelings}\n"
-            f"State: {[stat.value for stat in self.player_state]}, Alignment: {self.alignment.value}, Race: {self.race.name}, Gender: {self.gender}, God: {self.god}, Age: {self.age}\n"
+            f"State: {self.player_state}, Alignment: {self.alignment}, Race: {self.race}, Gender: {self.gender}, God: {self.god}, Age: {self.age}\n"
             f"Save Throw: {self.save_throw}, Save Bonuses: {list(self.save_bonuses)}, Immunity: {list(self.immunity)}, AC: {self.ac}\n"
             f"Special Abilities: {list(self.special_abilities)}\n"
             f"Languages: {list(self.add_langs)}\n"
@@ -177,8 +216,9 @@ class PlayerClass:
             f"darkvision: {self.darkvision}, parry: {self.parry}\n"
             f"delicate_tasks: {self.delicate_tasks}%, climb_walls: {self.climb_walls}%, hear_sounds: {self.hear_sounds}%\n"
             f"hide_in_shadows: {self.hide_in_shadows}%, move_silently: {self.move_silently}%, open_locks: {self.open_locks}%, surprised: {self.surprised}:6\n"
-            f"allowed_alignment: {[stat.value for stat in self.allowed_alignment]}, allowed_races: {[stat.value for stat in self.allowed_races]}"
-            f")"
+            f"allowed_alignment: {self.allowed_alignment}, allowed_races: {self.allowed_races}\n"
+            f"allowed_weapon: {self.allowed_weapon}, allowed_armor: {self.allowed_armor}\n"
+            #f")"
         )
     
     def to_dict(self):
@@ -186,12 +226,12 @@ class PlayerClass:
         return {
             "player_name": self.player_name,
             "character_name": self.character_name,
-            "profession": self.profession.name,
+            "profession": self.profession,
             "main_stats": [stat.value for stat in self.main_stats],
             "tp_dice": self.tp_dice,
             "level": self.level,
-            "alignment": self.alignment.value,
-            "race": self.race.name,
+            "alignment": self.alignment,
+            "race": self.race,
             "gender": self.gender,
             "god": self.god,
             "age": self.age,

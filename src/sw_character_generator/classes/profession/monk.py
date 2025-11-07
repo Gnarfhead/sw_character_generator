@@ -1,9 +1,6 @@
 """Monk profession module."""
 from sw_character_generator.classes.profession.profession import ProfessionBase
 from sw_character_generator.functions.role_dice import wuerfle_1d4
-from sw_character_generator.classes.player_enums import Alignments, Races, MainStats
-
-
 
 class Monk(ProfessionBase):
     """Monk profession class."""
@@ -13,11 +10,11 @@ class Monk(ProfessionBase):
     def apply_profession_dependent_modifiers(self, character):
         """Apply monk-specific modifiers to the character."""
         character.tp_dice = 4
-        character.main_stats = [MainStats.WISDOM]
-        character.allowed_alignment = [Alignments.NEUTRAL, Alignments.EVIL, Alignments.GOOD]
-        character.allowed_races = [Races.HUMAN]
-        character.allowed_weapon = "all"
-        character.allowed_armor = "none"
+        character.main_stats = ("Wisdom")
+        character.allowed_alignment = ("Neutral", "Evil", "Good")
+        character.allowed_races = ("Human")
+        character.allowed_weapon = ("all")
+        character.allowed_armor = ("none")
     
     def apply_stat_dependent_modifiers(self, character):
         """Apply stat-dependent modifiers for Monk."""

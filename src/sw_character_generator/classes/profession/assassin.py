@@ -1,8 +1,6 @@
 """Assassin profession module."""
 from sw_character_generator.classes.profession.profession import ProfessionBase
 from sw_character_generator.functions.role_dice import wuerfle_1d6
-from sw_character_generator.classes.player_enums import MainStats, Alignments, Races
-
 
 class Assassin(ProfessionBase):
     """Assassin profession class."""
@@ -12,11 +10,11 @@ class Assassin(ProfessionBase):
     def apply_profession_dependent_modifiers(self, character):
         """Apply Assassin-specific modifiers to the character."""
         character.tp_dice = 6
-        character.main_stats = [MainStats.STRENGTH, MainStats.DEXTERITY, MainStats.INTELLIGENCE]
-        character.allowed_alignment = [Alignments.NEUTRAL, Alignments.EVIL]
-        character.allowed_races = [Races.HUMAN]
-        character.allowed_weapon = "light weapons"
-        character.allowed_armor = "light"
+        character.main_stats = ("Strength", "Dexterity", "Intelligence")
+        character.allowed_alignment = ("Neutral", "Evil")
+        character.allowed_races = ("Human",)
+        character.allowed_weapon = ("light weapons",)
+        character.allowed_armor = ("light",)
 
     def apply_stat_dependent_modifiers(self, character):
         """Apply stat-dependent modifiers for Assassin."""

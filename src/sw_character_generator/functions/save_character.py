@@ -10,10 +10,13 @@ def save_character(character_data: PlayerClass) -> None:
     
     # Zeitstempel erzeugen
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    print(f"Saving character at {timestamp}")
 
     # Dateiname zusammensetzen
     filename = f"{data['player_name']}-{data['profession']}-{data['character_name']}-{timestamp}.json"
+    print(f"Generated filename: {filename}")
     filename = filename.replace(" ", "_")  # Leerzeichen vermeiden
+    print(f"Sanitized filename: {filename}")
 
     # Pfad vorbereiten
     path = os.path.join("saved_data", filename)

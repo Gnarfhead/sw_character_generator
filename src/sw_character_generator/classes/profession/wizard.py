@@ -1,8 +1,6 @@
 """Wizard profession module."""
 from sw_character_generator.classes.profession.profession import ProfessionBase
 from sw_character_generator.functions.role_dice import wuerfle_1d4
-from sw_character_generator.classes.player_enums import Alignments, Races, MainStats
-
 
 class Wizard(ProfessionBase):
     """Wizard profession class."""
@@ -12,11 +10,11 @@ class Wizard(ProfessionBase):
     def apply_profession_dependent_modifiers(self, character):
         """Apply wizard-specific modifiers to the character."""
         character.tp_dice = 4
-        character.main_stats = [MainStats.INTELLIGENCE]
-        character.allowed_alignment = [Alignments.GOOD, Alignments.NEUTRAL, Alignments.EVIL]
-        character.allowed_races = [Races.HUMAN, Races.HALFELF, Races.ELF]
-        character.allowed_weapon = "staff, dagger"
-        character.allowed_armor = "none"
+        character.main_stats = ("Intelligence",)
+        character.allowed_alignment = ("Good", "Neutral", "Evil")
+        character.allowed_races = ("Human", "Halfelf", "Elf")
+        character.allowed_weapon = ("staff", "dagger")
+        character.allowed_armor = ("none",)
 
     def apply_stat_dependent_modifiers(self, character):
         """Apply stat-dependent modifiers for Wizard."""
