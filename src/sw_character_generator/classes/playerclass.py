@@ -7,11 +7,19 @@ from sw_character_generator.classes.player_enums import MainStats, Alignments, M
 
 from sw_character_generator.classes.race.elf import Elf
 from sw_character_generator.classes.race.halfling import Halfling
+from sw_character_generator.classes.race.halfelff import Halfelf
+from sw_character_generator.classes.race.dwarf import Dwarf
+from sw_character_generator.classes.race.human import Human
 
 from sw_character_generator.classes.profession.assassin import Assassin
 from sw_character_generator.classes.profession.thief import Thief
 from sw_character_generator.classes.profession.wizard import Wizard
 from sw_character_generator.classes.profession.fighter import Fighter
+from sw_character_generator.classes.profession.cleric import Cleric
+from sw_character_generator.classes.profession.druid import Druid
+from sw_character_generator.classes.profession.monk import Monk
+from sw_character_generator.classes.profession.paladin import Paladin
+from sw_character_generator.classes.profession.ranger import Ranger
 
 # Mapping Enum → Classes
 PROFESSION_CLASS_MAP = {
@@ -19,18 +27,20 @@ PROFESSION_CLASS_MAP = {
     Professions.WIZARD: Wizard,
     Professions.THIEF: Thief,
     Professions.ASSASSIN: Assassin,
-    #Professions.CLERIC: Cleric,
-    #Professions.DRUID: Druid,
-    #Professions.PALADIN: Paladin,
+    Professions.CLERIC: Cleric,
+    Professions.DRUID: Druid,
+    Professions.PALADIN: Paladin,
+    Professions.MONK: Monk,
+    Professions.RANGER: Ranger,
 }
 
 # Mapping Enum → Classes
 RACE_CLASS_MAP = {
     Races.ELF: Elf,
     Races.HALFLING: Halfling,
-    #Races.DWARF: Dwarf,
-    #Races.HUMAN: Human,
-    #Races.HALFELF: HalfElf,
+    Races.DWARF: Dwarf,
+    Races.HUMAN: Human,
+    Races.HALFELF: Halfelf,
 }
 
 

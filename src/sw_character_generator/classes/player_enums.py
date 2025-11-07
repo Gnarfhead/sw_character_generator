@@ -43,3 +43,5 @@ class Professions(Enum):
     CLERIC = "cleric"
     DRUID = "druid"
     PALADIN = "paladin"
+    MONK = "monk"
+    RANGER = "ranger"
