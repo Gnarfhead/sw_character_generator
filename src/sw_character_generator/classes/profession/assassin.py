@@ -2,6 +2,7 @@ from sw_character_generator.functions.role_dice import wuerfle_1d6
 
 def apply_assassin_dependent_modifiers(character):
     """Apply Assassin-specific modifiers to the character."""
+    character.profession = "Assassin"
     character.tp_dice = 6
     character.main_stats = ("Strength", "Dexterity", "Intelligence")
     character.allowed_alignment = ("Neutral", "Evil")

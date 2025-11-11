@@ -2,6 +2,7 @@ from sw_character_generator.functions.role_dice import wuerfle_1d4
 
 def apply_wizard_dependent_modifiers(character):
     """Apply wizard-specific modifiers to the character."""
+    character.profession = "Wizard"
     character.tp_dice = 4
     character.main_stats = ("Intelligence",)
     character.allowed_alignment = ("Good", "Neutral", "Evil")

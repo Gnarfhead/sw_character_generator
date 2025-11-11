@@ -2,6 +2,7 @@ from sw_character_generator.functions.role_dice import wuerfle_1d4
 
 def apply_monk_dependent_modifiers(character):
     """Apply monk-specific modifiers to the character."""
+    character.profession = "Monk"
     character.tp_dice = 4
     character.main_stats = ("Wisdom")
     character.allowed_alignment = ("Neutral", "Evil", "Good")

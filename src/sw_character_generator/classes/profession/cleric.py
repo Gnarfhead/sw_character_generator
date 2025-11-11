@@ -2,6 +2,7 @@ from sw_character_generator.functions.role_dice import wuerfle_1d6
 
 def apply_cleric_dependent_modifiers(character):
     """Apply cleric-specific modifiers to the character."""
+    character.profession = "Cleric"
     character.tp_dice = 6
     character.main_stats = ("Wisdom")
     character.allowed_alignment = ("Good", "Evil")

@@ -2,6 +2,7 @@ from sw_character_generator.functions.role_dice import wuerfle_1d10
 
 def apply_fighter_dependent_modifiers(character):
     """Apply fighter-specific modifiers to the character."""
+    character.profession = "Fighter"
     character.tp_dice = 10
     character.main_stats = ("Strength",)
     character.allowed_alignment = ("Neutral", "Evil", "Good")
