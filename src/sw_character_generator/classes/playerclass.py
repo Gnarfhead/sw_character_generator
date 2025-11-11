@@ -137,21 +137,12 @@ class PlayerClass:
         )
         #print("DEBUG analyze_mod_char: ", self.stat_char)
 
-        # Re-apply class modifiers that depend on stats
-        self.profession.apply_profession_dependent_modifiers(self)
-
-        # calculate profession stat modifiers...
-        self.profession.apply_stat_dependent_modifiers(self)
-
-        # calculate race stat modifiers...
-        self.race.apply_race_dependent_modifiers(self)
-   
     def __repr__(self):
         """Return a string representation of the PlayerClass instance."""
         return (
-            #f"{self.__class__.__name__}("
             f"PlayerName={self.player_name}, CharacterName={self.character_name}\n"
-            f"Class={self.profession.name}, "
+            #f"Class={self.profession.name}, "
+            f"Class={self.profession}, "
             f"Level={self.level}, TP_Dice=d{self.tp_dice}, MainStats={self.main_stats}\n"
             f"xp={self.xp}, xp_bonus={self.xp_bonus}%, TP={self.tp}, Coins={self.coins}\n"
             f"STR: {self.stat_str}    STR_mod: Attack={self.strength_atck_mod}, Damage={self.strength_damage_mod}, "
@@ -163,7 +154,8 @@ class PlayerClass:
             f"min/max Spells per Level={self.min_spells_per_level}/{self.max_spells_per_level}\n"
             f"WIS: {self.stat_wis}\n"
             f"CHA: {self.stat_char}    CHA_mod: Max Hirelings={self.cap_spec_hirelings}\n"
-            f"State: {self.player_state}, Alignment: {self.alignment}, Race: {self.race.name}, Gender: {self.gender}, God: {self.god}, Age: {self.age}\n"
+            f"State: {self.player_state}, Alignment: {self.alignment}, Race: {self.race}, Gender: {self.gender}, God: {self.god}, Age: {self.age}\n"
+            #f"State: {self.player_state}, Alignment: {self.alignment}, Race: {self.race.name}, Gender: {self.gender}, God: {self.god}, Age: {self.age}\n"
             f"Save Throw: {self.save_throw}, Save Bonuses: {list(self.save_bonuses)}, Immunity: {list(self.immunity)}, AC: {self.ac}\n"
             f"Special Abilities: {list(self.special_abilities)}\n"
             f"Languages: {list(self.add_langs)}\n"
@@ -174,7 +166,6 @@ class PlayerClass:
             f"hide_in_shadows: {self.hide_in_shadows}%, move_silently: {self.move_silently}%, open_locks: {self.open_locks}%, surprised: {self.surprised}:6\n"
             f"allowed_alignment: {self.allowed_alignment}, allowed_races: {self.allowed_races}\n"
             f"allowed_weapon: {self.allowed_weapon}, allowed_armor: {self.allowed_armor}\n"
-            #f")"
         )
     
     def to_dict(self):
@@ -182,15 +173,15 @@ class PlayerClass:
         return {
             "player_name": self.player_name,
             "character_name": self.character_name,
-            "profession": self.profession.name,
-            #"profession": self.profession,
+            #"profession": self.profession.name,
+            "profession": self.profession,
             "main_stats": self.main_stats,
             "player_state": self.player_state,
             "tp_dice": self.tp_dice,
             "level": self.level,
             "alignment": self.alignment,
-            "race": self.race.name,
-            #"race": self.race,
+            #"race": self.race.name,
+            "race": self.race,
             "gender": self.gender,
             "god": self.god,
             "age": self.age,
