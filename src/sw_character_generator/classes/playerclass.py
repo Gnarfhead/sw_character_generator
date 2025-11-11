@@ -207,7 +207,7 @@ class PlayerClass:
             f"min/max Spells per Level={self.min_spells_per_level}/{self.max_spells_per_level}\n"
             f"WIS: {self.stat_wis}\n"
             f"CHA: {self.stat_char}    CHA_mod: Max Hirelings={self.cap_spec_hirelings}\n"
-            f"State: {self.player_state}, Alignment: {self.alignment}, Race: {self.race}, Gender: {self.gender}, God: {self.god}, Age: {self.age}\n"
+            f"State: {self.player_state}, Alignment: {self.alignment}, Race: {self.race.name}, Gender: {self.gender}, God: {self.god}, Age: {self.age}\n"
             f"Save Throw: {self.save_throw}, Save Bonuses: {list(self.save_bonuses)}, Immunity: {list(self.immunity)}, AC: {self.ac}\n"
             f"Special Abilities: {list(self.special_abilities)}\n"
             f"Languages: {list(self.add_langs)}\n"
@@ -226,13 +226,15 @@ class PlayerClass:
         return {
             "player_name": self.player_name,
             "character_name": self.character_name,
-            "profession": self.profession,
+            "profession": self.profession.name,
+            #"profession": self.profession,
             "main_stats": self.main_stats,
             "player_state": self.player_state,
             "tp_dice": self.tp_dice,
             "level": self.level,
             "alignment": self.alignment,
-            "race": self.race,
+            "race": self.race.name,
+            #"race": self.race,
             "gender": self.gender,
             "god": self.god,
             "age": self.age,

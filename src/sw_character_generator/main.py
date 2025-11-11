@@ -15,6 +15,7 @@ def main():
     #save_character(Blubb)
     
     print(Blubb)
+    save_character(Blubb)
 
 
 if __name__ == "__main__":
