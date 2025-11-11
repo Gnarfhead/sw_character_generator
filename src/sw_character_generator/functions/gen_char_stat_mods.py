@@ -1,9 +1,9 @@
 
 """Functions to analyze character stats and return corresponding modifiers."""
-from sw_character_generator.classes.playerclass import PlayerClass
+#from sw_character_generator.classes.playerclass import PlayerClass
 
 
-def analyze_mod_str(strength: float, character_class: PlayerClass):
+def analyze_mod_str(strength: float, profession: str):
     """Calculate strength-based modifiers. Positive bonuses only apply to fighters."""
     if 3 <= strength <= 4:
         return -2, -1, -5, 1
@@ -14,24 +14,24 @@ def analyze_mod_str(strength: float, character_class: PlayerClass):
     elif 9 <= strength <= 12:
         return 0, 0, 2.5, 2
     elif 13 <= strength <= 15:
-        strength_atck_mod = 1 if self.profession.lower() == "fighter" else 0
+        strength_atck_mod = 1 if profession.lower() == "fighter" else 0
         return strength_atck_mod, 0, 5, 2
     elif strength == 16:
-        strength_atck_mod = 1 if self.profession.lower() == "fighter" else 0
-        strength_damage_mod = 1 if self.profession.lower() == "fighter" else 0
+        strength_atck_mod = 1 if profession.lower() == "fighter" else 0
+        strength_damage_mod = 1 if profession.lower() == "fighter" else 0
         return strength_atck_mod, strength_damage_mod, 7.5, 3
     elif strength == 17:
-        strength_atck_mod = 2 if self.profession.lower() == "fighter" else 0
-        strength_damage_mod = 2 if self.profession.lower() == "fighter" else 0
+        strength_atck_mod = 2 if profession.lower() == "fighter" else 0
+        strength_damage_mod = 2 if profession.lower() == "fighter" else 0
         return strength_atck_mod, strength_damage_mod, 15, 4
     elif strength == 18:
-        strength_atck_mod = 2 if self.profession.lower() == "fighter" else 0
-        strength_damage_mod = 3 if self.profession.lower() == "fighter" else 0
+        strength_atck_mod = 2 if profession.lower() == "fighter" else 0
+        strength_damage_mod = 3 if profession.lower() == "fighter" else 0
         return strength_atck_mod, strength_damage_mod, 25, 5
     else:
         return None
 
-def analyze_mod_dex(dexterity: int, character_class: PlayerClass):
+def analyze_mod_dex(dexterity: int):
     """Calculate dexterity based modifiers."""
     if 3 <= dexterity <= 8:
         return -1, -1
@@ -42,7 +42,7 @@ def analyze_mod_dex(dexterity: int, character_class: PlayerClass):
     else:
         return None
 
-def analyze_mod_con(constitution: int, character_class: PlayerClass):
+def analyze_mod_con(constitution: int):
     """Calculate constitution based modifiers."""
     if 3 <= constitution <= 8:
         return -1, 50
@@ -53,7 +53,7 @@ def analyze_mod_con(constitution: int, character_class: PlayerClass):
     else:
         return None
 
-def analyze_mod_int(intelligence: int, character_class: PlayerClass):
+def analyze_mod_int(intelligence: int):
     """Calculate intelligence based modifiers."""
     if 3 <= intelligence <= 7:
         return 0, 4, 30, 2, 4
@@ -82,7 +82,7 @@ def analyze_mod_int(intelligence: int, character_class: PlayerClass):
     else:
         return None
 
-def analyze_mod_char(charisma: int, character_class: PlayerClass):
+def analyze_mod_char(charisma: int):
     """Calculate charisma based modifiers."""
     if 3 <= charisma <= 4:
         return 1

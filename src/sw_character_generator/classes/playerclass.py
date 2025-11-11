@@ -97,27 +97,25 @@ class PlayerClass:
             self.stat_str,
             self.profession
         )
-        #print("DEBUG analyze_mod_str: ", self.stat_str, self.profession)
-
+        print("DEBUG analyze_mod_str - STAT:", self.stat_str, "PROFESSION:", self.profession)
+        
         #Calculate and set all DEX derived modifiers after initialization."""
         (
             self.ranged_atck_mod,
             self.ac_mod
         ) = analyze_mod_dex(
-            self.stat_dex,
-            self.profession
+            self.stat_dex
         )
-        #print("DEBUG analyze_mod_dex: ", self.stat_dex, self.profession)
+        #print("DEBUG analyze_mod_dex: ", self.stat_dex)
 
         #Calculate and set all CON derived modifiers after initialization."""
         (
             self.tp_mod,
             self.raise_dead_mod
         ) = analyze_mod_con(
-            self.stat_con,
-            self.profession
+            self.stat_con
         )
-        #print("DEBUG analyze_mod_con: ", self.stat_con, self.profession)
+        #print("DEBUG analyze_mod_con: ", self.stat_con)
 
         #Calculate and set all INT derived modifiers after initialization."""
         (
@@ -127,19 +125,17 @@ class PlayerClass:
             self.min_spells_per_level,
             self.max_spells_per_level
         ) = analyze_mod_int(
-            self.stat_int,
-            self.profession
+            self.stat_int
         )
-        #print("DEBUG analyze_mod_int: ", self.stat_int, self.profession)
+        #print("DEBUG analyze_mod_int: ", self.stat_int)
         
         #Calculate and set all CHAR derived modifiers after initialization."""
         (
             self.cap_spec_hirelings
         ) = analyze_mod_char(
-            self.stat_char,
-            self.profession
+            self.stat_char
         )
-        #print("DEBUG analyze_mod_char: ", self.stat_char, self.profession)
+        #print("DEBUG analyze_mod_char: ", self.stat_char)
 
         # Re-apply class modifiers that depend on stats
         self.profession.apply_profession_dependent_modifiers(self)
