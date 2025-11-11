@@ -10,34 +10,22 @@ from sw_character_generator.classes.race.halfelff import Halfelf
 from sw_character_generator.classes.race.dwarf import Dwarf
 from sw_character_generator.classes.race.human import Human
 
-from sw_character_generator.classes.profession.assassin import Assassin
-from sw_character_generator.classes.profession.thief import Thief
-from sw_character_generator.classes.profession.wizard import Wizard
-from sw_character_generator.classes.profession.fighter import Fighter
-from sw_character_generator.classes.profession.cleric import Cleric
-from sw_character_generator.classes.profession.druid import Druid
-from sw_character_generator.classes.profession.monk import Monk
-from sw_character_generator.classes.profession.paladin import Paladin
-from sw_character_generator.classes.profession.ranger import Ranger
-
-
-
 
 @dataclass
 class PlayerClass:
     """Class representing a character in the game."""
     player_name: str = "Unknown"
     character_name: str = "Unnamed Hero"
-    profession: str = "fighter"
-    tp_dice: int = 8
-    main_stats: str = "strength"
+    profession: str = "Undefined"
+    tp_dice: int = 0
+    main_stats: str = "Undefined"
     player_state: str = "alive"
-    alignment: str = "neutral"
+    alignment: str = "Undefined"
     level: int = 1
-    race: str = "elf"
+    race: str = "Undefined"
     gender: str = "Undefined"
-    god: str = "None"
-    age: int = 18
+    god: str = "Undefined"
+    age: int = 0
     xp_bonus: int = 0
     xp: int = 0
     tp: int = 0
@@ -70,10 +58,10 @@ class PlayerClass:
     cap_spec_hirelings: int = field(init=False)
     treasure: list[str] = field(default_factory=list)
     coins: int = field(default_factory=lambda: wuerfle_3d6(str_desc="Starting Coins") * 10)
-    allowed_alignment: str = "good"
-    allowed_races: str = "all"
-    allowed_armor: str = "all"
-    allowed_weapon: str = "all"
+    allowed_alignment: str = "Undefined"
+    allowed_races: str = "Undefined"
+    allowed_armor: str = "Undefined"
+    allowed_weapon: str = "Undefined"
     delicate_tasks: int = 0
     climb_walls: int = 0
     hear_sounds: int = 0
@@ -141,8 +129,7 @@ class PlayerClass:
         """Return a string representation of the PlayerClass instance."""
         return (
             f"PlayerName={self.player_name}, CharacterName={self.character_name}\n"
-            #f"Class={self.profession.name}, "
-            f"Class={self.profession}, "
+            f"Profession={self.profession}, "
             f"Level={self.level}, TP_Dice=d{self.tp_dice}, MainStats={self.main_stats}\n"
             f"xp={self.xp}, xp_bonus={self.xp_bonus}%, TP={self.tp}, Coins={self.coins}\n"
             f"STR: {self.stat_str}    STR_mod: Attack={self.strength_atck_mod}, Damage={self.strength_damage_mod}, "
@@ -155,7 +142,6 @@ class PlayerClass:
             f"WIS: {self.stat_wis}\n"
             f"CHA: {self.stat_char}    CHA_mod: Max Hirelings={self.cap_spec_hirelings}\n"
             f"State: {self.player_state}, Alignment: {self.alignment}, Race: {self.race}, Gender: {self.gender}, God: {self.god}, Age: {self.age}\n"
-            #f"State: {self.player_state}, Alignment: {self.alignment}, Race: {self.race.name}, Gender: {self.gender}, God: {self.god}, Age: {self.age}\n"
             f"Save Throw: {self.save_throw}, Save Bonuses: {list(self.save_bonuses)}, Immunity: {list(self.immunity)}, AC: {self.ac}\n"
             f"Special Abilities: {list(self.special_abilities)}\n"
             f"Languages: {list(self.add_langs)}\n"
@@ -173,14 +159,12 @@ class PlayerClass:
         return {
             "player_name": self.player_name,
             "character_name": self.character_name,
-            #"profession": self.profession.name,
             "profession": self.profession,
             "main_stats": self.main_stats,
             "player_state": self.player_state,
             "tp_dice": self.tp_dice,
             "level": self.level,
             "alignment": self.alignment,
-            #"race": self.race.name,
             "race": self.race,
             "gender": self.gender,
             "god": self.god,

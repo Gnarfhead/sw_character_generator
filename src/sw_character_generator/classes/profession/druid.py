@@ -1,6 +1,6 @@
 from sw_character_generator.functions.role_dice import wuerfle_1d6
 
-def apply_profession_dependent_modifiers(self, character):
+def apply_druid_dependent_modifiers(character):
     """Apply druid-specific modifiers to the character."""
     character.tp_dice = 6
     character.main_stats = ("Wisdom", "Charisma")

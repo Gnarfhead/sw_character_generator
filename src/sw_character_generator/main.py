@@ -7,9 +7,6 @@ def main():
     Blubb = PlayerClass(
         player_name="Test Player",
         character_name="Aragorn",
-        profession="assassin",
-        race="human",
-        alignment="good"
     )
     #save_character(Blubb)
     

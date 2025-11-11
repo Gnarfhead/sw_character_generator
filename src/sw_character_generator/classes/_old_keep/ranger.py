@@ -1,5 +1,5 @@
 """Ranger profession module."""
-from sw_character_generator.classes.profession.profession import ProfessionBase
+from sw_character_generator.classes._old_keep.profession import ProfessionBase
 from sw_character_generator.functions.role_dice import wuerfle_1d8
 
 
