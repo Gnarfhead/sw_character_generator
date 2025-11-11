@@ -4,11 +4,7 @@ from typing import Set
 from sw_character_generator.functions.role_dice import wuerfle_3d6
 from sw_character_generator.functions.gen_char_stat_mods import analyze_mod_str, analyze_mod_dex, analyze_mod_con, analyze_mod_int, analyze_mod_char
 
-from sw_character_generator.classes.race.elf import Elf
-from sw_character_generator.classes.race.halfling import Halfling
-from sw_character_generator.classes.race.halfelff import Halfelf
-from sw_character_generator.classes.race.dwarf import Dwarf
-from sw_character_generator.classes.race.human import Human
+
 
 
 @dataclass
@@ -85,7 +81,7 @@ class PlayerClass:
             self.stat_str,
             self.profession
         )
-        print("DEBUG analyze_mod_str - STAT:", self.stat_str, "PROFESSION:", self.profession)
+        #print("DEBUG analyze_mod_str - STAT:", self.stat_str, "PROFESSION:", self.profession)
         
         #Calculate and set all DEX derived modifiers after initialization."""
         (
