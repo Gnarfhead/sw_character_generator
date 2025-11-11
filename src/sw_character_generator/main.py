@@ -1,8 +1,12 @@
 from sw_character_generator.classes.playerclass import PlayerClass
+from sw_character_generator.functions import choosen_profession
+from sw_character_generator.functions import choosen_race
 from sw_character_generator.functions.save_character import save_character
-from sw_character_generator.classes.profession.assassin import apply_assassin_dependent_modifiers as assassin_mods
+
 
 def main():
+
+    # Roll Character
 
     Blubb = PlayerClass(
         player_name="Test Player",
@@ -10,14 +14,17 @@ def main():
         gender="Male",
         age=30,
     )
-    #save_character(Blubb)
     
-    print(Blubb)
-    assassin_mods(Blubb)
-    print("After applying assassin modifiers:")
-    print(Blubb)    
+    # Choose profession
+    choosen_profession(PlayerClass, "Paladin")
 
-    #save_character(Blubb)
+    # Choose race
+    choosen_race(PlayerClass, "Human")
+
+    # Choose alignment
+    choosen_alignment(PlayerClass, "Good")
+
+    save_character(Blubb)
 
 
 if __name__ == "__main__":
