@@ -7,6 +7,8 @@ def main():
     Blubb = PlayerClass(
         player_name="Test Player",
         character_name="Aragorn",
+        gender="Male",
+        age=30,
     )
     #save_character(Blubb)
     
