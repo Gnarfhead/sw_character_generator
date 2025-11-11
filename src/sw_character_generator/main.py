@@ -1,6 +1,7 @@
 from sw_character_generator.classes.playerclass import PlayerClass
-from sw_character_generator.functions import choosen_alignment, choosen_profession
-from sw_character_generator.functions import choosen_race
+from sw_character_generator.functions.choosen_profession import choosen_profession
+from sw_character_generator.functions.choosen_race import choosen_race
+from sw_character_generator.functions.choosen_alignment import choosen_alignment    
 from sw_character_generator.functions.save_character import save_character
 
 
