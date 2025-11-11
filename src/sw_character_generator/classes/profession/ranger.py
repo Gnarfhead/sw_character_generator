@@ -1,8 +1,6 @@
 """Ranger profession module."""
 from sw_character_generator.classes.profession.profession import ProfessionBase
 from sw_character_generator.functions.role_dice import wuerfle_1d8
-from sw_character_generator.classes.player_enums import Alignments, Races, MainStats
-
 
 
 class Ranger(ProfessionBase):

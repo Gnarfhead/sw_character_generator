@@ -1,7 +1,7 @@
 from sw_character_generator.classes.playerclass import PlayerClass
 from sw_character_generator.classes.profession.ranger import Ranger
 from sw_character_generator.classes.race.human import Human
-from sw_character_generator.functions import save_character
+from sw_character_generator.functions.save_character import save_character
 
 def main():
 

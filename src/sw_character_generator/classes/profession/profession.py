@@ -11,9 +11,4 @@ class ProfessionBase:
     def apply_stat_dependent_modifiers(self, character):
         """Apply stat-dependent modifiers to the character."""
         pass  # will be overridden in subclasses
-
-    #def char_ability_wave_hand(self, character):
-    #    """Implement the 'Wave Hand' ability for the profession."""
-    #    echo_message = f"{character.character_name} waves their hand mysteriously."
-    #    print(echo_message) # Placeholder for actual ability implementation
-        
+    

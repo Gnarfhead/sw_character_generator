@@ -3,6 +3,7 @@ from typing import Set
 
 from sw_character_generator.functions.role_dice import wuerfle_3d6
 from sw_character_generator.functions.gen_char_stat_mods import analyze_mod_str, analyze_mod_dex, analyze_mod_con, analyze_mod_int, analyze_mod_char
+from sw_character_generator.classes.player_enums import MainStats, Alignments, MainStats, Professions, Races, PlayerStates
 
 from sw_character_generator.classes.race.elf import Elf
 from sw_character_generator.classes.race.halfling import Halfling
@@ -86,6 +87,45 @@ class PlayerClass:
     
     def __post_init__(self):
         """Post-initialization processing to set derived attributes."""        
+
+                # Helper maps to turn strings or enum members into class instances
+        _prof_map = {
+            "assassin": Assassin,
+            "thief": Thief,
+            "wizard": Wizard,
+            "fighter": Fighter,
+            "cleric": Cleric,
+            "druid": Druid,
+            "monk": Monk,
+            "paladin": Paladin,
+            "ranger": Ranger
+        }
+        _race_map = {
+            "elf": Elf,
+            "halfling": Halfling,
+            "halfelf": Halfelf,
+            "dwarf": Dwarf,
+            "human": Human
+        }
+
+        # Normalize and convert profession to an instance if needed
+        if not hasattr(self.profession, "apply_profession_dependent_modifiers"):
+            # accept enum member with .value, plain string, or capitalized strings
+            prof_key = self.profession.value if hasattr(self.profession, "value") else str(self.profession)
+            prof_key = prof_key.lower()
+            ProfClass = _prof_map.get(prof_key)
+            if ProfClass is None:
+                raise ValueError(f"Unknown profession: {self.profession!s}")
+            self.profession = ProfClass()
+
+        # Normalize and convert race to an instance if needed
+        if not hasattr(self.race, "apply_race_dependent_modifiers"):
+            race_key = self.race.value if hasattr(self.race, "value") else str(self.race)
+            race_key = race_key.lower()
+            RaceClass = _race_map.get(race_key)
+            if RaceClass is None:
+                raise ValueError(f"Unknown race: {self.race!s}")
+            self.race = RaceClass()    
 
         # Calculate and set all STR derived modifiers after initialization."""
         (

@@ -7,7 +7,9 @@ from sw_character_generator.classes.playerclass import PlayerClass
 def save_character(character_data: PlayerClass) -> None:
     """Save the Character data to a JSON file."""
     data = character_data.to_dict()
-    
+
+    print("Current working directory:", os.getcwd())
+
     # Zeitstempel erzeugen
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     print(f"Saving character at {timestamp}")
