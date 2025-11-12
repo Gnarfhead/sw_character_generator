@@ -10,3 +10,8 @@ def apply_monk_dependent_modifiers(character):
     character.allowed_weapon = ("all",)
     character.allowed_armor = ("none",)
     character.tp = wuerfle_1d4("TP", 1) + character.tp_mod
+    character.save_throw = 15
+
+    """Monks receive an experience bonus based on their wisdom."""
+    if character.stat_wis >= 13:
+        character.xp_bonus += 5

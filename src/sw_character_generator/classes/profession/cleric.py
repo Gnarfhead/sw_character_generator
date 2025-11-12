@@ -10,3 +10,8 @@ def apply_cleric_dependent_modifiers(character):
     character.allowed_weapon = ("blunt weapons",)
     character.allowed_armor = ("all",)
     character.tp = wuerfle_1d6("TP", 1) + character.tp_mod
+    character.save_throw = 15
+
+    """Clerics receive an experience bonus based on their wisdom."""
+    if character.stat_wis >= 13:
+        character.xp_bonus += 5

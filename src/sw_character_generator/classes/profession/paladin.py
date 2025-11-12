@@ -10,3 +10,8 @@ def apply_paladin_dependent_modifiers(character):
     character.allowed_weapon = ("all",)
     character.allowed_armor = ("all",)
     character.tp = wuerfle_1d8("TP", 1) + character.tp_mod
+    character.save_throw = 12
+
+    """Paladins receive an experience bonus based on their strength."""
+    if character.stat_str >= 13:
+        character.xp_bonus += 5

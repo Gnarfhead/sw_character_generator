@@ -11,5 +11,5 @@ def choosen_alignment_modifiers(player_class: PlayerClass, alignment: str):
     elif alignment.lower() == "evil" and "evil" in player_class.allowed_alignment:
         return player_class  # No changes for Evil alignment
     else:
-        print("All allowed alignments:", player_class.allowed_alignment)
+        #print("All allowed alignments:", player_class.allowed_alignment)
         raise ValueError("Unknown or not allowed alignment:", alignment)
