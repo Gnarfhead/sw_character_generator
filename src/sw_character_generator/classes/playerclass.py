@@ -1,7 +1,8 @@
 from dataclasses import dataclass, field
 
 from sw_character_generator.functions.role_dice import wuerfle_3d6
-from sw_character_generator.functions.gen_char_stat_mods import analyze_mod_str, analyze_mod_dex, analyze_mod_con, analyze_mod_int, analyze_mod_char
+from sw_character_generator.functions.gen_char_stat_mods import analyze_mod_str, analyze_mod_dex, analyze_mod_con, analyze_mod_int, analyze_mod_char   
+
 
 @dataclass
 class PlayerClass:
