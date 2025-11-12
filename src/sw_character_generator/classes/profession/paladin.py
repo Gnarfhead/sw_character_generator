@@ -1,4 +1,4 @@
-from sw_character_generator.functions.role_dice import wuerfle_1d8
+from src.sw_character_generator.functions.role_dice import wuerfle_1d8
 
 def apply_paladin_dependent_modifiers(character):
     """Apply paladin-specific modifiers to the character."""

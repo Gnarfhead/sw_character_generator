@@ -1,4 +1,4 @@
-from sw_character_generator.functions.role_dice import wuerfle_1d6
+from src.sw_character_generator.functions.role_dice import wuerfle_1d6
 
 def apply_druid_dependent_modifiers(character):
     """Apply druid-specific modifiers to the character."""

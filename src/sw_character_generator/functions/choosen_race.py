@@ -1,10 +1,10 @@
 from ctypes import alignment
-from sw_character_generator.classes.playerclass import PlayerClass
-from sw_character_generator.classes.race.dwarf import apply_dwarf_dependent_modifiers
-from sw_character_generator.classes.race.elf import apply_elf_dependent_modifiers
-from sw_character_generator.classes.race.halfelff import apply_halfelf_dependent_modifiers
-from sw_character_generator.classes.race.halfling import apply_halfling_dependent_modifiers
-from sw_character_generator.classes.race.human import apply_human_dependent_modifiers
+from src.sw_character_generator.classes.playerclass import PlayerClass
+from src.sw_character_generator.classes.race.dwarf import apply_dwarf_dependent_modifiers
+from src.sw_character_generator.classes.race.elf import apply_elf_dependent_modifiers
+from src.sw_character_generator.classes.race.halfelff import apply_halfelf_dependent_modifiers
+from src.sw_character_generator.classes.race.halfling import apply_halfling_dependent_modifiers
+from src.sw_character_generator.classes.race.human import apply_human_dependent_modifiers
 
 
 def choosen_race_modifiers(player_class: PlayerClass, race: str):

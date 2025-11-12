@@ -1,4 +1,4 @@
-from sw_character_generator.functions.role_dice import wuerfle_1d10
+from src.sw_character_generator.functions.role_dice import wuerfle_1d10
 
 def apply_fighter_dependent_modifiers(character):
     """Apply fighter-specific modifiers to the character."""

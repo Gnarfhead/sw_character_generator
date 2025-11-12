@@ -1,4 +1,4 @@
-from sw_character_generator.functions.role_dice import wuerfle_1d4
+from src.sw_character_generator.functions.role_dice import wuerfle_1d4
 
 def apply_wizard_dependent_modifiers(character):
     """Apply wizard-specific modifiers to the character."""

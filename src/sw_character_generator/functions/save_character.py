@@ -1,7 +1,7 @@
 import json
 import os
 from datetime import datetime
-from sw_character_generator.classes.playerclass import PlayerClass
+from src.sw_character_generator.classes.playerclass import PlayerClass
 
 
 def save_character(character_data: PlayerClass) -> None:
