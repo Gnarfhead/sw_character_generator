@@ -15,31 +15,31 @@ def choosen_profession_modifiers(player_class: PlayerClass, profession: str):
     """Apply profession-specific modifiers to the character."""
     if profession.lower() == "assassin":
         apply_assassin_dependent_modifiers(player_class)
-        #return player_class
+        player_class.profession = "Assassin"
     elif profession.lower() == "paladin":
         apply_paladin_dependent_modifiers(player_class)
-        #return player_class
+        player_class.profession = "Paladin"
     elif profession.lower() == "fighter":
         apply_fighter_dependent_modifiers(player_class)
-        #return player_class
+        player_class.profession = "Fighter"
     elif profession.lower() == "wizard":
         apply_wizard_dependent_modifiers(player_class)
-        #return player_class
+        player_class.profession = "Wizard"
     elif profession.lower() == "thief":
         apply_thief_dependent_modifiers(player_class)
-        #return player_class
+        player_class.profession = "Thief"
     elif profession.lower() == "ranger":
         apply_ranger_dependent_modifiers(player_class)
-        #return player_class
+        player_class.profession = "Ranger"
     elif profession.lower() == "monk":
         apply_monk_dependent_modifiers(player_class)
-        #return player_class
+        player_class.profession = "Monk"
     elif profession.lower() == "druid":
         apply_druid_dependent_modifiers(player_class)
-        #return player_class
+        player_class.profession = "Druid"
     elif profession.lower() == "cleric":
         apply_cleric_dependent_modifiers(player_class)
-        #return player_class
+        player_class.profession = "Cleric"
     else:
         raise ValueError(f"Unknown profession: {profession}")
     

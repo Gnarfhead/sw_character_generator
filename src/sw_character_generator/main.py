@@ -18,15 +18,15 @@ def main():
         age=30,
     )
     # Choose profession
-    choosen_profession_modifiers(blubb, "Thief")
+    choosen_profession_modifiers(blubb, "thief")
 
     # Choose race
-    choosen_race_modifiers(blubb, "Dwarf")
+    choosen_race_modifiers(blubb, "Elf")
 
     # Choose alignment
     choosen_alignment_modifiers(blubb, "evil")
 
-    print(blubb.__repr__())
+    print(blubb)
     save_character(blubb)
 
 

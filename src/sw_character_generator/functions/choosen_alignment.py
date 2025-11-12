@@ -5,13 +5,13 @@ def choosen_alignment_modifiers(player_class: PlayerClass, alignment: str):
 
     if alignment.lower() == "good" and "good" in player_class.allowed_alignment:
         print("DEBUG: Choosing Good alignment - alignment parameter:", alignment)
-        player_class.alignment = "good"
+        player_class.alignment = "Good"
     elif alignment.lower() == "neutral" and "neutral" in player_class.allowed_alignment:
         print("DEBUG: Choosing Neutral alignment - alignment parameter:", alignment)
-        player_class.alignment = "neutral"
+        player_class.alignment = "Neutral"
     elif alignment.lower() == "evil" and "evil" in player_class.allowed_alignment:
         print("DEBUG: Choosing Evil alignment - alignment parameter:", alignment)
-        player_class.alignment = "evil"
+        player_class.alignment = "Evil"
     else:
         print("All allowed alignments:", player_class.allowed_alignment, "Provided alignment:", alignment)
         raise ValueError("Unknown or not allowed alignment:", alignment)

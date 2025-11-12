@@ -13,23 +13,23 @@ def choosen_race_modifiers(player_class: PlayerClass, race: str):
     if race.lower() == "halfelf" and "halfelf" in player_class.allowed_races:
         print("DEBUG: Choosing Halfelf race - race parameter:", race)
         apply_halfelf_dependent_modifiers(player_class)
-        player_class.race = "halfelf"
+        player_class.race = "Halfelf"
     elif race.lower() == "dwarf" and "dwarf" in player_class.allowed_races:
         print("DEBUG: Choosing Dwarf race - race parameter:", race)
         apply_dwarf_dependent_modifiers(player_class)
-        player_class.race = "dwarf"
+        player_class.race = "Dwarf"
     elif race.lower() == "elf" and "elf" in player_class.allowed_races:
         print("DEBUG: Choosing Elf race - race parameter:", race)
         apply_elf_dependent_modifiers(player_class)
-        player_class.race = "elf"
+        player_class.race = "Elf"
     elif race.lower() == "halfling" and "halfling" in player_class.allowed_races:
         print("DEBUG: Choosing Halfling race - race parameter:", race)
         apply_halfling_dependent_modifiers(player_class)
-        player_class.race = "halfling"
+        player_class.race = "Halfling"
     elif race.lower() == "human" and "human" in player_class.allowed_races:
         print("DEBUG: Choosing Human race - race parameter:", race)
         apply_human_dependent_modifiers(player_class)
-        player_class.race = "human"
+        player_class.race = "Human"
     else:
         print("All allowed races:", player_class.allowed_races, "Provided race:", race)
         raise ValueError("Unknown or not allowed race:", race)
