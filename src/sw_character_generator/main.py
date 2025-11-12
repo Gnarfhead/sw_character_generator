@@ -17,16 +17,16 @@ def main():
     )
     
     # Choose profession
-    choosen_profession_modifiers(Blubb, "Paladin")
+    choosen_profession_modifiers(Blubb, "Assassin")
 
     # Choose race
     choosen_race_modifiers(Blubb, "Human")
 
     # Choose alignment
-    choosen_alignment_modifiers(Blubb, "Lawful Good")
+    choosen_alignment_modifiers(Blubb, "evil")
 
     print(Blubb.__repr__())
-    save_character(Blubb)
+    #save_character(Blubb)
 
 
 if __name__ == "__main__":

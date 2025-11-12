@@ -13,7 +13,7 @@ from sw_character_generator.classes.profession.wizard import apply_wizard_depend
 def choosen_profession_modifiers(player_class: PlayerClass, profession: str):
 
     """Apply profession-specific modifiers to the character."""
-    if profession.lower() == "assassin":    
+    if profession.lower() == "assassin":
         apply_assassin_dependent_modifiers(player_class)
     elif profession.lower() == "paladin":
         apply_paladin_dependent_modifiers(player_class)
