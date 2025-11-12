@@ -1,4 +1,3 @@
-
 """Functions to analyze character stats and return corresponding modifiers."""
 #from sw_character_generator.classes.playerclass import PlayerClass
 
