@@ -1,4 +1,4 @@
-def apply_halfling_dependent_modifiers(self, character):
+def apply_halfling_dependent_modifiers(character):
     """Apply Halfling-specific modifiers to the character."""
     character.race = "Halfling"
     character.darkvision = False

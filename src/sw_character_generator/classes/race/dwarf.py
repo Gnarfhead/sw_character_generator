@@ -1,4 +1,3 @@
-# Implement race-specific modifiers
 def apply_dwarf_dependent_modifiers(character):
     """Apply Dwarf-specific modifiers to the character."""
     character.race = "Dwarf"

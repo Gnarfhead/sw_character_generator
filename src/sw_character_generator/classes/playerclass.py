@@ -1,11 +1,7 @@
 from dataclasses import dataclass, field
-from typing import Set
 
 from sw_character_generator.functions.role_dice import wuerfle_3d6
 from sw_character_generator.functions.gen_char_stat_mods import analyze_mod_str, analyze_mod_dex, analyze_mod_con, analyze_mod_int, analyze_mod_char
-
-
-
 
 @dataclass
 class PlayerClass:
@@ -99,7 +95,7 @@ class PlayerClass:
         ) = analyze_mod_con(
             self.stat_con
         )
-        #print("DEBUG analyze_mod_con: ", self.stat_con)
+        print("DEBUG analyze_mod_con: ", self.stat_con, self.tp_mod, self.raise_dead_mod)
 
         #Calculate and set all INT derived modifiers after initialization."""
         (
@@ -121,6 +117,10 @@ class PlayerClass:
         )
         #print("DEBUG analyze_mod_char: ", self.stat_char)
 
+        # Update AC with DEX modifier
+        self.ac += self.ac_mod
+
+
     def __repr__(self):
         """Return a string representation of the PlayerClass instance."""
         return (
@@ -131,7 +131,7 @@ class PlayerClass:
             f"STR: {self.stat_str}    STR_mod: Attack={self.strength_atck_mod}, Damage={self.strength_damage_mod}, "
             f"Carry Capacity={self.carry_capacity_mod}, Door Crack={self.door_crack_mod}\n"
             f"DEX: {self.stat_dex}    DEX_mod: Ranged Attack={self.ranged_atck_mod}, AC Bonus={self.ac_mod}\n"
-            f"CON: {self.stat_con}    CON_mod: HP Bonus={self.tp_mod}, Raise Dead Chance={self.raise_dead_mod}%\n"
+            f"CON: {self.stat_con}    CON_mod: TP Bonus={self.tp_mod}, Raise Dead Chance={self.raise_dead_mod}%\n"
             f"INT: {self.stat_int}    INT_mod: max. Languages={self.max_add_langs}, Spell Level={self.highest_spell_level}, "
             f"Understands Spell={self.understand_spell}%, "
             f"min/max Spells per Level={self.min_spells_per_level}/{self.max_spells_per_level}\n"
