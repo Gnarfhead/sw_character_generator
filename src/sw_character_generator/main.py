@@ -20,7 +20,7 @@ def main():
     choosen_profession_modifiers(Blubb, "Thief")
 
     # Choose race
-    choosen_race_modifiers(Blubb, "Human")
+    choosen_race_modifiers(Blubb, "Dwarf")
 
     # Choose alignment
     choosen_alignment_modifiers(Blubb, "evil")
