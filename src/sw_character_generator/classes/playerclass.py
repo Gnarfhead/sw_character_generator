@@ -124,10 +124,10 @@ class PlayerClass:
     def __repr__(self):
         """Return a string representation of the PlayerClass instance."""
         return (
-            f"PlayerName={self.player_name}, CharacterName={self.character_name}\n"
+            f"Player Name={self.player_name}, Character Name={self.character_name}\n"
             f"Profession={self.profession}, "
-            f"Level={self.level}, TP_Dice=d{self.tp_dice}, MainStats={self.main_stats}\n"
-            f"xp={self.xp}, xp_bonus={self.xp_bonus}%, TP={self.tp}, Coins={self.coins}\n"
+            f"Level={self.level}, TP Dice=d{self.tp_dice}, Main Stats={self.main_stats}\n"
+            f"XP={self.xp}, XP Bonus={self.xp_bonus}%, TP={self.tp}, Coins={self.coins}\n"
             f"STR: {self.stat_str}    STR_mod: Attack={self.strength_atck_mod}, Damage={self.strength_damage_mod}, "
             f"Carry Capacity={self.carry_capacity_mod}, Door Crack={self.door_crack_mod}\n"
             f"DEX: {self.stat_dex}    DEX_mod: Ranged Attack={self.ranged_atck_mod}, AC Bonus={self.ac_mod}\n"
@@ -143,11 +143,11 @@ class PlayerClass:
             f"Languages: {list(self.add_langs)}\n"
             f"Inventory: {self.inventory}\n"
             f"Treasure: {self.treasure}\n"
-            f"darkvision: {self.darkvision}, parry: {self.parry}\n"
-            f"delicate_tasks: {self.delicate_tasks}%, climb_walls: {self.climb_walls}%, hear_sounds: {self.hear_sounds}%\n"
-            f"hide_in_shadows: {self.hide_in_shadows}%, move_silently: {self.move_silently}%, open_locks: {self.open_locks}%, surprised: {self.surprised}:6\n"
-            f"allowed_alignment: {self.allowed_alignment}, allowed_races: {self.allowed_races}\n"
-            f"allowed_weapon: {self.allowed_weapon}, allowed_armor: {self.allowed_armor}\n"
+            f"Darkvision: {self.darkvision}, Parry: {self.parry}\n"
+            f"Delicate Tasks: {self.delicate_tasks}%, Climb Walls: {self.climb_walls}%, Hear Sounds: {self.hear_sounds}%\n"
+            f"Hide in Shadows: {self.hide_in_shadows}%, Move Silently: {self.move_silently}%, Open Locks: {self.open_locks}%, Surprised: {self.surprised}:6\n"
+            f"Allowed Alignment: {self.allowed_alignment}, Allowed Races: {self.allowed_races}\n"
+            f"Allowed Weapon: {self.allowed_weapon}, Allowed Armor: {self.allowed_armor}\n"
         )
     
     def to_dict(self):
