@@ -2,6 +2,8 @@ from sw_character_generator.functions.role_dice import wuerfle_1d10
 
 def apply_fighter_dependent_modifiers(character):
     """Apply fighter-specific modifiers to the character."""
+    
+    # Set profession attributes
     character.profession = "fighter"
     character.tp_dice = 10
     character.main_stats = ("strength",)
@@ -9,9 +11,13 @@ def apply_fighter_dependent_modifiers(character):
     character.allowed_races = ("human", "halfling", "elf", "dwarf", "halfelf")
     character.allowed_weapon = ("all",)
     character.allowed_armor = ("heavy",)
-    character.tp = wuerfle_1d10("TP", 1) + character.tp_mod
     character.save_throw = 14
 
-    """Fighters receive an experience bonus based on their strength."""
+    # Calculate total TP
+    character.tp = wuerfle_1d10("TP", 1) + character.tp_mod
+    if character.tp < 1:
+        character.tp = 1
+
+    # Calculate XP bonus
     if character.stat_str >= 13:
         character.xp_bonus += 5

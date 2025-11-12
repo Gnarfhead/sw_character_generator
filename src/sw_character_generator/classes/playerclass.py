@@ -95,7 +95,7 @@ class PlayerClass:
         ) = analyze_mod_con(
             self.stat_con
         )
-        print("DEBUG analyze_mod_con: ", self.stat_con, self.tp_mod, self.raise_dead_mod)
+        #print("DEBUG analyze_mod_con: ", self.stat_con, self.tp_mod, self.raise_dead_mod)
 
         #Calculate and set all INT derived modifiers after initialization."""
         (

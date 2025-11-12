@@ -23,7 +23,7 @@ def main():
     choosen_race_modifiers(Blubb, "Human")
 
     # Choose alignment
-    choosen_alignment_modifiers(Blubb, "evil")
+    choosen_alignment_modifiers(Blubb, "Good")
 
     print(Blubb.__repr__())
     save_character(Blubb)
