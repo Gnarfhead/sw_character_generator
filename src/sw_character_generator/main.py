@@ -26,7 +26,7 @@ def main():
     choosen_alignment_modifiers(Blubb, "evil")
 
     print(Blubb.__repr__())
-    #save_character(Blubb)
+    save_character(Blubb)
 
 
 if __name__ == "__main__":

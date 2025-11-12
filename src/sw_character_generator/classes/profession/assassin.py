@@ -23,6 +23,7 @@ def apply_assassin_dependent_modifiers(character):
         "poison use: assassins are skilled in the use of poisoning weapons",
         "magic items: assassins can use magic items that are usable by thieves; additionally, they can use magic weapons, leather armor and shields",
         "disguise self: assassins can cast disguise self; danger of being discovered 5% -10% based on intelligence/wisdom of opponent",
+        "create guild (Level 14): assassins can create an assassins' guild to gather followers",
     )
 
     # Calculate total TP

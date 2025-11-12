@@ -22,6 +22,7 @@ def apply_thief_dependent_modifiers(character):
         "sneak attack: thieves gain a +4 bonus to attack and damage rolls are doubled when attacking opponent from behind",
         "read languages  (Level 3): thieves can read all written languages; 80% chance to understand maps and written information",
         "read magic language (Level 9): thieves can read magic inscriptions on magical items and scrolls and cast wizard-spells from scrolls",
+        "create guild (Level 9): thieves can create a thieves' guild to gather followers",
     )
     character.save_bonuses += (
         "+2 against traps and mechanical devices: Include traps, wands and magical devices",
