@@ -2,7 +2,8 @@
 from dataclasses import dataclass, field
 
 #from src.sw_character_generator.functions.role_dice import wuerfle_3d6
-from src.sw_character_generator.functions.gen_char_stat_mods import analyze_mod_str, analyze_mod_dex, analyze_mod_con, analyze_mod_int, analyze_mod_char   
+from src.sw_character_generator.functions.gen_char_stat_mods import analyze_mod_str, analyze_mod_dex, analyze_mod_con, analyze_mod_int, analyze_mod_char
+from sw_character_generator.functions.role_dice import wuerfle_3d6
 
 
 @dataclass
@@ -20,7 +21,7 @@ class PlayerClass:
     gender: str = "Undefined"
     god: str = "Undefined"
     age: int = 0
-    xp_bonus: int = 0
+    xp_bonus = 0
     xp: int = 0
     tp: int = 0
     save_throw: int = 0
@@ -28,19 +29,21 @@ class PlayerClass:
     immunity: tuple[str, ...] = field(default_factory=tuple)
     special_abilities: tuple[str, ...] = field(default_factory=tuple)
     ac: int = 10
-    stat_str: int = field(default_factory=0)
-    stat_dex: int = field(default_factory=0)
-    stat_con: int = field(default_factory=0)
-    stat_wis: int = field(default_factory=0)
-    stat_int: int = field(default_factory=0)
-    stat_char: int = field(default_factory=0)
-    #stat_str: int = field(default_factory=lambda: wuerfle_3d6(str_desc="Strength"))
-    #stat_dex: int = field(default_factory=lambda: wuerfle_3d6(str_desc="Dexterity"))
-    #stat_con: int = field(default_factory=lambda: wuerfle_3d6(str_desc="Constitution"))
-    #stat_wis: int = field(default_factory=lambda: wuerfle_3d6(str_desc="Wisdom"))
-    #stat_int: int = field(default_factory=lambda: wuerfle_3d6(str_desc="Intelligence"))
-    #stat_char: int = field(default_factory=lambda: wuerfle_3d6(str_desc="Charisma"))
+    #stat_str: int = field(default_factory=0)
+    #stat_dex: int = field(default_factory=0)
+    #stat_con: int = field(default_factory=0)
+    #stat_wis: int = field(default_factory=0)
+    #stat_int: int = field(default_factory=0)
+    #stat_char: int = field(default_factory=0)
+    stat_str: int = field(default_factory=lambda: wuerfle_3d6(str_desc="Strength"))
+    stat_dex: int = field(default_factory=lambda: wuerfle_3d6(str_desc="Dexterity"))
+    stat_con: int = field(default_factory=lambda: wuerfle_3d6(str_desc="Constitution"))
+    stat_wis: int = field(default_factory=lambda: wuerfle_3d6(str_desc="Wisdom"))
+    stat_int: int = field(default_factory=lambda: wuerfle_3d6(str_desc="Intelligence"))
+    stat_char: int = field(default_factory=lambda: wuerfle_3d6(str_desc="Charisma"))
     inventory: list[str] = field(default_factory=list)
+
+
     strength_atck_mod: float = field(init=False)
     strength_damage_mod: float = field(init=False)
     carry_capacity_mod: float = field(init=False)
@@ -54,8 +57,26 @@ class PlayerClass:
     understand_spell: int = field(init=False)
     min_spells_per_level: int = field(init=False)
     max_spells_per_level: int = field(init=False)
-    add_langs: tuple[str, ...] = field(default_factory=tuple)
     cap_spec_hirelings: int = field(init=False)
+
+    """
+    strength_atck_mod: float = field(default_factory=0)
+    strength_damage_mod: float = field(default_factory=0)
+    carry_capacity_mod: float = field(default_factory=0)
+    door_crack_mod: float = field(default_factory=0)
+    ranged_atck_mod: int = field(default_factory=0)
+    ac_mod: int = field(default_factory=0)
+    tp_mod: int = field(default_factory=0)
+    raise_dead_mod: int = field(default_factory=0)
+    max_add_langs: int = field(default_factory=0)
+    highest_spell_level: int = field(default_factory=0)
+    understand_spell: int = field(default_factory=0)
+    min_spells_per_level: int = field(default_factory=0)
+    max_spells_per_level: int = field(default_factory=0)
+    cap_spec_hirelings: int = field(default_factory=0)
+    """
+
+    add_langs: tuple[str, ...] = field(default_factory=tuple)    
     treasure: list[str] = field(default_factory=list)
     coins: int = field(default_factory=0)
     #coins: int = field(default_factory=lambda: wuerfle_3d6(str_desc="Starting Coins") * 10)
@@ -72,11 +93,10 @@ class PlayerClass:
     surprised: int = 2
     darkvision: bool = False
     parry: int = 0
+
     
     def __post_init__(self):
-        """Post-initialization processing to set derived attributes."""        
-
-        """
+                
         # Calculate and set all STR derived modifiers after initialization.
         (
             self.strength_atck_mod,
@@ -129,7 +149,7 @@ class PlayerClass:
 
         # Update AC with DEX modifier
         self.ac += self.ac_mod
-        """
+
 
 
     def __repr__(self):

@@ -25,14 +25,12 @@ def start_cli():
     
     # Roll attributes
     print("Rolling attributes...")
-    """
-    player_character.stat_str = wuerfle_3d6("Strength")
-    player_character.stat_dex = wuerfle_3d6("Dexterity")
-    player_character.stat_con = wuerfle_3d6("Constitution")
-    player_character.stat_int = wuerfle_3d6("Intelligence")
-    player_character.stat_wis = wuerfle_3d6("Wisdom")
-    player_character.stat_cha = wuerfle_3d6("Charisma")
-    """
+    player_character.stat_str = wuerfle_3d6(str_desc="Strength")
+    player_character.stat_dex = wuerfle_3d6(str_desc="Dexterity")
+    player_character.stat_con = wuerfle_3d6(str_desc="Constitution")
+    player_character.stat_int = wuerfle_3d6(str_desc="Intelligence")
+    player_character.stat_wis = wuerfle_3d6(str_desc="Wisdom")
+    player_character.stat_cha = wuerfle_3d6(str_desc="Charisma")
     print("\n")
     
     # Choose profession
