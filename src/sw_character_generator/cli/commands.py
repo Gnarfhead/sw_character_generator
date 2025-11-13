@@ -1,3 +1,4 @@
+"""CLI commands for the Swords & Wizardry character generator."""
 from sw_character_generator.classes.playerclass import PlayerClass
 from sw_character_generator.functions.choosen_alignment import choosen_alignment_modifiers
 from sw_character_generator.functions.choosen_profession import choosen_profession_modifiers
@@ -6,6 +7,7 @@ from sw_character_generator.functions.save_character import save_character
 
 
 def start_cli():
+    """Start the CLI for the character generator."""
     print("Willkommen zur CLI des Charaktergenerators!")
     # Hier weitere Interaktion oder Argument-Parsing ergänzen
 
@@ -28,16 +30,20 @@ def start_cli():
     print("\n")
 
     # Choose race
-    print(f"Choose your race:")
+    print("Choose your race:")
     print(f"{player_character.allowed_races}\n")
-    choosen_race_modifiers(player_character, input("Please enter your race: "))
+    race_input = str(input("Please enter your race: "))
+    choosen_race_modifiers(player_character, race_input)
     print("\n")
 
     # Choose alignment
-    print(f"Choose your alignment:")
+    print("Choose your alignment:")
     print(f"{player_character.allowed_alignment}\n")
     choosen_alignment_modifiers(player_character, input("Please enter your alignment: "))
     print("\n")
 
+    # Final character output
     print(player_character)
+
+    
     #save_character(player_character)
