@@ -37,13 +37,13 @@ def apply_monk_dependent_modifiers(character):
         "harmony touch (Level 13): connect through touch with another living being when TP die is equal or less; stop the heart and kill the being instantly",
         
     )
-    character.immunities += (
+    character.immunity += (
         "mastering self (Level 8): immune against mindcontrol, charm and hypnosis; except the spells 'geas' and 'command'",
         "be one with your self (Level 9): also immune against spells 'geas' and 'command'",
     )
 
     # Calculate total TP
-    character.tp = wuerfle_1d4("TP", 1) + character.tp_mod
+    character.tp = wuerfle_1d4(1) + character.tp_mod
     if character.tp < 1:
         character.tp = 1
 

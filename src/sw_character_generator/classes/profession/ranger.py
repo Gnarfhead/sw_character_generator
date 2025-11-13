@@ -14,7 +14,7 @@ def apply_ranger_dependent_modifiers(character):
     character.save_throw = 14
 
     # Calculate total TP
-    character.tp = wuerfle_1d8("TP", 2) + character.tp_mod
+    character.tp = wuerfle_1d8(2) + character.tp_mod
     if character.tp < 1:
         character.tp = 1
 

@@ -22,7 +22,7 @@ def apply_cleric_dependent_modifiers(character):
     )
 
     # Calculate total TP
-    character.tp = wuerfle_1d6("TP", 1) + character.tp_mod
+    character.tp = wuerfle_1d6(1) + character.tp_mod
     if character.tp < 1:
         character.tp = 1
 

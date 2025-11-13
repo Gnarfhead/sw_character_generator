@@ -14,7 +14,7 @@ def apply_wizard_dependent_modifiers(character):
     character.save_throw = 15
 
     # Calculate total TP
-    character.tp = wuerfle_1d4("TP", 1) + character.tp_mod
+    character.tp = wuerfle_1d4(1) + character.tp_mod
     if character.tp < 1:
         character.tp = 1
 

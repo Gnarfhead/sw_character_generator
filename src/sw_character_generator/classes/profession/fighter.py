@@ -30,7 +30,7 @@ def apply_fighter_dependent_modifiers(character):
         character.parry += -5
 
     # Calculate total TP
-    character.tp = wuerfle_1d10("TP", 1) + character.tp_mod
+    character.tp = wuerfle_1d10(1) + character.tp_mod
     if character.tp < 1:
         character.tp = 1
 

@@ -25,7 +25,7 @@ def apply_paladin_dependent_modifiers(character):
     )
 
     # Calculate total TP
-    character.tp = wuerfle_1d8("TP", 1) + character.tp_mod
+    character.tp = wuerfle_1d8(1) + character.tp_mod
     if character.tp < 1:
         character.tp = 1
 
