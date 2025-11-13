@@ -1,101 +1,175 @@
 """Functions to analyze character stats and return corresponding modifiers."""
-#from sw_character_generator.classes.playerclass import PlayerClass
+from sw_character_generator.classes.playerclass import PlayerClass
 
 
-def analyze_mod_str(strength: float, profession: str):
+def analyze_mod_str(player_character: PlayerClass):
     """Calculate strength-based modifiers. Positive bonuses only apply to fighters."""
-    if 3 <= strength <= 4:
-        return -2, -1, -5, 1
-    elif 5 <= strength <= 6:
-        return -1, 0, -2.5, 1
-    elif 7 <= strength <= 8:
-        return 0, 0, 0, 2
-    elif 9 <= strength <= 12:
-        return 0, 0, 2.5, 2
-    elif 13 <= strength <= 15:
-        strength_atck_mod = 1 if profession.lower() == "fighter" else 0
-        return strength_atck_mod, 0, 5, 2
-    elif strength == 16:
-        strength_atck_mod = 1 if profession.lower() == "fighter" else 0
-        strength_damage_mod = 1 if profession.lower() == "fighter" else 0
-        return strength_atck_mod, strength_damage_mod, 7.5, 3
-    elif strength == 17:
-        strength_atck_mod = 2 if profession.lower() == "fighter" else 0
-        strength_damage_mod = 2 if profession.lower() == "fighter" else 0
-        return strength_atck_mod, strength_damage_mod, 15, 4
-    elif strength == 18:
-        strength_atck_mod = 2 if profession.lower() == "fighter" else 0
-        strength_damage_mod = 3 if profession.lower() == "fighter" else 0
-        return strength_atck_mod, strength_damage_mod, 25, 5
+    if 3 <= player_character.stat_str <= 4:
+        player_character.strength_atck_mod = -2
+        player_character.strength_damage_mod = -1
+        player_character.carry_capacity_mod = -5
+        player_character.door_crack_mod = 1
+    elif 5 <= player_character.stat_str <= 6:
+        player_character.strength_atck_mod = -1
+        player_character.strength_damage_mod = 0
+        player_character.carry_capacity_mod = -2.5
+        player_character.door_crack_mod = 1
+    elif 7 <= player_character.stat_str <= 8:
+        player_character.strength_atck_mod = 0
+        player_character.strength_damage_mod = 0
+        player_character.carry_capacity_mod = 0
+        player_character.door_crack_mod = 2
+    elif 9 <= player_character.stat_str <= 12:
+        player_character.strength_atck_mod = 0
+        player_character.strength_damage_mod = 0
+        player_character.carry_capacity_mod = 2.5
+        player_character.door_crack_mod = 2
+    elif 13 <= player_character.stat_str <= 15:
+        player_character.strength_atck_mod = 1 if player_character.profession.lower() == "fighter" else 0
+        player_character.strength_damage_mod = 0
+        player_character.carry_capacity_mod = 5
+        player_character.door_crack_mod = 2
+    elif player_character.stat_str == 16:
+        player_character.strength_atck_mod = 1 if player_character.profession.lower() == "fighter" else 0
+        player_character.strength_damage_mod = 1 if player_character.profession.lower() == "fighter" else 0
+        player_character.carry_capacity_mod = 7.5
+        player_character.door_crack_mod = 3
+    elif player_character.stat_str == 17:
+        player_character.strength_atck_mod = 2 if player_character.profession.lower() == "fighter" else 0
+        player_character.strength_damage_mod = 2 if player_character.profession.lower() == "fighter" else 0
+        player_character.carry_capacity_mod = 15
+        player_character.door_crack_mod = 4
+    elif player_character.stat_str == 18:
+        player_character.strength_atck_mod = 2 if player_character.profession.lower() == "fighter" else 0
+        player_character.strength_damage_mod = 3 if player_character.profession.lower() == "fighter" else 0
+        player_character.carry_capacity_mod = 25
+        player_character.door_crack_mod = 5
     else:
-        return None
+        raise ValueError("Strength stat out of bounds:", player_character.stat_str)
 
-def analyze_mod_dex(dexterity: int):
+def analyze_mod_dex(player_character: PlayerClass):
     """Calculate dexterity based modifiers."""
-    if 3 <= dexterity <= 8:
-        return -1, -1
-    elif 9 <= dexterity <= 12:
-        return 0, 0
-    elif 13 <= dexterity <= 18:
-        return 1, 1
+    if 3 <= player_character.stat_dex <= 8:
+        player_character.ranged_atck_mod = -1
+        player_character.ac_mod = -1
+    elif 9 <= player_character.stat_dex <= 12:
+        player_character.ranged_atck_mod = 0
+        player_character.ac_mod = 0
+    elif 13 <= player_character.stat_dex <= 18:
+        player_character.ranged_atck_mod = 1
+        player_character.ac_mod = 1
     else:
-        return None
+        raise ValueError("Dexterity stat out of bounds:", player_character.stat_dex)
 
-def analyze_mod_con(constitution: int):
+    # Update AC with DEX modifier
+    player_character.ac += player_character.ac_mod
+
+def analyze_mod_con(player_character: PlayerClass):
     """Calculate constitution based modifiers."""
-    if 3 <= constitution <= 8:
-        return -1, 50
-    elif 9 <= constitution <= 12:
-        return 0, 75
-    elif 13 <= constitution <= 18:
-        return 1, 100
+    if 3 <= player_character.stat_con <= 8:
+        player_character.tp_mod = -1
+        player_character.raise_dead_mod = 50
+    elif 9 <= player_character.stat_con <= 12:
+        player_character.tp_mod = 0
+        player_character.raise_dead_mod = 75
+    elif 13 <= player_character.stat_con <= 18:
+        player_character.tp_mod = 1
+        player_character.raise_dead_mod = 100
     else:
-        return None
+        raise ValueError("Constitution stat out of bounds:", player_character.stat_con)
 
-def analyze_mod_int(intelligence: int):
+def analyze_mod_int(player_character: PlayerClass):
     """Calculate intelligence based modifiers."""
-    if 3 <= intelligence <= 7:
-        return 0, 4, 30, 2, 4
-    elif intelligence == 8:
-        return 1, 5, 40, 3, 5
-    elif intelligence == 9:
-        return 1, 6, 45, 4, 6
-    elif intelligence == 10:
-        return 2, 5, 50, 4, 6
-    elif intelligence == 11:
-        return 2, 6, 50, 4, 6
-    elif intelligence == 12:
-        return 3, 5, 55, 4, 6
-    elif intelligence == 13:
-        return 3, 6, 65, 5, 7
-    elif intelligence == 14:
-        return 4, 7, 65, 5, 8
-    elif intelligence == 15:
-        return 4, 8, 75, 6, 10
-    elif intelligence == 16:
-        return 5, 8, 75, 6, 10
-    elif intelligence == 17:
-        return 5, 9, 85, 7, 100
-    elif intelligence == 18:
-        return 6, 9, 95, 8, 100
+    if 3 <= player_character.stat_int <= 7:
+        player_character.max_add_langs = 0
+        player_character.highest_spell_level = 4
+        player_character.understand_spell = 30
+        player_character.min_spells_per_level = 2
+        player_character.max_spells_per_level = 4
+    elif player_character.stat_int == 8:
+        player_character.max_add_langs = 1
+        player_character.highest_spell_level = 5
+        player_character.understand_spell = 40
+        player_character.min_spells_per_level = 3
+        player_character.max_spells_per_level = 5
+    elif player_character.stat_int == 9:
+        player_character.max_add_langs = 1
+        player_character.highest_spell_level = 5
+        player_character.understand_spell = 45
+        player_character.min_spells_per_level = 3
+        player_character.max_spells_per_level = 5
+    elif player_character.stat_int == 10:
+        player_character.max_add_langs = 2
+        player_character.highest_spell_level = 5
+        player_character.understand_spell = 50
+        player_character.min_spells_per_level = 4
+        player_character.max_spells_per_level = 6
+    elif player_character.stat_int == 11:
+        player_character.max_add_langs = 2
+        player_character.highest_spell_level = 6
+        player_character.understand_spell = 50
+        player_character.min_spells_per_level = 4
+        player_character.max_spells_per_level = 6
+    elif player_character.stat_int == 12:
+        player_character.max_add_langs = 3
+        player_character.highest_spell_level = 6
+        player_character.understand_spell = 55
+        player_character.min_spells_per_level = 4
+        player_character.max_spells_per_level = 6
+    elif player_character.stat_int == 13:
+        player_character.max_add_langs = 3
+        player_character.highest_spell_level = 7
+        player_character.understand_spell = 65
+        player_character.min_spells_per_level = 5
+        player_character.max_spells_per_level = 8
+    elif player_character.stat_int == 14:
+        player_character.max_add_langs = 4
+        player_character.highest_spell_level = 7
+        player_character.understand_spell = 65
+        player_character.min_spells_per_level = 5
+        player_character.max_spells_per_level = 8
+    elif player_character.stat_int == 15:
+        player_character.max_add_langs = 4
+        player_character.highest_spell_level = 8
+        player_character.understand_spell = 75
+        player_character.min_spells_per_level = 6
+        player_character.max_spells_per_level = 10
+    elif player_character.stat_int == 16:
+        player_character.max_add_langs = 5
+        player_character.highest_spell_level = 8
+        player_character.understand_spell = 75
+        player_character.min_spells_per_level = 6
+        player_character.max_spells_per_level = 10
+    elif player_character.stat_int == 17:
+        player_character.max_add_langs = 5
+        player_character.highest_spell_level = 9
+        player_character.understand_spell = 85
+        player_character.min_spells_per_level = 7
+        player_character.max_spells_per_level = 100
+    elif player_character.stat_int == 18:
+        player_character.max_add_langs = 6
+        player_character.highest_spell_level = 9
+        player_character.understand_spell = 95
+        player_character.min_spells_per_level = 8
+        player_character.max_spells_per_level = 100
     else:
-        return None
+        raise ValueError("Intelligence stat out of bounds:", player_character.stat_int)
 
-def analyze_mod_char(charisma: int):
+def analyze_mod_char(player_character: PlayerClass):
     """Calculate charisma based modifiers."""
-    if 3 <= charisma <= 4:
-        return 1
-    elif 5 <= charisma <= 6:
-        return 2
-    elif 7 <= charisma <= 8:
-        return 3
-    elif 9 <= charisma <= 12:
-        return 4
-    elif 13 <= charisma <= 15:
-        return 5
-    elif 16 <= charisma <= 17:
-        return 6
-    elif charisma == 18:
-        return 7
+    if 3 <= player_character.stat_char <= 4:
+        player_character.cap_spec_hirelings = 1 
+    elif 5 <= player_character.stat_char <= 6:
+        player_character.cap_spec_hirelings = 2
+    elif 7 <= player_character.stat_char <= 8:
+        player_character.cap_spec_hirelings = 3
+    elif 9 <= player_character.stat_char <= 12:
+        player_character.cap_spec_hirelings = 4
+    elif 13 <= player_character.stat_char <= 15:
+        player_character.cap_spec_hirelings = 5
+    elif 16 <= player_character.stat_char <= 17:
+        player_character.cap_spec_hirelings = 6
+    elif player_character.stat_char == 18:
+        player_character.cap_spec_hirelings = 7
     else:
-        return None
+        raise ValueError("Charisma stat out of bounds:", player_character.stat_char)

@@ -3,6 +3,7 @@ from sw_character_generator.classes.playerclass import PlayerClass
 from sw_character_generator.functions.choosen_alignment import choosen_alignment_modifiers
 from sw_character_generator.functions.choosen_profession import choosen_profession_modifiers
 from sw_character_generator.functions.choosen_race import choosen_race_modifiers
+from sw_character_generator.functions.gen_char_stat_mods import analyze_mod_char, analyze_mod_con, analyze_mod_dex, analyze_mod_int, analyze_mod_str
 from sw_character_generator.functions.role_dice import wuerfle_3d6
 from sw_character_generator.functions.save_character import save_character
 
@@ -22,17 +23,27 @@ def start_cli():
         god = str(input("Please enter your god: "))
     )
     print(f"Character {player_character.character_name} created for player {player_character.player_name}.")
-    
-    # Roll attributes
-    print("Rolling attributes...")
+
+    # Roll stats
+    print("Rolling character stats (3d6 each):")
     player_character.stat_str = wuerfle_3d6(str_desc="Strength")
     player_character.stat_dex = wuerfle_3d6(str_desc="Dexterity")
     player_character.stat_con = wuerfle_3d6(str_desc="Constitution")
-    player_character.stat_int = wuerfle_3d6(str_desc="Intelligence")
     player_character.stat_wis = wuerfle_3d6(str_desc="Wisdom")
-    player_character.stat_cha = wuerfle_3d6(str_desc="Charisma")
-    print("\n")
-    
+    player_character.stat_int = wuerfle_3d6(str_desc="Intelligence")
+    player_character.stat_char = wuerfle_3d6(str_desc="Charisma")
+
+    # Apply stat modifiers
+    analyze_mod_str(player_character)
+    analyze_mod_dex(player_character)
+    analyze_mod_con(player_character)
+    analyze_mod_int(player_character)
+    analyze_mod_char(player_character)
+ 
+    # Roll starting coins
+    player_character.coins = wuerfle_3d6(str_desc="Starting Coins") * 10
+
+
     # Choose profession
     print("Choose your profession:")
     print(" Assassin\n Cleric\n Druid\n Fighter\n Monk\n Paladin\n Ranger\n Thief\n Wizard\n")
