@@ -1,6 +1,7 @@
+"""Module defining the PlayerClass dataclass for character representation."""
 from dataclasses import dataclass, field
 
-from src.sw_character_generator.functions.role_dice import wuerfle_3d6
+#from src.sw_character_generator.functions.role_dice import wuerfle_3d6
 from src.sw_character_generator.functions.gen_char_stat_mods import analyze_mod_str, analyze_mod_dex, analyze_mod_con, analyze_mod_int, analyze_mod_char   
 
 
@@ -27,12 +28,18 @@ class PlayerClass:
     immunity: tuple[str, ...] = field(default_factory=tuple)
     special_abilities: tuple[str, ...] = field(default_factory=tuple)
     ac: int = 10
-    stat_str: int = field(default_factory=lambda: wuerfle_3d6(str_desc="Strength"))
-    stat_dex: int = field(default_factory=lambda: wuerfle_3d6(str_desc="Dexterity"))
-    stat_con: int = field(default_factory=lambda: wuerfle_3d6(str_desc="Constitution"))
-    stat_wis: int = field(default_factory=lambda: wuerfle_3d6(str_desc="Wisdom"))
-    stat_int: int = field(default_factory=lambda: wuerfle_3d6(str_desc="Intelligence"))
-    stat_char: int = field(default_factory=lambda: wuerfle_3d6(str_desc="Charisma"))
+    stat_str: int = field(default_factory=0)
+    stat_dex: int = field(default_factory=0)
+    stat_con: int = field(default_factory=0)
+    stat_wis: int = field(default_factory=0)
+    stat_int: int = field(default_factory=0)
+    stat_char: int = field(default_factory=0)
+    #stat_str: int = field(default_factory=lambda: wuerfle_3d6(str_desc="Strength"))
+    #stat_dex: int = field(default_factory=lambda: wuerfle_3d6(str_desc="Dexterity"))
+    #stat_con: int = field(default_factory=lambda: wuerfle_3d6(str_desc="Constitution"))
+    #stat_wis: int = field(default_factory=lambda: wuerfle_3d6(str_desc="Wisdom"))
+    #stat_int: int = field(default_factory=lambda: wuerfle_3d6(str_desc="Intelligence"))
+    #stat_char: int = field(default_factory=lambda: wuerfle_3d6(str_desc="Charisma"))
     inventory: list[str] = field(default_factory=list)
     strength_atck_mod: float = field(init=False)
     strength_damage_mod: float = field(init=False)
@@ -50,7 +57,8 @@ class PlayerClass:
     add_langs: tuple[str, ...] = field(default_factory=tuple)
     cap_spec_hirelings: int = field(init=False)
     treasure: list[str] = field(default_factory=list)
-    coins: int = field(default_factory=lambda: wuerfle_3d6(str_desc="Starting Coins") * 10)
+    coins: int = field(default_factory=0)
+    #coins: int = field(default_factory=lambda: wuerfle_3d6(str_desc="Starting Coins") * 10)
     allowed_alignment: str = "Undefined"
     allowed_races: str = "Undefined"
     allowed_armor: str = "Undefined"
@@ -68,7 +76,8 @@ class PlayerClass:
     def __post_init__(self):
         """Post-initialization processing to set derived attributes."""        
 
-        # Calculate and set all STR derived modifiers after initialization."""
+        """
+        # Calculate and set all STR derived modifiers after initialization.
         (
             self.strength_atck_mod,
             self.strength_damage_mod,
@@ -78,27 +87,27 @@ class PlayerClass:
             self.stat_str,
             self.profession
         )
-        #print("DEBUG analyze_mod_str - STAT:", self.stat_str, "PROFESSION:", self.profession)
+        # print("DEBUG analyze_mod_str - STAT:", self.stat_str, "PROFESSION:", self.profession)
         
-        #Calculate and set all DEX derived modifiers after initialization."""
+        # Calculate and set all DEX derived modifiers after initialization.
         (
             self.ranged_atck_mod,
             self.ac_mod
         ) = analyze_mod_dex(
             self.stat_dex
         )
-        #print("DEBUG analyze_mod_dex: ", self.stat_dex)
+        # print("DEBUG analyze_mod_dex: ", self.stat_dex)
 
-        #Calculate and set all CON derived modifiers after initialization."""
+        # Calculate and set all CON derived modifiers after initialization.
         (
             self.tp_mod,
             self.raise_dead_mod
         ) = analyze_mod_con(
             self.stat_con
         )
-        #print("DEBUG analyze_mod_con: ", self.stat_con, self.tp_mod, self.raise_dead_mod)
+        # print("DEBUG analyze_mod_con: ", self.stat_con, self.tp_mod, self.raise_dead_mod)
 
-        #Calculate and set all INT derived modifiers after initialization."""
+        # Calculate and set all INT derived modifiers after initialization.
         (
             self.max_add_langs,
             self.highest_spell_level,
@@ -108,9 +117,9 @@ class PlayerClass:
         ) = analyze_mod_int(
             self.stat_int
         )
-        #print("DEBUG analyze_mod_int: ", self.stat_int)
+        # print("DEBUG analyze_mod_int: ", self.stat_int)
         
-        #Calculate and set all CHAR derived modifiers after initialization."""
+        # Calculate and set all CHAR derived modifiers after initialization.
         (
             self.cap_spec_hirelings
         ) = analyze_mod_char(
@@ -120,6 +129,7 @@ class PlayerClass:
 
         # Update AC with DEX modifier
         self.ac += self.ac_mod
+        """
 
 
     def __repr__(self):
