@@ -34,5 +34,5 @@ def apply_druid_dependent_modifiers(character):
     # Calculate XP bonus
     if character.stat_wis >= 13:
         character.xp_bonus += 5
-    if character.stat_cha >= 13:
+    if character.stat_char >= 13:
         character.xp_bonus += 5
