@@ -24,6 +24,19 @@ ENTRY_WIDTH = 20
 PADX = 8
 PADY = 6
 
+def label_entry(parent, text, row, column, var=None, widget="entry", width=ENTRY_WIDTH, columnspan=1, **grid_opts):
+    lbl = ttk.Label(parent, text=text)
+    lbl.grid(row=row, column=column, sticky="w", padx=PADX, pady=PADY)
+    if widget == "entry":
+        ent = ttk.Entry(parent, textvariable=var, width=width)
+        ent.grid(row=row, column=column + 1, columnspan=columnspan, sticky="ew", padx=PADX, pady=PADY, **grid_opts)
+        return lbl, ent
+    elif widget == "combobox":
+        cb = ttk.Combobox(parent, textvariable=var, state="readonly", width=width)
+        cb.grid(row=row, column=column + 1, columnspan=columnspan, sticky="ew", padx=PADX, pady=PADY, **grid_opts)
+        return lbl, cb
+    else:
+        raise ValueError("Unsupported widget type")
 
 class App:
     """Class-based GUI for the character generator."""
@@ -98,12 +111,13 @@ class App:
         last = load_local_player()
         if last:
             try:
+                print("Found saved LocalPlayer, loading into fields...")
                 self.player_var.set(last.get("player_name", ""))
                 self.character_var.set(last.get("character_name", ""))
                 self.age_var.set(last.get("age", ""))
                 self.gender_var.set(last.get("gender", ""))
                 self.god_var.set(last.get("deity", ""))
-                #self.god_var.set(last.get("deity", ""))
+                self.god_var.set(last.get("deity", ""))
                 self.update_status("Automatisch geladene gespeicherte Werte.")
             except Exception:
                 pass
@@ -115,14 +129,7 @@ class App:
         # Create top frame and place it with grid (do not mix pack/grid on root)
         self.top_frame = ttk.Frame(self.root, borderwidth=5, relief="ridge", padding=(6, 6))
         self.top_frame.grid(row=0, column=0, columnspan=3, padx=10, pady=10, sticky="ew")
-
-        # Configure top_frame columns for a responsive layout (6 logical columns: label/value pairs)
-        for c in range(6):
-            if c % 2 == 0:
-                self.top_frame.grid_columnconfigure(c, weight=0, minsize=LABEL_MIN_W)
-            else:
-                self.top_frame.grid_columnconfigure(c, weight=1, minsize=VALUE_MIN_W)
-
+       
         # Row 0: basic fields
         label_entry(self.top_frame, "Spieler:in:", 0, 0, var=self.player_var, columnspan=1)
         label_entry(self.top_frame, "SC Name:", 0, 2, var=self.character_var, columnspan=1)

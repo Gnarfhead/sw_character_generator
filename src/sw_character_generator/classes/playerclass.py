@@ -31,21 +31,21 @@ class PlayerClass:
     stat_int: int = field(default=0)
     stat_char: int = field(default=0)
     inventory: list[str] = field(default_factory=list)
-    strength_atck_mod: float = field(init=False)
-    strength_damage_mod: float = field(init=False)
-    carry_capacity_mod: float = field(init=False)
-    door_crack_mod: float = field(init=False)
-    ranged_atck_mod: int = field(init=False)
-    ac_mod: int = field(init=False)
+    strength_atck_mod: float = 0.0
+    strength_damage_mod: float = 0.0
+    carry_capacity_mod: float = 0.0
+    door_crack_mod: float = 0.0
+    ranged_atck_mod: int = 0
+    ac_mod: int = 0
     hp_mod: int = 0
-    raise_dead_mod: int = field(init=False)
-    max_add_langs: int = field(init=False)
-    highest_spell_level: int = field(init=False)
-    understand_spell: int = field(init=False)
-    min_spells_per_level: int = field(init=False)
-    max_spells_per_level: int = field(init=False)
-    cap_spec_hirelings: int = field(init=False)
-    add_langs: tuple[str, ...] = field(default_factory=tuple)    
+    raise_dead_mod: int = 0
+    max_add_langs: int = 0
+    highest_spell_level: int = 0
+    understand_spell: int = 0
+    min_spells_per_level: int = 0
+    max_spells_per_level: int = 0
+    cap_spec_hirelings: int = 0
+    add_langs: tuple[str, ...] = field(default_factory=tuple)
     treasure: list[str] = field(default_factory=list)
     coins: int = field(default=0)
     allowed_alignment: str = "Undefined"
