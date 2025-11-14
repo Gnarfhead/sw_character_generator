@@ -1,38 +1,19 @@
-"""GUI application for the Swords & Wizardry character generator."""
+"""GUI application for the Swords & Wizardry character generator.
+
+This file provides an App class that encapsulates the Tk GUI, previously implemented
+as a collection of functions. The module still exposes start_gui() for backwards
+compatibility (main.py imports start_gui).
+"""
 import tkinter as tk
 import tkinter.ttk as ttk
 import tkinter.scrolledtext as scrolledtext
 import tkinter.messagebox as messagebox
-from sw_character_generator.core.services import character_from_localplayer
-from sw_character_generator.core.models import LocalPlayer
+from dataclasses import dataclass, asdict
+import json
+import sys
+from typing import Optional, Tuple
 
-
-
-def on_save_player():
-    nonlocal current_local_player
-    lp = build_local_player_from_vars()
-    current_local_player = lp
-
-    # Erzeuge Character-Objekt und prüfe Fehler
-    character_obj, errors = character_from_localplayer(lp)
-    if errors:
-        # einfache Rückmeldung an User
-        messagebox.showerror("Ungültige Eingaben", "\n".join(errors))
-        update_status("Fehler beim Erstellen des Characters: " + "; ".join(errors))
-        return
-
-    # Wenn alles ok: hier kannst du entweder PlayerClass binden oder das Character-Objekt weiterverwenden
-    # z.B. temporär in-memory speichern, an Services weitergeben, testen, etc.
-    print("Character object created:", character_obj)
-    update_status(f"Character erstellt: {character_obj.character_name} (Spieler: {character_obj.player_name})")
-
-    # Option: falls du weiterhin PlayerClass binden willst, kannst du das hier aufrufen (wie bisher)
-    bound = try_bind_to_playerclass(lp)
-    if bound:
-        update_status("Daten zusätzlich in PlayerClass geschrieben.")
-    else:
-        _safe_json_dump(asdict(lp), _PLAYER_PERSIST_FILE)
-        update_status("Lokale Felder gespeichert (PlayerClass nicht aktualisiert).")
+from sw_character_generator.classes.playerclass import PlayerClass
 
 # Layout / sizing constants
 ROOT_MIN_W = 900
@@ -43,276 +24,418 @@ ENTRY_WIDTH = 20
 PADX = 8
 PADY = 6
 
-
-def _label_entry(parent, text, row, column, var=None, widget="entry", width=ENTRY_WIDTH, columnspan=1, **grid_opts):
-    """Helper to create a label + entry/combobox and grid them neatly.
-    - parent: parent widget
-    - text: label text
-    - row, column: position for label (value placed at column+1 by default)
-    - widget: "entry" or "combobox"
-    - width: widget width in characters
-    - columnspan: how many columns the value widget should span (starting at column+1)
-    """
-    lbl = ttk.Label(parent, text=text)
-    lbl.grid(row=row, column=column, sticky="w", padx=PADX, pady=PADY)
-    if widget == "entry":
-        ent = ttk.Entry(parent, textvariable=var, width=width)
-        ent.grid(row=row, column=column + 1, columnspan=columnspan, sticky="ew", padx=PADX, pady=PADY, **grid_opts)
-        return lbl, ent
-    elif widget == "combobox":
-        cb = ttk.Combobox(parent, textvariable=var, state="readonly", width=width)
-        cb.grid(row=row, column=column + 1, columnspan=columnspan, sticky="ew", padx=PADX, pady=PADY, **grid_opts)
-        return lbl, cb
-    else:
-        raise ValueError("Unsupported widget type")
+# rudimentary file to persist the small demo player (optional)
+_PLAYER_PERSIST_FILE = "last_player.json"
 
 
-def start_gui():
-    """Start the GUI for the character generator."""
-    root = tk.Tk()
-    root.title("Swords & Wizardry Charaktergenerator")
+def _safe_json_dump(obj, path):
+    try:
+        with open(path, "w", encoding="utf-8") as fh:
+            json.dump(obj, fh, ensure_ascii=False, indent=2)
+    except Exception as e:
+        print("Failed to save JSON:", e, file=sys.stderr)
 
-    # sensible minimum size so the layout doesn't collapse
-    root.minsize(ROOT_MIN_W, ROOT_MIN_H)
 
-    # Make root use grid for all direct children and allow columns to expand
-    # Set minsize for columns to give each column a useful minimum width and make value columns expand.
-    for c in range(3):
-        root.grid_columnconfigure(c, weight=1, minsize=VALUE_MIN_W)
+def _safe_json_load(path):
+    try:
+        with open(path, "r", encoding="utf-8") as fh:
+            return json.load(fh)
+    except Exception:
+        return None
 
-    # Create top frame and place it with grid (do not mix pack/grid on root)
-    top_frame = ttk.Frame(root, borderwidth=5, relief="ridge", padding=(6,6))
-    top_frame.grid(row=0, column=0, columnspan=3, padx=10, pady=10, sticky="ew")
 
-    # Configure top_frame columns for a responsive layout (6 logical columns: label/value pairs)
-    # We'll set label (even) columns to small minsize and value (odd) columns to be expandable.
-    for c in range(6):
-        # label columns 0,2,4 -> small, value columns 1,3,5 -> expand
-        if c % 2 == 0:
-            top_frame.grid_columnconfigure(c, weight=0, minsize=LABEL_MIN_W)
+@dataclass
+class LocalPlayer:
+    """A minimal local model to hold the fields you requested."""
+    player_name: str = ""
+    character_name: str = ""
+    age: str = ""
+    gender: str = ""
+    deity: str = ""
+
+
+class App:
+    """Class-based GUI for the character generator."""
+
+    def __init__(self):
+        # Create root first, then StringVars etc.
+        self.root = tk.Tk()
+        self.root.title("Swords & Wizardry Charaktergenerator")
+        self.root.minsize(ROOT_MIN_W, ROOT_MIN_H)
+
+        # Make root use grid for all direct children and allow columns to expand
+        for c in range(3):
+            self.root.grid_columnconfigure(c, weight=1, minsize=VALUE_MIN_W)
+
+        # Application state
+        self.current_local_player: LocalPlayer = LocalPlayer()
+
+        # GUI-bound variables (created after root exists)
+        self.player_var = tk.StringVar(master=self.root)
+        self.character_var = tk.StringVar(master=self.root)
+        self.level_var = tk.StringVar(master=self.root, value="1")
+        self.profession_var = tk.StringVar(master=self.root)
+        self.race_var = tk.StringVar(master=self.root)
+        self.gender_var = tk.StringVar(master=self.root)
+        self.alignment_var = tk.StringVar(master=self.root)
+        self.god_var = tk.StringVar(master=self.root)
+        self.age_var = tk.StringVar(master=self.root)
+        self.xp_bonus_var = tk.StringVar(master=self.root, value="0")
+        self.xp_var = tk.StringVar(master=self.root, value="0")
+        self.main_stats_var = tk.StringVar(master=self.root, value="STR DEX CON INT WIS CHA")
+        self.status_var = tk.StringVar(master=self.root, value="Ready")
+        self.stat_str_var = tk.StringVar(master=self.root, value="0")
+        self.stat_dex_var = tk.StringVar(master=self.root, value="0")
+        self.stat_con_var = tk.StringVar(master=self.root, value="0")
+        self.stat_int_var = tk.StringVar(master=self.root, value="0")
+        self.stat_wis_var = tk.StringVar(master=self.root, value="0")
+        self.stat_cha_var = tk.StringVar(master=self.root, value="0")
+        self.coins_var = tk.StringVar(master=self.root, value="0")
+        self.delicate_tasks_var = tk.StringVar(master=self.root, value="0")
+        self.climb_walls_var = tk.StringVar(master=self.root, value="0")
+        self.hear_sounds_var = tk.StringVar(master=self.root, value="0")
+        self.hide_in_shadows_var = tk.StringVar(master=self.root, value="0")
+        self.move_silently_var = tk.StringVar(master=self.root, value="0")
+        self.open_locks_var = tk.StringVar(master=self.root, value="0")
+        self.player_state_var = tk.StringVar(master=self.root, value="Normal")
+        self.hp_var = tk.StringVar(master=self.root, value="0")
+        self.save_throw_var = tk.StringVar(master=self.root, value="0")
+        self.ac_var = tk.StringVar(master=self.root, value="0")
+        self.darkvision_var = tk.StringVar(master=self.root, value="No")
+        self.parry_var = tk.StringVar(master=self.root, value="0")
+        self.add_langs_var = tk.StringVar(master=self.root, value="0")
+        self.special_abilities_var = tk.StringVar(master=self.root, value="")
+        self.immunities_var = tk.StringVar(master=self.root, value="")
+        
+
+
+        # Build UI
+        self._build_ui()
+
+        # Try to pre-load last saved values if present
+        last = _safe_json_load(_PLAYER_PERSIST_FILE)
+        if last:
+            try:
+                self.player_var.set(last.get("player_name", ""))
+                self.character_var.set(last.get("character_name", ""))
+                self.age_var.set(last.get("age", ""))
+                self.gender_var.set(last.get("gender", ""))
+                self.god_var.set(last.get("deity", ""))
+                self.update_status("Automatisch geladene gespeicherte Werte.")
+            except Exception:
+                pass
+
+    # ----------------- UI building -----------------
+    def _label_entry(
+        self,
+        parent,
+        text: str,
+        row: int,
+        column: int,
+        var: Optional[tk.Variable] = None,
+        widget: str = "entry",
+        width: int = ENTRY_WIDTH,
+        columnspan: int = 1,
+        **grid_opts
+    ):
+        """Helper to create a label + entry/combobox and grid them neatly."""
+        lbl = ttk.Label(parent, text=text)
+        lbl.grid(row=row, column=column, sticky="w", padx=PADX, pady=PADY)
+        if widget == "entry":
+            ent = ttk.Entry(parent, textvariable=var, width=width)
+            ent.grid(row=row, column=column + 1, columnspan=columnspan, sticky="ew", padx=PADX, pady=PADY, **grid_opts)
+            return lbl, ent
+        elif widget == "combobox":
+            cb = ttk.Combobox(parent, textvariable=var, state="readonly", width=width)
+            cb.grid(row=row, column=column + 1, columnspan=columnspan, sticky="ew", padx=PADX, pady=PADY, **grid_opts)
+            return lbl, cb
         else:
-            top_frame.grid_columnconfigure(c, weight=1, minsize=VALUE_MIN_W)
+            raise ValueError("Unsupported widget type")
 
-    # Use StringVars so values can be updated later
-    player_name_var = tk.StringVar(value="Undefined Player")
-    character_name_var = tk.StringVar(value="Undefined Character")
-    level_var = tk.StringVar(value="1")
-    profession_var = tk.StringVar(value="Undefined")
-    race_var = tk.StringVar(value="Undefined")
-    gender_var = tk.StringVar(value="Undefined")
-    alignment_var = tk.StringVar(value="Undefined")
-    god_var = tk.StringVar(value="Undefined")
-    age_var = tk.StringVar(value="Undefined")
-    xp_bonus_var = tk.StringVar(value="0")
-    xp_var = tk.StringVar(value="0")
-    main_stats_var = tk.StringVar(value="STR DEX CON INT WIS CHA")
-    stat_str_var = tk.StringVar(value="0")
-    stat_dex_var = tk.StringVar(value="0")
-    stat_con_var = tk.StringVar(value="0")
-    stat_int_var = tk.StringVar(value="0")
-    stat_wis_var = tk.StringVar(value="0")
-    stat_cha_var = tk.StringVar(value="0")
-    strength_atck_mod_var = tk.StringVar(value="0")
-    strength_damage_mod_var = tk.StringVar(value="0")
-    carry_capacity_mod_var = tk.StringVar(value="0")
-    door_crack_mod_var = tk.StringVar(value="0")
-    ranged_atck_mod_var = tk.StringVar(value="0")
-    ac_mod_var = tk.StringVar(value="0")
-    hp_mod_var = tk.StringVar(value="0")
-    raise_dead_mod_var = tk.StringVar(value="0")
-    max_add_langs_var = tk.StringVar(value="0")
-    cap_spec_hirelings_var = tk.StringVar(value="0")
-    hp_var = tk.StringVar(value="0")
-    ac_var = tk.StringVar(value="0")
-    save_throw_var = tk.StringVar(value="0")
-    coins_var = tk.StringVar(value="0")
-    delicate_tasks_var = tk.StringVar(value="0")
-    climb_walls_var = tk.StringVar(value="0")
-    hear_sounds_var = tk.StringVar(value="0")
-    hide_in_shadows_var = tk.StringVar(value="0")
-    move_silently_var = tk.StringVar(value="0")
-    open_locks_var = tk.StringVar(value="0")
-    special_abilities_var = tk.StringVar(value="Undefined")
-    immunities_var = tk.StringVar(value="Undefined")
-    add_langs_var = tk.StringVar(value="Undefined")
-    darkvision_var = tk.StringVar(value="Undefined")
-    parry_var = tk.StringVar(value="0")
-    player_state_var = tk.StringVar(value="Undefined")
+    def _build_ui(self):
+        # Create top frame and place it with grid (do not mix pack/grid on root)
+        self.top_frame = ttk.Frame(self.root, borderwidth=5, relief="ridge", padding=(6, 6))
+        self.top_frame.grid(row=0, column=0, columnspan=3, padx=10, pady=10, sticky="ew")
 
- 
-    # Row 0: use columnspan for entries where appropriate so they remain usable on narrow windows
-    _label_entry(top_frame, "Player name", 0, 0, var=player_name_var, columnspan=1)
-    _label_entry(top_frame, "SC name:", 0, 2, var=character_name_var, columnspan=1)
-    ttk.Label(top_frame, text="Level:").grid(row=0, column=4, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(top_frame, textvariable=level_var).grid(row=0, column=5, sticky="w", padx=PADX, pady=PADY)
+        # Configure top_frame columns for a responsive layout (6 logical columns: label/value pairs)
+        for c in range(6):
+            if c % 2 == 0:
+                self.top_frame.grid_columnconfigure(c, weight=0, minsize=LABEL_MIN_W)
+            else:
+                self.top_frame.grid_columnconfigure(c, weight=1, minsize=VALUE_MIN_W)
 
-    # Row 1
-    _label_entry(top_frame, "Profession:", 1, 0, var=profession_var, widget="combobox")
-    # configure values for last created child (combobox)
-    # safer: keep a reference from the helper if needed; here we access the children directly
-    profession_cb = top_frame.grid_slaves(row=1, column=1)[0]
-    profession_cb.config(values=["Fighter", "Cleric", "Thief", "Wizard", "Ranger", "Paladin"])
-    _label_entry(top_frame, "Race:", 1, 2, var=race_var, widget="combobox")
-    race_cb = top_frame.grid_slaves(row=1, column=3)[0]
-    race_cb.config(values=["Human", "Elf", "Dwarf", "Halfling", "Halfelf"])
-    _label_entry(top_frame, "Gender:", 1, 4, var=gender_var)
+        # Row 0: basic fields
+        self._label_entry(self.top_frame, "Spieler:in:", 0, 0, var=self.player_var, columnspan=1)
+        self._label_entry(self.top_frame, "SC Name:", 0, 2, var=self.character_var, columnspan=1)
+        ttk.Label(self.top_frame, text="Level:").grid(row=0, column=4, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.top_frame, textvariable=self.level_var).grid(row=0, column=5, sticky="w", padx=PADX, pady=PADY)
 
-    # Row 2
-    _label_entry(top_frame, "Alignment:", 2, 0, var=alignment_var, widget="combobox")
-    align_cb = top_frame.grid_slaves(row=2, column=1)[0]
-    align_cb.config(values=["Good", "Neutral", "Evil"])
-    _label_entry(top_frame, "Deity:", 2, 2, var=god_var)
-    _label_entry(top_frame, "Age:", 2, 4, var=age_var)
+        # Row 1
+        self._label_entry(self.top_frame, "Profession:", 1, 0, var=self.profession_var, widget="combobox")
+        profession_cb = self.top_frame.grid_slaves(row=1, column=1)[0]
+        profession_cb.config(values=["Fighter", "Cleric", "Thief", "Wizard", "Ranger", "Paladin"])
+        self._label_entry(self.top_frame, "Rasse:", 1, 2, var=self.race_var, widget="combobox")
+        race_cb = self.top_frame.grid_slaves(row=1, column=3)[0]
+        race_cb.config(values=["Human", "Elf", "Dwarf", "Halfling", "Halfelf"])
+        self._label_entry(self.top_frame, "Geschlecht:", 1, 4, var=self.gender_var)
 
-    # Row 3 - main stats and XP; make main_stats span two columns so it doesn't wrap too early
-    ttk.Label(top_frame, text="Main Stats:").grid(row=3, column=0, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(top_frame, textvariable=main_stats_var).grid(row=3, column=1, columnspan=1, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(top_frame, text="EP-Bonus (%):").grid(row=3, column=2, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(top_frame, textvariable=xp_bonus_var).grid(row=3, column=3, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(top_frame, text="EP:").grid(row=3, column=4, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(top_frame, textvariable=xp_var).grid(row=3, column=5, sticky="w", padx=PADX, pady=PADY)
+        # Row 2
+        self._label_entry(self.top_frame, "Gesinnung:", 2, 0, var=self.alignment_var, widget="combobox")
+        align_cb = self.top_frame.grid_slaves(row=2, column=1)[0]
+        align_cb.config(values=["Good", "Neutral", "Evil"])
+        self._label_entry(self.top_frame, "Gottheit:", 2, 2, var=self.god_var)
+        self._label_entry(self.top_frame, "Alter:", 2, 4, var=self.age_var)
 
-    # status label at bottom of main area
-    status_var = tk.StringVar(value="Ready")
-    status_label = ttk.Label(root, textvariable=status_var, anchor="w")
-    status_label.grid(row=4, column=0, columnspan=3, sticky="ew", padx=10, pady=(0, 8))
+        # Row 3 - main stats and XP
+        ttk.Label(self.top_frame, text="Main Stats:").grid(row=3, column=0, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.top_frame, textvariable=self.main_stats_var).grid(row=3, column=1, columnspan=1, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.top_frame, text="EP-Bonus (%):").grid(row=3, column=2, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.top_frame, textvariable=self.xp_bonus_var).grid(row=3, column=3, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.top_frame, text="EP:").grid(row=3, column=4, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.top_frame, textvariable=self.xp_var).grid(row=3, column=5, sticky="w", padx=PADX, pady=PADY)
 
-    # Attribute frame (use LabelFrame for nicer title)
-    attr_frame = ttk.LabelFrame(root, text="Attributs", borderwidth=5, padding=(6,6))
-    attr_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
-    # label/value columns and their responsiveness
-    attr_frame.grid_columnconfigure(0, weight=0, minsize=LABEL_MIN_W)
-    attr_frame.grid_columnconfigure(1, weight=1, minsize=VALUE_MIN_W)
+        # --- Save / Load controls for the rudimentary binding ---
+        status_label = ttk.Label(self.root, textvariable=self.status_var, anchor="w")
+        status_label.grid(row=4, column=0, columnspan=3, sticky="ew", padx=10, pady=(0, 8))
 
-    # Create stat variables and place them with grid
-    ttk.Label(attr_frame, text="Strength (STR):").grid(row=0, column=0, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(attr_frame, textvariable=stat_str_var).grid(row=0, column=1, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(attr_frame, text="Dexterity (DEX):").grid(row=1, column=0, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(attr_frame, textvariable=stat_dex_var).grid(row=1, column=1, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(attr_frame, text="Constitution (CON):").grid(row=2, column=0, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(attr_frame, textvariable=stat_con_var).grid(row=2, column=1, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(attr_frame, text="Intelligence (INT):").grid(row=3, column=0, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(attr_frame, textvariable=stat_int_var).grid(row=3, column=1, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(attr_frame, text="Wisdom (WIS):").grid(row=4, column=0, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(attr_frame, textvariable=stat_wis_var).grid(row=4, column=1, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(attr_frame, text="Charisma (CHA):").grid(row=5, column=0, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(attr_frame, textvariable=stat_cha_var).grid(row=5, column=1, sticky="w", padx=PADX, pady=PADY)
-    
-    # Bonuses frame
-    bonus_frame = ttk.LabelFrame(root, text="Attribute Bonuses", borderwidth=5, padding=(6,6))
-    bonus_frame.grid(row=1, column=1, padx=10, pady=10, sticky="nsew")
-    bonus_frame.grid_columnconfigure(0, weight=0, minsize=LABEL_MIN_W)
-    bonus_frame.grid_columnconfigure(1, weight=1, minsize=VALUE_MIN_W)
+        # place Save / Load buttons inside top_frame on a new row so they're visually nearby
+        btn_save = ttk.Button(self.top_frame, text="Save", command=self.on_save_player)
+        btn_save.grid(row=4, column=4, columnspan=1, sticky="e", padx=PADX, pady=PADY)
+        btn_load = ttk.Button(self.top_frame, text="Load", command=self.on_load_player)
+        btn_load.grid(row=4, column=5, columnspan=1, sticky="w", padx=PADX, pady=PADY)
 
-    # Create bonus labels and values
-    ttk.Label(bonus_frame, text="Melee Attack Bonus:").grid(row=0, column=0, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(bonus_frame, textvariable=strength_atck_mod_var).grid(row=0, column=1, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(bonus_frame, text="Melee Damage Bonus:").grid(row=1, column=0, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(bonus_frame, textvariable=strength_damage_mod_var).grid(row=1, column=1, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(bonus_frame, text="Carry Capacity Bonus:").grid(row=2, column=0, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(bonus_frame, textvariable=carry_capacity_mod_var).grid(row=2, column=1, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(bonus_frame, text="Door Crack Bonus:").grid(row=3, column=0, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(bonus_frame, textvariable=door_crack_mod_var).grid(row=3, column=1, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(bonus_frame, text="Ranged Attack Bonus:").grid(row=4, column=0, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(bonus_frame, textvariable=ranged_atck_mod_var).grid(row=4, column=1, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(bonus_frame, text="AC Bonus:").grid(row=5, column=0, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(bonus_frame, textvariable=ac_mod_var).grid(row=5, column=1, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(bonus_frame, text="HP Bonus:").grid(row=6, column=0, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(bonus_frame, textvariable=hp_mod_var).grid(row=6, column=1, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(bonus_frame, text="Raise Dead Modifier:").grid(row=7, column=0, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(bonus_frame, textvariable=raise_dead_mod_var).grid(row=7, column=1, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(bonus_frame, text="Max Additional Languages:").grid(row=8, column=0, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(bonus_frame, textvariable=max_add_langs_var).grid(row=8, column=1, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(bonus_frame, text="Special Hirelings Cap:").grid(row=9, column=0, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(bonus_frame, textvariable=cap_spec_hirelings_var).grid(row=9, column=1, sticky="w", padx=PADX, pady=PADY) 
+        # ----------------- rest of the UI (attributes / bonuses / panels) -----------------
+        # Attribute frame (use LabelFrame for nicer title)
+        self.attr_frame = ttk.LabelFrame(self.root, text="Attribute", borderwidth=5, padding=(6, 6))
+        self.attr_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
+        self.attr_frame.grid_columnconfigure(0, weight=0, minsize=LABEL_MIN_W)
+        self.attr_frame.grid_columnconfigure(1, weight=1, minsize=VALUE_MIN_W)
 
-    # Stats / Other panels
-    stats_frame = ttk.LabelFrame(root, text="Stats / Derived", borderwidth=5, padding=(6,6))
-    stats_frame.grid(row=1, column=2, padx=10, pady=10, sticky="nsew")
-    stats_frame.grid_columnconfigure(0, weight=1)
+        # Create stat variables and place them with grid
+        ttk.Label(self.attr_frame, text="Strength (STR):").grid(row=0, column=0, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.attr_frame, textvariable=self.stat_str_var).grid(row=0, column=1, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.attr_frame, text="Dexterity (DEX):").grid(row=1, column=0, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.attr_frame, textvariable=self.stat_dex_var).grid(row=1, column=1, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.attr_frame, text="Constitution (CON):").grid(row=2, column=0, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.attr_frame, textvariable=self.stat_con_var).grid(row=2, column=1, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.attr_frame, text="Intelligence (INT):").grid(row=3, column=0, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.attr_frame, textvariable=self.stat_int_var).grid(row=3, column=1, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.attr_frame, text="Wisdom (WIS):").grid(row=4, column=0, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.attr_frame, textvariable=self.stat_wis_var).grid(row=4, column=1, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.attr_frame, text="Charisma (CHA):").grid(row=5, column=0, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.attr_frame, textvariable=self.stat_cha_var).grid(row=5, column=1, sticky="w", padx=PADX, pady=PADY)
 
-    # Create stat labels and values
-    ttk.Label(stats_frame, text="State").grid(row=0, column=0, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(stats_frame, textvariable=player_state_var).grid(row=0, column=1, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(stats_frame, text="Hit Points (HP):").grid(row=1, column=0, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(stats_frame, textvariable=hp_var).grid(row=1, column=1, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(stats_frame, text="Saving Throw:").grid(row=2, column=0, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(stats_frame, textvariable=save_throw_var).grid(row=2, column=1, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(stats_frame, text="Armor Class (AC):").grid(row=3, column=0, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(stats_frame, textvariable=ac_var).grid(row=2, column=1, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(stats_frame, text="Darkvision:").grid(row=3, column=0, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(stats_frame, textvariable=darkvision_var).grid(row=3, column=1, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(stats_frame, text="Parry:").grid(row=4, column=0, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(stats_frame, textvariable=parry_var).grid(row=4, column=1, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(stats_frame, text="Special Abilities:").grid(row=5, column=0, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(stats_frame, textvariable=special_abilities_var).grid(row=5, column=1, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(stats_frame, text="Immunities:").grid(row=6, column=0, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(stats_frame, textvariable=immunities_var).grid(row=6, column=1, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(stats_frame, text="Languages:").grid(row=7, column=0, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(stats_frame, textvariable=add_langs_var).grid(row=7, column=1, sticky="w", padx=PADX, pady=PADY)
+        # Bonuses frame
+        self.bonus_frame = ttk.LabelFrame(self.root, text="Attribute Bonuses", borderwidth=5, padding=(6, 6))
+        self.bonus_frame.grid(row=1, column=1, padx=10, pady=10, sticky="nsew")
+        self.bonus_frame.grid_columnconfigure(0, weight=0, minsize=LABEL_MIN_W)
+        self.bonus_frame.grid_columnconfigure(1, weight=1, minsize=VALUE_MIN_W)
 
-    # Thief Skills frame
-    thief_frame = ttk.LabelFrame(root, text="Thief Skills", borderwidth=5, padding=(6,6))
-    thief_frame.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
-    stats_frame.grid_columnconfigure(0, weight=1)
+        bonus_labels = [
+            "Melee Attack Bonus:", "Melee Damage Bonus:", "Carry Capacity Bonus:",
+            "Door Crack Bonus:", "Ranged Attack Bonus:", "AC Bonus:", "TP Bonus:",
+            "Raise Dead Modifier:", "Max Additional Languages:", "Special Hirelings Cap:"
+        ]
+        self.bonus_vars = [tk.StringVar(master=self.root, value="0") for _ in bonus_labels]
+        for i, (lbl_text, var) in enumerate(zip(bonus_labels, self.bonus_vars), start=1):
+            ttk.Label(self.bonus_frame, text=lbl_text).grid(row=i, column=0, sticky="w", padx=PADX, pady=PADY)
+            ttk.Label(self.bonus_frame, textvariable=var).grid(row=i, column=1, sticky="w", padx=PADX, pady=PADY)
 
-    # Create thief skill labels and values
-    ttk.Label(thief_frame, text="Delicate Tasks:").grid(row=0, column=0, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(thief_frame, textvariable=delicate_tasks_var).grid(row=0, column=1, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(thief_frame, text="Climb Walls:").grid(row=1, column=0, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(thief_frame, textvariable=climb_walls_var).grid(row=1, column=1, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(thief_frame, text="Hear Sounds:").grid(row=2, column=0, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(thief_frame, textvariable=hear_sounds_var).grid(row=2, column=1, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(thief_frame, text="Hide in Shadows:").grid(row=3, column=0, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(thief_frame, textvariable=hide_in_shadows_var).grid(row=3, column=1, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(thief_frame, text="Move Silently:").grid(row=4, column=0, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(thief_frame, textvariable=move_silently_var).grid(row=4, column=1, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(thief_frame, text="Open Locks:").grid(row=5, column=0, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(thief_frame, textvariable=open_locks_var).grid(row=5, column=1, sticky="w", padx=PADX, pady=PADY)
-    
+        # Stats / Other panels
+        self.stats_frame = ttk.LabelFrame(self.root, text="Stats / Derived", borderwidth=5, padding=(6, 6))
+        self.stats_frame.grid(row=1, column=2, padx=10, pady=10, sticky="nsew")
+        self.stats_frame.grid_columnconfigure(0, weight=0, minsize=LABEL_MIN_W)
+        self.stats_frame.grid_columnconfigure(1, weight=1, minsize=VALUE_MIN_W)
 
-    # Weapons & Armor frame
-    weapons_frame = ttk.LabelFrame(root, text="Weapons & Armor", borderwidth=5, padding=(6,6))
-    weapons_frame.grid(row=2, column=1, padx=10, pady=10, sticky="nsew")
 
-    # Inventory frame
-    inventory_frame = ttk.LabelFrame(root, text="Inventory", borderwidth=5, padding=(6,6))
-    inventory_frame.grid(row=2, column=2, padx=10, pady=10, sticky="nsew")
+        # Create stat labels and values
+        ttk.Label(self.stats_frame, text="State").grid(row=0, column=0, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.stats_frame, textvariable=self.player_state_var).grid(row=0, column=1, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.stats_frame, text="Hit Points (HP):").grid(row=1, column=0, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.stats_frame, textvariable=self.hp_var).grid(row=1, column=1, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.stats_frame, text="Saving Throw:").grid(row=2, column=0, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.stats_frame, textvariable=self.save_throw_var).grid(row=2, column=1, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.stats_frame, text="Armor Class (AC):").grid(row=3, column=0, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.stats_frame, textvariable=self.ac_var).grid(row=3, column=1, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.stats_frame, text="Darkvision:").grid(row=4, column=0, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.stats_frame, textvariable=self.darkvision_var).grid(row=4, column=1, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.stats_frame, text="Parry:").grid(row=5, column=0, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.stats_frame, textvariable=self.parry_var).grid(row=5, column=1, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.stats_frame, text="Languages:").grid(row=6, column=0, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.stats_frame, textvariable=self.add_langs_var).grid(row=6, column=1, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.stats_frame, text="Special Abilities:").grid(row=7, column=0, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.stats_frame, textvariable=self.special_abilities_var).grid(row=7, column=1, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.stats_frame, text="Immunities:").grid(row=8, column=0, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.stats_frame, textvariable=self.immunities_var).grid(row=8, column=1, sticky="w", padx=PADX, pady=PADY)
 
-    ttk.Label(inventory_frame, text="Coins:").grid(row=0, column=0, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(inventory_frame, textvariable=coins_var).grid(row=0, column=1, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(inventory_frame, text="Treasure:").grid(row=1, column=0, sticky="nw", padx=PADX, pady=PADY)
-    treasure_txt = scrolledtext.ScrolledText(
-    inventory_frame,
-    wrap="word",
-    height=5,        # sichtbare Zeilenhöhe (kann angepasst werden)
-    width=50,        # sichtbare Spaltenbreite (char-basiert)
-    font=("TkDefaultFont", 10)
-    )
-    treasure_txt.grid(row=1, column=1, sticky="nsew", padx=PADX, pady=PADY)
-    ttk.Label(inventory_frame, text="Inventory:").grid(row=2, column=0, sticky="nw", padx=PADX, pady=PADY)
-    inventory_txt = scrolledtext.ScrolledText(
-    inventory_frame,
-    wrap="word",
-    height=5,        # sichtbare Zeilenhöhe (kann angepasst werden)
-    width=50,        # sichtbare Spaltenbreite (char-basiert)
-    font=("TkDefaultFont", 10)
-    )
-    inventory_txt.grid(row=2, column=1, sticky="nsew", padx=PADX, pady=PADY)
+        # Thief skills panel
+        self.thief_frame = ttk.LabelFrame(self.root, text="Thief Skills", borderwidth=5, padding=(6, 6))
+        self.thief_frame.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
+        self.thief_frame.grid_columnconfigure(0, weight=0, minsize=LABEL_MIN_W)
+        self.thief_frame.grid_columnconfigure(1, weight=1, minsize=VALUE_MIN_W)
 
-    # Make lower rows/frames expand when window is resized
-    root.grid_rowconfigure(1, weight=1, minsize=200)
-    root.grid_rowconfigure(2, weight=1, minsize=200)
+        # Create thief skill labels and values
+        ttk.Label(self.thief_frame, text="Delicate Tasks:").grid(row=0, column=0, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.thief_frame, textvariable=self.delicate_tasks_var).grid(row=0, column=1, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.thief_frame, text="Climb Walls:").grid(row=1, column=0, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.thief_frame, textvariable=self.climb_walls_var).grid(row=1, column=1, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.thief_frame, text="Hear Sounds:").grid(row=2, column=0, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.thief_frame, textvariable=self.hear_sounds_var).grid(row=2, column=1, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.thief_frame, text="Hide in Shadows:").grid(row=3, column=0, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.thief_frame, textvariable=self.hide_in_shadows_var).grid(row=3, column=1, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.thief_frame, text="Move Silently:").grid(row=4, column=0, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.thief_frame, textvariable=self.move_silently_var).grid(row=4, column=1, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.thief_frame, text="Open Locks:").grid(row=5, column=0, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.thief_frame, textvariable=self.open_locks_var).grid(row=5, column=1, sticky="w", padx=PADX, pady=PADY)
 
-    # also make frames themselves expand internally where appropriate
-    for f in (attr_frame, bonus_frame, stats_frame, thief_frame, weapons_frame):
-        f.grid_rowconfigure(0, weight=0)
-        f.grid_columnconfigure(0, weight=1)
+        # Weapons & Armor frame
+        self.weapons_frame = ttk.LabelFrame(self.root, text="Weapons & Armor", borderwidth=5, padding=(6,6))
+        self.weapons_frame.grid(row=2, column=1, padx=10, pady=10, sticky="nsew")
 
-    # Example: set a minimum width for some Entry widgets if you want explicit control
-    # (already set via ENTRY_WIDTH, but you can set widget.configure(width=...) later)
-    # e.g., player entry:
-    # player_entry = top_frame.grid_slaves(row=0, column=1)[0]
-    # player_entry.configure(width=28)
+        # Inventory frame
+        self.inventory_frame = ttk.LabelFrame(self.root, text="Inventory", borderwidth=5, padding=(6,6))
+        self.inventory_frame.grid(row=2, column=2, padx=10, pady=10, sticky="nsew")
 
-    root.mainloop()
+        ttk.Label(self.inventory_frame, text="Coins:").grid(row=0, column=0, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.inventory_frame, textvariable=self.coins_var).grid(row=0, column=1, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.inventory_frame, text="Treasure:").grid(row=1, column=0, sticky="nw", padx=PADX, pady=PADY)
+        treasure_txt = scrolledtext.ScrolledText(
+        self.inventory_frame,
+        wrap="word",
+        height=5,        # sichtbare Zeilenhöhe (kann angepasst werden)
+        width=50,        # sichtbare Spaltenbreite (char-basiert)
+        font=("TkDefaultFont", 10)
+        )
+        treasure_txt.grid(row=1, column=1, sticky="nsew", padx=PADX, pady=PADY)
+        ttk.Label(self.inventory_frame, text="Inventory:").grid(row=2, column=0, sticky="nw", padx=PADX, pady=PADY)
+        inventory_txt = scrolledtext.ScrolledText(
+        self.inventory_frame,
+        wrap="word",
+        height=5,        # sichtbare Zeilenhöhe (kann angepasst werden)
+        width=50,        # sichtbare Spaltenbreite (char-basiert)
+        font=("TkDefaultFont", 10)
+        )
+        inventory_txt.grid(row=2, column=1, sticky="nsew", padx=PADX, pady=PADY)
+
+        # Make lower rows/frames expand when window is resized
+        self.root.grid_rowconfigure(1, weight=1, minsize=200)
+        self.root.grid_rowconfigure(2, weight=1, minsize=200)
+        self.root.grid_rowconfigure(3, weight=1, minsize=150)
+
+        # also make frames themselves expand internally where appropriate
+        for f in (self.attr_frame, self.bonus_frame, self.stats_frame, self.thief_frame, self.weapons_frame, self.inventory_frame):
+            f.grid_rowconfigure(0, weight=1)
+            f.grid_columnconfigure(0, weight=1)
+
+    # ----------------- utilities / actions -----------------
+    def update_status(self, msg: str):
+        """Update the status bar message."""
+        self.status_var.set(msg)
+        print(msg)
+
+    def build_local_player_from_vars(self) -> LocalPlayer:
+        """Build a LocalPlayer instance from the current GUI variable values."""
+        return LocalPlayer(
+            player_name=self.player_var.get().strip(),
+            character_name=self.character_var.get().strip(),
+            age=self.age_var.get().strip(),
+            gender=self.gender_var.get().strip(),
+            deity=self.god_var.get().strip(),
+        )
+
+    def try_bind_to_playerclass(self, lp: LocalPlayer) -> bool:
+        """Attempt to create/update a PlayerClass instance with the given fields.
+
+        Returns True on success, False on any failure. This is intentionally tolerant:
+        it will try to setattr common attribute names and ignore failures.
+        """
+        try:
+            # try no-arg constructor first
+            p = PlayerClass()
+        except Exception:
+            try:
+                # try a two-arg constructor common in some models (player, character)
+                p = PlayerClass(lp.player_name, lp.character_name)
+            except Exception as e:
+                # can't instantiate PlayerClass -> bail out
+                print("Could not instantiate PlayerClass:", e, file=sys.stderr)
+                return False
+
+        # map of local fields -> candidate attribute names on PlayerClass
+        mappings = {
+            "player_name": ["player_name", "player", "playername", "owner"],
+            "character_name": ["character_name", "character", "name", "char_name"],
+            "age": ["age", "alter"],
+            "gender": ["gender", "sex"],
+            "deity": ["deity", "god", "gottheit"],
+        }
+
+        success_any = False
+        for local_field, candidates in mappings.items():
+            val = getattr(lp, local_field)
+            for cand in candidates:
+                try:
+                    if hasattr(p, cand):
+                        setattr(p, cand, val)
+                        success_any = True
+                        break
+                    else:
+                        # try setter method pattern set_<field>
+                        setter = f"set_{cand}"
+                        if hasattr(p, setter):
+                            getattr(p, setter)(val)
+                            success_any = True
+                            break
+                except Exception as e:
+                    # ignore individual failures but log
+                    print(f"Failed setting {cand} on PlayerClass: {e}", file=sys.stderr)
+                    continue
+
+        # If at least one attribute was set, we consider it useful and print the object
+        if success_any:
+            try:
+                print("Updated PlayerClass instance:", p)
+            except Exception:
+                pass
+            # optionally persist a small JSON with values
+            _safe_json_dump(asdict(lp), _PLAYER_PERSIST_FILE)
+            self.update_status("PlayerClass instanziert/aktualisiert und lokal gespeichert.")
+            return True
+
+        return False
+
+    def on_save_player(self):
+        lp = self.build_local_player_from_vars()
+        # Save to local model first
+        self.current_local_player = lp
+        # Try to bind to PlayerClass (best-effort)
+        bound = self.try_bind_to_playerclass(lp)
+        if bound:
+            self.update_status("Daten erfolgreich in PlayerClass geschrieben.")
+        else:
+            # fallback: save JSON locally so it isn't lost
+            _safe_json_dump(asdict(lp), _PLAYER_PERSIST_FILE)
+            self.update_status("Lokale Felder gespeichert (PlayerClass nicht aktualisiert).")
+
+    def on_load_player(self):
+        data = _safe_json_load(_PLAYER_PERSIST_FILE)
+        if data:
+            self.current_local_player = LocalPlayer(**{k: str(v) for k, v in data.items()})
+            # update GUI fields
+            self.player_var.set(self.current_local_player.player_name)
+            self.character_var.set(self.current_local_player.character_name)
+            self.age_var.set(self.current_local_player.age)
+            self.gender_var.set(self.current_local_player.gender)
+            self.god_var.set(self.current_local_player.deity)
+            self.update_status("Gespeicherte Werte geladen.")
+        else:
+            self.update_status("Keine gespeicherten Werte gefunden.")
+
+    # ----------------- run -----------------
+    def run(self):
+        self.root.mainloop()
+
+
+# Backwards-compatibility helper used by main.py
+def start_gui():
+    App().run()
