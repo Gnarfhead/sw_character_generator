@@ -2,9 +2,37 @@
 import tkinter as tk
 import tkinter.ttk as ttk
 import tkinter.scrolledtext as scrolledtext
-from sw_character_generator.classes.playerclass import PlayerClass
+import tkinter.messagebox as messagebox
+from sw_character_generator.core.services import character_from_localplayer
+from sw_character_generator.core.models import LocalPlayer
 
 
+
+def on_save_player():
+    nonlocal current_local_player
+    lp = build_local_player_from_vars()
+    current_local_player = lp
+
+    # Erzeuge Character-Objekt und prüfe Fehler
+    character_obj, errors = character_from_localplayer(lp)
+    if errors:
+        # einfache Rückmeldung an User
+        messagebox.showerror("Ungültige Eingaben", "\n".join(errors))
+        update_status("Fehler beim Erstellen des Characters: " + "; ".join(errors))
+        return
+
+    # Wenn alles ok: hier kannst du entweder PlayerClass binden oder das Character-Objekt weiterverwenden
+    # z.B. temporär in-memory speichern, an Services weitergeben, testen, etc.
+    print("Character object created:", character_obj)
+    update_status(f"Character erstellt: {character_obj.character_name} (Spieler: {character_obj.player_name})")
+
+    # Option: falls du weiterhin PlayerClass binden willst, kannst du das hier aufrufen (wie bisher)
+    bound = try_bind_to_playerclass(lp)
+    if bound:
+        update_status("Daten zusätzlich in PlayerClass geschrieben.")
+    else:
+        _safe_json_dump(asdict(lp), _PLAYER_PERSIST_FILE)
+        update_status("Lokale Felder gespeichert (PlayerClass nicht aktualisiert).")
 
 # Layout / sizing constants
 ROOT_MIN_W = 900
@@ -110,17 +138,6 @@ def start_gui():
     darkvision_var = tk.StringVar(value="Undefined")
     parry_var = tk.StringVar(value="0")
     player_state_var = tk.StringVar(value="Undefined")
-
-    # Instantiate PlayerClass from entered data
-    player_character = PlayerClass(
-        player_name = player_name_var.get().strip(),
-        character_name = character_name_var.get().strip(),
-        age = age_var.get().strip(),
-        gender = gender_var.get().strip(),
-        god = god_var.get().strip(),
-    )
-
-    print(player_character.player_name)
 
  
     # Row 0: use columnspan for entries where appropriate so they remain usable on narrow windows
