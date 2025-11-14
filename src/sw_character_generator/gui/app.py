@@ -2,8 +2,11 @@
 import tkinter as tk
 import tkinter.ttk as ttk
 import tkinter.scrolledtext as scrolledtext
+from sw_character_generator.core.models import LocalPlayer
+from sw_character_generator.core.services import bind_to_playerclass, save_player_local, load_local_player
 
-from sw_character_generator.classes.playerclass import PlayerClass
+
+
 
 # Layout / sizing constants
 ROOT_MIN_W = 900
@@ -13,6 +16,51 @@ VALUE_MIN_W = 160
 ENTRY_WIDTH = 20
 PADX = 8
 PADY = 6
+
+# Use StringVars so values can be updated later
+player_name_var = tk.StringVar(value="Undefined Player")
+character_name_var = tk.StringVar(value="Undefined Character")
+level_var = tk.StringVar(value="1")
+profession_var = tk.StringVar(value="Undefined")
+race_var = tk.StringVar(value="Undefined")
+gender_var = tk.StringVar(value="Undefined")
+alignment_var = tk.StringVar(value="Undefined")
+god_var = tk.StringVar(value="Undefined")
+age_var = tk.StringVar(value="Undefined")
+xp_bonus_var = tk.StringVar(value="0")
+xp_var = tk.StringVar(value="0")
+main_stats_var = tk.StringVar(value="STR DEX CON INT WIS CHA")
+stat_str_var = tk.StringVar(value="0")
+stat_dex_var = tk.StringVar(value="0")
+stat_con_var = tk.StringVar(value="0")
+stat_int_var = tk.StringVar(value="0")
+stat_wis_var = tk.StringVar(value="0")
+stat_cha_var = tk.StringVar(value="0")
+strength_atck_mod_var = tk.StringVar(value="0")
+strength_damage_mod_var = tk.StringVar(value="0")
+carry_capacity_mod_var = tk.StringVar(value="0")
+door_crack_mod_var = tk.StringVar(value="0")
+ranged_atck_mod_var = tk.StringVar(value="0")
+ac_mod_var = tk.StringVar(value="0")
+hp_mod_var = tk.StringVar(value="0")
+raise_dead_mod_var = tk.StringVar(value="0")
+max_add_langs_var = tk.StringVar(value="0")
+cap_spec_hirelings_var = tk.StringVar(value="0")
+hp_var = tk.StringVar(value="0")
+ac_var = tk.StringVar(value="0")
+save_throw_var = tk.StringVar(value="0")
+coins_var = tk.StringVar(value="0")
+delicate_tasks_var = tk.StringVar(value="0")
+climb_walls_var = tk.StringVar(value="0")
+hear_sounds_var = tk.StringVar(value="0")
+hide_in_shadows_var = tk.StringVar(value="0")
+move_silently_var = tk.StringVar(value="0")
+open_locks_var = tk.StringVar(value="0")
+special_abilities_var = tk.StringVar(value="Undefined")
+immunities_var = tk.StringVar(value="Undefined")
+add_langs_var = tk.StringVar(value="Undefined")
+darkvision_var = tk.StringVar(value="Undefined")
+parry_var = tk.StringVar(value="0")
 
 def _label_entry(parent, text, row, column, var=None, widget="entry", width=ENTRY_WIDTH, columnspan=1, **grid_opts):
     """Helper to create a label + entry/combobox and grid them neatly.
@@ -62,54 +110,24 @@ def start_gui():
         else:
             top_frame.grid_columnconfigure(c, weight=1, minsize=VALUE_MIN_W)
 
-    # Use StringVars so values can be updated later
-    player_var = tk.StringVar(value="Undefined Player")
-    character_var = tk.StringVar(value="Undefined Character")
-    level_var = tk.StringVar(value="1")
-    profession_var = tk.StringVar(value="Undefined")
-    race_var = tk.StringVar(value="Undefined")
-    gender_var = tk.StringVar(value="Undefined")
-    alignment_var = tk.StringVar(value="Undefined")
-    god_var = tk.StringVar(value="Undefined")
-    age_var = tk.StringVar(value="Undefined")
-    xp_bonus_var = tk.StringVar(value="0")
-    xp_var = tk.StringVar(value="0")
-    main_stats_var = tk.StringVar(value="STR DEX CON INT WIS CHA")
-    stat_str_var = tk.StringVar(value="0")
-    stat_dex_var = tk.StringVar(value="0")
-    stat_con_var = tk.StringVar(value="0")
-    stat_int_var = tk.StringVar(value="0")
-    stat_wis_var = tk.StringVar(value="0")
-    stat_cha_var = tk.StringVar(value="0")
-    strength_atck_mod_var = tk.StringVar(value="0")
-    strength_damage_mod_var = tk.StringVar(value="0")
-    carry_capacity_mod_var = tk.StringVar(value="0")
-    door_crack_mod_var = tk.StringVar(value="0")
-    ranged_atck_mod_var = tk.StringVar(value="0")
-    ac_mod_var = tk.StringVar(value="0")
-    hp_mod_var = tk.StringVar(value="0")
-    raise_dead_mod_var = tk.StringVar(value="0")
-    max_add_langs_var = tk.StringVar(value="0")
-    cap_spec_hirelings_var = tk.StringVar(value="0")
-    hp_var = tk.StringVar(value="0")
-    ac_var = tk.StringVar(value="0")
-    save_throw_var = tk.StringVar(value="0")
-    coins_var = tk.StringVar(value="0")
-    delicate_tasks_var = tk.StringVar(value="0")
-    climb_walls_var = tk.StringVar(value="0")
-    hear_sounds_var = tk.StringVar(value="0")
-    hide_in_shadows_var = tk.StringVar(value="0")
-    move_silently_var = tk.StringVar(value="0")
-    open_locks_var = tk.StringVar(value="0")
-    special_abilities_var = tk.StringVar(value="Undefined")
-    immunities_var = tk.StringVar(value="Undefined")
-    add_langs_var = tk.StringVar(value="Undefined")
-    darkvision_var = tk.StringVar(value="Undefined")
-    parry_var = tk.StringVar(value="0")
+
+
+    def on_save():
+        lp = LocalPlayer(
+            player_name=player_name_var.get(),
+            character_name=character_name_var.get(),
+            age=age_var.get(),
+            gender=gender_var.get(),
+            deity=god_var.get()
+        )
+        ok = bind_to_playerclass(lp)
+        if not ok:
+            save_player_local(lp)
+        status_var.set("Gespeichert")
 
     # Row 0: use columnspan for entries where appropriate so they remain usable on narrow windows
-    _label_entry(top_frame, "Player name", 0, 0, var=player_var, columnspan=1)
-    _label_entry(top_frame, "SC name:", 0, 2, var=character_var, columnspan=1)
+    _label_entry(top_frame, "Player name", 0, 0, var=player_name_var, columnspan=1)
+    _label_entry(top_frame, "SC name:", 0, 2, var=character_name_var, columnspan=1)
     ttk.Label(top_frame, text="Level:").grid(row=0, column=4, sticky="w", padx=PADX, pady=PADY)
     ttk.Label(top_frame, textvariable=level_var).grid(row=0, column=5, sticky="w", padx=PADX, pady=PADY)
 
