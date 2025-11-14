@@ -2,9 +2,12 @@
 import tkinter as tk
 import tkinter.ttk as ttk
 import tkinter.scrolledtext as scrolledtext
+from sw_character_generator.classes.playerclass import PlayerClass
 from sw_character_generator.core.models import LocalPlayer
 from sw_character_generator.core.services import bind_to_playerclass, save_player_local, load_local_player
-
+from dataclasses import asdict, dataclass
+import json
+import sys
 
 
 
@@ -17,50 +20,23 @@ ENTRY_WIDTH = 20
 PADX = 8
 PADY = 6
 
-# Use StringVars so values can be updated later
-player_name_var = tk.StringVar(value="Undefined Player")
-character_name_var = tk.StringVar(value="Undefined Character")
-level_var = tk.StringVar(value="1")
-profession_var = tk.StringVar(value="Undefined")
-race_var = tk.StringVar(value="Undefined")
-gender_var = tk.StringVar(value="Undefined")
-alignment_var = tk.StringVar(value="Undefined")
-god_var = tk.StringVar(value="Undefined")
-age_var = tk.StringVar(value="Undefined")
-xp_bonus_var = tk.StringVar(value="0")
-xp_var = tk.StringVar(value="0")
-main_stats_var = tk.StringVar(value="STR DEX CON INT WIS CHA")
-stat_str_var = tk.StringVar(value="0")
-stat_dex_var = tk.StringVar(value="0")
-stat_con_var = tk.StringVar(value="0")
-stat_int_var = tk.StringVar(value="0")
-stat_wis_var = tk.StringVar(value="0")
-stat_cha_var = tk.StringVar(value="0")
-strength_atck_mod_var = tk.StringVar(value="0")
-strength_damage_mod_var = tk.StringVar(value="0")
-carry_capacity_mod_var = tk.StringVar(value="0")
-door_crack_mod_var = tk.StringVar(value="0")
-ranged_atck_mod_var = tk.StringVar(value="0")
-ac_mod_var = tk.StringVar(value="0")
-hp_mod_var = tk.StringVar(value="0")
-raise_dead_mod_var = tk.StringVar(value="0")
-max_add_langs_var = tk.StringVar(value="0")
-cap_spec_hirelings_var = tk.StringVar(value="0")
-hp_var = tk.StringVar(value="0")
-ac_var = tk.StringVar(value="0")
-save_throw_var = tk.StringVar(value="0")
-coins_var = tk.StringVar(value="0")
-delicate_tasks_var = tk.StringVar(value="0")
-climb_walls_var = tk.StringVar(value="0")
-hear_sounds_var = tk.StringVar(value="0")
-hide_in_shadows_var = tk.StringVar(value="0")
-move_silently_var = tk.StringVar(value="0")
-open_locks_var = tk.StringVar(value="0")
-special_abilities_var = tk.StringVar(value="Undefined")
-immunities_var = tk.StringVar(value="Undefined")
-add_langs_var = tk.StringVar(value="Undefined")
-darkvision_var = tk.StringVar(value="Undefined")
-parry_var = tk.StringVar(value="0")
+# rudimentary file to persist the small demo player (optional)
+_PLAYER_PERSIST_FILE = "last_player.json"
+
+def _safe_json_dump(obj, path):
+    try:
+        with open(path, "w", encoding="utf-8") as fh:
+            json.dump(obj, fh, ensure_ascii=False, indent=2)
+    except Exception as e:
+        print("Failed to save JSON:", e, file=sys.stderr)
+
+
+def _safe_json_load(path):
+    try:
+        with open(path, "r", encoding="utf-8") as fh:
+            return json.load(fh)
+    except Exception:
+        return None
 
 def _label_entry(parent, text, row, column, var=None, widget="entry", width=ENTRY_WIDTH, columnspan=1, **grid_opts):
     """Helper to create a label + entry/combobox and grid them neatly.
@@ -83,6 +59,15 @@ def _label_entry(parent, text, row, column, var=None, widget="entry", width=ENTR
         return lbl, cb
     else:
         raise ValueError("Unsupported widget type")
+    
+@dataclass
+class LocalPlayer:
+    """A minimal local model to hold the fields you requested."""
+    player_name: str = ""
+    character_name: str = ""
+    age: str = ""
+    gender: str = ""
+    deity: str = ""
 
 def start_gui():
     """Start the GUI for the character generator."""
@@ -110,7 +95,51 @@ def start_gui():
         else:
             top_frame.grid_columnconfigure(c, weight=1, minsize=VALUE_MIN_W)
 
-
+    # Use StringVars so values can be updated later
+    player_name_var = tk.StringVar(value="Undefined Player")
+    character_name_var = tk.StringVar(value="Undefined Character")
+    level_var = tk.StringVar(value="1")
+    profession_var = tk.StringVar(value="Undefined")
+    race_var = tk.StringVar(value="Undefined")
+    gender_var = tk.StringVar(value="Undefined")
+    alignment_var = tk.StringVar(value="Undefined")
+    god_var = tk.StringVar(value="Undefined")
+    age_var = tk.StringVar(value="Undefined")
+    xp_bonus_var = tk.StringVar(value="0")
+    xp_var = tk.StringVar(value="0")
+    main_stats_var = tk.StringVar(value="STR DEX CON INT WIS CHA")
+    stat_str_var = tk.StringVar(value="0")
+    stat_dex_var = tk.StringVar(value="0")
+    stat_con_var = tk.StringVar(value="0")
+    stat_int_var = tk.StringVar(value="0")
+    stat_wis_var = tk.StringVar(value="0")
+    stat_cha_var = tk.StringVar(value="0")
+    strength_atck_mod_var = tk.StringVar(value="0")
+    strength_damage_mod_var = tk.StringVar(value="0")
+    carry_capacity_mod_var = tk.StringVar(value="0")
+    door_crack_mod_var = tk.StringVar(value="0")
+    ranged_atck_mod_var = tk.StringVar(value="0")
+    ac_mod_var = tk.StringVar(value="0")
+    hp_mod_var = tk.StringVar(value="0")
+    raise_dead_mod_var = tk.StringVar(value="0")
+    max_add_langs_var = tk.StringVar(value="0")
+    cap_spec_hirelings_var = tk.StringVar(value="0")
+    hp_var = tk.StringVar(value="0")
+    ac_var = tk.StringVar(value="0")
+    save_throw_var = tk.StringVar(value="0")
+    coins_var = tk.StringVar(value="0")
+    delicate_tasks_var = tk.StringVar(value="0")
+    climb_walls_var = tk.StringVar(value="0")
+    hear_sounds_var = tk.StringVar(value="0")
+    hide_in_shadows_var = tk.StringVar(value="0")
+    move_silently_var = tk.StringVar(value="0")
+    open_locks_var = tk.StringVar(value="0")
+    special_abilities_var = tk.StringVar(value="Undefined")
+    immunities_var = tk.StringVar(value="Undefined")
+    add_langs_var = tk.StringVar(value="Undefined")
+    darkvision_var = tk.StringVar(value="Undefined")
+    parry_var = tk.StringVar(value="0")
+    player_state_var = tk.StringVar(value="Undefined")
 
     def on_save():
         lp = LocalPlayer(
@@ -156,6 +185,124 @@ def start_gui():
     ttk.Label(top_frame, textvariable=xp_bonus_var).grid(row=3, column=3, sticky="w", padx=PADX, pady=PADY)
     ttk.Label(top_frame, text="EP:").grid(row=3, column=4, sticky="w", padx=PADX, pady=PADY)
     ttk.Label(top_frame, textvariable=xp_var).grid(row=3, column=5, sticky="w", padx=PADX, pady=PADY)
+
+        # status label at bottom of main area
+    status_var = tk.StringVar(value="Ready")
+    status_label = ttk.Label(root, textvariable=status_var, anchor="w")
+    status_label.grid(row=4, column=0, columnspan=3, sticky="ew", padx=10, pady=(0, 8))
+
+    # local player model (keeps values if PlayerClass can't be used)
+    current_local_player = LocalPlayer()
+
+    def update_status(msg: str):
+        status_var.set(msg)
+        # also print for dev feedback
+        print(msg)
+
+    def build_local_player_from_vars() -> LocalPlayer:
+        return LocalPlayer(
+            player_name=player_name_var.get().strip(),
+            character_name=character_name_var.get().strip(),
+            age=age_var.get().strip(),
+            gender=gender_var.get().strip(),
+            deity=god_var.get().strip(),
+        )
+
+    def try_bind_to_playerclass(lp: LocalPlayer) -> bool:
+        """Attempt to create/update a PlayerClass instance with the given fields.
+
+        Returns True on success, False on any failure. This is intentionally tolerant:
+        it will try to setattr common attribute names and ignore failures.
+        """
+        try:
+            # try no-arg constructor first
+            p = PlayerClass()
+        except Exception:
+            try:
+                # try a two-arg constructor common in some models (player, character)
+                p = PlayerClass(lp.player_name, lp.character_name)
+            except Exception as e:
+                # can't instantiate PlayerClass -> bail out
+                print("Could not instantiate PlayerClass:", e, file=sys.stderr)
+                return False
+
+        # map of local fields -> candidate attribute names on PlayerClass
+        mappings = {
+            "player_name": ["player_name", "player", "playername", "owner"],
+            "character_name": ["character_name", "character", "name", "char_name"],
+            "age": ["age", "alter"],
+            "gender": ["gender", "sex"],
+            "deity": ["deity", "god", "gottheit"],
+        }
+
+        success_any = False
+        for local_field, candidates in mappings.items():
+            val = getattr(lp, local_field)
+            for cand in candidates:
+                try:
+                    if hasattr(p, cand):
+                        setattr(p, cand, val)
+                        success_any = True
+                        break
+                    else:
+                        # try setter method pattern set_<field>
+                        setter = f"set_{cand}"
+                        if hasattr(p, setter):
+                            getattr(p, setter)(val)
+                            success_any = True
+                            break
+                except Exception as e:
+                    # ignore individual failures but log
+                    print(f"Failed setting {cand} on PlayerClass: {e}", file=sys.stderr)
+                    continue
+
+        # If at least one attribute was set, we consider it useful and print the object
+        if success_any:
+            try:
+                print("Updated PlayerClass instance:", p)
+            except Exception:
+                pass
+            # optionally persist a small JSON with values
+            _safe_json_dump(asdict(lp), _PLAYER_PERSIST_FILE)
+            update_status("PlayerClass instanziert/aktualisiert und lokal gespeichert.")
+            return True
+
+        return False
+
+    def on_save_player():
+        nonlocal current_local_player
+        lp = build_local_player_from_vars()
+        # Save to local model first
+        current_local_player = lp
+        # Try to bind to PlayerClass (best-effort)
+        bound = try_bind_to_playerclass(lp)
+        if bound:
+            update_status("Daten erfolgreich in PlayerClass geschrieben.")
+        else:
+            # fallback: save JSON locally so it isn't lost
+            _safe_json_dump(asdict(lp), _PLAYER_PERSIST_FILE)
+            update_status("Lokale Felder gespeichert (PlayerClass nicht aktualisiert).")
+
+    def on_load_player():
+        nonlocal current_local_player
+        data = _safe_json_load(_PLAYER_PERSIST_FILE)
+        if data:
+            current_local_player = LocalPlayer(**{k: str(v) for k, v in data.items()})
+            # update GUI fields
+            player_name_var.set(current_local_player.player_name)
+            character_name_var.set(current_local_player.character_name)
+            age_var.set(current_local_player.age)
+            gender_var.set(current_local_player.gender)
+            god_var.set(current_local_player.deity)
+            update_status("Gespeicherte Werte geladen.")
+        else:
+            update_status("Keine gespeicherten Werte gefunden.")
+
+    # place Save / Load buttons inside top_frame on a new row so they're visually nearby
+    btn_save = ttk.Button(top_frame, text="Save", command=on_save_player)
+    btn_save.grid(row=4, column=4, columnspan=1, sticky="e", padx=PADX, pady=PADY)
+    btn_load = ttk.Button(top_frame, text="Load", command=on_load_player)
+    btn_load.grid(row=4, column=5, columnspan=1, sticky="w", padx=PADX, pady=PADY)
 
     # Attribute frame (use LabelFrame for nicer title)
     attr_frame = ttk.LabelFrame(root, text="Attributs", borderwidth=5, padding=(6,6))
@@ -212,11 +359,13 @@ def start_gui():
     stats_frame.grid_columnconfigure(0, weight=1)
 
     # Create stat labels and values
-    ttk.Label(stats_frame, text="Hit Points (HP):").grid(row=0, column=0, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(stats_frame, textvariable=hp_var).grid(row=0, column=1, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(stats_frame, text="Saving Throw:").grid(row=1, column=0, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(stats_frame, textvariable=save_throw_var).grid(row=1, column=1, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(stats_frame, text="Armor Class (AC):").grid(row=2, column=0, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(stats_frame, text="State").grid(row=0, column=0, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(stats_frame, textvariable=player_state_var).grid(row=0, column=1, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(stats_frame, text="Hit Points (HP):").grid(row=1, column=0, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(stats_frame, textvariable=hp_var).grid(row=1, column=1, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(stats_frame, text="Saving Throw:").grid(row=2, column=0, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(stats_frame, textvariable=save_throw_var).grid(row=2, column=1, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(stats_frame, text="Armor Class (AC):").grid(row=3, column=0, sticky="w", padx=PADX, pady=PADY)
     ttk.Label(stats_frame, textvariable=ac_var).grid(row=2, column=1, sticky="w", padx=PADX, pady=PADY)
     ttk.Label(stats_frame, text="Darkvision:").grid(row=3, column=0, sticky="w", padx=PADX, pady=PADY)
     ttk.Label(stats_frame, textvariable=darkvision_var).grid(row=3, column=1, sticky="w", padx=PADX, pady=PADY)
