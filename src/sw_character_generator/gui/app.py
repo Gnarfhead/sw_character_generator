@@ -10,10 +10,10 @@ import tkinter.scrolledtext as scrolledtext
 import sys
 from dataclasses import asdict
 from src.sw_character_generator.core.persistence import save_local_player, load_local_player
-
 from src.sw_character_generator.gui.widgets import label_entry
-
 from sw_character_generator.classes.playerclass import PlayerClass
+from sw_character_generator.core.models import LocalPlayer
+
 
 # Layout / sizing constants
 ROOT_MIN_W = 900
@@ -113,6 +113,7 @@ class App:
                 self.age_var.set(last.get("age", ""))
                 self.gender_var.set(last.get("gender", ""))
                 self.god_var.set(last.get("deity", ""))
+                #self.god_var.set(last.get("deity", ""))
                 self.update_status("Automatisch geladene gespeicherte Werte.")
             except Exception:
                 pass
@@ -306,6 +307,7 @@ class App:
 
     def build_local_player_from_vars(self) -> LocalPlayer:
         """Build a LocalPlayer instance from the current GUI variable values."""
+        print("Building LocalPlayer from GUI fields...")
         return LocalPlayer(
             player_name=self.player_var.get().strip(),
             character_name=self.character_var.get().strip(),
@@ -363,34 +365,43 @@ class App:
                     continue
 
         # If at least one attribute was set, we consider it useful and print the object
+        print("Attempting to update PlayerClass instance:", p)
         if success_any:
             try:
                 print("Updated PlayerClass instance:", p)
             except Exception:
                 pass
             # optionally persist a small JSON with values
-            _safe_json_dump(asdict(lp), _PLAYER_PERSIST_FILE)
+            save_local_player(lp)
+            #_safe_json_dump(asdict(lp), _PLAYER_PERSIST_FILE)
             self.update_status("PlayerClass instanziert/aktualisiert und lokal gespeichert.")
             return True
 
         return False
 
     def on_save_player(self):
+        """Handle Save button click: save current fields to LocalPlayer and try to bind to PlayerClass."""
+        print("Saving LocalPlayer from GUI fields...")
         lp = self.build_local_player_from_vars()
         # Save to local model first
         self.current_local_player = lp
         # Try to bind to PlayerClass (best-effort)
         bound = self.try_bind_to_playerclass(lp)
         if bound:
+            print("PlayerClass erfolgreich aktualisiert.")
             self.update_status("Daten erfolgreich in PlayerClass geschrieben.")
         else:
+            print("Konnte PlayerClass nicht aktualisieren.")
             # fallback: save JSON locally so it isn't lost
-            _safe_json_dump(asdict(lp), _PLAYER_PERSIST_FILE)
+            save_local_player(lp)
             self.update_status("Lokale Felder gespeichert (PlayerClass nicht aktualisiert).")
 
     def on_load_player(self):
-        data = _safe_json_load(_PLAYER_PERSIST_FILE)
+        """Handle Load button click: load fields from persisted LocalPlayer JSON."""
+        print("Loading LocalPlayer from persisted JSON...")
+        data = load_local_player()
         if data:
+            print("Loaded LocalPlayer data:", data)
             self.current_local_player = LocalPlayer(**{k: str(v) for k, v in data.items()})
             # update GUI fields
             self.player_var.set(self.current_local_player.player_name)
@@ -400,10 +411,12 @@ class App:
             self.god_var.set(self.current_local_player.deity)
             self.update_status("Gespeicherte Werte geladen.")
         else:
+            print("No persisted LocalPlayer data found.")
             self.update_status("Keine gespeicherten Werte gefunden.")
 
     # ----------------- run -----------------
     def run(self):
+        """Run the main Tk event loop."""
         self.root.mainloop()
 
 
