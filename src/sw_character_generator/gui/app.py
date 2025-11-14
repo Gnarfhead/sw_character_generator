@@ -106,6 +106,17 @@ class App:
         self.add_langs_var = tk.StringVar(master=self.root, value="0")
         self.special_abilities_var = tk.StringVar(master=self.root, value="")
         self.immunities_var = tk.StringVar(master=self.root, value="")
+        self.strength_atck_mod_var = tk.StringVar(master=self.root, value="0")
+        self.strength_damage_mod_var = tk.StringVar(master=self.root, value="0")
+        self.carry_capacity_mod_var = tk.StringVar(master=self.root, value="0")
+        self.door_crack_mod_var = tk.StringVar(master=self.root, value="0")
+        self.ranged_atck_mod_var = tk.StringVar(master=self.root, value="0")
+        self.ac_mod_var = tk.StringVar(master=self.root, value="0")
+        self.hp_mod_var = tk.StringVar(master=self.root, value="0")
+        self.raise_dead_mod_var = tk.StringVar(master=self.root, value="0")
+        self.max_add_langs_var = tk.StringVar(master=self.root, value="0")
+        self.cap_spec_hirelings_var = tk.StringVar(master=self.root, value="0")
+        # ----------------- build UI -----------------
         
 
 
@@ -208,8 +219,6 @@ class App:
         # Attribute frame (use LabelFrame for nicer title)
         self.attr_frame = ttk.LabelFrame(self.root, text="Attribute", borderwidth=5, padding=(6, 6))
         self.attr_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
-        self.attr_frame.grid_columnconfigure(0, weight=0, minsize=LABEL_MIN_W)
-        self.attr_frame.grid_columnconfigure(1, weight=1, minsize=VALUE_MIN_W)
 
         # Create stat variables and place them with grid
         ttk.Label(self.attr_frame, text="Strength (STR):").grid(row=0, column=0, sticky="w", padx=PADX, pady=PADY)
@@ -228,25 +237,32 @@ class App:
         # Bonuses frame
         self.bonus_frame = ttk.LabelFrame(self.root, text="Attribute Bonuses", borderwidth=5, padding=(6, 6))
         self.bonus_frame.grid(row=1, column=1, padx=10, pady=10, sticky="nsew")
-        self.bonus_frame.grid_columnconfigure(0, weight=0, minsize=LABEL_MIN_W)
-        self.bonus_frame.grid_columnconfigure(1, weight=1, minsize=VALUE_MIN_W)
 
-        bonus_labels = [
-            "Melee Attack Bonus:", "Melee Damage Bonus:", "Carry Capacity Bonus:",
-            "Door Crack Bonus:", "Ranged Attack Bonus:", "AC Bonus:", "TP Bonus:",
-            "Raise Dead Modifier:", "Max Additional Languages:", "Special Hirelings Cap:"
-        ]
-        self.bonus_vars = [tk.StringVar(master=self.root, value="0") for _ in bonus_labels]
-        for i, (lbl_text, var) in enumerate(zip(bonus_labels, self.bonus_vars), start=1):
-            ttk.Label(self.bonus_frame, text=lbl_text).grid(row=i, column=0, sticky="w", padx=PADX, pady=PADY)
-            ttk.Label(self.bonus_frame, textvariable=var).grid(row=i, column=1, sticky="w", padx=PADX, pady=PADY)
+        # Create bonus labels and values
+        ttk.Label(self.bonus_frame, text="Melee Attack Bonus:").grid(row=0, column=0, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.bonus_frame, textvariable=self.strength_atck_mod_var).grid(row=0, column=1, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.bonus_frame, text="Melee Damage Bonus:").grid(row=1, column=0, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.bonus_frame, textvariable=self.strength_damage_mod_var).grid(row=1, column=1, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.bonus_frame, text="Carry Capacity Bonus:").grid(row=2, column=0, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.bonus_frame, textvariable=self.carry_capacity_mod_var).grid(row=2, column=1, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.bonus_frame, text="Door Crack Bonus:").grid(row=3, column=0, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.bonus_frame, textvariable=self.door_crack_mod_var).grid(row=3, column=1, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.bonus_frame, text="Ranged Attack Bonus:").grid(row=4, column=0, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.bonus_frame, textvariable=self.ranged_atck_mod_var).grid(row=4, column=1, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.bonus_frame, text="AC Bonus:").grid(row=5, column=0, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.bonus_frame, textvariable=self.ac_mod_var).grid(row=5, column=1, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.bonus_frame, text="HP Bonus:").grid(row=6, column=0, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.bonus_frame, textvariable=self.hp_mod_var).grid(row=6, column=1, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.bonus_frame, text="Raise Dead Modifier:").grid(row=7, column=0, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.bonus_frame, textvariable=self.raise_dead_mod_var).grid(row=7, column=1, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.bonus_frame, text="Max Additional Languages:").grid(row=8, column=0, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.bonus_frame, textvariable=self.max_add_langs_var).grid(row=8, column=1, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.bonus_frame, text="Special Hirelings Cap:").grid(row=9, column=0, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.bonus_frame, textvariable=self.cap_spec_hirelings_var).grid(row=9, column=1, sticky="w", padx=PADX, pady=PADY)
 
         # Stats / Other panels
         self.stats_frame = ttk.LabelFrame(self.root, text="Stats / Derived", borderwidth=5, padding=(6, 6))
         self.stats_frame.grid(row=1, column=2, padx=10, pady=10, sticky="nsew")
-        self.stats_frame.grid_columnconfigure(0, weight=0, minsize=LABEL_MIN_W)
-        self.stats_frame.grid_columnconfigure(1, weight=1, minsize=VALUE_MIN_W)
-
 
         # Create stat labels and values
         ttk.Label(self.stats_frame, text="State").grid(row=0, column=0, sticky="w", padx=PADX, pady=PADY)
@@ -271,9 +287,7 @@ class App:
         # Thief skills panel
         self.thief_frame = ttk.LabelFrame(self.root, text="Thief Skills", borderwidth=5, padding=(6, 6))
         self.thief_frame.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
-        self.thief_frame.grid_columnconfigure(0, weight=0, minsize=LABEL_MIN_W)
-        self.thief_frame.grid_columnconfigure(1, weight=1, minsize=VALUE_MIN_W)
-
+  
         # Create thief skill labels and values
         ttk.Label(self.thief_frame, text="Delicate Tasks:").grid(row=0, column=0, sticky="w", padx=PADX, pady=PADY)
         ttk.Label(self.thief_frame, textvariable=self.delicate_tasks_var).grid(row=0, column=1, sticky="w", padx=PADX, pady=PADY)
