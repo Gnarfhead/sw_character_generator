@@ -8,11 +8,10 @@ import tkinter as tk
 import tkinter.ttk as ttk
 import tkinter.scrolledtext as scrolledtext
 import sys
-from dataclasses import asdict
-from src.sw_character_generator.core.persistence import save_local_player, load_local_player
-from src.sw_character_generator.gui.widgets import label_entry
+from src.sw_character_generator.core.persistence import _safe_json_load, _safe_json_dump, save_local_player, load_local_player
 from sw_character_generator.classes.playerclass import PlayerClass
 from sw_character_generator.core.models import LocalPlayer
+
 
 
 # Layout / sizing constants
@@ -24,19 +23,7 @@ ENTRY_WIDTH = 20
 PADX = 8
 PADY = 6
 
-def label_entry(parent, text, row, column, var=None, widget="entry", width=ENTRY_WIDTH, columnspan=1, **grid_opts):
-    lbl = ttk.Label(parent, text=text)
-    lbl.grid(row=row, column=column, sticky="w", padx=PADX, pady=PADY)
-    if widget == "entry":
-        ent = ttk.Entry(parent, textvariable=var, width=width)
-        ent.grid(row=row, column=column + 1, columnspan=columnspan, sticky="ew", padx=PADX, pady=PADY, **grid_opts)
-        return lbl, ent
-    elif widget == "combobox":
-        cb = ttk.Combobox(parent, textvariable=var, state="readonly", width=width)
-        cb.grid(row=row, column=column + 1, columnspan=columnspan, sticky="ew", padx=PADX, pady=PADY, **grid_opts)
-        return lbl, cb
-    else:
-        raise ValueError("Unsupported widget type")
+_PLAYER_PERSIST_FILE = "last_player.json"
 
 class App:
     """Class-based GUI for the character generator."""
@@ -108,19 +95,39 @@ class App:
         self._build_ui()
 
         # Try to pre-load last saved values if present
-        last = load_local_player()
+        last = _safe_json_load(_PLAYER_PERSIST_FILE)
         if last:
             try:
-                print("Found saved LocalPlayer, loading into fields...")
-                self.player_var.set(last.get("player_name", ""))
-                self.character_var.set(last.get("character_name", ""))
-                self.age_var.set(last.get("age", ""))
-                self.gender_var.set(last.get("gender", ""))
-                self.god_var.set(last.get("deity", ""))
-                self.god_var.set(last.get("deity", ""))
-                self.update_status("Automatisch geladene gespeicherte Werte.")
+                # Fall A: last ist ein dict (aus plain JSON)
+                if isinstance(last, dict):
+                    self.player_var.set(last.get("player_name", ""))
+                    self.character_var.set(last.get("character_name", ""))
+                    self.age_var.set(last.get("age", ""))
+                    self.gender_var.set(last.get("gender", ""))
+                    self.god_var.set(last.get("deity", ""))
+                    self.update_status("Automatisch geladene gespeicherte Werte (dict).")
+                else:
+                    # Fall B: last ist bereits ein LocalPlayer-Objekt oder ähnliches
+                    # Versuche attribute-style Zugriff; falls nicht vorhanden, ignoriere ruhig
+                    player_name = getattr(last, "player_name", None)
+                    if player_name is not None:
+                        self.player_var.set(player_name)
+                    character_name = getattr(last, "character_name", None)
+                    if character_name is not None:
+                        self.character_var.set(character_name)
+                    age = getattr(last, "age", None)
+                    if age is not None:
+                        self.age_var.set(age)
+                    gender = getattr(last, "gender", None)
+                    if gender is not None:
+                        self.gender_var.set(gender)
+                    deity = getattr(last, "deity", None)
+                    if deity is not None:
+                        self.god_var.set(deity)
+                    self.update_status("Automatisch geladene gespeicherte Werte (object).")
             except Exception:
-                pass
+                # Falls irgendwas schiefgeht, ignoriere das Laden (keine App-Krise)
+                self.update_status("Fehler beim automatischen Laden der gespeicherten Werte.")
 
     # ----------------- UI building -----------------
 
@@ -131,26 +138,36 @@ class App:
         self.top_frame.grid(row=0, column=0, columnspan=3, padx=10, pady=10, sticky="ew")
        
         # Row 0: basic fields
-        label_entry(self.top_frame, "Spieler:in:", 0, 0, var=self.player_var, columnspan=1)
-        label_entry(self.top_frame, "SC Name:", 0, 2, var=self.character_var, columnspan=1)
+        ttk.Label(self.top_frame, text="Spieler:in:").grid(row=0, column=0, sticky="w", padx=PADX, pady=PADY)
+        ttk.Entry(self.top_frame, textvariable=self.player_var).grid(row=0, column=1, sticky="ew", padx=PADX, pady=PADY)
+        ttk.Label(self.top_frame, text="SC Name:").grid(row=0, column=2, sticky="w", padx=PADX, pady=PADY)
+        ttk.Entry(self.top_frame, textvariable=self.character_var).grid(row=0, column=3, sticky="ew", padx=PADX, pady=PADY)
         ttk.Label(self.top_frame, text="Level:").grid(row=0, column=4, sticky="w", padx=PADX, pady=PADY)
         ttk.Label(self.top_frame, textvariable=self.level_var).grid(row=0, column=5, sticky="w", padx=PADX, pady=PADY)
 
         # Row 1
-        label_entry(self.top_frame, "Profession:", 1, 0, var=self.profession_var, widget="combobox")
-        profession_cb = self.top_frame.grid_slaves(row=1, column=1)[0]
+        ttk.Label(self.top_frame, text="Profession:").grid(row=1, column=0, sticky="w", padx=PADX, pady=PADY)
+        profession_cb = ttk.Combobox(self.top_frame, textvariable=self.profession_var)
+        profession_cb.grid(row=1, column=1, sticky="ew", padx=PADX, pady=PADY)
         profession_cb.config(values=["Fighter", "Cleric", "Thief", "Wizard", "Ranger", "Paladin"])
-        label_entry(self.top_frame, "Rasse:", 1, 2, var=self.race_var, widget="combobox")
-        race_cb = self.top_frame.grid_slaves(row=1, column=3)[0]
+        ttk.Label(self.top_frame, text="Rasse:").grid(row=1, column=2, sticky="w", padx=PADX, pady=PADY)
+        race_cb = ttk.Combobox(self.top_frame, textvariable=self.race_var)
+        race_cb.grid(row=1, column=3, sticky="ew", padx=PADX, pady=PADY)
         race_cb.config(values=["Human", "Elf", "Dwarf", "Halfling", "Halfelf"])
-        label_entry(self.top_frame, "Geschlecht:", 1, 4, var=self.gender_var)
+        ttk.Label(self.top_frame, text="Geschlecht:").grid(row=1, column=4, sticky="w", padx=PADX, pady=PADY)
+        gender_cb = ttk.Combobox(self.top_frame, textvariable=self.gender_var)
+        gender_cb.grid(row=1, column=5, sticky="ew", padx=PADX, pady=PADY)
+        gender_cb.config(values=["Male", "Female", "Other"])
 
         # Row 2
-        label_entry(self.top_frame, "Gesinnung:", 2, 0, var=self.alignment_var, widget="combobox")
-        align_cb = self.top_frame.grid_slaves(row=2, column=1)[0]
+        ttk.Label(self.top_frame, text="Gesinnung:").grid(row=2, column=0, sticky="w", padx=PADX, pady=PADY)
+        align_cb = ttk.Combobox(self.top_frame, textvariable=self.alignment_var)
+        align_cb.grid(row=2, column=1, sticky="ew", padx=PADX, pady=PADY)
         align_cb.config(values=["Good", "Neutral", "Evil"])
-        label_entry(self.top_frame, "Gottheit:", 2, 2, var=self.god_var)
-        label_entry(self.top_frame, "Alter:", 2, 4, var=self.age_var)
+        ttk.Label(self.top_frame, text="Gottheit:").grid(row=2, column=2, sticky="w", padx=PADX, pady=PADY)
+        ttk.Entry(self.top_frame, textvariable=self.god_var).grid(row=2, column=3, sticky="ew", padx=PADX, pady=PADY)
+        ttk.Label(self.top_frame, text="Alter:").grid(row=2, column=4, sticky="w", padx=PADX, pady=PADY)
+        ttk.Entry(self.top_frame, textvariable=self.age_var).grid(row=2, column=5, sticky="ew", padx=PADX, pady=PADY)
 
         # Row 3 - main stats and XP
         ttk.Label(self.top_frame, text="Main Stats:").grid(row=3, column=0, sticky="w", padx=PADX, pady=PADY)
@@ -159,16 +176,6 @@ class App:
         ttk.Label(self.top_frame, textvariable=self.xp_bonus_var).grid(row=3, column=3, sticky="w", padx=PADX, pady=PADY)
         ttk.Label(self.top_frame, text="EP:").grid(row=3, column=4, sticky="w", padx=PADX, pady=PADY)
         ttk.Label(self.top_frame, textvariable=self.xp_var).grid(row=3, column=5, sticky="w", padx=PADX, pady=PADY)
-
-        # --- Save / Load controls for the rudimentary binding ---
-        status_label = ttk.Label(self.root, textvariable=self.status_var, anchor="w")
-        status_label.grid(row=4, column=0, columnspan=3, sticky="ew", padx=10, pady=(0, 8))
-
-        # place Save / Load buttons inside top_frame on a new row so they're visually nearby
-        btn_save = ttk.Button(self.top_frame, text="Save", command=self.on_save_player)
-        btn_save.grid(row=4, column=4, columnspan=1, sticky="e", padx=PADX, pady=PADY)
-        btn_load = ttk.Button(self.top_frame, text="Load", command=self.on_load_player)
-        btn_load.grid(row=4, column=5, columnspan=1, sticky="w", padx=PADX, pady=PADY)
 
         # ----------------- rest of the UI (attributes / bonuses / panels) -----------------
         # Attribute frame (use LabelFrame for nicer title)
@@ -286,6 +293,21 @@ class App:
         )
         inventory_txt.grid(row=2, column=1, sticky="nsew", padx=PADX, pady=PADY)
 
+        # Footerframe (if needed in future)
+        self.footer_frame = ttk.Frame(self.root, borderwidth=5, padding=(6,6))
+        self.footer_frame.grid(row=3, column=0, columnspan=3, padx=10, pady=10, sticky="ew")
+
+        # place Save / Load buttons inside footer_frame on a new row so they're visually nearby
+        btn_save = ttk.Button(self.footer_frame, text="Save", command=self.on_save_player)
+        btn_save.grid(row=0, column=0, sticky="e", padx=PADX, pady=PADY)
+        btn_load = ttk.Button(self.footer_frame, text="Load", command=self.on_load_player)
+        btn_load.grid(row=0, column=1, sticky="w", padx=PADX, pady=PADY)
+
+        # Status bar at the very bottom
+        self.status_bar = ttk.Label(self.root, textvariable=self.status_var, relief="sunken", anchor="w", padding=(4,4))
+        self.status_bar.grid(row=4, column=0, columnspan=3, sticky="ew")    
+        # ----------------- configure resizing behavior -----------------
+
         # Make lower rows/frames expand when window is resized
         self.root.grid_rowconfigure(1, weight=1, minsize=200)
         self.root.grid_rowconfigure(2, weight=1, minsize=200)
@@ -396,20 +418,27 @@ class App:
     def on_load_player(self):
         """Handle Load button click: load fields from persisted LocalPlayer JSON."""
         print("Loading LocalPlayer from persisted JSON...")
-        data = load_local_player()
-        if data:
-            print("Loaded LocalPlayer data:", data)
-            self.current_local_player = LocalPlayer(**{k: str(v) for k, v in data.items()})
-            # update GUI fields
-            self.player_var.set(self.current_local_player.player_name)
-            self.character_var.set(self.current_local_player.character_name)
-            self.age_var.set(self.current_local_player.age)
-            self.gender_var.set(self.current_local_player.gender)
-            self.god_var.set(self.current_local_player.deity)
-            self.update_status("Gespeicherte Werte geladen.")
-        else:
-            print("No persisted LocalPlayer data found.")
+        data = _safe_json_load(_PLAYER_PERSIST_FILE)
+        if not data:
             self.update_status("Keine gespeicherten Werte gefunden.")
+            return
+
+        try:
+            if isinstance(data, dict):
+                # JSON-Format
+                self.current_local_player = LocalPlayer(**{k: str(v) for k, v in data.items()})
+            else:
+                # Falls data schon ein LocalPlayer ist (oder ähnliches), versuche direktes Zuweisen
+                self.current_local_player = data
+            # update GUI fields (tolerant gegenüber fehlenden Attributes)
+            self.player_var.set(getattr(self.current_local_player, "player_name", ""))
+            self.character_var.set(getattr(self.current_local_player, "character_name", ""))
+            self.age_var.set(getattr(self.current_local_player, "age", ""))
+            self.gender_var.set(getattr(self.current_local_player, "gender", ""))
+            self.god_var.set(getattr(self.current_local_player, "deity", ""))
+            self.update_status("Gespeicherte Werte geladen.")
+        except Exception:
+            self.update_status("Fehler beim Laden der gespeicherten Werte.")
 
     # ----------------- run -----------------
     def run(self):
@@ -419,4 +448,5 @@ class App:
 
 # Backwards-compatibility helper used by main.py
 def start_gui():
+    """Start the GUI application (for backwards compatibility)."""
     App().run()
