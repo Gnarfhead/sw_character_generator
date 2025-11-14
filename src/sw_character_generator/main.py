@@ -12,7 +12,7 @@ def main():
         from sw_character_generator.cli.commands import start_cli
         start_cli()
     else:
-        print("Unbekannter Parameter! Benutze keine Parameter, '-gui', oder '-cli'.")
+        print("Unbekannter Parameter! Benutze Parameter, '-gui', oder '-cli'.")
 
 
 if __name__ == "__main__":

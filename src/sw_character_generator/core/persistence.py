@@ -7,6 +7,7 @@ from src.sw_character_generator.core.models import LocalPlayer
 DEFAULT_PATH = "last_player.json"
 
 def save_local_player(lp: LocalPlayer, path: str = DEFAULT_PATH) -> None:
+    """Speichert LocalPlayer zu path."""
     try:
         print(f"Saving LocalPlayer to {path}...")
         with open(path, "w", encoding="utf-8") as fh:
@@ -15,6 +16,7 @@ def save_local_player(lp: LocalPlayer, path: str = DEFAULT_PATH) -> None:
         print(f"Error saving LocalPlayer: {e}")
 
 def load_local_player(path: str = DEFAULT_PATH) -> Optional[LocalPlayer]:
+    """Lädt LocalPlayer von path."""
     try:
         print(f"Loading LocalPlayer from {path}...")
         with open(path, "r", encoding="utf-8") as fh:

@@ -4,6 +4,9 @@ from .persistence import save_local_player
 import sys
 
 def parse_age(age_str: str) -> Tuple[Optional[int], Optional[str]]:
+    """Parst age_str in ein Optional[int].
+    Gibt (age, None) zurück bei Erfolg, sonst (None, error_message).
+    """
     if age_str is None:
         return None, None
     s = age_str.strip()
@@ -18,6 +21,7 @@ def parse_age(age_str: str) -> Tuple[Optional[int], Optional[str]]:
         return None, "Ungültiges Alter: bitte Zahl eingeben."
 
 def character_from_localplayer(lp: LocalPlayer, default_level: int = 1) -> Tuple[Character, list]:
+    """Erstellt Character aus LocalPlayer."""
     errors = []
     age, age_err = parse_age(lp.age)
     if age_err:
