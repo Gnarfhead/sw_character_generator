@@ -1,4 +1,4 @@
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 from typing import Optional
 
 @dataclass
@@ -19,6 +19,3 @@ class Character:
     gender: Optional[str] = None
     deity: Optional[str] = None
     level: int = 1
-
-    def to_dict(self):
-        return asdict(self)

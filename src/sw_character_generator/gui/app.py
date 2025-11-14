@@ -7,11 +7,11 @@ compatibility (main.py imports start_gui).
 import tkinter as tk
 import tkinter.ttk as ttk
 import tkinter.scrolledtext as scrolledtext
-import tkinter.messagebox as messagebox
-from dataclasses import dataclass, asdict
-import json
 import sys
-from typing import Optional, Tuple
+from dataclasses import asdict
+from src.sw_character_generator.core.persistence import save_local_player, load_local_player
+
+from src.sw_character_generator.gui.widgets import label_entry
 
 from sw_character_generator.classes.playerclass import PlayerClass
 
@@ -24,27 +24,8 @@ ENTRY_WIDTH = 20
 PADX = 8
 PADY = 6
 
-# rudimentary file to persist the small demo player (optional)
-_PLAYER_PERSIST_FILE = "last_player.json"
 
 
-def _safe_json_dump(obj, path):
-    try:
-        with open(path, "w", encoding="utf-8") as fh:
-            json.dump(obj, fh, ensure_ascii=False, indent=2)
-    except Exception as e:
-        print("Failed to save JSON:", e, file=sys.stderr)
-
-
-def _safe_json_load(path):
-    try:
-        with open(path, "r", encoding="utf-8") as fh:
-            return json.load(fh)
-    except Exception:
-        return None
-
-
-@dataclass
 class LocalPlayer:
     """A minimal local model to hold the fields you requested."""
     player_name: str = ""
@@ -124,7 +105,7 @@ class App:
         self._build_ui()
 
         # Try to pre-load last saved values if present
-        last = _safe_json_load(_PLAYER_PERSIST_FILE)
+        last = load_local_player()
         if last:
             try:
                 self.player_var.set(last.get("player_name", ""))
@@ -137,31 +118,7 @@ class App:
                 pass
 
     # ----------------- UI building -----------------
-    def _label_entry(
-        self,
-        parent,
-        text: str,
-        row: int,
-        column: int,
-        var: Optional[tk.Variable] = None,
-        widget: str = "entry",
-        width: int = ENTRY_WIDTH,
-        columnspan: int = 1,
-        **grid_opts
-    ):
-        """Helper to create a label + entry/combobox and grid them neatly."""
-        lbl = ttk.Label(parent, text=text)
-        lbl.grid(row=row, column=column, sticky="w", padx=PADX, pady=PADY)
-        if widget == "entry":
-            ent = ttk.Entry(parent, textvariable=var, width=width)
-            ent.grid(row=row, column=column + 1, columnspan=columnspan, sticky="ew", padx=PADX, pady=PADY, **grid_opts)
-            return lbl, ent
-        elif widget == "combobox":
-            cb = ttk.Combobox(parent, textvariable=var, state="readonly", width=width)
-            cb.grid(row=row, column=column + 1, columnspan=columnspan, sticky="ew", padx=PADX, pady=PADY, **grid_opts)
-            return lbl, cb
-        else:
-            raise ValueError("Unsupported widget type")
+
 
     def _build_ui(self):
         # Create top frame and place it with grid (do not mix pack/grid on root)
@@ -176,26 +133,26 @@ class App:
                 self.top_frame.grid_columnconfigure(c, weight=1, minsize=VALUE_MIN_W)
 
         # Row 0: basic fields
-        self._label_entry(self.top_frame, "Spieler:in:", 0, 0, var=self.player_var, columnspan=1)
-        self._label_entry(self.top_frame, "SC Name:", 0, 2, var=self.character_var, columnspan=1)
+        label_entry(self.top_frame, "Spieler:in:", 0, 0, var=self.player_var, columnspan=1)
+        label_entry(self.top_frame, "SC Name:", 0, 2, var=self.character_var, columnspan=1)
         ttk.Label(self.top_frame, text="Level:").grid(row=0, column=4, sticky="w", padx=PADX, pady=PADY)
         ttk.Label(self.top_frame, textvariable=self.level_var).grid(row=0, column=5, sticky="w", padx=PADX, pady=PADY)
 
         # Row 1
-        self._label_entry(self.top_frame, "Profession:", 1, 0, var=self.profession_var, widget="combobox")
+        label_entry(self.top_frame, "Profession:", 1, 0, var=self.profession_var, widget="combobox")
         profession_cb = self.top_frame.grid_slaves(row=1, column=1)[0]
         profession_cb.config(values=["Fighter", "Cleric", "Thief", "Wizard", "Ranger", "Paladin"])
-        self._label_entry(self.top_frame, "Rasse:", 1, 2, var=self.race_var, widget="combobox")
+        label_entry(self.top_frame, "Rasse:", 1, 2, var=self.race_var, widget="combobox")
         race_cb = self.top_frame.grid_slaves(row=1, column=3)[0]
         race_cb.config(values=["Human", "Elf", "Dwarf", "Halfling", "Halfelf"])
-        self._label_entry(self.top_frame, "Geschlecht:", 1, 4, var=self.gender_var)
+        label_entry(self.top_frame, "Geschlecht:", 1, 4, var=self.gender_var)
 
         # Row 2
-        self._label_entry(self.top_frame, "Gesinnung:", 2, 0, var=self.alignment_var, widget="combobox")
+        label_entry(self.top_frame, "Gesinnung:", 2, 0, var=self.alignment_var, widget="combobox")
         align_cb = self.top_frame.grid_slaves(row=2, column=1)[0]
         align_cb.config(values=["Good", "Neutral", "Evil"])
-        self._label_entry(self.top_frame, "Gottheit:", 2, 2, var=self.god_var)
-        self._label_entry(self.top_frame, "Alter:", 2, 4, var=self.age_var)
+        label_entry(self.top_frame, "Gottheit:", 2, 2, var=self.god_var)
+        label_entry(self.top_frame, "Alter:", 2, 4, var=self.age_var)
 
         # Row 3 - main stats and XP
         ttk.Label(self.top_frame, text="Main Stats:").grid(row=3, column=0, sticky="w", padx=PADX, pady=PADY)
