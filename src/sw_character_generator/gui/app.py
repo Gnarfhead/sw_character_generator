@@ -80,10 +80,22 @@ def start_gui():
     stat_int_var = tk.StringVar(value="0")
     stat_wis_var = tk.StringVar(value="0")
     stat_cha_var = tk.StringVar(value="0")
+    strength_atck_mod_var = tk.StringVar(value="0")
+    strength_damage_mod_var = tk.StringVar(value="0")
+    carry_capacity_mod_var = tk.StringVar(value="0")
+    door_crack_mod_var = tk.StringVar(value="0")
+    ranged_atck_mod_var = tk.StringVar(value="0")
+    ac_mod_var = tk.StringVar(value="0")
+    tp_mod_var = tk.StringVar(value="0")
+    raise_dead_mod_var = tk.StringVar(value="0")
+    max_add_langs_var = tk.StringVar(value="0")
+    cap_spec_hirelings_var = tk.StringVar(value="0")
+
+
 
     # Row 0: use columnspan for entries where appropriate so they remain usable on narrow windows
-    _label_entry(top_frame, "Spieler:in:", 0, 0, var=player_var, columnspan=1)
-    _label_entry(top_frame, "SC Name:", 0, 2, var=character_var, columnspan=1)
+    _label_entry(top_frame, "Player name", 0, 0, var=player_var, columnspan=1)
+    _label_entry(top_frame, "SC name:", 0, 2, var=character_var, columnspan=1)
     ttk.Label(top_frame, text="Level:").grid(row=0, column=4, sticky="w", padx=PADX, pady=PADY)
     ttk.Label(top_frame, textvariable=level_var).grid(row=0, column=5, sticky="w", padx=PADX, pady=PADY)
 
@@ -93,17 +105,17 @@ def start_gui():
     # safer: keep a reference from the helper if needed; here we access the children directly
     profession_cb = top_frame.grid_slaves(row=1, column=1)[0]
     profession_cb.config(values=["Fighter", "Cleric", "Thief", "Wizard", "Ranger", "Paladin"])
-    _label_entry(top_frame, "Rasse:", 1, 2, var=race_var, widget="combobox")
+    _label_entry(top_frame, "Race:", 1, 2, var=race_var, widget="combobox")
     race_cb = top_frame.grid_slaves(row=1, column=3)[0]
     race_cb.config(values=["Human", "Elf", "Dwarf", "Halfling", "Halfelf"])
-    _label_entry(top_frame, "Geschlecht:", 1, 4, var=gender_var)
+    _label_entry(top_frame, "Gender:", 1, 4, var=gender_var)
 
     # Row 2
-    _label_entry(top_frame, "Gesinnung:", 2, 0, var=alignment_var, widget="combobox")
+    _label_entry(top_frame, "Alignment:", 2, 0, var=alignment_var, widget="combobox")
     align_cb = top_frame.grid_slaves(row=2, column=1)[0]
     align_cb.config(values=["Good", "Neutral", "Evil"])
-    _label_entry(top_frame, "Gottheit:", 2, 2, var=god_var)
-    _label_entry(top_frame, "Alter:", 2, 4, var=age_var)
+    _label_entry(top_frame, "Deity:", 2, 2, var=god_var)
+    _label_entry(top_frame, "Age:", 2, 4, var=age_var)
 
     # Row 3 - main stats and XP; make main_stats span two columns so it doesn't wrap too early
     ttk.Label(top_frame, text="Main Stats:").grid(row=3, column=0, sticky="w", padx=PADX, pady=PADY)
@@ -114,7 +126,7 @@ def start_gui():
     ttk.Label(top_frame, textvariable=xp_var).grid(row=3, column=5, sticky="w", padx=PADX, pady=PADY)
 
     # Attribute frame (use LabelFrame for nicer title)
-    attr_frame = ttk.LabelFrame(root, text="Attribute", borderwidth=5, padding=(6,6))
+    attr_frame = ttk.LabelFrame(root, text="Attributs", borderwidth=5, padding=(6,6))
     attr_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
     # label/value columns and their responsiveness
     attr_frame.grid_columnconfigure(0, weight=0, minsize=LABEL_MIN_W)
@@ -140,15 +152,29 @@ def start_gui():
     bonus_frame.grid_columnconfigure(0, weight=0, minsize=LABEL_MIN_W)
     bonus_frame.grid_columnconfigure(1, weight=1, minsize=VALUE_MIN_W)
 
-    bonus_labels = [
-        "Melee Attack Bonus:", "Melee Damage Bonus:", "Carry Capacity Bonus:",
-        "Door Crack Bonus:", "Ranged Attack Bonus:", "AC Bonus:", "TP Bonus:",
-        "Raise Dead Modifier:", "Max Additional Languages:", "Special Hirelings Cap:"
-    ]
-    bonus_vars = [tk.StringVar(value="0") for _ in bonus_labels]
-    for i, (lbl_text, var) in enumerate(zip(bonus_labels, bonus_vars), start=1):
-        ttk.Label(bonus_frame, text=lbl_text).grid(row=i, column=0, sticky="w", padx=PADX, pady=PADY)
-        ttk.Label(bonus_frame, textvariable=var).grid(row=i, column=1, sticky="w", padx=PADX, pady=PADY)
+    # Create bonus labels and values
+    ttk.Label(bonus_frame, text="Melee Attack Bonus:").grid(row=0, column=0, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(bonus_frame, textvariable=strength_atck_mod_var).grid(row=0, column=1, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(bonus_frame, text="Melee Damage Bonus:").grid(row=1, column=0, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(bonus_frame, textvariable=strength_damage_mod_var).grid(row=1, column=1, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(bonus_frame, text="Carry Capacity Bonus:").grid(row=2, column=0, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(bonus_frame, textvariable=carry_capacity_mod_var).grid(row=2, column=1, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(bonus_frame, text="Door Crack Bonus:").grid(row=3, column=0, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(bonus_frame, textvariable=door_crack_mod_var).grid(row=3, column=1, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(bonus_frame, text="Ranged Attack Bonus:").grid(row=4, column=0, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(bonus_frame, textvariable=ranged_atck_mod_var).grid(row=4, column=1, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(bonus_frame, text="AC Bonus:").grid(row=5, column=0, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(bonus_frame, textvariable=ac_mod_var).grid(row=5, column=1, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(bonus_frame, text="TP Bonus:").grid(row=6, column=0, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(bonus_frame, textvariable=tp_mod_var).grid(row=6, column=1, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(bonus_frame, text="Raise Dead Modifier:").grid(row=7, column=0, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(bonus_frame, textvariable=raise_dead_mod_var).grid(row=7, column=1, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(bonus_frame, text="Max Additional Languages:").grid(row=8, column=0, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(bonus_frame, textvariable=max_add_langs_var).grid(row=8, column=1, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(bonus_frame, text="Special Hirelings Cap:").grid(row=9, column=0, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(bonus_frame, textvariable=cap_spec_hirelings_var).grid(row=9, column=1, sticky="w", padx=PADX, pady=PADY)
+
+    
 
     # Stats / Other panels
     stats_frame = ttk.LabelFrame(root, text="Stats / Derived", borderwidth=5, padding=(6,6))
