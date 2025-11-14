@@ -67,13 +67,13 @@ def analyze_mod_dex(player_character: PlayerClass):
 def analyze_mod_con(player_character: PlayerClass):
     """Calculate constitution based modifiers."""
     if 3 <= player_character.stat_con <= 8:
-        player_character.tp_mod = -1
+        player_character.hp_mod = -1
         player_character.raise_dead_mod = 50
     elif 9 <= player_character.stat_con <= 12:
-        player_character.tp_mod = 0
+        player_character.hp_mod = 0
         player_character.raise_dead_mod = 75
     elif 13 <= player_character.stat_con <= 18:
-        player_character.tp_mod = 1
+        player_character.hp_mod = 1
         player_character.raise_dead_mod = 100
     else:
         raise ValueError("Constitution stat out of bounds:", player_character.stat_con)

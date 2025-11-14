@@ -5,7 +5,7 @@ def apply_wizard_dependent_modifiers(character):
 
     # Set profession attributes
     character.profession = "wizard"
-    character.tp_dice = 4
+    character.hp_dice = 4
     character.main_stats = ("intelligence",)
     character.allowed_alignment = ("good", "neutral", "evil")
     character.allowed_races = ("human", "halfelf", "elf")
@@ -13,10 +13,10 @@ def apply_wizard_dependent_modifiers(character):
     character.allowed_armor = ("none",)
     character.save_throw = 15
 
-    # Calculate total TP
-    character.tp = wuerfle_1d4(1) + character.tp_mod
-    if character.tp < 1:
-        character.tp = 1
+    # Calculate total HP
+    character.hp = wuerfle_1d4(1) + character.hp_mod
+    if character.hp < 1:
+        character.hp = 1
 
     # Calculate XP bonus
     if character.stat_int >= 13:

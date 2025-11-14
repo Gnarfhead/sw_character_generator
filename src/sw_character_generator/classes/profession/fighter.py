@@ -5,7 +5,7 @@ def apply_fighter_dependent_modifiers(character):
     
     # Set profession attributes
     character.profession = "fighter"
-    character.tp_dice = 10
+    character.hp_dice = 10
     character.main_stats = ("strength",)
     character.allowed_alignment = ("neutral", "evil", "good")
     character.allowed_races = ("human", "halfling", "elf", "dwarf", "halfelf")
@@ -29,10 +29,10 @@ def apply_fighter_dependent_modifiers(character):
     elif character.stat_dex == 18:
         character.parry += -5
 
-    # Calculate total TP
-    character.tp = wuerfle_1d10(1) + character.tp_mod
-    if character.tp < 1:
-        character.tp = 1
+    # Calculate total HP
+    character.hp = wuerfle_1d10(1) + character.hp_mod
+    if character.hp < 1:
+        character.hp = 1
 
     # Calculate XP bonus
     if character.stat_str >= 13:

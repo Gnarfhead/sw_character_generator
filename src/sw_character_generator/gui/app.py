@@ -1,6 +1,7 @@
 """GUI application for the Swords & Wizardry character generator."""
 import tkinter as tk
 import tkinter.ttk as ttk
+import tkinter.scrolledtext as scrolledtext
 
 from sw_character_generator.classes.playerclass import PlayerClass
 
@@ -65,12 +66,12 @@ def start_gui():
     player_var = tk.StringVar(value="Undefined Player")
     character_var = tk.StringVar(value="Undefined Character")
     level_var = tk.StringVar(value="1")
-    profession_var = tk.StringVar(value="Unbekannt")
-    race_var = tk.StringVar(value="Unbekannt")
-    gender_var = tk.StringVar(value="Unbekannt")
-    alignment_var = tk.StringVar(value="Unbekannt")
-    god_var = tk.StringVar(value="Unbekannt")
-    age_var = tk.StringVar(value="Unbekannt")
+    profession_var = tk.StringVar(value="Undefined")
+    race_var = tk.StringVar(value="Undefined")
+    gender_var = tk.StringVar(value="Undefined")
+    alignment_var = tk.StringVar(value="Undefined")
+    god_var = tk.StringVar(value="Undefined")
+    age_var = tk.StringVar(value="Undefined")
     xp_bonus_var = tk.StringVar(value="0")
     xp_var = tk.StringVar(value="0")
     main_stats_var = tk.StringVar(value="STR DEX CON INT WIS CHA")
@@ -86,12 +87,25 @@ def start_gui():
     door_crack_mod_var = tk.StringVar(value="0")
     ranged_atck_mod_var = tk.StringVar(value="0")
     ac_mod_var = tk.StringVar(value="0")
-    tp_mod_var = tk.StringVar(value="0")
+    hp_mod_var = tk.StringVar(value="0")
     raise_dead_mod_var = tk.StringVar(value="0")
     max_add_langs_var = tk.StringVar(value="0")
     cap_spec_hirelings_var = tk.StringVar(value="0")
-
-
+    hp_var = tk.StringVar(value="0")
+    ac_var = tk.StringVar(value="0")
+    save_throw_var = tk.StringVar(value="0")
+    coins_var = tk.StringVar(value="0")
+    delicate_tasks_var = tk.StringVar(value="0")
+    climb_walls_var = tk.StringVar(value="0")
+    hear_sounds_var = tk.StringVar(value="0")
+    hide_in_shadows_var = tk.StringVar(value="0")
+    move_silently_var = tk.StringVar(value="0")
+    open_locks_var = tk.StringVar(value="0")
+    special_abilities_var = tk.StringVar(value="Undefined")
+    immunities_var = tk.StringVar(value="Undefined")
+    add_langs_var = tk.StringVar(value="Undefined")
+    darkvision_var = tk.StringVar(value="Undefined")
+    parry_var = tk.StringVar(value="0")
 
     # Row 0: use columnspan for entries where appropriate so they remain usable on narrow windows
     _label_entry(top_frame, "Player name", 0, 0, var=player_var, columnspan=1)
@@ -165,37 +179,93 @@ def start_gui():
     ttk.Label(bonus_frame, textvariable=ranged_atck_mod_var).grid(row=4, column=1, sticky="w", padx=PADX, pady=PADY)
     ttk.Label(bonus_frame, text="AC Bonus:").grid(row=5, column=0, sticky="w", padx=PADX, pady=PADY)
     ttk.Label(bonus_frame, textvariable=ac_mod_var).grid(row=5, column=1, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(bonus_frame, text="TP Bonus:").grid(row=6, column=0, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(bonus_frame, textvariable=tp_mod_var).grid(row=6, column=1, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(bonus_frame, text="HP Bonus:").grid(row=6, column=0, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(bonus_frame, textvariable=hp_mod_var).grid(row=6, column=1, sticky="w", padx=PADX, pady=PADY)
     ttk.Label(bonus_frame, text="Raise Dead Modifier:").grid(row=7, column=0, sticky="w", padx=PADX, pady=PADY)
     ttk.Label(bonus_frame, textvariable=raise_dead_mod_var).grid(row=7, column=1, sticky="w", padx=PADX, pady=PADY)
     ttk.Label(bonus_frame, text="Max Additional Languages:").grid(row=8, column=0, sticky="w", padx=PADX, pady=PADY)
     ttk.Label(bonus_frame, textvariable=max_add_langs_var).grid(row=8, column=1, sticky="w", padx=PADX, pady=PADY)
     ttk.Label(bonus_frame, text="Special Hirelings Cap:").grid(row=9, column=0, sticky="w", padx=PADX, pady=PADY)
-    ttk.Label(bonus_frame, textvariable=cap_spec_hirelings_var).grid(row=9, column=1, sticky="w", padx=PADX, pady=PADY)
-
-    
+    ttk.Label(bonus_frame, textvariable=cap_spec_hirelings_var).grid(row=9, column=1, sticky="w", padx=PADX, pady=PADY) 
 
     # Stats / Other panels
     stats_frame = ttk.LabelFrame(root, text="Stats / Derived", borderwidth=5, padding=(6,6))
     stats_frame.grid(row=1, column=2, padx=10, pady=10, sticky="nsew")
     stats_frame.grid_columnconfigure(0, weight=1)
 
+    # Create stat labels and values
+    ttk.Label(stats_frame, text="Hit Points (HP):").grid(row=0, column=0, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(stats_frame, textvariable=hp_var).grid(row=0, column=1, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(stats_frame, text="Saving Throw:").grid(row=1, column=0, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(stats_frame, textvariable=save_throw_var).grid(row=1, column=1, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(stats_frame, text="Armor Class (AC):").grid(row=2, column=0, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(stats_frame, textvariable=ac_var).grid(row=2, column=1, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(stats_frame, text="Darkvision:").grid(row=3, column=0, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(stats_frame, textvariable=darkvision_var).grid(row=3, column=1, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(stats_frame, text="Parry:").grid(row=4, column=0, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(stats_frame, textvariable=parry_var).grid(row=4, column=1, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(stats_frame, text="Special Abilities:").grid(row=5, column=0, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(stats_frame, textvariable=special_abilities_var).grid(row=5, column=1, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(stats_frame, text="Immunities:").grid(row=6, column=0, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(stats_frame, textvariable=immunities_var).grid(row=6, column=1, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(stats_frame, text="Languages:").grid(row=7, column=0, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(stats_frame, textvariable=add_langs_var).grid(row=7, column=1, sticky="w", padx=PADX, pady=PADY)
+
+    # Thief Skills frame
     thief_frame = ttk.LabelFrame(root, text="Thief Skills", borderwidth=5, padding=(6,6))
     thief_frame.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
+    stats_frame.grid_columnconfigure(0, weight=1)
 
-    weapons_frame = ttk.LabelFrame(root, text="Weapons", borderwidth=5, padding=(6,6))
+    # Create thief skill labels and values
+    ttk.Label(thief_frame, text="Delicate Tasks:").grid(row=0, column=0, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(thief_frame, textvariable=delicate_tasks_var).grid(row=0, column=1, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(thief_frame, text="Climb Walls:").grid(row=1, column=0, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(thief_frame, textvariable=climb_walls_var).grid(row=1, column=1, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(thief_frame, text="Hear Sounds:").grid(row=2, column=0, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(thief_frame, textvariable=hear_sounds_var).grid(row=2, column=1, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(thief_frame, text="Hide in Shadows:").grid(row=3, column=0, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(thief_frame, textvariable=hide_in_shadows_var).grid(row=3, column=1, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(thief_frame, text="Move Silently:").grid(row=4, column=0, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(thief_frame, textvariable=move_silently_var).grid(row=4, column=1, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(thief_frame, text="Open Locks:").grid(row=5, column=0, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(thief_frame, textvariable=open_locks_var).grid(row=5, column=1, sticky="w", padx=PADX, pady=PADY)
+    
+
+    # Weapons & Armor frame
+    weapons_frame = ttk.LabelFrame(root, text="Weapons & Armor", borderwidth=5, padding=(6,6))
     weapons_frame.grid(row=2, column=1, padx=10, pady=10, sticky="nsew")
 
-    armor_frame = ttk.LabelFrame(root, text="Armor", borderwidth=5, padding=(6,6))
-    armor_frame.grid(row=2, column=2, padx=10, pady=10, sticky="nsew")
+    # Inventory frame
+    inventory_frame = ttk.LabelFrame(root, text="Inventory", borderwidth=5, padding=(6,6))
+    inventory_frame.grid(row=2, column=2, padx=10, pady=10, sticky="nsew")
+
+    ttk.Label(inventory_frame, text="Coins:").grid(row=0, column=0, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(inventory_frame, textvariable=coins_var).grid(row=0, column=1, sticky="w", padx=PADX, pady=PADY)
+    ttk.Label(inventory_frame, text="Treasure:").grid(row=1, column=0, sticky="nw", padx=PADX, pady=PADY)
+    treasure_txt = scrolledtext.ScrolledText(
+    inventory_frame,
+    wrap="word",
+    height=5,        # sichtbare Zeilenhöhe (kann angepasst werden)
+    width=50,        # sichtbare Spaltenbreite (char-basiert)
+    font=("TkDefaultFont", 10)
+    )
+    treasure_txt.grid(row=1, column=1, sticky="nsew", padx=PADX, pady=PADY)
+    ttk.Label(inventory_frame, text="Inventory:").grid(row=2, column=0, sticky="nw", padx=PADX, pady=PADY)
+    inventory_txt = scrolledtext.ScrolledText(
+    inventory_frame,
+    wrap="word",
+    height=5,        # sichtbare Zeilenhöhe (kann angepasst werden)
+    width=50,        # sichtbare Spaltenbreite (char-basiert)
+    font=("TkDefaultFont", 10)
+    )
+    inventory_txt.grid(row=2, column=1, sticky="nsew", padx=PADX, pady=PADY)
 
     # Make lower rows/frames expand when window is resized
     root.grid_rowconfigure(1, weight=1, minsize=200)
     root.grid_rowconfigure(2, weight=1, minsize=200)
 
     # also make frames themselves expand internally where appropriate
-    for f in (attr_frame, bonus_frame, stats_frame, thief_frame, weapons_frame, armor_frame):
+    for f in (attr_frame, bonus_frame, stats_frame, thief_frame, weapons_frame):
         f.grid_rowconfigure(0, weight=0)
         f.grid_columnconfigure(0, weight=1)
 

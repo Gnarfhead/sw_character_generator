@@ -5,7 +5,7 @@ def apply_ranger_dependent_modifiers(character):
 
     # Set profession attributes
     character.profession = "ranger"
-    character.tp_dice = 8
+    character.hp_dice = 8
     character.main_stats = ("strength",)
     character.allowed_alignment = ("good",)
     character.allowed_races = ("human",)
@@ -13,10 +13,10 @@ def apply_ranger_dependent_modifiers(character):
     character.allowed_armor = ("all",)
     character.save_throw = 14
 
-    # Calculate total TP
-    character.tp = wuerfle_1d8(2) + character.tp_mod
-    if character.tp < 1:
-        character.tp = 1
+    # Calculate total HP
+    character.hp = wuerfle_1d8(2) + character.hp_mod
+    if character.hp < 1:
+        character.hp = 1
 
     # Calculate XP bonus
     if character.stat_str >= 13:

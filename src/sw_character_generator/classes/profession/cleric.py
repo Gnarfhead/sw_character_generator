@@ -5,7 +5,7 @@ def apply_cleric_dependent_modifiers(character):
     
     # Set profession attributes
     character.profession = "cleric"
-    character.tp_dice = 6
+    character.hp_dice = 6
     character.main_stats = ("wisdom",)
     character.allowed_alignment = ("good", "evil")
     character.allowed_races = ("human", "halfelf")
@@ -21,10 +21,10 @@ def apply_cleric_dependent_modifiers(character):
         "religious fortress (Level 9): clerics can create a temple to gather followers",
     )
 
-    # Calculate total TP
-    character.tp = wuerfle_1d6(1) + character.tp_mod
-    if character.tp < 1:
-        character.tp = 1
+    # Calculate total HP
+    character.hp = wuerfle_1d6(1) + character.hp_mod
+    if character.hp < 1:
+        character.hp = 1
 
     # Calculate XP bonus
     if character.stat_wis >= 13:

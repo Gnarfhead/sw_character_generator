@@ -80,15 +80,15 @@ def start_cli():
     choosen_profession_modifiers(player_character, profession_input)
     print(f"Modifiers for profession {profession_input} applied.\n")
 
-    # Optional homebrew rule: Get full TPs at level 1
-    print("Optional homebrew rule: Do you want to start with max TP at level 1 or roll for it? (y/n)")
+    # Optional homebrew rule: Get full HPs at level 1
+    print("Optional homebrew rule: Do you want to start with max HP at level 1 or roll for it? (y/n)")
     if input().lower() == 'y':
-        player_character.tp = player_character.tp_dice + player_character.tp_mod
-        print(f"Set TP to full: {player_character.tp}\n")
+        player_character.hp = player_character.hp_dice + player_character.hp_mod
+        print(f"Set HP to full: {player_character.hp}\n")
     elif input().lower() == 'n':
-        print(f"TP remains as rolled: {player_character.tp}\n")
+        print(f"HP remains as rolled: {player_character.hp}\n")
     else:
-        print(f"Invalid input: {input()} - TP remains as rolled: {player_character.tp}\n")
+        print(f"Invalid input: {input()} - HP remains as rolled: {player_character.hp}\n")
 
     # Choose race
     print("Choose your race:")

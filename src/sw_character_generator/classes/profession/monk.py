@@ -5,7 +5,7 @@ def apply_monk_dependent_modifiers(character):
     
     # Set profession attributes
     character.profession = "monk"
-    character.tp_dice = 4
+    character.hp_dice = 4
     character.main_stats = ("wisdom",)
     character.allowed_alignment = ("neutral", "evil", "good")
     character.allowed_races = ("human",)
@@ -42,10 +42,10 @@ def apply_monk_dependent_modifiers(character):
         "be one with your self (Level 9): also immune against spells 'geas' and 'command'",
     )
 
-    # Calculate total TP
-    character.tp = wuerfle_1d4(1) + character.tp_mod
-    if character.tp < 1:
-        character.tp = 1
+    # Calculate total HP
+    character.hp = wuerfle_1d4(1) + character.hp_mod
+    if character.hp < 1:
+        character.hp = 1
 
     # Calculate XP bonus
     if character.stat_wis >= 13:

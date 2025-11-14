@@ -7,7 +7,7 @@ class PlayerClass:
     player_name: str = "Unknown"
     character_name: str = "Unnamed Hero"
     profession: str = "Undefined"
-    tp_dice: int = 0
+    hp_dice: int = 0
     main_stats: str = "Undefined"
     player_state: str = "alive"
     alignment: str = "Undefined"
@@ -18,7 +18,7 @@ class PlayerClass:
     age: int = 0
     xp_bonus = 0
     xp: int = 0
-    tp: int = 0
+    hp: int = 0
     save_throw: int = 0
     save_bonuses: tuple[str, ...] = field(default_factory=tuple)
     immunity: tuple[str, ...] = field(default_factory=tuple)
@@ -37,7 +37,7 @@ class PlayerClass:
     door_crack_mod: float = field(init=False)
     ranged_atck_mod: int = field(init=False)
     ac_mod: int = field(init=False)
-    tp_mod: int = 0
+    hp_mod: int = 0
     raise_dead_mod: int = field(init=False)
     max_add_langs: int = field(init=False)
     highest_spell_level: int = field(init=False)
@@ -62,17 +62,23 @@ class PlayerClass:
     darkvision: bool = False
     parry: int = 0
 
+    def post_init(self):
+        """Initialize derived attributes after the main initialization."""
+        self.inventory = ["Rope", "Torch", "Backpack", "Bedroll", "Waterskin", "Mess Kit"]
+        self.treasure = ["Gold Coin", "Silver Ring"]
+
+
     def __repr__(self):
         """Return a string representation of the PlayerClass instance."""
         return (
             f"Player Name={self.player_name}, Character Name={self.character_name}\n"
             f"Profession={self.profession}, "
-            f"Level={self.level}, TP Dice=d{self.tp_dice}, Main Stats={self.main_stats}\n"
-            f"XP={self.xp}, XP Bonus={self.xp_bonus}%, TP={self.tp}, Coins={self.coins}\n"
+            f"Level={self.level}, HP Dice=d{self.hp_dice}, Main Stats={self.main_stats}\n"
+            f"XP={self.xp}, XP Bonus={self.xp_bonus}%, HP={self.hp}, Coins={self.coins}\n"
             f"STR: {self.stat_str}    STR_mod: Attack={self.strength_atck_mod}, Damage={self.strength_damage_mod}, "
             f"Carry Capacity={self.carry_capacity_mod}, Door Crack={self.door_crack_mod}\n"
             f"DEX: {self.stat_dex}    DEX_mod: Ranged Attack={self.ranged_atck_mod}, AC Bonus={self.ac_mod}\n"
-            f"CON: {self.stat_con}    CON_mod: TP Bonus={self.tp_mod}, Raise Dead Chance={self.raise_dead_mod}%\n"
+            f"CON: {self.stat_con}    CON_mod: HP Bonus={self.hp_mod}, Raise Dead Chance={self.raise_dead_mod}%\n"
             f"INT: {self.stat_int}    INT_mod: max. additional languages={self.max_add_langs}, Spell Level={self.highest_spell_level}, "
             f"Understands Spell={self.understand_spell}%, "
             f"min/max Spells per Level={self.min_spells_per_level}/{self.max_spells_per_level}\n"
@@ -99,7 +105,7 @@ class PlayerClass:
             "profession": self.profession,
             "main_stats": self.main_stats,
             "player_state": self.player_state,
-            "tp_dice": self.tp_dice,
+            "hp_dice": self.hp_dice,
             "level": self.level,
             "alignment": self.alignment,
             "race": self.race,
@@ -108,7 +114,7 @@ class PlayerClass:
             "age": self.age,
             "xp": self.xp,
             "xp_bonus": self.xp_bonus,
-            "tp": self.tp,
+            "hp": self.hp,
             "save_throw": self.save_throw,
             "save_bonuses": list(self.save_bonuses),
             "immunity": list(self.immunity),
@@ -135,7 +141,7 @@ class PlayerClass:
                     "ac_mod": self.ac_mod
                 },
                 "constitution": {
-                    "hp_mod": self.tp_mod,
+                    "hp_mod": self.hp_mod,
                     "raise_dead_chance": self.raise_dead_mod
                 },
                 "intelligence": {

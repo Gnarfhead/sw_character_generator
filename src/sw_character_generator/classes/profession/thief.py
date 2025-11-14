@@ -5,7 +5,7 @@ def apply_thief_dependent_modifiers(character):
 
     # Set profession attributes
     character.profession = "thief"
-    character.tp_dice = 6
+    character.hp_dice = 6
     character.main_stats = ("dexterity",)
     character.allowed_alignment = ("neutral", "evil")
     character.allowed_races = ("human", "halfling", "elf", "dwarf")
@@ -28,10 +28,10 @@ def apply_thief_dependent_modifiers(character):
         "+2 against traps and mechanical devices: Include traps, wands and magical devices",
     )  
 
-    # Calculate total TP
-    character.tp = wuerfle_1d6(1) + character.tp_mod
-    if character.tp < 1:
-        character.tp = 1
+    # Calculate total HP
+    character.hp = wuerfle_1d6(1) + character.hp_mod
+    if character.hp < 1:
+        character.hp = 1
 
     # Calculate XP bonus
     if character.stat_dex >= 13:
