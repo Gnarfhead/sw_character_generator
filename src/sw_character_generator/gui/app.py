@@ -25,16 +25,6 @@ PADX = 8
 PADY = 6
 
 
-
-class LocalPlayer:
-    """A minimal local model to hold the fields you requested."""
-    player_name: str = ""
-    character_name: str = ""
-    age: str = ""
-    gender: str = ""
-    deity: str = ""
-
-
 class App:
     """Class-based GUI for the character generator."""
 
