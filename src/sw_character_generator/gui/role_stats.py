@@ -1,5 +1,68 @@
 """"Module for rolling and assigning role stats to a character."""
+import tkinter as tk
+from tkinter import ttk
 from sw_character_generator.functions.role_dice import wuerfle_3d6
+
+
+def change_stats(parent: tk.Tk) -> str | None:
+    """
+    Open a modal Toplevel that returns a value to the caller.
+    We set an attribute on the child window and read it after wait_window.
+    """
+    win = tk.Toplevel(parent)
+    win.title("Return value")
+    win.transient(parent)
+    win.grab_set()
+
+    str_var = tk.BooleanVar()
+    dex_var = tk.BooleanVar()
+    con_var = tk.BooleanVar()
+    int_var = tk.BooleanVar()
+    wis_var = tk.BooleanVar()
+    char_var = tk.BooleanVar()
+
+    tk.Label(win, text="Choose 2 stats:").grid(row=0, column=0, columnspan=2, pady=(10, 5))
+    chkbox_stat_str = ttk.Checkbutton(win, text="Strength", variable=str_var)
+    chkbox_stat_str.grid(row=1, column=0, sticky="w", padx=20, pady=5)
+    chkbox_stat_dex = ttk.Checkbutton(win, text="Dexterity", variable=dex_var)
+    chkbox_stat_dex.grid(row=1, column=1, sticky="w", padx=20, pady=5)
+    chkbox_stat_con = ttk.Checkbutton(win, text="Constitution", variable=con_var)
+    chkbox_stat_con.grid(row=2, column=0, sticky="w", padx=20, pady=5)
+    chkbox_stat_int = ttk.Checkbutton(win, text="Intelligence", variable=int_var)
+    chkbox_stat_int.grid(row=2, column=1, sticky="w", padx=20, pady=5)
+    chkbox_stat_wis = ttk.Checkbutton(win, text="Wisdom", variable=wis_var)
+    chkbox_stat_wis.grid(row=3, column=0, sticky="w", padx=20, pady=5)
+    chkbox_stat_char = ttk.Checkbutton(win, text="Charisma", variable=char_var)
+    chkbox_stat_char.grid(row=3, column=1, sticky="w", padx=20, pady=5)
+    
+    def switch_stats():
+        selected_stats = []
+        if str_var.get():
+            selected_stats.append("Strength")
+        if dex_var.get():
+            selected_stats.append("Dexterity")
+        if con_var.get():
+            selected_stats.append("Constitution")
+        if int_var.get():
+            selected_stats.append("Intelligence")
+        if wis_var.get():
+            selected_stats.append("Wisdom")
+        if char_var.get():
+            selected_stats.append("Charisma")
+
+        if len(selected_stats) != 2:
+            tk.messagebox.showerror("Error", "Please select exactly 2 stats.")
+            return
+
+        win.result = f"Switched stats: {selected_stats[0]} and {selected_stats[1]}"
+        win.destroy()    
+
+    btn_switch_stats = ttk.Button(win, text="Switch", command=switch_stats)
+    btn_switch_stats.grid(row=4, column=0, columnspan=2, pady=(10, 10))
+
+    win.focus_set()
+    parent.wait_window(win)  # blocks until win is closed
+    return getattr(win, "result", None)
 
 
 def role_stats(character, chk_opt_4d6dl_var, btn_roll_stats=None, btn_change_stats=None):
@@ -30,11 +93,7 @@ def role_stats(character, chk_opt_4d6dl_var, btn_roll_stats=None, btn_change_sta
     print("Rolling starting coins (3d6 * 10):")
     character.coins = wuerfle_3d6(str_desc="Starting Coins") * 10
 
-    def change_stats():
-        """Enables changing stats after initial roll."""
-        if btn_change_stats is not None:
-            btn_change_stats.config(text="Change Stats", state="disabled")
-            btn_roll_stats.config(state="normal")
+
         
         
 
