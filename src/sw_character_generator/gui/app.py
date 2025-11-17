@@ -9,6 +9,8 @@ import tkinter.ttk as ttk
 import tkinter.scrolledtext as scrolledtext
 
 from sw_character_generator.classes.playerclass import PlayerClass
+from sw_character_generator.core.persistence import save_characterobj
+from sw_character_generator.functions.choosen_race import choosen_race_modifiers
 
 
 # Layout / sizing constants
@@ -20,10 +22,14 @@ ENTRY_WIDTH = 20
 PADX = 8
 PADY = 6
 
-new_player = PlayerClass()
 
 class App:
     """Class-based GUI for the character generator."""
+
+    # Global player character instance (to be used by save/load functions)
+    new_player = PlayerClass(
+        player_name="New Player"
+    )
 
     def __init__(self):
         # Create root first, then StringVars etc.
@@ -37,14 +43,22 @@ class App:
 
         # GUI-bound variables (created after root exists)
         self.player_var = tk.StringVar(master=self.root)
+        self.player_var.trace("w", lambda *args: setattr(self.new_player, "player_name", self.player_var.get()))
         self.character_var = tk.StringVar(master=self.root)
+        self.character_var.trace("w", lambda *args: setattr(self.new_player, "character_name", self.character_var.get()))
         self.level_var = tk.StringVar(master=self.root, value="1")
         self.profession_var = tk.StringVar(master=self.root)
+        self.profession_var.trace("w", lambda *args: setattr(self.new_player, "profession", self.profession_var.get()))
         self.race_var = tk.StringVar(master=self.root)
+        self.race_var.trace("w", choosen_race_modifiers(self.new_player, self.race_var.get()))
         self.gender_var = tk.StringVar(master=self.root)
+        self.gender_var.trace("w", lambda *args: setattr(self.new_player, "gender", self.gender_var.get()))
         self.alignment_var = tk.StringVar(master=self.root)
+        self.alignment_var.trace("w", lambda *args: setattr(self.new_player, "alignment", self.alignment_var.get()))
         self.god_var = tk.StringVar(master=self.root)
+        self.god_var.trace("w", lambda *args: setattr(self.new_player, "god", self.god_var.get()))
         self.age_var = tk.StringVar(master=self.root)
+        self.age_var.trace("w", lambda *args: setattr(self.new_player, "age", self.age_var.get()))
         self.xp_bonus_var = tk.StringVar(master=self.root, value="0")
         self.xp_var = tk.StringVar(master=self.root, value="0")
         self.main_stats_var = tk.StringVar(master=self.root, value="STR DEX CON INT WIS CHA")
@@ -256,7 +270,7 @@ class App:
         self.footer_frame.grid(row=3, column=0, columnspan=3, padx=10, pady=10, sticky="ew")
 
         # place Save / Load buttons inside footer_frame on a new row so they're visually nearby
-        btn_save = ttk.Button(self.footer_frame, text="Save", command="")
+        btn_save = ttk.Button(self.footer_frame, text="Save", command=lambda: save_characterobj(self.new_player))
         btn_save.grid(row=0, column=0, sticky="e", padx=PADX, pady=PADY)
         btn_load = ttk.Button(self.footer_frame, text="Load", command="")
         btn_load.grid(row=0, column=1, sticky="w", padx=PADX, pady=PADY)

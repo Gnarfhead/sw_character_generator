@@ -9,6 +9,7 @@ from src.sw_character_generator.classes.race.human import apply_human_dependent_
 
 def choosen_race_modifiers(player_class: PlayerClass, race: str):
     """Applies race-dependent modifiers to the player character based on the chosen race."""
+    print("DEBUG: Race chosen:", race)
 
     if race.lower() == "halfelf" and "halfelf" in player_class.allowed_races:
         #print("DEBUG: Choosing Halfelf race - race parameter:", race)
