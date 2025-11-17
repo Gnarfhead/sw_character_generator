@@ -12,6 +12,7 @@ import tkinter.scrolledtext as scrolledtext
 
 from sw_character_generator.classes.playerclass import PlayerClass
 from sw_character_generator.core.persistence import save_characterobj
+from sw_character_generator.gui.role_stats import role_stats
 
 
 # Layout / sizing constants
@@ -27,10 +28,7 @@ PADY = 6
 class App:
     """Class-based GUI for the character generator."""
 
-    # Global player character instance (to be used by save/load functions)
-    new_player = PlayerClass(
-        player_name="New Player"
-    )
+    #----------------- initialization -----------------
 
     def __init__(self):
         # Create root first, then StringVars etc.
@@ -40,17 +38,15 @@ class App:
         self.root.minsize(ROOT_MIN_W, ROOT_MIN_H)
 
         # Global player character instance (to be used by save/load functions)
-        self.new_player = PlayerClass(
-            player_name="New Player"
-        )
+        self.new_player = PlayerClass()
 
         # Make root use grid for all direct children and allow columns to expand
         for c in range(3):
             self.root.grid_columnconfigure(c, weight=1, minsize=VALUE_MIN_W)
 
         # GUI-bound variables (created after root exists)
-        self.player_var = tk.StringVar(master=self.root)
-        self.character_var = tk.StringVar(master=self.root)
+        self.player_name_var = tk.StringVar(master=self.root)
+        self.character_name_var = tk.StringVar(master=self.root)
         self.level_var = tk.StringVar(master=self.root, value="1")
         self.profession_var = tk.StringVar(master=self.root)
         self.race_var = tk.StringVar(master=self.root)
@@ -94,14 +90,20 @@ class App:
         self.raise_dead_mod_var = tk.StringVar(master=self.root, value="0")
         self.max_add_langs_var = tk.StringVar(master=self.root, value="0")
         self.cap_spec_hirelings_var = tk.StringVar(master=self.root, value="0")
+        self.chk_opt_4d6dl_var = tk.BooleanVar(master=self.root, value=False)   
         
     # ----------------- build UI -----------------
        
         # Build UI
         self._build_ui()
+
+        # Bind GUI variables/widgets back to model
+        self._bind_model_vars()
+
+        # Populate the view initially from the model
+        self.update_view_from_model()
   
     # ----------------- UI building -----------------
-
 
     def _build_ui(self):
         # Create top frame and place it with grid (do not mix pack/grid on root)
@@ -110,9 +112,9 @@ class App:
        
         # Row 0: basic fields
         ttk.Label(self.top_frame, text="Spieler:in:").grid(row=0, column=0, sticky="w", padx=PADX, pady=PADY)
-        ttk.Entry(self.top_frame, textvariable=self.player_var).grid(row=0, column=1, sticky="ew", padx=PADX, pady=PADY)
+        ttk.Entry(self.top_frame, textvariable=self.player_name_var).grid(row=0, column=1, sticky="ew", padx=PADX, pady=PADY)
         ttk.Label(self.top_frame, text="SC Name:").grid(row=0, column=2, sticky="w", padx=PADX, pady=PADY)
-        ttk.Entry(self.top_frame, textvariable=self.character_var).grid(row=0, column=3, sticky="ew", padx=PADX, pady=PADY)
+        ttk.Entry(self.top_frame, textvariable=self.character_name_var).grid(row=0, column=3, sticky="ew", padx=PADX, pady=PADY)
         ttk.Label(self.top_frame, text="Level:").grid(row=0, column=4, sticky="w", padx=PADX, pady=PADY)
         ttk.Label(self.top_frame, textvariable=self.level_var).grid(row=0, column=5, sticky="w", padx=PADX, pady=PADY)
 
@@ -166,6 +168,12 @@ class App:
         ttk.Label(self.attr_frame, textvariable=self.stat_wis_var).grid(row=4, column=1, sticky="w", padx=PADX, pady=PADY)
         ttk.Label(self.attr_frame, text="Charisma (CHA):").grid(row=5, column=0, sticky="w", padx=PADX, pady=PADY)
         ttk.Label(self.attr_frame, textvariable=self.stat_cha_var).grid(row=5, column=1, sticky="w", padx=PADX, pady=PADY)
+        
+        # place Roll Stats button inside attr_frame
+        btn_roll_stats = ttk.Button(self.attr_frame, text="Roll Stats", command=role_stats(self.new_player, self.chk_opt_4d6dl_var.get()))  # connect to method that rolls and updates
+        btn_roll_stats.grid(row=6, column=0, sticky="ew", padx=PADX, pady=PADY)
+        chk_opt_4d6dl = ttk.Checkbutton(self.attr_frame, text="4d6 drop lowest", variable=self.chk_opt_4d6dl_var)  # add variable binding as needed
+        chk_opt_4d6dl.grid(row=6, column=1, sticky="ew", padx=PADX, pady=PADY)  # add command as needed
 
         # Bonuses frame
         self.bonus_frame = ttk.LabelFrame(self.root, text="Attribute Bonuses", borderwidth=5, padding=(6, 6))
@@ -277,6 +285,7 @@ class App:
         # Status bar at the very bottom
         self.status_bar = ttk.Label(self.root, textvariable=self.status_var, relief="sunken", anchor="w", padding=(4,4))
         self.status_bar.grid(row=4, column=0, columnspan=3, sticky="ew")    
+
         # ----------------- configure resizing behavior -----------------
 
         # Make lower rows/frames expand when window is resized
@@ -289,6 +298,7 @@ class App:
             f.grid_rowconfigure(0, weight=1)
             f.grid_columnconfigure(0, weight=1)
 
+    # ----------------- model-view synchronization -----------------
 
     @contextmanager
     def _suspend_updates(self):
@@ -310,6 +320,30 @@ class App:
                 if var.get() != s:
                     var.set(s)
 
+    def _bind_model_vars(self):
+        """Bind GUI variables/widgets back to the model."""
+        for field in asdict(self.new_player).keys():
+            var = getattr(self, f"{field}_var", None)
+            if var is None:
+                continue
+            var.trace_add("write", lambda *a, f=field, v=var: self._on_var_change(f, v))
+
+    def _on_var_change(self, field, var):
+        """Callback when a GUI variable changes; update the model accordingly."""
+        if self._updating:
+            return
+        val = var.get()
+        # Convert to appropriate type if necessary (e.g., int)
+        current_val = getattr(self.new_player, field)
+        if isinstance(current_val, int):
+            try:
+                val = int(val)
+            except ValueError:
+                val = 0  # or some default/fallback
+        setattr(self.new_player, field, val)
+        # Optionally, update the view again to reflect any derived changes
+        self.update_view_from_model()
+    
     # ----------------- run -----------------
     def run(self):
         """Run the main Tk event loop."""
