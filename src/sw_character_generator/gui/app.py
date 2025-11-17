@@ -39,7 +39,10 @@ class App:
         self.root.title("Swords & Wizardry Charaktergenerator")
         self.root.minsize(ROOT_MIN_W, ROOT_MIN_H)
 
-    
+        # Global player character instance (to be used by save/load functions)
+        self.new_player = PlayerClass(
+            player_name="New Player"
+        )
 
         # Make root use grid for all direct children and allow columns to expand
         for c in range(3):
