@@ -2,11 +2,6 @@
 import tkinter as tk
 import tkinter.ttk as ttk
 import tkinter.scrolledtext as scrolledtext
-import tkinter.messagebox as messagebox
-from sw_character_generator.core.services import character_from_localplayer
-from sw_character_generator.core.models import LocalPlayer
-
-
 
 # Layout / sizing constants
 ROOT_MIN_W = 900

@@ -7,11 +7,8 @@ compatibility (main.py imports start_gui).
 import tkinter as tk
 import tkinter.ttk as ttk
 import tkinter.scrolledtext as scrolledtext
-import sys
-from src.sw_character_generator.core.persistence import _safe_json_load, _safe_json_dump, save_local_player, load_local_player
-from sw_character_generator.classes.playerclass import PlayerClass
-from sw_character_generator.core.models import LocalPlayer
 
+from sw_character_generator.classes.playerclass import PlayerClass
 
 
 # Layout / sizing constants
@@ -23,7 +20,7 @@ ENTRY_WIDTH = 20
 PADX = 8
 PADY = 6
 
-_PLAYER_PERSIST_FILE = "last_player.json"
+new_player = PlayerClass()
 
 class App:
     """Class-based GUI for the character generator."""
@@ -37,9 +34,6 @@ class App:
         # Make root use grid for all direct children and allow columns to expand
         for c in range(3):
             self.root.grid_columnconfigure(c, weight=1, minsize=VALUE_MIN_W)
-
-        # Application state
-        self.current_local_player: LocalPlayer = LocalPlayer()
 
         # GUI-bound variables (created after root exists)
         self.player_var = tk.StringVar(master=self.root)
@@ -87,48 +81,12 @@ class App:
         self.raise_dead_mod_var = tk.StringVar(master=self.root, value="0")
         self.max_add_langs_var = tk.StringVar(master=self.root, value="0")
         self.cap_spec_hirelings_var = tk.StringVar(master=self.root, value="0")
-        # ----------------- build UI -----------------
         
-
-
+    # ----------------- build UI -----------------
+       
         # Build UI
         self._build_ui()
-
-        # Try to pre-load last saved values if present
-        last = _safe_json_load(_PLAYER_PERSIST_FILE)
-        if last:
-            try:
-                # Fall A: last ist ein dict (aus plain JSON)
-                if isinstance(last, dict):
-                    self.player_var.set(last.get("player_name", ""))
-                    self.character_var.set(last.get("character_name", ""))
-                    self.age_var.set(last.get("age", ""))
-                    self.gender_var.set(last.get("gender", ""))
-                    self.god_var.set(last.get("deity", ""))
-                    self.update_status("Automatisch geladene gespeicherte Werte (dict).")
-                else:
-                    # Fall B: last ist bereits ein LocalPlayer-Objekt oder ähnliches
-                    # Versuche attribute-style Zugriff; falls nicht vorhanden, ignoriere ruhig
-                    player_name = getattr(last, "player_name", None)
-                    if player_name is not None:
-                        self.player_var.set(player_name)
-                    character_name = getattr(last, "character_name", None)
-                    if character_name is not None:
-                        self.character_var.set(character_name)
-                    age = getattr(last, "age", None)
-                    if age is not None:
-                        self.age_var.set(age)
-                    gender = getattr(last, "gender", None)
-                    if gender is not None:
-                        self.gender_var.set(gender)
-                    deity = getattr(last, "deity", None)
-                    if deity is not None:
-                        self.god_var.set(deity)
-                    self.update_status("Automatisch geladene gespeicherte Werte (object).")
-            except Exception:
-                # Falls irgendwas schiefgeht, ignoriere das Laden (keine App-Krise)
-                self.update_status("Fehler beim automatischen Laden der gespeicherten Werte.")
-
+  
     # ----------------- UI building -----------------
 
 
@@ -298,9 +256,9 @@ class App:
         self.footer_frame.grid(row=3, column=0, columnspan=3, padx=10, pady=10, sticky="ew")
 
         # place Save / Load buttons inside footer_frame on a new row so they're visually nearby
-        btn_save = ttk.Button(self.footer_frame, text="Save", command=self.on_save_player)
+        btn_save = ttk.Button(self.footer_frame, text="Save", command="")
         btn_save.grid(row=0, column=0, sticky="e", padx=PADX, pady=PADY)
-        btn_load = ttk.Button(self.footer_frame, text="Load", command=self.on_load_player)
+        btn_load = ttk.Button(self.footer_frame, text="Load", command="")
         btn_load.grid(row=0, column=1, sticky="w", padx=PADX, pady=PADY)
 
         # Status bar at the very bottom
@@ -317,128 +275,6 @@ class App:
         for f in (self.attr_frame, self.bonus_frame, self.stats_frame, self.thief_frame, self.weapons_frame, self.inventory_frame):
             f.grid_rowconfigure(0, weight=1)
             f.grid_columnconfigure(0, weight=1)
-
-    # ----------------- utilities / actions -----------------
-    def update_status(self, msg: str):
-        """Update the status bar message."""
-        self.status_var.set(msg)
-        print(msg)
-
-    def build_local_player_from_vars(self) -> LocalPlayer:
-        """Build a LocalPlayer instance from the current GUI variable values."""
-        print("Building LocalPlayer from GUI fields...")
-        return LocalPlayer(
-            player_name=self.player_var.get().strip(),
-            character_name=self.character_var.get().strip(),
-            age=self.age_var.get().strip(),
-            gender=self.gender_var.get().strip(),
-            deity=self.god_var.get().strip(),
-        )
-
-    def try_bind_to_playerclass(self, lp: LocalPlayer) -> bool:
-        """Attempt to create/update a PlayerClass instance with the given fields.
-
-        Returns True on success, False on any failure. This is intentionally tolerant:
-        it will try to setattr common attribute names and ignore failures.
-        """
-        try:
-            # try no-arg constructor first
-            p = PlayerClass()
-        except Exception:
-            try:
-                # try a two-arg constructor common in some models (player, character)
-                p = PlayerClass(lp.player_name, lp.character_name)
-            except Exception as e:
-                # can't instantiate PlayerClass -> bail out
-                print("Could not instantiate PlayerClass:", e, file=sys.stderr)
-                return False
-
-        # map of local fields -> candidate attribute names on PlayerClass
-        mappings = {
-            "player_name": ["player_name", "player", "playername", "owner"],
-            "character_name": ["character_name", "character", "name", "char_name"],
-            "age": ["age", "alter"],
-            "gender": ["gender", "sex"],
-            "deity": ["deity", "god", "gottheit"],
-        }
-
-        success_any = False
-        for local_field, candidates in mappings.items():
-            val = getattr(lp, local_field)
-            for cand in candidates:
-                try:
-                    if hasattr(p, cand):
-                        setattr(p, cand, val)
-                        success_any = True
-                        break
-                    else:
-                        # try setter method pattern set_<field>
-                        setter = f"set_{cand}"
-                        if hasattr(p, setter):
-                            getattr(p, setter)(val)
-                            success_any = True
-                            break
-                except Exception as e:
-                    # ignore individual failures but log
-                    print(f"Failed setting {cand} on PlayerClass: {e}", file=sys.stderr)
-                    continue
-
-        # If at least one attribute was set, we consider it useful and print the object
-        print("Attempting to update PlayerClass instance:", p)
-        if success_any:
-            try:
-                print("Updated PlayerClass instance:", p)
-            except Exception:
-                pass
-            # optionally persist a small JSON with values
-            save_local_player(lp)
-            #_safe_json_dump(asdict(lp), _PLAYER_PERSIST_FILE)
-            self.update_status("PlayerClass instanziert/aktualisiert und lokal gespeichert.")
-            return True
-
-        return False
-
-    def on_save_player(self):
-        """Handle Save button click: save current fields to LocalPlayer and try to bind to PlayerClass."""
-        print("Saving LocalPlayer from GUI fields...")
-        lp = self.build_local_player_from_vars()
-        # Save to local model first
-        self.current_local_player = lp
-        # Try to bind to PlayerClass (best-effort)
-        bound = self.try_bind_to_playerclass(lp)
-        if bound:
-            print("PlayerClass erfolgreich aktualisiert.")
-            self.update_status("Daten erfolgreich in PlayerClass geschrieben.")
-        else:
-            print("Konnte PlayerClass nicht aktualisieren.")
-            # fallback: save JSON locally so it isn't lost
-            save_local_player(lp)
-            self.update_status("Lokale Felder gespeichert (PlayerClass nicht aktualisiert).")
-
-    def on_load_player(self):
-        """Handle Load button click: load fields from persisted LocalPlayer JSON."""
-        print("Loading LocalPlayer from persisted JSON...")
-        data = _safe_json_load(_PLAYER_PERSIST_FILE)
-        if not data:
-            self.update_status("Keine gespeicherten Werte gefunden.")
-            return
-
-        try:
-            if isinstance(data, dict):
-                # JSON-Format
-                self.current_local_player = LocalPlayer(**{k: str(v) for k, v in data.items()})
-            else:
-                # Falls data schon ein LocalPlayer ist (oder ähnliches), versuche direktes Zuweisen
-                self.current_local_player = data
-            # update GUI fields (tolerant gegenüber fehlenden Attributes)
-            self.player_var.set(getattr(self.current_local_player, "player_name", ""))
-            self.character_var.set(getattr(self.current_local_player, "character_name", ""))
-            self.age_var.set(getattr(self.current_local_player, "age", ""))
-            self.gender_var.set(getattr(self.current_local_player, "gender", ""))
-            self.god_var.set(getattr(self.current_local_player, "deity", ""))
-            self.update_status("Gespeicherte Werte geladen.")
-        except Exception:
-            self.update_status("Fehler beim Laden der gespeicherten Werte.")
 
     # ----------------- run -----------------
     def run(self):
