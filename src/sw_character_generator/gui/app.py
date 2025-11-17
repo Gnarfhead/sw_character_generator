@@ -4,13 +4,14 @@ This file provides an App class that encapsulates the Tk GUI, previously impleme
 as a collection of functions. The module still exposes start_gui() for backwards
 compatibility (main.py imports start_gui).
 """
+from contextlib import contextmanager
+from dataclasses import asdict
 import tkinter as tk
 import tkinter.ttk as ttk
 import tkinter.scrolledtext as scrolledtext
 
 from sw_character_generator.classes.playerclass import PlayerClass
 from sw_character_generator.core.persistence import save_characterobj
-from sw_character_generator.functions.choosen_race import choosen_race_modifiers
 
 
 # Layout / sizing constants
@@ -33,9 +34,12 @@ class App:
 
     def __init__(self):
         # Create root first, then StringVars etc.
+        self._updating = False  # flag to prevent recursive updates
         self.root = tk.Tk()
         self.root.title("Swords & Wizardry Charaktergenerator")
         self.root.minsize(ROOT_MIN_W, ROOT_MIN_H)
+
+    
 
         # Make root use grid for all direct children and allow columns to expand
         for c in range(3):
@@ -43,22 +47,14 @@ class App:
 
         # GUI-bound variables (created after root exists)
         self.player_var = tk.StringVar(master=self.root)
-        self.player_var.trace("w", lambda *args: setattr(self.new_player, "player_name", self.player_var.get()))
         self.character_var = tk.StringVar(master=self.root)
-        self.character_var.trace("w", lambda *args: setattr(self.new_player, "character_name", self.character_var.get()))
         self.level_var = tk.StringVar(master=self.root, value="1")
         self.profession_var = tk.StringVar(master=self.root)
-        self.profession_var.trace("w", lambda *args: setattr(self.new_player, "profession", self.profession_var.get()))
         self.race_var = tk.StringVar(master=self.root)
-        self.race_var.trace("w", choosen_race_modifiers(self.new_player, self.race_var.get()))
         self.gender_var = tk.StringVar(master=self.root)
-        self.gender_var.trace("w", lambda *args: setattr(self.new_player, "gender", self.gender_var.get()))
         self.alignment_var = tk.StringVar(master=self.root)
-        self.alignment_var.trace("w", lambda *args: setattr(self.new_player, "alignment", self.alignment_var.get()))
         self.god_var = tk.StringVar(master=self.root)
-        self.god_var.trace("w", lambda *args: setattr(self.new_player, "god", self.god_var.get()))
         self.age_var = tk.StringVar(master=self.root)
-        self.age_var.trace("w", lambda *args: setattr(self.new_player, "age", self.age_var.get()))
         self.xp_bonus_var = tk.StringVar(master=self.root, value="0")
         self.xp_var = tk.StringVar(master=self.root, value="0")
         self.main_stats_var = tk.StringVar(master=self.root, value="STR DEX CON INT WIS CHA")
@@ -289,6 +285,27 @@ class App:
         for f in (self.attr_frame, self.bonus_frame, self.stats_frame, self.thief_frame, self.weapons_frame, self.inventory_frame):
             f.grid_rowconfigure(0, weight=1)
             f.grid_columnconfigure(0, weight=1)
+
+
+    @contextmanager
+    def _suspend_updates(self):
+        """Context manager to suspend update callbacks temporarily."""
+        self._updating = True
+        try:
+            yield
+        finally:
+            self._updating = False
+
+    def update_view_from_model(self):
+        """Update all GUI-bound variables from the new_player model."""
+        with self._suspend_updates():
+            for field, val in asdict(self.new_player).items():
+                var = getattr(self, f"{field}_var", None)
+                if var is None:
+                    continue
+                s = str(val) if val is not None else ""
+                if var.get() != s:
+                    var.set(s)
 
     # ----------------- run -----------------
     def run(self):
