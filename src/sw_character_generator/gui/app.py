@@ -9,6 +9,7 @@ from dataclasses import asdict
 import tkinter as tk
 import tkinter.ttk as ttk
 import tkinter.scrolledtext as scrolledtext
+import tkinter.messagebox
 
 from sw_character_generator.classes.playerclass import PlayerClass
 from sw_character_generator.core.persistence import save_characterobj
@@ -63,7 +64,7 @@ class App:
         self.stat_con_var = tk.StringVar(master=self.root, value="0")
         self.stat_int_var = tk.StringVar(master=self.root, value="0")
         self.stat_wis_var = tk.StringVar(master=self.root, value="0")
-        self.stat_cha_var = tk.StringVar(master=self.root, value="0")
+        self.stat_char_var = tk.StringVar(master=self.root, value="0")
         self.coins_var = tk.StringVar(master=self.root, value="0")
         self.delicate_tasks_var = tk.StringVar(master=self.root, value="0")
         self.climb_walls_var = tk.StringVar(master=self.root, value="0")
@@ -104,6 +105,31 @@ class App:
         self.update_view_from_model()
   
     # ----------------- UI building -----------------
+
+    def open_modal_with_result(self, parent: tk.Tk) -> str | None:
+        """
+        Open a modal Toplevel that returns a value to the caller.
+        We set an attribute on the child window and read it after wait_window.
+        """
+        win = tk.Toplevel(parent)
+        win.title("Return value")
+        win.transient(parent)
+        win.grab_set()
+        tk.Label(win, text="Enter some text and press Submit:").pack(padx=20, pady=(10, 0))
+        entry = tk.Entry(win, width=40)
+        entry.pack(padx=20, pady=(0, 10))
+
+        def submit():
+            win.result = entry.get()
+            win.destroy()
+
+        tk.Button(win, text="Submit", command=submit).pack(pady=(0, 10))
+
+        entry.focus_set()
+        parent.wait_window(win)  # blocks until win is closed
+
+        # After the window is closed, attempt to return the result (or None)
+        return getattr(win, "result", None)
 
     def _build_ui(self):
         # Create top frame and place it with grid (do not mix pack/grid on root)
@@ -167,13 +193,27 @@ class App:
         ttk.Label(self.attr_frame, text="Wisdom (WIS):").grid(row=4, column=0, sticky="w", padx=PADX, pady=PADY)
         ttk.Label(self.attr_frame, textvariable=self.stat_wis_var).grid(row=4, column=1, sticky="w", padx=PADX, pady=PADY)
         ttk.Label(self.attr_frame, text="Charisma (CHA):").grid(row=5, column=0, sticky="w", padx=PADX, pady=PADY)
-        ttk.Label(self.attr_frame, textvariable=self.stat_cha_var).grid(row=5, column=1, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.attr_frame, textvariable=self.stat_char_var).grid(row=5, column=1, sticky="w", padx=PADX, pady=PADY)
         
         # place Roll Stats button inside attr_frame
-        btn_roll_stats = ttk.Button(self.attr_frame, text="Roll Stats", command=role_stats(self.new_player, self.chk_opt_4d6dl_var.get()))  # connect to method that rolls and updates
+        btn_roll_stats = ttk.Button(self.attr_frame, text="Roll Stats", command=lambda: role_stats(self.new_player, self.chk_opt_4d6dl_var.get(), btn_roll_stats, btn_change_stats,))
         btn_roll_stats.grid(row=6, column=0, sticky="ew", padx=PADX, pady=PADY)
-        chk_opt_4d6dl = ttk.Checkbutton(self.attr_frame, text="4d6 drop lowest", variable=self.chk_opt_4d6dl_var)  # add variable binding as needed
-        chk_opt_4d6dl.grid(row=6, column=1, sticky="ew", padx=PADX, pady=PADY)  # add command as needed
+
+        # Homewbrew frame (use LabelFrame for nicer title)
+        self.attr_homebrew_frame = ttk.LabelFrame(self.attr_frame, text="Homebrew", borderwidth=5, padding=(6, 6))
+        self.attr_homebrew_frame.grid(row=7, column=0, padx=10, pady=10, sticky="nsew")
+   
+        btn_change_stats = ttk.Button(self.attr_homebrew_frame, text="Change Stats", command="")  # Placeholder for future functionality
+        btn_change_stats.config(state="disabled")  # Disabled for now
+        btn_change_stats.grid(row=0, column=1, sticky="ew", padx=PADX, pady=PADY)
+        chk_opt_4d6dl = ttk.Checkbutton(self.attr_homebrew_frame, text="4d6 drop lowest", variable=self.chk_opt_4d6dl_var)
+        chk_opt_4d6dl.grid(row=0, column=0, sticky="ew", padx=PADX, pady=PADY)
+
+        def on_open_with_result():
+            result = self.open_modal_with_result(self.root)
+            tk.messagebox.showinfo("Result", f"Returned: {result!s}")
+            
+        tk.Button(self.attr_homebrew_frame, text="Open modal & return", width=18, command=on_open_with_result).grid(row=1, column=0, padx=6, pady=6)
 
         # Bonuses frame
         self.bonus_frame = ttk.LabelFrame(self.root, text="Attribute Bonuses", borderwidth=5, padding=(6, 6))
