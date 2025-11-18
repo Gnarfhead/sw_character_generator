@@ -171,7 +171,7 @@ class App:
         ttk.Label(self.attr_frame, textvariable=self.stat_char_var).grid(row=5, column=1, sticky="w", padx=PADX, pady=PADY)
         
         # place Roll Stats button inside attr_frame
-        btn_roll_stats = ttk.Button(self.attr_frame, text="Roll Stats", command=lambda: role_stats(self.new_player, self.chk_opt_4d6dl_var.get(), btn_roll_stats, btn_switch_stats))
+        btn_roll_stats = ttk.Button(self.attr_frame, text="Roll Stats", command=lambda: role_stats(self, self.new_player, self.chk_opt_4d6dl_var.get(), btn_roll_stats, btn_switch_stats))
         btn_roll_stats.grid(row=6, column=0, sticky="ew", padx=PADX, pady=PADY)
 
         # Homewbrew frame (use LabelFrame for nicer title)

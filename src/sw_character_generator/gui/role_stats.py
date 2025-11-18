@@ -97,7 +97,7 @@ def switch_stats(parent: tk.Tk, character, btn_switch_stats=None) -> str | None:
     return getattr(win, "result", None)
 
 
-def role_stats(character, chk_opt_4d6dl_var, btn_roll_stats=None, btn_switch_stats=None):
+def role_stats(app, character, chk_opt_4d6dl_var, btn_roll_stats=None, btn_switch_stats=None):
     """Rolls and assigns role stats to the character based on the 4d6 drop lowest option."""
     print("Rolling role stats...")
     print("4d6 drop lowest option is set to:", chk_opt_4d6dl_var)
@@ -126,6 +126,9 @@ def role_stats(character, chk_opt_4d6dl_var, btn_roll_stats=None, btn_switch_sta
     # Starting coins: roll 3d6 and multiply by 10
     print("Rolling starting coins (3d6 * 10):")
     character.coins = wuerfle_3d6(str_desc="Starting Coins") * 10
+
+    app.status_var.set("Stats and start coins rolled.")
+    app.update_view_from_model()
 
         
 
