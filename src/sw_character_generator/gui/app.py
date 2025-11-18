@@ -13,7 +13,7 @@ import tkinter.messagebox
 
 from sw_character_generator.classes.playerclass import PlayerClass
 from sw_character_generator.core.persistence import save_characterobj
-from sw_character_generator.gui.role_stats import role_stats, change_stats
+from sw_character_generator.gui.role_stats import role_stats, switch_stats
 
 
 # Layout / sizing constants
@@ -171,22 +171,22 @@ class App:
         ttk.Label(self.attr_frame, textvariable=self.stat_char_var).grid(row=5, column=1, sticky="w", padx=PADX, pady=PADY)
         
         # place Roll Stats button inside attr_frame
-        btn_roll_stats = ttk.Button(self.attr_frame, text="Roll Stats", command=lambda: role_stats(self.new_player, self.chk_opt_4d6dl_var.get(), btn_roll_stats, btn_change_stats,))
+        btn_roll_stats = ttk.Button(self.attr_frame, text="Roll Stats", command=lambda: role_stats(self.new_player, self.chk_opt_4d6dl_var.get(), btn_roll_stats, btn_switch_stats))
         btn_roll_stats.grid(row=6, column=0, sticky="ew", padx=PADX, pady=PADY)
 
         # Homewbrew frame (use LabelFrame for nicer title)
         self.attr_homebrew_frame = ttk.LabelFrame(self.attr_frame, text="Homebrew", borderwidth=5, padding=(6, 6))
         self.attr_homebrew_frame.grid(row=7, column=0, padx=10, pady=10, sticky="nsew")
 
-        def homebrew_change_stats(self):
-            result = change_stats(self.root)
+        def homebrew_switch_stats(self, character, btn_switch_stats):
+            switch_stats(self.root, character, btn_switch_stats)
             #tk.messagebox.showinfo("Result", Returned: Erledigt")
             self.status_var.set("Stats switched.")
             self.update_view_from_model()
 
-        btn_change_stats = ttk.Button(self.attr_homebrew_frame, text="Change Stats", command=lambda: homebrew_change_stats(self))
-        btn_change_stats.config(state="disabled")  # Disabled for now
-        btn_change_stats.grid(row=0, column=1, sticky="ew", padx=PADX, pady=PADY)
+        btn_switch_stats = ttk.Button(self.attr_homebrew_frame, text="Switch Stats", command=lambda: homebrew_switch_stats(self, self.new_player, btn_switch_stats))
+        btn_switch_stats.config(state="disabled")  # Disabled for now
+        btn_switch_stats.grid(row=0, column=1, sticky="ew", padx=PADX, pady=PADY)
         chk_opt_4d6dl = ttk.Checkbutton(self.attr_homebrew_frame, text="4d6 drop lowest", variable=self.chk_opt_4d6dl_var)
         chk_opt_4d6dl.grid(row=0, column=0, sticky="ew", padx=PADX, pady=PADY)
 
