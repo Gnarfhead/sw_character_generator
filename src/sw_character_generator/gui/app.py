@@ -13,6 +13,8 @@ import tkinter.messagebox
 
 from sw_character_generator.classes.playerclass import PlayerClass
 from sw_character_generator.core.persistence import save_characterobj
+from sw_character_generator.functions.choosen_profession import choosen_profession_modifiers
+from sw_character_generator.functions.choosen_race import choosen_race_modifiers
 from sw_character_generator.gui.role_stats import role_stats, switch_stats
 
 
@@ -50,14 +52,16 @@ class App:
         self.character_name_var = tk.StringVar(master=self.root)
         self.level_var = tk.StringVar(master=self.root, value="1")
         self.profession_var = tk.StringVar(master=self.root)
+        self.profession_var.trace_add("write", self._on_profession_change)
         self.race_var = tk.StringVar(master=self.root)
+        self.race_var.trace_add("write", self._on_race_change)
         self.gender_var = tk.StringVar(master=self.root)
         self.alignment_var = tk.StringVar(master=self.root)
         self.god_var = tk.StringVar(master=self.root)
         self.age_var = tk.StringVar(master=self.root)
         self.xp_bonus_var = tk.StringVar(master=self.root, value="0")
         self.xp_var = tk.StringVar(master=self.root, value="0")
-        self.main_stats_var = tk.StringVar(master=self.root, value="STR DEX CON INT WIS CHA")
+        self.main_stats_var = tk.StringVar(master=self.root)
         self.status_var = tk.StringVar(master=self.root, value="Ready")
         self.stat_str_var = tk.StringVar(master=self.root, value="0")
         self.stat_dex_var = tk.StringVar(master=self.root, value="0")
@@ -107,6 +111,10 @@ class App:
     # ----------------- UI building -----------------
 
     def _build_ui(self):
+
+        style = ttk.Style()
+        style.configure("SW.Label", foreground="black", background="red")
+      
         # Create top frame and place it with grid (do not mix pack/grid on root)
         self.top_frame = ttk.Frame(self.root, borderwidth=5, relief="ridge", padding=(6, 6))
         self.top_frame.grid(row=0, column=0, columnspan=3, padx=10, pady=10, sticky="ew")
@@ -120,18 +128,18 @@ class App:
         ttk.Label(self.top_frame, textvariable=self.level_var).grid(row=0, column=5, sticky="w", padx=PADX, pady=PADY)
 
         # Row 1
-        ttk.Label(self.top_frame, text="Profession:").grid(row=1, column=0, sticky="w", padx=PADX, pady=PADY)
-        profession_cb = ttk.Combobox(self.top_frame, textvariable=self.profession_var)
-        profession_cb.grid(row=1, column=1, sticky="ew", padx=PADX, pady=PADY)
-        profession_cb.config(values=["Fighter", "Cleric", "Thief", "Wizard", "Ranger", "Paladin"])
+        ttk.Label(self.top_frame, text="Profession:", style="SW.Label").grid(row=1, column=0, sticky="w", padx=PADX, pady=PADY)
+        self.profession_cb = ttk.Combobox(self.top_frame, textvariable=self.profession_var)
+        self.profession_cb.grid(row=1, column=1, sticky="ew", padx=PADX, pady=PADY)
+        self.profession_cb.config(values=["Fighter", "Cleric", "Thief", "Wizard", "Ranger", "Paladin"])
         ttk.Label(self.top_frame, text="Rasse:").grid(row=1, column=2, sticky="w", padx=PADX, pady=PADY)
-        race_cb = ttk.Combobox(self.top_frame, textvariable=self.race_var)
-        race_cb.grid(row=1, column=3, sticky="ew", padx=PADX, pady=PADY)
-        race_cb.config(values=["Human", "Elf", "Dwarf", "Halfling", "Halfelf"])
+        self.race_cb = ttk.Combobox(self.top_frame, textvariable=self.race_var, state="disabled")
+        self.race_cb.grid(row=1, column=3, sticky="ew", padx=PADX, pady=PADY)
+        self.race_cb.config(values=["Human", "Elf", "Dwarf", "Halfling", "Halfelf"])
         ttk.Label(self.top_frame, text="Geschlecht:").grid(row=1, column=4, sticky="w", padx=PADX, pady=PADY)
-        gender_cb = ttk.Combobox(self.top_frame, textvariable=self.gender_var)
-        gender_cb.grid(row=1, column=5, sticky="ew", padx=PADX, pady=PADY)
-        gender_cb.config(values=["Male", "Female", "Other"])
+        self.gender_cb = ttk.Combobox(self.top_frame, textvariable=self.gender_var)
+        self.gender_cb.grid(row=1, column=5, sticky="ew", padx=PADX, pady=PADY)
+        self.gender_cb.config(values=["Male", "Female", "Other"])
 
         # Row 2
         ttk.Label(self.top_frame, text="Gesinnung:").grid(row=2, column=0, sticky="w", padx=PADX, pady=PADY)
@@ -171,8 +179,8 @@ class App:
         ttk.Label(self.attr_frame, textvariable=self.stat_char_var).grid(row=5, column=1, sticky="w", padx=PADX, pady=PADY)
         
         # place Roll Stats button inside attr_frame
-        btn_roll_stats = ttk.Button(self.attr_frame, text="Roll Stats", command=lambda: role_stats(self, self.new_player, self.chk_opt_4d6dl_var.get(), btn_roll_stats, btn_switch_stats))
-        btn_roll_stats.grid(row=6, column=0, sticky="ew", padx=PADX, pady=PADY)
+        self.btn_roll_stats = ttk.Button(self.attr_frame, text="Roll Stats", command=lambda: role_stats(self, self.new_player, self.chk_opt_4d6dl_var.get(), self.btn_roll_stats, self.btn_switch_stats))
+        self.btn_roll_stats.grid(row=6, column=0, sticky="ew", padx=PADX, pady=PADY)
 
         # Homewbrew frame (use LabelFrame for nicer title)
         self.attr_homebrew_frame = ttk.LabelFrame(self.attr_frame, text="Homebrew", borderwidth=5, padding=(6, 6))
@@ -184,11 +192,11 @@ class App:
             self.status_var.set("Stats switched.")
             self.update_view_from_model()
 
-        btn_switch_stats = ttk.Button(self.attr_homebrew_frame, text="Switch Stats", command=lambda: homebrew_switch_stats(self, self.new_player, btn_switch_stats))
-        btn_switch_stats.config(state="disabled")  # Disabled for now
-        btn_switch_stats.grid(row=0, column=1, sticky="ew", padx=PADX, pady=PADY)
-        chk_opt_4d6dl = ttk.Checkbutton(self.attr_homebrew_frame, text="4d6 drop lowest", variable=self.chk_opt_4d6dl_var)
-        chk_opt_4d6dl.grid(row=0, column=0, sticky="ew", padx=PADX, pady=PADY)
+        self.btn_switch_stats = ttk.Button(self.attr_homebrew_frame, text="Switch Stats", command=lambda: homebrew_switch_stats(self, self.new_player, self.btn_switch_stats))
+        self.btn_switch_stats.config(state="disabled")  # Disabled for now
+        self.btn_switch_stats.grid(row=0, column=1, sticky="ew", padx=PADX, pady=PADY)
+        self.chk_opt_4d6dl = ttk.Checkbutton(self.attr_homebrew_frame, text="4d6 drop lowest", variable=self.chk_opt_4d6dl_var)
+        self.chk_opt_4d6dl.grid(row=0, column=0, sticky="ew", padx=PADX, pady=PADY)
 
         # Bonuses frame
         self.bonus_frame = ttk.LabelFrame(self.root, text="Attribute Bonuses", borderwidth=5, padding=(6, 6))
@@ -292,10 +300,10 @@ class App:
         self.footer_frame.grid(row=3, column=0, columnspan=3, padx=10, pady=10, sticky="ew")
 
         # place Save / Load buttons inside footer_frame on a new row so they're visually nearby
-        btn_save = ttk.Button(self.footer_frame, text="Save", command=lambda: save_characterobj(self.new_player))
-        btn_save.grid(row=0, column=0, sticky="e", padx=PADX, pady=PADY)
-        btn_load = ttk.Button(self.footer_frame, text="Load", command="")
-        btn_load.grid(row=0, column=1, sticky="w", padx=PADX, pady=PADY)
+        self.btn_save = ttk.Button(self.footer_frame, text="Save", command=lambda: save_characterobj(self.new_player))
+        self.btn_save.grid(row=0, column=0, sticky="e", padx=PADX, pady=PADY)
+        self.btn_load = ttk.Button(self.footer_frame, text="Load", command="")
+        self.btn_load.grid(row=0, column=1, sticky="w", padx=PADX, pady=PADY)
 
         # Status bar at the very bottom
         self.status_bar = ttk.Label(self.root, textvariable=self.status_var, relief="sunken", anchor="w", padding=(4,4))
@@ -358,7 +366,40 @@ class App:
         setattr(self.new_player, field, val)
         # Optionally, update the view again to reflect any derived changes
         self.update_view_from_model()
-    
+
+    ### Race change handling ###
+     
+    def _on_race_change(self, *args):
+        """Callback when race_var changes; update model race accordingly."""
+        if self._updating:  # Prevent recursive updates during bulk updates
+            return
+            
+        try:
+            race_name = self.race_var.get()
+            if race_name:  # Only process if a race is actually selected
+                choosen_race_modifiers(self.new_player, race_name)
+                self.update_view_from_model()
+                self.status_var.set(f"Race changed to {race_name}")
+        except Exception as e:
+            self.status_var.set(f"Error updating race: {e}")
+            print(f"Race change error: {e}")
+
+    def _on_profession_change(self, *args):
+        """Callback when profession_var changes; update model profession accordingly."""
+        if self._updating:  # Prevent recursive updates during bulk updates
+            return
+            
+        try:
+            profession_name = self.profession_var.get()
+            if profession_name:  # Only process if a profession is actually selected
+                choosen_profession_modifiers(self.new_player, profession_name)
+                self.update_view_from_model()
+                self.status_var.set(f"Profession changed to {profession_name}")
+                self.race_cb.config(state="normal")
+        except Exception as e:
+            self.status_var.set(f"Error updating profession: {e}")
+            print(f"Profession change error: {e}")
+
     # ----------------- run -----------------
     def run(self):
         """Run the main Tk event loop."""
