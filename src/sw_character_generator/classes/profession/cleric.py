@@ -16,7 +16,7 @@ def apply_cleric_dependent_modifiers(character):
         "+2 against paralysis and poison",
     )
 
-    character.special_abilities += (
+    character.special_abilities = (
         "turn undead: clerics can turn undead creatures",
         "religious fortress (Level 9): clerics can create a temple to gather followers",
     )

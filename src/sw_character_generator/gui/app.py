@@ -243,10 +243,20 @@ class App:
         ttk.Label(self.stats_frame, textvariable=self.parry_var).grid(row=5, column=1, sticky="w", padx=PADX, pady=PADY)
         ttk.Label(self.stats_frame, text="Languages:").grid(row=6, column=0, sticky="w", padx=PADX, pady=PADY)
         ttk.Label(self.stats_frame, textvariable=self.add_langs_var).grid(row=6, column=1, sticky="w", padx=PADX, pady=PADY)
-        ttk.Label(self.stats_frame, text="Special Abilities:").grid(row=7, column=0, sticky="w", padx=PADX, pady=PADY)
-        ttk.Label(self.stats_frame, textvariable=self.special_abilities_var).grid(row=7, column=1, sticky="w", padx=PADX, pady=PADY)
-        ttk.Label(self.stats_frame, text="Immunities:").grid(row=8, column=0, sticky="w", padx=PADX, pady=PADY)
-        ttk.Label(self.stats_frame, textvariable=self.immunities_var).grid(row=8, column=1, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.stats_frame, text="Immunities:").grid(row=7, column=0, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.stats_frame, textvariable=self.immunities_var).grid(row=7, column=1, sticky="w", padx=PADX, pady=PADY)
+        ttk.Label(self.stats_frame, text="Special Abilities:").grid(row=8, column=0, sticky="w", padx=PADX, pady=PADY)
+                
+        # Use scrolledtext for special abilities
+        special_abilities_txt = scrolledtext.ScrolledText(
+        self.stats_frame,
+        wrap="word",
+        height=5,        # sichtbare Zeilenhöhe (kann angepasst werden)
+        width=40,        # sichtbare Spaltenbreite (char-basiert)
+        font=("TkDefaultFont", 10)
+        )
+        special_abilities_txt.grid(row=8, column=1, sticky="nsew", padx=PADX, pady=PADY)   
+
 
         # Thief skills panel
         self.thief_frame = ttk.LabelFrame(self.root, text="Thief Skills", borderwidth=5, padding=(6, 6))
@@ -277,6 +287,8 @@ class App:
         ttk.Label(self.inventory_frame, text="Coins:").grid(row=0, column=0, sticky="w", padx=PADX, pady=PADY)
         ttk.Label(self.inventory_frame, textvariable=self.coins_var).grid(row=0, column=1, sticky="w", padx=PADX, pady=PADY)
         ttk.Label(self.inventory_frame, text="Treasure:").grid(row=1, column=0, sticky="nw", padx=PADX, pady=PADY)
+        
+        # Use scrolledtext for treasure
         treasure_txt = scrolledtext.ScrolledText(
         self.inventory_frame,
         wrap="word",
@@ -286,6 +298,8 @@ class App:
         )
         treasure_txt.grid(row=1, column=1, sticky="nsew", padx=PADX, pady=PADY)
         ttk.Label(self.inventory_frame, text="Inventory:").grid(row=2, column=0, sticky="nw", padx=PADX, pady=PADY)
+        
+        # Use scrolledtext for inventory
         inventory_txt = scrolledtext.ScrolledText(
         self.inventory_frame,
         wrap="word",
@@ -367,7 +381,7 @@ class App:
         # Optionally, update the view again to reflect any derived changes
         self.update_view_from_model()
 
-    ### Race change handling ###
+    # ----------------- specific variable change handlers -----------------
      
     def _on_race_change(self, *args):
         """Callback when race_var changes; update model race accordingly."""

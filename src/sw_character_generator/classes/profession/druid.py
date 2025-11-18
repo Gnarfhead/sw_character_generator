@@ -18,7 +18,7 @@ def apply_druid_dependent_modifiers(character):
     character.immunity += (
         "Immunity against fay spells and magical effects (Level 5)",
     )
-    character.special_abilities += (
+    character.special_abilities = (
         "secret language: druids know a secret language understood only by other druids of neutral alignment",
         "magic items: druids can use magic items that are usable by clerics, except scrolls with cleric-spells",
         "first mysteries (Level 2): ",

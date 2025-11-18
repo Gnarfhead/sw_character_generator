@@ -18,7 +18,7 @@ def apply_thief_dependent_modifiers(character):
     character.move_silently = 20
     character.open_locks = 10
     character.climb_walls = 85
-    character.special_abilities += (
+    character.special_abilities = (
         "sneak attack: thieves gain a +4 bonus to attack and damage rolls are doubled when attacking opponent from behind",
         "read languages  (Level 3): thieves can read all written languages; 80% chance to understand maps and written information",
         "read magic language (Level 9): thieves can read magic inscriptions on magical items and scrolls and cast wizard-spells from scrolls",

@@ -12,7 +12,7 @@ def apply_fighter_dependent_modifiers(character):
     character.allowed_weapon = ("all",)
     character.allowed_armor = ("heavy",)
     character.save_throw = 14
-    character.special_abilities += (
+    character.special_abilities = (
         "multiple attacks: against creatures with 1 tp or less, fighters strike one attack per level per round",
         "fortress (Level 9): fighters can create a stronghold to gather followers and protect themselves",
     )

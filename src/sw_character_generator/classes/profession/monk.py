@@ -21,7 +21,7 @@ def apply_monk_dependent_modifiers(character):
     character.move_silently = 20
     character.open_locks = 10
     character.climb_walls = 85
-    character.special_abilities += (
+    character.special_abilities = (
         "deflect missiles: monks can deflect magic missiles and arrows with a successful save throw",
         "magic items: you can't use magic healing potions. Monks can only use magic weapons and rings",
         "deadly strike: if attack roll is 5 points above opponents AC, chance is 75% to stun opponent for 2d6 rounds; opponents less 1 TP die instantly die by 25% chance",
