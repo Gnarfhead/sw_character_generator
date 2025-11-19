@@ -5,7 +5,7 @@ as a collection of functions. The module still exposes start_gui() for backwards
 compatibility (main.py imports start_gui).
 """
 from contextlib import contextmanager
-from dataclasses import asdict
+from dataclasses import asdict, field
 import tkinter as tk
 import tkinter.ttk as ttk
 import tkinter.scrolledtext as scrolledtext
@@ -53,7 +53,7 @@ class App:
         # GUI-bound variables (created after root exists)
         self.player_name_var = tk.StringVar(master=self.root)
         self.character_name_var = tk.StringVar(master=self.root)
-        self.level_var = tk.StringVar(master=self.root, value="1")
+        self.level_var = tk.IntVar(master=self.root, value=1)
         self.profession_var = tk.StringVar(master=self.root)
         self.profession_var.trace_add("write", lambda *args: on_profession_change(self, *args))
         self.race_var = tk.StringVar(master=self.root)
@@ -62,47 +62,47 @@ class App:
         self.alignment_var = tk.StringVar(master=self.root)
         self.alignment_var.trace_add("write", lambda *args: on_alignment_change(self, *args))
         self.god_var = tk.StringVar(master=self.root)
-        self.age_var = tk.StringVar(master=self.root)
-        self.xp_bonus_var = tk.StringVar(master=self.root, value="0")
-        self.xp_var = tk.StringVar(master=self.root, value="0")
+        self.age_var = tk.IntVar(master=self.root, value=0)
+        self.xp_bonus_var = tk.IntVar(master=self.root, value=0)
+        self.xp_var = tk.IntVar(master=self.root, value=0)
         self.main_stats_var = tk.StringVar(master=self.root)
         self.status_var = tk.StringVar(master=self.root, value="Ready")
-        self.stat_str_var = tk.StringVar(master=self.root, value="0")
-        self.stat_dex_var = tk.StringVar(master=self.root, value="0")
-        self.stat_con_var = tk.StringVar(master=self.root, value="0")
-        self.stat_int_var = tk.StringVar(master=self.root, value="0")
-        self.stat_wis_var = tk.StringVar(master=self.root, value="0")
-        self.stat_char_var = tk.StringVar(master=self.root, value="0")
-        self.coins_var = tk.StringVar(master=self.root, value="0")
-        self.delicate_tasks_var = tk.StringVar(master=self.root, value="0")
-        self.climb_walls_var = tk.StringVar(master=self.root, value="0")
-        self.hear_sounds_var = tk.StringVar(master=self.root, value="0")
-        self.hide_in_shadows_var = tk.StringVar(master=self.root, value="0")
-        self.move_silently_var = tk.StringVar(master=self.root, value="0")
-        self.open_locks_var = tk.StringVar(master=self.root, value="0")
+        self.stat_str_var = tk.IntVar(master=self.root, value=0)
+        self.stat_dex_var = tk.IntVar(master=self.root, value=0)
+        self.stat_con_var = tk.IntVar(master=self.root, value=0)
+        self.stat_int_var = tk.IntVar(master=self.root, value=0)
+        self.stat_wis_var = tk.IntVar(master=self.root, value=0)
+        self.stat_char_var = tk.IntVar(master=self.root, value=0)
+        self.coins_var = tk.IntVar(master=self.root, value=0)
+        self.delicate_tasks_var = tk.IntVar(master=self.root, value=0)
+        self.climb_walls_var = tk.IntVar(master=self.root, value=0)
+        self.hear_sounds_var = tk.IntVar(master=self.root, value=0)
+        self.hide_in_shadows_var = tk.IntVar(master=self.root, value=0)
+        self.move_silently_var = tk.IntVar(master=self.root, value=0)
+        self.open_locks_var = tk.IntVar(master=self.root, value=0)
         self.player_state_var = tk.StringVar(master=self.root, value="Normal")
         self.hp_var = tk.IntVar(master=self.root, value=0)
-        self.hp_current_var = tk.IntVar(master=self.root, value="0")
-        self.hp_modify_var = tk.IntVar(master=self.root, value="0")
-        self.save_throw_var = tk.StringVar(master=self.root, value="0")
-        self.ac_var = tk.StringVar(master=self.root, value="0")
+        self.hp_current_var = tk.IntVar(master=self.root, value=0)
+        self.hp_modify_var = tk.IntVar(master=self.root, value=0)
+        self.save_throw_var = tk.IntVar(master=self.root, value=0)
+        self.ac_var = tk.IntVar(master=self.root, value=0)
         self.darkvision_var = tk.StringVar(master=self.root, value="No")
-        self.parry_var = tk.StringVar(master=self.root, value="0")
-        self.add_langs_var = tk.StringVar(master=self.root, value="0")
+        self.parry_var = tk.IntVar(master=self.root, value=0)
+        self.add_langs_var = tk.IntVar(master=self.root, value=0)
         self.special_abilities_var = tk.StringVar(master=self.root, value="")
         self.immunities_var = tk.StringVar(master=self.root, value="")
-        self.strength_atck_mod_var = tk.StringVar(master=self.root, value="0")
-        self.strength_damage_mod_var = tk.StringVar(master=self.root, value="0")
-        self.carry_capacity_mod_var = tk.StringVar(master=self.root, value="0")
-        self.door_crack_mod_var = tk.StringVar(master=self.root, value="0")
-        self.ranged_atck_mod_var = tk.StringVar(master=self.root, value="0")
-        self.ac_mod_var = tk.StringVar(master=self.root, value="0")
-        self.hp_mod_var = tk.StringVar(master=self.root, value="0")
-        self.raise_dead_mod_var = tk.StringVar(master=self.root, value="0")
-        self.max_add_langs_var = tk.StringVar(master=self.root, value="0")
-        self.cap_spec_hirelings_var = tk.StringVar(master=self.root, value="0")
-        self.chk_opt_4d6dl_var = tk.BooleanVar(master=self.root, value=False)   
-        
+        self.strength_atck_mod_var = tk.DoubleVar(master=self.root, value=0.0)
+        self.strength_damage_mod_var = tk.DoubleVar(master=self.root, value=0.0)
+        self.carry_capacity_mod_var = tk.DoubleVar(master=self.root, value=0.0)
+        self.door_crack_mod_var = tk.DoubleVar(master=self.root, value=0.0)
+        self.ranged_atck_mod_var = tk.IntVar(master=self.root, value=0)
+        self.ac_mod_var = tk.IntVar(master=self.root, value=0)
+        self.hp_mod_var = tk.IntVar(master=self.root, value=0)
+        self.raise_dead_mod_var = tk.IntVar(master=self.root, value=0)
+        self.max_add_langs_var = tk.IntVar(master=self.root, value=0)
+        self.cap_spec_hirelings_var = tk.IntVar(master=self.root, value=0)
+        self.chk_opt_4d6dl_var = tk.BooleanVar(master=self.root, value=False)
+
     # ----------------- setup UI -----------------
 
         style = ttk.Style()
@@ -562,20 +562,42 @@ class App:
             var.trace_add("write", lambda *a, f=field, v=var: self._on_var_change(f, v))
 
     def _on_var_change(self, field, var):
-        """Callback when a GUI variable changes; update the model accordingly."""
+    """Callback when a GUI variable changes; update the model accordingly."""
         if self._updating:
             return
-        val = var.get()
-        # Convert to appropriate type if necessary (e.g., int)
-        current_val = getattr(self.new_player, field)
+        try:
+            raw = var.get()
+        except tk.TclError:
+            # Invalid/incompatible value in Tk variable (e.g. "Common" in IntVar)
+            # Refresh from model and bail out
+            with self.suppress_updates():
+                update_view_from_model(self)
+            return
+
+        # Normalize by model field type
+        current_val = getattr(self.new_player, field, None)
+
+        # If model has numeric, coerce; if coercion fails, ignore change
         if isinstance(current_val, int):
             try:
-                val = int(val)
-            except ValueError:
-                val = 0  # or some default/fallback
-        setattr(self.new_player, field, val)
-        # Optionally, update the view again to reflect any derived changes
-        update_view_from_model(self)
+                if isinstance(raw, (tuple, list)):
+                    raw = raw[0] if raw else 0
+                raw = int(raw)
+            except (ValueError, TypeError):
+                return
+        elif isinstance(current_val, float):
+            try:
+                if isinstance(raw, (tuple, list)):
+                    raw = raw[0] if raw else 0.0
+                raw = float(raw)
+            except (ValueError, TypeError):
+                return
+
+        setattr(self.new_player, field, raw)
+
+        # Update view for any derived fields, but prevent recursion
+        with self.suppress_updates():
+            update_view_from_model(self)
 
     # ----------------- run -----------------
     def run(self):

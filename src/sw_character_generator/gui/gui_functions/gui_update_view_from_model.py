@@ -1,8 +1,48 @@
 """Update view from model function."""
+import tkinter as tk
 from dataclasses import asdict
 
 def update_view_from_model(app):
-    """Update all GUI-bound variables from the new_player model."""
+    """Safely copy model fields into Tkinter variables, normalizing types."""
+    model = app.new_player
+    for field, value in asdict(model).items():
+        var = getattr(app, f"{field}_var", None)
+        if var is None:
+            continue
+
+        # Normalize numeric targets
+        if isinstance(var, (tk.IntVar, tk.DoubleVar)):
+            if isinstance(value, (tuple, list)):
+                value = value[0] if value else 0
+            elif not isinstance(value, (int, float)):
+                try:
+                    value = int(value)
+                except (TypeError, ValueError):
+                    value = 0
+
+        # Normalize string targets
+        elif isinstance(var, tk.StringVar):
+            if not isinstance(value, str):
+                value = str(value)
+
+        try:
+            current = var.get()
+        except tk.TclError:
+            # Variable type mismatch; force reset
+            current = None
+
+        if current != value:
+            try:
+                var.set(value)
+            except tk.TclError:
+                # Fallback for broken value (e.g. still "()")
+                if isinstance(var, (tk.IntVar, tk.DoubleVar)):
+                    var.set(0)
+                else:
+                    var.set(str(value))
+
+"""
+def update_view_from_model(app):
     with app.suppress_updates(): # Prevent recursive updates
         for field, val in asdict(app.new_player).items(): # Iterate over all fields in the dataclass
             var = getattr(app, f"{field}_var", None) # Get the corresponding GUI variable
@@ -11,3 +51,4 @@ def update_view_from_model(app):
             s = str(val) if val is not None else "" # Convert value to string, handle None
             if var.get() != s: # Only update if the value has changed
                 var.set(s) # Update the GUI variable
+"""
