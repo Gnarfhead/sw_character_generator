@@ -181,3 +181,7 @@ def analyze_mod_char(player_character: PlayerClass):
         player_character.cap_spec_hirelings = 7
     else:
         raise ValueError("Charisma stat out of bounds:", player_character.stat_char)
+    
+    # Calculate XP bonus
+    if player_character.stat_char >= 13:
+        player_character.xp_bonus += 5
