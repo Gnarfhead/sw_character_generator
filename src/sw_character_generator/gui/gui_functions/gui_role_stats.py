@@ -3,17 +3,19 @@ import tkinter as tk
 from tkinter import ttk
 from sw_character_generator.functions.gen_char_stat_mods import analyze_mod_char, analyze_mod_con, analyze_mod_dex, analyze_mod_int, analyze_mod_str
 from sw_character_generator.functions.role_dice import wuerfle_3d6
+from sw_character_generator.gui.gui_functions.gui_update_view_from_model import update_view_from_model
 
 def switch_stats(parent: tk.Tk, character, btn_switch_stats=None) -> str | None:
     """
     Open a modal Toplevel that returns a value to the caller.
     We set an attribute on the child window and read it after wait_window.
     """
-    win = tk.Toplevel(parent)
-    win.title("Return value")
-    win.transient(parent)
-    win.grab_set()
+    win = tk.Toplevel(parent) # Create the modal window
+    win.title("Return value") # Set the title of the window
+    win.transient(parent) # Set to be on top of the main window
+    win.grab_set() # Make modal
 
+    # Variables for checkbuttons
     str_var = tk.BooleanVar()
     dex_var = tk.BooleanVar()
     con_var = tk.BooleanVar()
@@ -21,6 +23,7 @@ def switch_stats(parent: tk.Tk, character, btn_switch_stats=None) -> str | None:
     wis_var = tk.BooleanVar()
     char_var = tk.BooleanVar()
 
+    # Checkbuttons for stat selection
     tk.Label(win, text="Choose 2 stats:").grid(row=0, column=0, columnspan=2, pady=(10, 5))
     chkbox_stat_str = ttk.Checkbutton(win, text="Strength", variable=str_var)
     chkbox_stat_str.grid(row=1, column=0, sticky="w", padx=20, pady=5)
@@ -35,6 +38,7 @@ def switch_stats(parent: tk.Tk, character, btn_switch_stats=None) -> str | None:
     chkbox_stat_char = ttk.Checkbutton(win, text="Charisma", variable=char_var)
     chkbox_stat_char.grid(row=3, column=1, sticky="w", padx=20, pady=5)
     
+    # Internal function to switch stats
     def internal_switch_stats():
         """Switch the two selected stats in the character object."""
         selected_stats = []
@@ -68,9 +72,9 @@ def switch_stats(parent: tk.Tk, character, btn_switch_stats=None) -> str | None:
         
         # Die beiden ausgewählten Stats tauschen
         stat1_attr = stat_mapping[selected_stats[0]]
-        #print(stat1_attr)
+        print("DEBUG gui_role_stats: stat1_attr =", stat1_attr)
         stat2_attr = stat_mapping[selected_stats[1]]
-        #print(stat2_attr)
+        print("DEBUG gui_role_stats: stat2_attr =", stat2_attr)
         
         # Werte zwischenspeichern und tauschen
         temp_value = getattr(character, stat1_attr)
@@ -86,7 +90,7 @@ def switch_stats(parent: tk.Tk, character, btn_switch_stats=None) -> str | None:
 
         # Update buttons if provided
         if btn_switch_stats is not None:
-            #print("Button found, updating...")
+            print("DEBUG gui_role_stats: Button found, updating...")
             btn_switch_stats.config(text="Stats switched", state="disabled")
 
         # Set result and close window
@@ -107,11 +111,12 @@ def switch_stats(parent: tk.Tk, character, btn_switch_stats=None) -> str | None:
 
 def role_stats(app, character, chk_opt_4d6dl_var, btn_roll_stats=None, btn_switch_stats=None):
     """Rolls and assigns role stats to the character based on the 4d6 drop lowest option."""
-    print("Rolling role stats...")
-    print("4d6 drop lowest option is set to:", chk_opt_4d6dl_var)
+    print("DEBUG gui_role_stats: Rolling role stats...")
+    print("DEBUG gui_role_stats: 4d6 drop lowest option is set to:", chk_opt_4d6dl_var)
 
     # Roll stats
     if chk_opt_4d6dl_var is True: # 4d6 drop lowest
+        print("DEBUG gui_role_stats: Rolling stats using 4d6 drop lowest method.")
         character.stat_str = wuerfle_3d6("strength", drop_low=True)
         character.stat_dex = wuerfle_3d6("dexterity", drop_low=True)
         character.stat_con = wuerfle_3d6("constitution", drop_low=True)
@@ -119,6 +124,7 @@ def role_stats(app, character, chk_opt_4d6dl_var, btn_roll_stats=None, btn_switc
         character.stat_wis = wuerfle_3d6("wisdom", drop_low=True)
         character.stat_char = wuerfle_3d6("charisma", drop_low=True)
     else: # Standard 3d6
+        print("DEBUG gui_role_stats: Rolling stats using standard 3d6 method.")
         character.stat_str = wuerfle_3d6("strength", drop_low=False)
         character.stat_dex = wuerfle_3d6("dexterity", drop_low=False)
         character.stat_con = wuerfle_3d6("constitution", drop_low=False)
@@ -128,27 +134,30 @@ def role_stats(app, character, chk_opt_4d6dl_var, btn_roll_stats=None, btn_switc
 
     # Update buttons if provided
     if btn_roll_stats is not None:
-        btn_roll_stats.config(text="Stats Rolled", state="disabled")
-        app.chk_opt_4d6dl.config(state="disabled")
-        btn_switch_stats.config(state="normal")
-        app.profession_cb.config(state="normal")
-        app.top_frame.config(style="Attention.TFrame")
-        app.lbl_profession.config(style="Attention.TLabel")
-        app.attr_frame.config(style="Standard.TFrame")
+        btn_roll_stats.config(text="Stats Rolled", state="disabled") # Disable roll button after rolling
+        app.chk_opt_4d6dl.config(state="disabled") # Disable 4d6 drop lowest option
+        btn_switch_stats.config(state="normal") # Enable switch stats button
+        app.profession_cb.config(state="normal") # Enable profession combobox
+        app.top_frame.config(style="Attention.TFrame") # Highlight top frame to indicate next step
+        app.lbl_profession.config(style="Attention.TLabel") # Highlight profession label
+        app.attr_frame.config(style="Standard.TFrame") # Reset attribute frame style in case it was highlighted before
 
     # Starting coins: roll 3d6 and multiply by 10
-    print("Rolling starting coins (3d6 * 10):")
+    print("DEBUG gui_role_stats: Rolling starting coins (3d6 * 10):")
     character.coins = wuerfle_3d6(str_desc="Starting Coins") * 10
 
     # Analyze stat modifiers and apply to character
-    analyze_mod_str(character)
-    analyze_mod_dex(character)
-    analyze_mod_con(character)
-    analyze_mod_int(character)
-    analyze_mod_char(character)
+    analyze_mod_str(character) # Apply strength modifier
+    analyze_mod_dex(character) # Apply dexterity modifier
+    analyze_mod_con(character) # Apply constitution modifier
+    analyze_mod_int(character) # Apply intelligence modifier
+    analyze_mod_char(character) # Apply charisma modifier
 
+    # Update status and GUI
     app.status_var.set("Stats and start coins rolled.")
-    app.update_view_from_model()
+
+    # Update the GUI from the model
+    update_view_from_model(app)
 
   
 

@@ -13,9 +13,10 @@ import tkinter.messagebox
 
 from sw_character_generator.classes.playerclass import PlayerClass
 from sw_character_generator.core.persistence import save_characterobj
-from sw_character_generator.gui.gui_functions.race_change import on_race_change
-from sw_character_generator.gui.gui_functions.role_stats import role_stats, switch_stats
-from sw_character_generator.gui.gui_functions.profession_change import on_profession_change
+from sw_character_generator.gui.gui_functions.gui_race_change import on_race_change
+from sw_character_generator.gui.gui_functions.gui_role_stats import role_stats, switch_stats
+from sw_character_generator.gui.gui_functions.gui_profession_change import on_profession_change
+from sw_character_generator.gui.gui_functions.gui_update_view_from_model import update_view_from_model
 
 
 # Layout / sizing constants
@@ -151,7 +152,7 @@ class App:
         self._bind_model_vars()
 
         # Populate the view initially from the model
-        self.update_view_from_model()
+        update_view_from_model(self)
   
     # ----------------- UI building -----------------
 
@@ -188,7 +189,6 @@ class App:
         self.lbl_race.grid(row=1, column=2, sticky="w", padx=PADX, pady=PADY)
         self.race_cb = ttk.Combobox(self.top_frame, textvariable=self.race_var, state="disabled")
         self.race_cb.grid(row=1, column=3, sticky="ew", padx=PADX, pady=PADY)
-        #self.race_cb.config(values=["Human", "Elf", "Dwarf", "Halfling", "Halfelf"])
         self.race_cb.config(values=list(getattr(self.new_player, "allowed_races", ())))
 
         self.lbl_gender = ttk.Label(self.top_frame, text="Geschlecht:", style="Standard.TLabel")
@@ -230,37 +230,41 @@ class App:
         self.entry_xp = ttk.Label(self.top_frame, textvariable=self.xp_var)
         self.entry_xp.grid(row=3, column=5, sticky="w", padx=PADX, pady=PADY)
 
-        # ----------------- rest of the UI (attributes / bonuses / panels) -----------------
         # Attribute frame (use LabelFrame for nicer title)
         self.attr_frame = ttk.LabelFrame(self.root, text="Attribute", borderwidth=5, padding=(6, 6), style="Attention.TFrame")
         self.attr_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
 
-        # Create stat variables and place them with grid
+        # Row 0
         self.lbl_str = ttk.Label(self.attr_frame, text="Strength (STR):", style="Standard.TLabel")
         self.lbl_str.grid(row=0, column=0, sticky="w", padx=PADX, pady=PADY)
         self.entry_str = ttk.Label(self.attr_frame, textvariable=self.stat_str_var)
         self.entry_str.grid(row=0, column=1, sticky="w", padx=PADX, pady=PADY)
 
+        # Row 1
         self.lbl_dex = ttk.Label(self.attr_frame, text="Dexterity (DEX):", style="Standard.TLabel")
         self.lbl_dex.grid(row=1, column=0, sticky="w", padx=PADX, pady=PADY)
         self.entry_dex = ttk.Label(self.attr_frame, textvariable=self.stat_dex_var)
         self.entry_dex.grid(row=1, column=1, sticky="w", padx=PADX, pady=PADY)
 
+        # Row 2
         self.lbl_con = ttk.Label(self.attr_frame, text="Constitution (CON):", style="Standard.TLabel")
         self.lbl_con.grid(row=2, column=0, sticky="w", padx=PADX, pady=PADY)
         self.entry_con = ttk.Label(self.attr_frame, textvariable=self.stat_con_var)
         self.entry_con.grid(row=2, column=1, sticky="w", padx=PADX, pady=PADY)
 
+        # Row 3
         self.lbl_int = ttk.Label(self.attr_frame, text="Intelligence (INT):", style="Standard.TLabel")
         self.lbl_int.grid(row=3, column=0, sticky="w", padx=PADX, pady=PADY)
         self.entry_int = ttk.Label(self.attr_frame, textvariable=self.stat_int_var)
         self.entry_int.grid(row=3, column=1, sticky="w", padx=PADX, pady=PADY)
 
+        # Row 4
         self.lbl_wis = ttk.Label(self.attr_frame, text="Wisdom (WIS):", style="Standard.TLabel")
         self.lbl_wis.grid(row=4, column=0, sticky="w", padx=PADX, pady=PADY)
         self.entry_wis = ttk.Label(self.attr_frame, textvariable=self.stat_wis_var)
         self.entry_wis.grid(row=4, column=1, sticky="w", padx=PADX, pady=PADY)
 
+        # Row 5
         self.lbl_cha = ttk.Label(self.attr_frame, text="Charisma (CHA):", style="Standard.TLabel")
         self.lbl_cha.grid(row=5, column=0, sticky="w", padx=PADX, pady=PADY)
         self.entry_cha = ttk.Label(self.attr_frame, textvariable=self.stat_char_var)
@@ -274,12 +278,13 @@ class App:
         self.attr_homebrew_frame = ttk.LabelFrame(self.attr_frame, text="Homebrew", borderwidth=5, padding=(6, 6), style="Standard.TFrame")
         self.attr_homebrew_frame.grid(row=7, column=0, padx=10, pady=10, sticky="nsew")
 
+        # Switch Stats button inside homebrew frame
         def homebrew_switch_stats(self, character, btn_switch_stats):
             switch_stats(self.root, character, btn_switch_stats)
-            #tk.messagebox.showinfo("Result", Returned: Erledigt")
             self.status_var.set("Stats switched.")
-            self.update_view_from_model()
+            update_view_from_model(self)
 
+        # Switch Stats button
         self.btn_switch_stats = ttk.Button(self.attr_homebrew_frame, text="Switch Stats", style="Standard.TButton", command=lambda: homebrew_switch_stats(self, self.new_player, self.btn_switch_stats))
         self.btn_switch_stats.config(state="disabled")  # Disabled for now
         self.btn_switch_stats.grid(row=0, column=1, sticky="ew", padx=PADX, pady=PADY)
@@ -475,8 +480,11 @@ class App:
         # place Save / Load buttons inside footer_frame on a new row so they're visually nearby
         self.btn_save = ttk.Button(self.footer_frame, text="Save", command=lambda: save_characterobj(self.new_player))
         self.btn_save.grid(row=0, column=0, sticky="e", padx=PADX, pady=PADY)
-        self.btn_load = ttk.Button(self.footer_frame, text="Load", command="")
+        self.btn_load = ttk.Button(self.footer_frame, text="Load", command="messagebox.showinfo('Info', 'Load functionality not yet implemented.')")
         self.btn_load.grid(row=0, column=1, sticky="w", padx=PADX, pady=PADY)
+        self.btn_exit = ttk.Button(self.footer_frame, text="Exit", command=self.root.quit)
+        self.btn_exit.grid(row=0, column=2, sticky="e", padx=PADX, pady=PADY)
+
 
         # Status bar at the very bottom
         self.status_bar = ttk.Label(self.root, textvariable=self.status_var, relief="sunken", anchor="w", padding=(4,4))
@@ -511,17 +519,6 @@ class App:
         finally:
             self._updating = prev
 
-    def update_view_from_model(self):
-        """Update all GUI-bound variables from the new_player model."""
-        with self.suppress_updates():
-            for field, val in asdict(self.new_player).items():
-                var = getattr(self, f"{field}_var", None)
-                if var is None:
-                    continue
-                s = str(val) if val is not None else ""
-                if var.get() != s:
-                    var.set(s)
-
     def _bind_model_vars(self):
         """Bind GUI variables/widgets back to the model."""
         for field in asdict(self.new_player).keys():
@@ -544,12 +541,8 @@ class App:
                 val = 0  # or some default/fallback
         setattr(self.new_player, field, val)
         # Optionally, update the view again to reflect any derived changes
-        self.update_view_from_model()
+        update_view_from_model(self)
 
-    # ----------------- specific variable change handlers -----------------
-     
-    
-   
     # ----------------- run -----------------
     def run(self):
         """Run the main Tk event loop."""
