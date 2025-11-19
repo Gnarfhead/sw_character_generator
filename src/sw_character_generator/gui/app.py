@@ -13,6 +13,7 @@ import tkinter.messagebox
 
 from sw_character_generator.classes.playerclass import PlayerClass
 from sw_character_generator.core.persistence import save_characterobj
+from sw_character_generator.functions.modify_hp import modify_hp
 from sw_character_generator.gui.gui_functions.gui_alignment_change import on_alignment_change
 from sw_character_generator.gui.gui_functions.gui_race_change import on_race_change
 from sw_character_generator.gui.gui_functions.gui_role_stats import role_stats, switch_stats
@@ -80,7 +81,9 @@ class App:
         self.move_silently_var = tk.StringVar(master=self.root, value="0")
         self.open_locks_var = tk.StringVar(master=self.root, value="0")
         self.player_state_var = tk.StringVar(master=self.root, value="Normal")
-        self.hp_var = tk.StringVar(master=self.root, value="0")
+        self.hp_var = tk.IntVar(master=self.root, value=0)
+        self.hp_current_var = tk.IntVar(master=self.root, value="0")
+        self.hp_modify_var = tk.IntVar(master=self.root, value="0")
         self.save_throw_var = tk.StringVar(master=self.root, value="0")
         self.ac_var = tk.StringVar(master=self.root, value="0")
         self.darkvision_var = tk.StringVar(master=self.root, value="No")
@@ -353,48 +356,59 @@ class App:
         self.stats_frame.grid(row=1, column=2, padx=10, pady=10, sticky="nsew")
 
         # Create stat labels and values
-        self.lbl_player_state = ttk.Label(self.stats_frame, text="State:", style="Standard.TLabel")
-        self.lbl_player_state.grid(row=0, column=0, sticky="w", padx=PADX, pady=PADY)
-        self.entry_player_state = ttk.Label(self.stats_frame, textvariable=self.player_state_var)
-        self.entry_player_state.grid(row=0, column=1, sticky="w", padx=PADX, pady=PADY) 
-
-        self.lbl_hp = ttk.Label(self.stats_frame, text="Hit Points (HP):", style="Standard.TLabel")
-        self.lbl_hp.grid(row=1, column=0, sticky="w", padx=PADX, pady=PADY)
+        self.lbl_hp = ttk.Label(self.stats_frame, text="Hit Points max.:", style="Standard.TLabel")
+        self.lbl_hp.grid(row=0, column=0, sticky="w", padx=PADX, pady=PADY)
         self.entry_hp = ttk.Label(self.stats_frame, textvariable=self.hp_var)
-        self.entry_hp.grid(row=1, column=1, sticky="w", padx=PADX, pady=PADY)
+        self.entry_hp.grid(row=0, column=1, sticky="w", padx=PADX, pady=PADY)
+        self.btn_rollhp = ttk.Button(self.stats_frame, text="Roll HP", style="Standard.TButton")
+        self.btn_rollhp.grid(row=0, column=3, sticky="e", padx=PADX, pady=PADY)
+
+        self.lbl_hp_current = ttk.Label(self.stats_frame, text="Hit Points current:", style="Standard.TLabel")
+        self.lbl_hp_current.grid(row=1, column=0, sticky="w", padx=PADX, pady=PADY)
+        self.entry_hp_current = ttk.Label(self.stats_frame, textvariable=self.hp_current_var)
+        self.entry_hp_current.grid(row=1, column=1, sticky="w", padx=PADX, pady=PADY)
+        self.sbx_modify_hp = ttk.Spinbox(self.stats_frame, from_=-100, to=100, textvariable=self.hp_modify_var, width=5)
+        self.sbx_modify_hp.grid(row=1, column=2, sticky="e", padx=PADX, pady=PADY)
+        self.btn_modify_hp = ttk.Button(self.stats_frame, text="Modify HP", style="Standard.TButton", command=lambda: modify_hp(self.hp_modify_var.get(), self.hp_current_var, self.hp_var, self.player_state_var))
+        self.btn_modify_hp.grid(row=1, column=3, sticky="e", padx=PADX, pady=PADY)
+
+        self.lbl_player_state = ttk.Label(self.stats_frame, text="State:", style="Standard.TLabel")
+        self.lbl_player_state.grid(row=2, column=0, sticky="w", padx=PADX, pady=PADY)
+        self.entry_player_state = ttk.Label(self.stats_frame, textvariable=self.player_state_var)
+        self.entry_player_state.grid(row=2, column=1, sticky="w", padx=PADX, pady=PADY)
 
         self.lbl_save_throw = ttk.Label(self.stats_frame, text="Saving Throw:", style="Standard.TLabel")
-        self.lbl_save_throw.grid(row=2, column=0, sticky="w", padx=PADX, pady=PADY)
+        self.lbl_save_throw.grid(row=3, column=0, sticky="w", padx=PADX, pady=PADY)
         self.entry_save_throw = ttk.Label(self.stats_frame, textvariable=self.save_throw_var)
-        self.entry_save_throw.grid(row=2, column=1, sticky="w", padx=PADX, pady=PADY)
+        self.entry_save_throw.grid(row=3, column=1, sticky="w", padx=PADX, pady=PADY)
 
         self.lbl_ac = ttk.Label(self.stats_frame, text="Armor Class (AC):", style="Standard.TLabel")
-        self.lbl_ac.grid(row=3, column=0, sticky="w", padx=PADX, pady=PADY)
+        self.lbl_ac.grid(row=4, column=0, sticky="w", padx=PADX, pady=PADY)
         self.entry_ac = ttk.Label(self.stats_frame, textvariable=self.ac_var)
-        self.entry_ac.grid(row=3, column=1, sticky="w", padx=PADX, pady=PADY)
+        self.entry_ac.grid(row=4, column=1, sticky="w", padx=PADX, pady=PADY)
 
         self.lbl_darkvision = ttk.Label(self.stats_frame, text="Darkvision:", style="Standard.TLabel")
-        self.lbl_darkvision.grid(row=4, column=0, sticky="w", padx=PADX, pady=PADY)
+        self.lbl_darkvision.grid(row=5, column=0, sticky="w", padx=PADX, pady=PADY)
         self.entry_darkvision = ttk.Label(self.stats_frame, textvariable=self.darkvision_var)
-        self.entry_darkvision.grid(row=4, column=1, sticky="w", padx=PADX, pady=PADY)
+        self.entry_darkvision.grid(row=5, column=1, sticky="w", padx=PADX, pady=PADY)
 
         self.lbl_parry = ttk.Label(self.stats_frame, text="Parry:", style="Standard.TLabel")
-        self.lbl_parry.grid(row=5, column=0, sticky="w", padx=PADX, pady=PADY)
+        self.lbl_parry.grid(row=6, column=0, sticky="w", padx=PADX, pady=PADY)
         self.entry_parry = ttk.Label(self.stats_frame, textvariable=self.parry_var)
-        self.entry_parry.grid(row=5, column=1, sticky="w", padx=PADX, pady=PADY)
+        self.entry_parry.grid(row=6, column=1, sticky="w", padx=PADX, pady=PADY)
 
         self.lbl_add_langs = ttk.Label(self.stats_frame, text="Languages:", style="Standard.TLabel")
-        self.lbl_add_langs.grid(row=6, column=0, sticky="w", padx=PADX, pady=PADY)
+        self.lbl_add_langs.grid(row=7, column=0, sticky="w", padx=PADX, pady=PADY)
         self.entry_add_langs = ttk.Label(self.stats_frame, textvariable=self.add_langs_var)
-        self.entry_add_langs.grid(row=6, column=1, sticky="w", padx=PADX, pady=PADY)
+        self.entry_add_langs.grid(row=7, column=1, sticky="w", padx=PADX, pady=PADY)
 
         self.lbl_immunities = ttk.Label(self.stats_frame, text="Immunities:", style="Standard.TLabel")
-        self.lbl_immunities.grid(row=7, column=0, sticky="w", padx=PADX, pady=PADY)
+        self.lbl_immunities.grid(row=8, column=0, sticky="w", padx=PADX, pady=PADY)
         self.entry_immunities = ttk.Label(self.stats_frame, textvariable=self.immunities_var)
-        self.entry_immunities.grid(row=7, column=1, sticky="w", padx=PADX, pady=PADY)
+        self.entry_immunities.grid(row=8, column=1, sticky="w", padx=PADX, pady=PADY)
 
         self.lbl_special_abilities = ttk.Label(self.stats_frame, text="Special Abilities:", style="Standard.TLabel")
-        self.lbl_special_abilities.grid(row=8, column=0, sticky="w", padx=PADX, pady=PADY)
+        self.lbl_special_abilities.grid(row=9, column=0, sticky="w", padx=PADX, pady=PADY)
 
         # Use scrolledtext for special abilities
         special_abilities_txt = scrolledtext.ScrolledText(
@@ -404,7 +418,7 @@ class App:
         width=40,        # sichtbare Spaltenbreite (char-basiert)
         font=("TkDefaultFont", 10)
         )
-        special_abilities_txt.grid(row=8, column=1, sticky="nsew", padx=PADX, pady=PADY)   
+        special_abilities_txt.grid(row=9, column=1, columnspan=2, sticky="nsew", padx=PADX, pady=PADY)
 
 
         # Thief skills panel

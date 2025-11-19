@@ -19,6 +19,7 @@ class PlayerClass:
     xp_bonus = 0
     xp: int = 0
     hp: int = 0
+    hp_current: int = 0
     save_throw: int = 0
     save_bonuses: tuple[str, ...] = field(default_factory=tuple)
     immunity: tuple[str, ...] = field(default_factory=tuple)
