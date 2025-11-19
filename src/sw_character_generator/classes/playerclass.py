@@ -54,7 +54,7 @@ class PlayerClass:
     allowed_weapon: str = "Undefined"
     delicate_tasks: int = 0
     climb_walls: int = 0
-    hear_sounds: int = 0
+    hear_sounds: str = "0:6"
     hide_in_shadows: int = 0
     move_silently: int = 0
     open_locks: int = 0

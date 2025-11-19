@@ -14,7 +14,7 @@ def apply_monk_dependent_modifiers(character):
     character.save_throw = 15
     character.delicate_tasks = 15
     character.hide_in_shadows = 10
-    character.hear_sounds = 3
+    character.hear_sounds = "3:6"
     character.move_silently = 20
     character.open_locks = 10
     character.climb_walls = 85

@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import ttk
 from sw_character_generator.functions.gen_char_stat_mods import analyze_mod_char, analyze_mod_con, analyze_mod_dex, analyze_mod_int, analyze_mod_str
 from sw_character_generator.functions.role_dice import wuerfle_3d6
+from sw_character_generator.gui import app
 from sw_character_generator.gui.gui_functions.gui_update_view_from_model import update_view_from_model
 
 def switch_stats(parent: tk.Tk, character, btn_switch_stats=None) -> str | None:
@@ -106,7 +107,7 @@ def switch_stats(parent: tk.Tk, character, btn_switch_stats=None) -> str | None:
     # Center the window over parent
     win.focus_set()
     parent.wait_window(win)  # blocks until win is closed
-    return getattr(win, "result", None)
+    return getattr(win, "result", None) # Return the result set in internal_switch_stats
 
 
 def role_stats(app, character, chk_opt_4d6dl_var, btn_roll_stats=None, btn_switch_stats=None):

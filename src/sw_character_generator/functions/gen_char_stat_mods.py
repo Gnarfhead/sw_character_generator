@@ -62,6 +62,7 @@ def analyze_mod_dex(player_character: PlayerClass):
         raise ValueError("Dexterity stat out of bounds:", player_character.stat_dex)
 
     # Update AC with DEX modifier
+    player_character.ac = 10 # base AC
     player_character.ac += player_character.ac_mod
 
 def analyze_mod_con(player_character: PlayerClass):

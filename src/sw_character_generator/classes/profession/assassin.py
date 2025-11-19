@@ -14,7 +14,7 @@ def apply_assassin_dependent_modifiers(character):
     character.save_throw = 15
     character.delicate_tasks = 0
     character.hide_in_shadows = 0
-    character.hear_sounds = 0
+    character.hear_sounds = "0:6"
     character.move_silently = 0
     character.open_locks = 0
     character.climb_walls = 0

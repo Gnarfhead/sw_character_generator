@@ -13,6 +13,7 @@ import tkinter.messagebox
 
 from sw_character_generator.classes.playerclass import PlayerClass
 from sw_character_generator.core.persistence import save_characterobj
+from sw_character_generator.gui.gui_functions.gui_alignment_change import on_alignment_change
 from sw_character_generator.gui.gui_functions.gui_race_change import on_race_change
 from sw_character_generator.gui.gui_functions.gui_role_stats import role_stats, switch_stats
 from sw_character_generator.gui.gui_functions.gui_profession_change import on_profession_change
@@ -58,6 +59,7 @@ class App:
         self.race_var.trace_add("write", lambda *args: on_race_change(self, *args))
         self.gender_var = tk.StringVar(master=self.root)
         self.alignment_var = tk.StringVar(master=self.root)
+        self.alignment_var.trace_add("write", lambda *args: on_alignment_change(self, *args))
         self.god_var = tk.StringVar(master=self.root)
         self.age_var = tk.StringVar(master=self.root)
         self.xp_bonus_var = tk.StringVar(master=self.root, value="0")
@@ -183,7 +185,7 @@ class App:
         self.lbl_profession.grid(row=1, column=0, sticky="w", padx=PADX, pady=PADY)
         self.profession_cb = ttk.Combobox(self.top_frame, textvariable=self.profession_var, state="disabled")
         self.profession_cb.grid(row=1, column=1, sticky="ew", padx=PADX, pady=PADY)
-        self.profession_cb.config(values=["Fighter", "Cleric", "Thief", "Wizard", "Ranger", "Paladin", "Druid"])
+        self.profession_cb.config(values=["Fighter", "Cleric", "Thief", "Wizard", "Ranger", "Paladin", "Druid", "Assassin", "Monk"])
 
         self.lbl_race = ttk.Label(self.top_frame, text="Rasse:", style="Standard.TLabel")
         self.lbl_race.grid(row=1, column=2, sticky="w", padx=PADX, pady=PADY)
@@ -200,9 +202,9 @@ class App:
         # Row 2
         self.lbl_alignment = ttk.Label(self.top_frame, text="Gesinnung:", style="Standard.TLabel")
         self.lbl_alignment.grid(row=2, column=0, sticky="w", padx=PADX, pady=PADY)
-        self.align_cb = ttk.Combobox(self.top_frame, textvariable=self.alignment_var)
-        self.align_cb.grid(row=2, column=1, sticky="ew", padx=PADX, pady=PADY)
-        self.align_cb.config(values=["Good", "Neutral", "Evil"])
+        self.alignment_cb = ttk.Combobox(self.top_frame, textvariable=self.alignment_var, state="disabled")
+        self.alignment_cb.grid(row=2, column=1, sticky="ew", padx=PADX, pady=PADY)
+        self.alignment_cb.config(values=["Good", "Neutral", "Evil"])
 
         self.lbl_god = ttk.Label(self.top_frame, text="Gottheit:", style="Standard.TLabel")
         self.lbl_god.grid(row=2, column=2, sticky="w", padx=PADX, pady=PADY)
