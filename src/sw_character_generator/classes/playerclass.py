@@ -62,6 +62,15 @@ class PlayerClass:
     surprised: int = 2
     darkvision: bool = False
     parry: int = 0
+    spells_lvl1: int = 0
+    spells_lvl2: int = 0
+    spells_lvl3: int = 0
+    spells_lvl4: int = 0
+    spells_lvl5: int = 0
+    spells_lvl6: int = 0
+    spells_lvl7: int = 0
+    spells_lvl8: int = 0
+    spells_lvl9: int = 0
 
     def post_init(self):
         """Initialize derived attributes after the main initialization."""

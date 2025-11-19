@@ -28,6 +28,7 @@ def apply_cleric_dependent_modifiers(character):
     )
     character.xp_bonus = 0
     character.parry = 0
+    character.spells_lvl1 = 0
 
     # Calculate total HP
     character.hp = wuerfle_1d6(1) + character.hp_mod
@@ -40,4 +41,4 @@ def apply_cleric_dependent_modifiers(character):
 
     # Calculate spell-related attributes
     if character.stat_wis >= 15:
-        character.max_spells_per_level += 1
+        character.spells_lvl1 += 1
