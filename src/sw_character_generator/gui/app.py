@@ -97,6 +97,40 @@ class App:
         self.cap_spec_hirelings_var = tk.StringVar(master=self.root, value="0")
         self.chk_opt_4d6dl_var = tk.BooleanVar(master=self.root, value=False)   
         
+    # ----------------- setup UI -----------------
+
+        style = ttk.Style()
+        # Optional: anderes Theme wählen (manche Themes erlauben bessere Farbkontrolle)
+        # verfügbare Themes: style.theme_names()
+        style.theme_use("clam")
+
+        style.configure("Standard.Button",
+                background="#e2e3e5",
+                foreground="black",
+                font=("Helvetica", 10, "bold"),
+                padding=8)
+        style.map("Standard.Button",
+                background=[("active", "#c82333"), ("pressed", "#e2e3e5"), ("disabled", "#e2e3e5")],)
+                #foreground=[("disabled", "#d9d9d9")])
+
+        style.configure("Attention.Button",
+                        background="#dc3545",
+                        foreground="white",
+                        font=("Helvetica", 10, "bold"),
+                        padding=8)
+        style.map("Attention.Button",
+                background=[("active", "#c82333"), ("pressed", "#e2e3e5"), ("disabled", "#e2e3e5")],)
+
+        # Labels mit verschiedenen Styles
+        style.configure("Big.TLabel",
+                        font=("Helvetica", 14, "bold"),
+                        foreground="#333333",
+                        padding=6)
+        style.configure("Muted.TLabel",
+                        font=("Helvetica", 10),
+                        foreground="#666666",
+                        padding=4)
+    
     # ----------------- build UI -----------------
        
         # Build UI
@@ -112,31 +146,28 @@ class App:
 
     def _build_ui(self):
 
-        style = ttk.Style()
-        style.configure("SW.Label", foreground="black", background="red")
-      
         # Create top frame and place it with grid (do not mix pack/grid on root)
         self.top_frame = ttk.Frame(self.root, borderwidth=5, relief="ridge", padding=(6, 6))
         self.top_frame.grid(row=0, column=0, columnspan=3, padx=10, pady=10, sticky="ew")
        
         # Row 0: basic fields
-        ttk.Label(self.top_frame, text="Spieler:in:").grid(row=0, column=0, sticky="w", padx=PADX, pady=PADY)
-        ttk.Entry(self.top_frame, textvariable=self.player_name_var).grid(row=0, column=1, sticky="ew", padx=PADX, pady=PADY)
-        ttk.Label(self.top_frame, text="SC Name:").grid(row=0, column=2, sticky="w", padx=PADX, pady=PADY)
-        ttk.Entry(self.top_frame, textvariable=self.character_name_var).grid(row=0, column=3, sticky="ew", padx=PADX, pady=PADY)
-        ttk.Label(self.top_frame, text="Level:").grid(row=0, column=4, sticky="w", padx=PADX, pady=PADY)
-        ttk.Label(self.top_frame, textvariable=self.level_var).grid(row=0, column=5, sticky="w", padx=PADX, pady=PADY)
+        tk.Label(self.top_frame, text="Spieler:in:").grid(row=0, column=0, sticky="w", padx=PADX, pady=PADY)
+        tk.Entry(self.top_frame, textvariable=self.player_name_var).grid(row=0, column=1, sticky="ew", padx=PADX, pady=PADY)
+        tk.Label(self.top_frame, text="SC Name:").grid(row=0, column=2, sticky="w", padx=PADX, pady=PADY)
+        tk.Entry(self.top_frame, textvariable=self.character_name_var).grid(row=0, column=3, sticky="ew", padx=PADX, pady=PADY)
+        tk.Label(self.top_frame, text="Level:").grid(row=0, column=4, sticky="w", padx=PADX, pady=PADY)
+        tk.Label(self.top_frame, textvariable=self.level_var).grid(row=0, column=5, sticky="w", padx=PADX, pady=PADY)
 
         # Row 1
-        ttk.Label(self.top_frame, text="Profession:", style="SW.Label").grid(row=1, column=0, sticky="w", padx=PADX, pady=PADY)
-        self.profession_cb = ttk.Combobox(self.top_frame, textvariable=self.profession_var)
+        tk.Label(self.top_frame, text="Profession:").grid(row=1, column=0, sticky="w", padx=PADX, pady=PADY)
+        self.profession_cb = ttk.Combobox(self.top_frame, textvariable=self.profession_var, state="disabled")
         self.profession_cb.grid(row=1, column=1, sticky="ew", padx=PADX, pady=PADY)
         self.profession_cb.config(values=["Fighter", "Cleric", "Thief", "Wizard", "Ranger", "Paladin"])
-        ttk.Label(self.top_frame, text="Rasse:").grid(row=1, column=2, sticky="w", padx=PADX, pady=PADY)
+        tk.Label(self.top_frame, text="Rasse:").grid(row=1, column=2, sticky="w", padx=PADX, pady=PADY)
         self.race_cb = ttk.Combobox(self.top_frame, textvariable=self.race_var, state="disabled")
         self.race_cb.grid(row=1, column=3, sticky="ew", padx=PADX, pady=PADY)
         self.race_cb.config(values=["Human", "Elf", "Dwarf", "Halfling", "Halfelf"])
-        ttk.Label(self.top_frame, text="Geschlecht:").grid(row=1, column=4, sticky="w", padx=PADX, pady=PADY)
+        tk.Label(self.top_frame, text="Geschlecht:").grid(row=1, column=4, sticky="w", padx=PADX, pady=PADY)
         self.gender_cb = ttk.Combobox(self.top_frame, textvariable=self.gender_var)
         self.gender_cb.grid(row=1, column=5, sticky="ew", padx=PADX, pady=PADY)
         self.gender_cb.config(values=["Male", "Female", "Other"])
@@ -179,7 +210,7 @@ class App:
         ttk.Label(self.attr_frame, textvariable=self.stat_char_var).grid(row=5, column=1, sticky="w", padx=PADX, pady=PADY)
         
         # place Roll Stats button inside attr_frame
-        self.btn_roll_stats = ttk.Button(self.attr_frame, text="Roll Stats", command=lambda: role_stats(self, self.new_player, self.chk_opt_4d6dl_var.get(), self.btn_roll_stats, self.btn_switch_stats))
+        self.btn_roll_stats = ttk.Button(self.attr_frame, text="Roll Stats", style="Attention.Button", command=lambda: role_stats(self, self.new_player, self.chk_opt_4d6dl_var.get(), self.btn_roll_stats, self.btn_switch_stats))
         self.btn_roll_stats.grid(row=6, column=0, sticky="ew", padx=PADX, pady=PADY)
 
         # Homewbrew frame (use LabelFrame for nicer title)
@@ -192,7 +223,7 @@ class App:
             self.status_var.set("Stats switched.")
             self.update_view_from_model()
 
-        self.btn_switch_stats = ttk.Button(self.attr_homebrew_frame, text="Switch Stats", command=lambda: homebrew_switch_stats(self, self.new_player, self.btn_switch_stats))
+        self.btn_switch_stats = ttk.Button(self.attr_homebrew_frame, text="Switch Stats", style="Attention.Button", command=lambda: homebrew_switch_stats(self, self.new_player, self.btn_switch_stats))
         self.btn_switch_stats.config(state="disabled")  # Disabled for now
         self.btn_switch_stats.grid(row=0, column=1, sticky="ew", padx=PADX, pady=PADY)
         self.chk_opt_4d6dl = ttk.Checkbutton(self.attr_homebrew_frame, text="4d6 drop lowest", variable=self.chk_opt_4d6dl_var)
