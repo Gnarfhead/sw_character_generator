@@ -12,14 +12,22 @@ def apply_cleric_dependent_modifiers(character):
     character.allowed_weapon = ("blunt weapons",)
     character.allowed_armor = ("all",)
     character.save_throw = 15
-    character.save_bonuses += (
+    character.delicate_tasks = 0
+    character.hide_in_shadows = 0
+    character.hear_sounds = 0
+    character.move_silently = 0
+    character.open_locks = 0
+    character.climb_walls = 0
+    character.save_bonuses = (
         "+2 against paralysis and poison",
     )
-
+    character.immunity = ()
     character.special_abilities = (
         "turn undead: clerics can turn undead creatures",
         "religious fortress (Level 9): clerics can create a temple to gather followers",
     )
+    character.xp_bonus = 0
+    character.parry = 0
 
     # Calculate total HP
     character.hp = wuerfle_1d6(1) + character.hp_mod

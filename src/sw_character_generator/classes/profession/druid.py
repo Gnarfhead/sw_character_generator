@@ -12,10 +12,16 @@ def apply_druid_dependent_modifiers(character):
     character.allowed_weapon = ("daggers", "sickles", "spears", "slings", "oil flasks")
     character.allowed_armor = ("leather", "wooden shield")
     character.save_throw = 15
-    character.save_bonuses += (
+    character.delicate_tasks = 0
+    character.hide_in_shadows = 0
+    character.hear_sounds = 0
+    character.move_silently = 0
+    character.open_locks = 0
+    character.climb_walls = 0
+    character.save_bonuses = (
         "+2 against fire",
     )
-    character.immunity += (
+    character.immunity = (
         "Immunity against fay spells and magical effects (Level 5)",
     )
     character.special_abilities = (
@@ -25,6 +31,8 @@ def apply_druid_dependent_modifiers(character):
         "shape change (Level 5): druids can change their shape into that of a small or medium-sized animal three times per day",
         "Druid fortress (Level 9): druids can create a sanctuary",
     )
+    character.xp_bonus = 0
+    character.parry = 0
 
     # Calculate total HP
     character.hp = wuerfle_1d6(1) + character.hp_mod

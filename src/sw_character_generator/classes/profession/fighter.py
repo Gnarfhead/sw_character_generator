@@ -13,10 +13,19 @@ def apply_fighter_dependent_modifiers(character):
     character.allowed_weapon = ("all",)
     character.allowed_armor = ("heavy",)
     character.save_throw = 14
+    character.delicate_tasks = 0
+    character.hide_in_shadows = 0
+    character.hear_sounds = 0
+    character.move_silently = 0
+    character.open_locks = 0
+    character.climb_walls = 0
+    character.save_bonuses = ()
+    character.immunity = ()
     character.special_abilities = (
         "multiple attacks: against creatures with 1 tp or less, fighters strike one attack per level per round",
         "fortress (Level 9): fighters can create a stronghold to gather followers and protect themselves",
     )
+    character.xp_bonus = 0
 
     # Calculate parry based on DEX
     if character.stat_dex == 14:

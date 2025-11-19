@@ -12,6 +12,18 @@ def apply_ranger_dependent_modifiers(character):
     character.allowed_weapon = ("all",)
     character.allowed_armor = ("all",)
     character.save_throw = 14
+    character.delicate_tasks = 0
+    character.hide_in_shadows = 0
+    character.hear_sounds = 0
+    character.move_silently = 0
+    character.open_locks = 0
+    character.climb_walls = 0
+    character.save_bonuses = ()
+    character.immunity = ()
+    character.special_abilities = ()
+    character.xp_bonus = 0
+    character.parry = 0
+
 
     # Calculate total HP
     character.hp = wuerfle_1d8(2) + character.hp_mod

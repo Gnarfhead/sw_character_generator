@@ -12,6 +12,16 @@ def apply_paladin_dependent_modifiers(character):
     character.allowed_weapon = ("all",)
     character.allowed_armor = ("all",)
     character.save_throw = 12
+    character.delicate_tasks = 0
+    character.hide_in_shadows = 0
+    character.hear_sounds = 0
+    character.move_silently = 0
+    character.open_locks = 0
+    character.climb_walls = 0
+    character.save_bonuses = ()
+    character.immunity = (
+        "immunity against disease",
+    )
     character.special_abilities = (
         "lay on hands: paladins can heal 2 HP by laying on hands or cure a disease once per day",
         "magic items: paladins can use magic items that are usable by fighters. A total of 4 magic items, including max 3 weapons, 1 armor and 1 shield",
@@ -20,9 +30,8 @@ def apply_paladin_dependent_modifiers(character):
         "detect evil (Level 8): like the cleric spell",
         "fortress (Level 9): paladins can create a stronghold to gather followers",
     )
-    character.immunity += (
-        "immunity against disease",
-    )
+    character.xp_bonus = 0
+    character.parry = 0
 
     # Calculate total HP
     character.hp = wuerfle_1d8(1) + character.hp_mod

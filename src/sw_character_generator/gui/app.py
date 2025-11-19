@@ -15,6 +15,7 @@ from sw_character_generator.classes.playerclass import PlayerClass
 from sw_character_generator.core.persistence import save_characterobj
 from sw_character_generator.functions.choosen_profession import choosen_profession_modifiers
 from sw_character_generator.functions.choosen_race import choosen_race_modifiers
+from sw_character_generator.functions.gen_char_stat_mods import analyze_mod_str
 from sw_character_generator.gui.role_stats import role_stats, switch_stats
 
 

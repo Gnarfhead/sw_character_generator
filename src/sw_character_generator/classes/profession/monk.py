@@ -12,15 +12,19 @@ def apply_monk_dependent_modifiers(character):
     character.allowed_weapon = ("all",)
     character.allowed_armor = ("none",)
     character.save_throw = 15
-    character.save_bonuses += (
-        "+2 against paralysis and poison",
-    )
     character.delicate_tasks = 15
     character.hide_in_shadows = 10
     character.hear_sounds = 3
     character.move_silently = 20
     character.open_locks = 10
     character.climb_walls = 85
+    character.save_bonuses = (
+        "+2 against paralysis and poison",
+    )
+    character.immunity = (
+        "mastering self (Level 8): immune against mindcontrol, charm and hypnosis; except the spells 'geas' and 'command'",
+        "be one with your self (Level 9): also immune against spells 'geas' and 'command'",
+    )
     character.special_abilities = (
         "deflect missiles: monks can deflect magic missiles and arrows with a successful save throw",
         "magic items: you can't use magic healing potions. Monks can only use magic weapons and rings",
@@ -37,10 +41,9 @@ def apply_monk_dependent_modifiers(character):
         "harmony touch (Level 13): connect through touch with another living being when TP die is equal or less; stop the heart and kill the being instantly",
         
     )
-    character.immunity += (
-        "mastering self (Level 8): immune against mindcontrol, charm and hypnosis; except the spells 'geas' and 'command'",
-        "be one with your self (Level 9): also immune against spells 'geas' and 'command'",
-    )
+    character.xp_bonus = 0
+    character.parry = 0
+
 
     # Calculate total HP
     character.hp = wuerfle_1d4(1) + character.hp_mod

@@ -18,6 +18,8 @@ def apply_assassin_dependent_modifiers(character):
     character.move_silently = 0
     character.open_locks = 0
     character.climb_walls = 0
+    character.save_bonuses = ()
+    character.immunity = ()
     character.special_abilities = (
         "sneak attack: assassins gain a +4 bonus to attack and damage rolls are doubled when attacking opponent from behind",
         "poison use: assassins are skilled in the use of poisoning weapons",
@@ -25,6 +27,8 @@ def apply_assassin_dependent_modifiers(character):
         "disguise self: assassins can cast disguise self; danger of being discovered 5% -10% based on intelligence/wisdom of opponent",
         "create guild (Level 14): assassins can create an assassins' guild to gather followers",
     )
+    character.xp_bonus = 0
+    character.parry = 0
 
     # Calculate total HP
     character.hp = wuerfle_1d6(1) + character.hp_mod
