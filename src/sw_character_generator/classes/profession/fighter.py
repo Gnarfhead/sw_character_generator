@@ -26,6 +26,15 @@ def apply_fighter_dependent_modifiers(character):
         "fortress (Level 9): fighters can create a stronghold to gather followers and protect themselves",
     )
     character.xp_bonus = 0
+    character.spells_lvl1 = 0
+    character.spells_lvl2 = 0
+    character.spells_lvl3 = 0
+    character.spells_lvl4 = 0
+    character.spells_lvl5 = 0
+    character.spells_lvl6 = 0
+    character.spells_lvl7 = 0
+    character.spells_lvl8 = 0
+    character.spells_lvl9 = 0
 
     # Calculate parry based on DEX
     if character.stat_dex == 14:

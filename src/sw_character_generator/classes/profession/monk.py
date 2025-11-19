@@ -43,6 +43,15 @@ def apply_monk_dependent_modifiers(character):
     )
     character.xp_bonus = 0
     character.parry = 0
+    character.spells_lvl1 = 0
+    character.spells_lvl2 = 0
+    character.spells_lvl3 = 0
+    character.spells_lvl4 = 0
+    character.spells_lvl5 = 0
+    character.spells_lvl6 = 0
+    character.spells_lvl7 = 0
+    character.spells_lvl8 = 0
+    character.spells_lvl9 = 0
 
 
     # Calculate total HP
