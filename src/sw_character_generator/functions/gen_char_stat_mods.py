@@ -155,6 +155,13 @@ def analyze_mod_int(player_character: PlayerClass):
         player_character.max_spells_per_level = 100
     else:
         raise ValueError("Intelligence stat out of bounds:", player_character.stat_int)
+    
+def analyze_mod_wis(player_character: PlayerClass):
+    """Calculate wisdom based modifiers."""
+    if player_character.stat_wis >= 13:
+        player_character.xp_bonus += 5
+    else:
+        raise ValueError("Wisdom stat out of bounds:", player_character.stat_wis)
 
 def analyze_mod_char(player_character: PlayerClass):
     """Calculate charisma based modifiers."""

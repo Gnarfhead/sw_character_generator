@@ -37,3 +37,7 @@ def apply_cleric_dependent_modifiers(character):
     # Calculate XP bonus
     if character.stat_wis >= 13:
         character.xp_bonus += 5
+
+    # Calculate spell-related attributes
+    if character.stat_wis >= 15:
+        character.max_spells_per_level += 1
