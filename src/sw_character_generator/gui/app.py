@@ -13,10 +13,9 @@ import tkinter.messagebox
 
 from sw_character_generator.classes.playerclass import PlayerClass
 from sw_character_generator.core.persistence import save_characterobj
-from sw_character_generator.functions.choosen_race import choosen_race_modifiers
+from sw_character_generator.gui.gui_functions.race_change import on_race_change
 from sw_character_generator.gui.gui_functions.role_stats import role_stats, switch_stats
 from sw_character_generator.gui.gui_functions.profession_change import on_profession_change
-
 
 
 # Layout / sizing constants
@@ -55,7 +54,7 @@ class App:
         self.profession_var = tk.StringVar(master=self.root)
         self.profession_var.trace_add("write", lambda *args: on_profession_change(self, *args))
         self.race_var = tk.StringVar(master=self.root)
-        self.race_var.trace_add("write", lambda *args: self._on_race_change(self, *args))
+        self.race_var.trace_add("write", lambda *args: on_race_change(self, *args))
         self.gender_var = tk.StringVar(master=self.root)
         self.alignment_var = tk.StringVar(master=self.root)
         self.god_var = tk.StringVar(master=self.root)
@@ -183,13 +182,14 @@ class App:
         self.lbl_profession.grid(row=1, column=0, sticky="w", padx=PADX, pady=PADY)
         self.profession_cb = ttk.Combobox(self.top_frame, textvariable=self.profession_var, state="disabled")
         self.profession_cb.grid(row=1, column=1, sticky="ew", padx=PADX, pady=PADY)
-        self.profession_cb.config(values=["Fighter", "Cleric", "Thief", "Wizard", "Ranger", "Paladin"])
+        self.profession_cb.config(values=["Fighter", "Cleric", "Thief", "Wizard", "Ranger", "Paladin", "Druid"])
 
         self.lbl_race = ttk.Label(self.top_frame, text="Rasse:", style="Standard.TLabel")
         self.lbl_race.grid(row=1, column=2, sticky="w", padx=PADX, pady=PADY)
         self.race_cb = ttk.Combobox(self.top_frame, textvariable=self.race_var, state="disabled")
         self.race_cb.grid(row=1, column=3, sticky="ew", padx=PADX, pady=PADY)
-        self.race_cb.config(values=["Human", "Elf", "Dwarf", "Halfling", "Halfelf"])
+        #self.race_cb.config(values=["Human", "Elf", "Dwarf", "Halfling", "Halfelf"])
+        self.race_cb.config(values=list(getattr(self.new_player, "allowed_races", ())))
 
         self.lbl_gender = ttk.Label(self.top_frame, text="Geschlecht:", style="Standard.TLabel")
         self.lbl_gender.grid(row=1, column=4, sticky="w", padx=PADX, pady=PADY)
@@ -548,38 +548,8 @@ class App:
 
     # ----------------- specific variable change handlers -----------------
      
-    def _on_race_change(self, *args):
-        """Callback when race_var changes; update model race accordingly."""
-        if self._updating:  # Prevent recursive updates during bulk updates
-            return
-            
-        try:
-            race_name = self.race_var.get()
-            if race_name:  # Only process if a race is actually selected
-                choosen_race_modifiers(self.new_player, race_name)
-                self.update_view_from_model()
-                self.status_var.set(f"Race changed to {race_name}")
-        except Exception as e:
-            self.status_var.set(f"Error updating race: {e}")
-            print(f"Race change error: {e}")
-
-    """
-    def _on_profession_change(self, *args):
-        #Callback when profession_var changes; update model profession accordingly.
-        if self._updating:  # Prevent recursive updates during bulk updates
-            return
-            
-        try:
-            profession_name = self.profession_var.get()
-            if profession_name:  # Only process if a profession is actually selected
-                choosen_profession_modifiers(self.new_player, profession_name)
-                self.update_view_from_model()
-                self.status_var.set(f"Profession changed to {profession_name}")
-                self.race_cb.config(state="normal")
-        except Exception as e:
-            self.status_var.set(f"Error updating profession: {e}")
-            print(f"Profession change error: {e}")
-    """
+    
+   
     # ----------------- run -----------------
     def run(self):
         """Run the main Tk event loop."""
