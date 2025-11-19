@@ -480,12 +480,14 @@ class App:
         self.footer_frame.grid(row=3, column=0, columnspan=3, padx=10, pady=10, sticky="ew")
 
         # place Save / Load buttons inside footer_frame on a new row so they're visually nearby
+        self.btn_new = ttk.Button(self.footer_frame, text="New", command=lambda: self._new_characterobj())
+        self.btn_new.grid(row=0, column=0, sticky="w", padx=PADX, pady=PADY)
         self.btn_save = ttk.Button(self.footer_frame, text="Save", command=lambda: save_characterobj(self.new_player))
-        self.btn_save.grid(row=0, column=0, sticky="e", padx=PADX, pady=PADY)
+        self.btn_save.grid(row=0, column=1, sticky="e", padx=PADX, pady=PADY)
         self.btn_load = ttk.Button(self.footer_frame, text="Load", command="")
-        self.btn_load.grid(row=0, column=1, sticky="w", padx=PADX, pady=PADY)
+        self.btn_load.grid(row=0, column=2, sticky="w", padx=PADX, pady=PADY)
         self.btn_exit = ttk.Button(self.footer_frame, text="Exit", command=lambda: tkinter.messagebox.askokcancel("Exit", "Do you really want to exit?", parent=self.root) and self.root.destroy())
-        self.btn_exit.grid(row=0, column=2, sticky="e", padx=PADX, pady=PADY)
+        self.btn_exit.grid(row=0, column=3, sticky="e", padx=PADX, pady=PADY)
 
 
         # Status bar at the very bottom
@@ -520,6 +522,22 @@ class App:
             yield
         finally:
             self._updating = prev
+
+    def _new_characterobj(self):
+        """Create a new character object and update the view."""
+        print("Debug _new_characterobj: Creating new character object.")
+        self.new_player = PlayerClass()
+        self._rebuild_ui()
+
+    def _rebuild_ui(self):
+        """Zerstört alle Kinder der Root und baut UI neu auf."""
+        for child in self.root.winfo_children():
+            child.destroy()
+
+        # Build UI again
+        self._build_ui()
+        with self.suppress_updates():
+            update_view_from_model(self)
     
     def _bind_model_vars(self):
         """Bind GUI variables/widgets back to the model."""
