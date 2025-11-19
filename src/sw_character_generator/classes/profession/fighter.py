@@ -1,4 +1,5 @@
 from src.sw_character_generator.functions.role_dice import wuerfle_1d10
+from sw_character_generator.functions.gen_char_stat_mods import analyze_mod_str
 
 def apply_fighter_dependent_modifiers(character):
     """Apply fighter-specific modifiers to the character."""
@@ -37,3 +38,6 @@ def apply_fighter_dependent_modifiers(character):
     # Calculate XP bonus
     if character.stat_str >= 13:
         character.xp_bonus += 5
+
+    # Analyze stat modifiers and apply to character (fighter specific Bonus to STR)
+    analyze_mod_str(character)

@@ -1,6 +1,7 @@
 """"Module for rolling and assigning role stats to a character."""
 import tkinter as tk
 from tkinter import ttk
+from sw_character_generator.functions.gen_char_stat_mods import analyze_mod_char, analyze_mod_con, analyze_mod_dex, analyze_mod_int, analyze_mod_str
 from sw_character_generator.functions.role_dice import wuerfle_3d6
 
 def switch_stats(parent: tk.Tk, character, btn_switch_stats=None) -> str | None:
@@ -67,18 +68,25 @@ def switch_stats(parent: tk.Tk, character, btn_switch_stats=None) -> str | None:
         
         # Die beiden ausgewählten Stats tauschen
         stat1_attr = stat_mapping[selected_stats[0]]
-        print(stat1_attr)
+        #print(stat1_attr)
         stat2_attr = stat_mapping[selected_stats[1]]
-        print(stat2_attr)
+        #print(stat2_attr)
         
         # Werte zwischenspeichern und tauschen
         temp_value = getattr(character, stat1_attr)
         setattr(character, stat1_attr, getattr(character, stat2_attr))
         setattr(character, stat2_attr, temp_value)
 
+        # Analyze stat modifiers and apply to character
+        analyze_mod_str(character)
+        analyze_mod_dex(character)
+        analyze_mod_con(character)
+        analyze_mod_int(character)
+        analyze_mod_char(character)
+
         # Update buttons if provided
         if btn_switch_stats is not None:
-            print("Button found, updating...")
+            #print("Button found, updating...")
             btn_switch_stats.config(text="Stats switched", state="disabled")
 
         # Set result and close window
@@ -121,14 +129,23 @@ def role_stats(app, character, chk_opt_4d6dl_var, btn_roll_stats=None, btn_switc
     # Update buttons if provided
     if btn_roll_stats is not None:
         btn_roll_stats.config(text="Stats Rolled", state="disabled")
+        app.chk_opt_4d6dl.config(state="disabled")
         btn_switch_stats.config(state="normal")
+        app.profession_cb.config(state="normal")
 
     # Starting coins: roll 3d6 and multiply by 10
     print("Rolling starting coins (3d6 * 10):")
     character.coins = wuerfle_3d6(str_desc="Starting Coins") * 10
 
+    # Analyze stat modifiers and apply to character
+    analyze_mod_str(character)
+    analyze_mod_dex(character)
+    analyze_mod_con(character)
+    analyze_mod_int(character)
+    analyze_mod_char(character)
+
     app.status_var.set("Stats and start coins rolled.")
     app.update_view_from_model()
 
-        
+  
 
