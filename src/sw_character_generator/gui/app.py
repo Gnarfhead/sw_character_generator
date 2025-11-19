@@ -13,6 +13,7 @@ import tkinter.messagebox
 
 from sw_character_generator.classes.playerclass import PlayerClass
 from sw_character_generator.core.persistence import save_characterobj
+from sw_character_generator.gui.gui_functions import on_exit
 from sw_character_generator.gui.gui_functions.gui_race_change import on_race_change
 from sw_character_generator.gui.gui_functions.gui_role_stats import role_stats, switch_stats
 from sw_character_generator.gui.gui_functions.gui_profession_change import on_profession_change
@@ -480,15 +481,15 @@ class App:
         # place Save / Load buttons inside footer_frame on a new row so they're visually nearby
         self.btn_save = ttk.Button(self.footer_frame, text="Save", command=lambda: save_characterobj(self.new_player))
         self.btn_save.grid(row=0, column=0, sticky="e", padx=PADX, pady=PADY)
-        self.btn_load = ttk.Button(self.footer_frame, text="Load", command="messagebox.showinfo('Info', 'Load functionality not yet implemented.')")
+        self.btn_load = ttk.Button(self.footer_frame, text="Load", command="")
         self.btn_load.grid(row=0, column=1, sticky="w", padx=PADX, pady=PADY)
-        self.btn_exit = ttk.Button(self.footer_frame, text="Exit", command=self.root.quit)
+        self.btn_exit = ttk.Button(self.footer_frame, text="Exit", command=lambda: tkinter.messagebox.askokcancel("Beenden", "Möchten Sie die Anwendung wirklich beenden?", parent=self.root) and self.root.destroy())
         self.btn_exit.grid(row=0, column=2, sticky="e", padx=PADX, pady=PADY)
 
 
         # Status bar at the very bottom
         self.status_bar = ttk.Label(self.root, textvariable=self.status_var, relief="sunken", anchor="w", padding=(4,4))
-        self.status_bar.grid(row=4, column=0, columnspan=3, sticky="ew")    
+        self.status_bar.grid(row=4, column=0, columnspan=3, sticky="ew")        
 
         # ----------------- configure resizing behavior -----------------
 
@@ -518,7 +519,7 @@ class App:
             yield
         finally:
             self._updating = prev
-
+    
     def _bind_model_vars(self):
         """Bind GUI variables/widgets back to the model."""
         for field in asdict(self.new_player).keys():
