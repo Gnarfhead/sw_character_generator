@@ -1,0 +1,24 @@
+"""Callback when profession_var changes; update model profession accordingly."""
+from sw_character_generator.functions.choosen_profession import choosen_profession_modifiers
+
+
+def on_profession_change(app, *args):
+    """Callback when profession_var changes; update model profession accordingly."""
+    if app.is_updating:  # Prevent recursive updates during bulk updates
+        return
+            
+    try:
+        profession_name = app.profession_var.get()
+        if profession_name:  # Only process if a profession is actually selected
+            choosen_profession_modifiers(app.new_player, profession_name)
+            app.race_cb.config(state="normal")
+            app.status_var.set(f"Profession changed to {profession_name}")
+
+    except Exception as e:
+        app.status_var.set(f"ERROR - updating profession: {e}")
+        print(f"Profession change error: {e}")
+
+    finally:
+        # Update the GUI to reflect changes
+        app.update_view_from_model()
+        

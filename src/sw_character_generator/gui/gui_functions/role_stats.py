@@ -132,6 +132,9 @@ def role_stats(app, character, chk_opt_4d6dl_var, btn_roll_stats=None, btn_switc
         app.chk_opt_4d6dl.config(state="disabled")
         btn_switch_stats.config(state="normal")
         app.profession_cb.config(state="normal")
+        app.top_frame.config(style="Attention.TFrame")
+        app.lbl_profession.config(style="Attention.TLabel")
+        app.attr_frame.config(style="Standard.TFrame")
 
     # Starting coins: roll 3d6 and multiply by 10
     print("Rolling starting coins (3d6 * 10):")
