@@ -13,7 +13,6 @@ import tkinter.messagebox
 
 from sw_character_generator.classes.playerclass import PlayerClass
 from sw_character_generator.core.persistence import save_characterobj
-from sw_character_generator.gui.gui_functions import on_exit
 from sw_character_generator.gui.gui_functions.gui_race_change import on_race_change
 from sw_character_generator.gui.gui_functions.gui_role_stats import role_stats, switch_stats
 from sw_character_generator.gui.gui_functions.gui_profession_change import on_profession_change
@@ -483,7 +482,7 @@ class App:
         self.btn_save.grid(row=0, column=0, sticky="e", padx=PADX, pady=PADY)
         self.btn_load = ttk.Button(self.footer_frame, text="Load", command="")
         self.btn_load.grid(row=0, column=1, sticky="w", padx=PADX, pady=PADY)
-        self.btn_exit = ttk.Button(self.footer_frame, text="Exit", command=lambda: tkinter.messagebox.askokcancel("Beenden", "Möchten Sie die Anwendung wirklich beenden?", parent=self.root) and self.root.destroy())
+        self.btn_exit = ttk.Button(self.footer_frame, text="Exit", command=lambda: tkinter.messagebox.askokcancel("Exit", "Do you really want to exit?", parent=self.root) and self.root.destroy())
         self.btn_exit.grid(row=0, column=2, sticky="e", padx=PADX, pady=PADY)
 
 
