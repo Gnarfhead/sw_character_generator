@@ -11,7 +11,7 @@ import tkinter.scrolledtext as scrolledtext
 from tkinter import messagebox
 
 from src.sw_character_generator.classes.playerclass import PlayerClass
-from src.sw_character_generator.functions.modify_hp import modify_hp
+from sw_character_generator.functions.manage_hp import modify_hp, roll_starting_hp
 from src.sw_character_generator.functions.character_handling import save_character, load_character
 from src.sw_character_generator.gui.gui_functions.gui_new_character import apply_character, new_characterobj
 from .gui_functions.gui_dice_roller import dice_roller
@@ -104,6 +104,7 @@ class App:
         self.max_add_langs_var = tk.IntVar(master=self.root, value=0)
         self.cap_spec_hirelings_var = tk.IntVar(master=self.root, value=0)
         self.chk_opt_4d6dl_var = tk.BooleanVar(master=self.root, value=False)
+        self.chk_opt_fullhplvl1_var = tk.BooleanVar(master=self.root, value=False)
 
     # ----------------- setup UI -----------------
 
@@ -165,22 +166,12 @@ class App:
         self.top_frame.grid(row=0, column=0, columnspan=3, padx=10, pady=10, sticky="ew")
     
         # Row 0: basic fields
-        self.lbl_player_name = ttk.Label(self.top_frame, text="Spieler:in:", style="Standard.TLabel")
-        self.lbl_player_name.grid(row=0, column=0, sticky="w", padx=PADX, pady=PADY)
-        self.entry_player_name = ttk.Entry(self.top_frame, textvariable=self.player_name_var)
-        self.entry_player_name.grid(row=0, column=1, sticky="ew", padx=PADX, pady=PADY)
-
-        self.lbl_character_name = ttk.Label(self.top_frame, text="SC Name:", style="Standard.TLabel")
-        self.lbl_character_name.grid(row=0, column=2, sticky="w", padx=PADX, pady=PADY)
-        self.entry_character_name = ttk.Entry(self.top_frame, textvariable=self.character_name_var)
-        self.entry_character_name.grid(row=0, column=3, sticky="ew", padx=PADX, pady=PADY)
-
-        self.lbl_level = ttk.Label(self.top_frame, text="Level:", style="Standard.TLabel")
-        self.lbl_level.grid(row=0, column=4, sticky="w", padx=PADX, pady=PADY)
-        self.entry_level = ttk.Label(self.top_frame, textvariable=self.level_var)
-        self.entry_level.grid(row=0, column=5, sticky="w", padx=PADX, pady=PADY)
+        widget_entry(self.top_frame, "Player Name:", 0, 0, var=self.player_name_var)
+        widget_entry(self.top_frame, "Character Name:", 0, 2, var=self.character_name_var)
+        widget_entry(self.top_frame, "Level:", 0, 4, var=self.level_var)
 
         # Row 1
+        #widget_label(self.top_frame, "Profession:", 1, 0, self.profession_var, ["Fighter", "Cleric", "Thief", "Wizard", "Ranger", "Paladin", "Druid", "Assassin", "Monk"], ENTRY_WIDTH, state="enabled")
         self.lbl_profession = ttk.Label(self.top_frame, text="Profession:", style="Standard.TLabel")
         self.lbl_profession.grid(row=1, column=0, sticky="w", padx=PADX, pady=PADY)
         self.profession_cb = ttk.Combobox(self.top_frame, textvariable=self.profession_var, state="disabled")
@@ -357,17 +348,19 @@ class App:
         self.lbl_hp.grid(row=0, column=0, sticky="w", padx=PADX, pady=PADY)
         self.entry_hp = ttk.Label(self.stats_frame, textvariable=self.hp_var)
         self.entry_hp.grid(row=0, column=1, sticky="w", padx=PADX, pady=PADY)
-        self.btn_rollhp = ttk.Button(self.stats_frame, text="Roll HP", style="Standard.TButton")
-        self.btn_rollhp.grid(row=0, column=3, sticky="e", padx=PADX, pady=PADY)
+        self.btn_rollhp = ttk.Button(self.stats_frame, text="Roll HP", style="Standard.TButton", command=lambda: roll_starting_hp(self.new_player))
+        self.btn_rollhp.grid(row=0, column=2, sticky="e", padx=PADX, pady=PADY)
+        widget_checkbutton(self.stats_frame, "Full TP on Level 1", 0, 3, self.chk_opt_fullhplvl1_var)
 
         self.lbl_hp_current = ttk.Label(self.stats_frame, text="Hit Points current:", style="Standard.TLabel")
         self.lbl_hp_current.grid(row=1, column=0, sticky="w", padx=PADX, pady=PADY)
         self.entry_hp_current = ttk.Label(self.stats_frame, textvariable=self.hp_current_var)
         self.entry_hp_current.grid(row=1, column=1, sticky="w", padx=PADX, pady=PADY)
+        self.btn_modify_hp = ttk.Button(self.stats_frame, text="Modify HP", style="Standard.TButton", command=lambda: modify_hp(self.hp_modify_var.get(), self.new_player))
+        self.btn_modify_hp.grid(row=1, column=2, sticky="e", padx=PADX, pady=PADY)
         self.sbx_modify_hp = ttk.Spinbox(self.stats_frame, from_=-100, to=100, textvariable=self.hp_modify_var, width=5)
-        self.sbx_modify_hp.grid(row=1, column=2, sticky="e", padx=PADX, pady=PADY)
-        self.btn_modify_hp = ttk.Button(self.stats_frame, text="Modify HP", style="Standard.TButton", command=lambda: modify_hp(self.hp_modify_var.get(), self.hp_current_var, self.hp_var, self.player_state_var))
-        self.btn_modify_hp.grid(row=1, column=3, sticky="e", padx=PADX, pady=PADY)
+        self.sbx_modify_hp.grid(row=1, column=3, sticky="e", padx=PADX, pady=PADY)
+
 
         self.lbl_player_state = ttk.Label(self.stats_frame, text="State:", style="Standard.TLabel")
         self.lbl_player_state.grid(row=2, column=0, sticky="w", padx=PADX, pady=PADY)
@@ -496,12 +489,13 @@ class App:
         self.btn_apply = ttk.Button(self.footer_frame, text="Apply", command=lambda: apply_character(self, self.new_player))
         self.btn_apply.grid(row=0, column=1, sticky="e", padx=PADX, pady=PADY)
         self.btn_save = ttk.Button(self.footer_frame, text="Save", command=lambda: save_character(self.new_player))
-        self.btn_save.grid(row=0, column=1, sticky="e", padx=PADX, pady=PADY)
+        self.btn_save.grid(row=0, column=2, sticky="e", padx=PADX, pady=PADY)
         self.btn_load = ttk.Button(self.footer_frame, text="Load", command=lambda: load_character(self))
-        self.btn_load.grid(row=0, column=2, sticky="w", padx=PADX, pady=PADY)
-        self.btn_diceroaler = ttk.Button(self.footer_frame, text="Dice Roller", command=lambda: dice_roller(self))
+        self.btn_load.grid(row=0, column=3, sticky="w", padx=PADX, pady=PADY)
+        self.btn_dice_roller = ttk.Button(self.footer_frame, text="Dice Roller", command=lambda: dice_roller(self))
+        self.btn_dice_roller.grid(row=0, column=4, sticky="e", padx=PADX, pady=PADY)
         self.btn_exit = ttk.Button(self.footer_frame, text="Exit", command=lambda: messagebox.askokcancel("Exit", "Do you really want to exit?", parent=self.root) and self.root.destroy())
-        self.btn_exit.grid(row=0, column=3, sticky="e", padx=PADX, pady=PADY)
+        self.btn_exit.grid(row=0, column=5, sticky="e", padx=PADX, pady=PADY)
 
 
         # Status bar at the very bottom

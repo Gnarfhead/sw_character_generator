@@ -1,5 +1,8 @@
 """Functions to modify character HP and state based on changes."""
-def modify_hp(delta: int, hp_current_var, hp_max_var, state_var):
+from sw_character_generator.classes.playerclass import PlayerClass
+
+
+def modify_hp(delta: int, character: PlayerClass):
     """Adjust current HP by delta; clamp; set state."""
     current = hp_current_var.get()
     maximum = hp_max_var.get()
@@ -15,3 +18,7 @@ def modify_hp(delta: int, hp_current_var, hp_max_var, state_var):
         state_var.set("Wounded")
     else:
         state_var.set("Healthy")
+
+def roll_starting_hp(app, character: PlayerClass):
+    """Roll starting HP using provided dice roll function."""
+   

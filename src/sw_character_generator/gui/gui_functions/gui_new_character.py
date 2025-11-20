@@ -1,5 +1,6 @@
 """Functions for character handling: save, load, and create new character."""
 from src.sw_character_generator.classes.playerclass import PlayerClass
+from src.sw_character_generator.gui.gui_functions.gui_update_view_from_model import update_view_from_model
 
 def new_characterobj(app):
     """Create a new character object and update the view."""
@@ -10,4 +11,11 @@ def new_characterobj(app):
 def apply_character(app, character: PlayerClass):
     """Apply changes to the character object."""
     print("Debug apply_character: Applying changes to character object.")
-    # Implementation for applying changes can be added here
+    character.character_created = True
+    app.profession_cb.config(state="disabled")
+    app.race_cb.config(state="disabled")
+    app.alignment_cb.config(state="disabled")
+    app.btn_rollhp.config(state="disabled")
+    app.btn_roll_stats.config(state="disabled")
+    app.btn_switch_stats.config(state="disabled")
+    update_view_from_model(app)

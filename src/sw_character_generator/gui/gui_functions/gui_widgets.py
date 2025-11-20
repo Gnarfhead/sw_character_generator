@@ -23,7 +23,7 @@ def widget_combobox(parent, text, row, column, var=None, values=None, width=ENTR
     """Create a labeled Combobox widget in a grid."""
     lbl = ttk.Label(parent, text=text)
     lbl.grid(row=row, column=column, sticky="w", padx=PADX, pady=PADY)
-    combo = ttk.Combobox(parent, textvariable=var, values=values or [], width=width, state="readonly")
+    combo = ttk.Combobox(parent, textvariable=var, values=values or [], width=width, state="active")
     combo.grid(row=row, column=column + 1, sticky="ew", padx=PADX, pady=PADY, **grid_opts)
     return lbl, combo
 
@@ -48,5 +48,5 @@ def widget_checkbutton(parent, text, row, column, var=None, **grid_opts):
     lbl = ttk.Label(parent, text=text)
     lbl.grid(row=row, column=column, sticky="w", padx=PADX, pady=PADY)
     chk = ttk.Checkbutton(parent, variable=var)
-    chk.grid(row=row, column=column + 1, sticky="w", padx=PADX, pady=PADY, **grid_opts)
+    chk.grid(row=row, column=column + 1, sticky="ew", padx=PADX, pady=PADY, **grid_opts)
     return lbl, chk
