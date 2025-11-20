@@ -19,7 +19,7 @@ from sw_character_generator.gui.gui_functions.gui_race_change import on_race_cha
 from sw_character_generator.gui.gui_functions.gui_role_stats import role_stats, switch_stats
 from sw_character_generator.gui.gui_functions.gui_profession_change import on_profession_change
 from sw_character_generator.gui.gui_functions.gui_update_view_from_model import update_view_from_model
-from sw_character_generator.gui.gui_functions.persistence import on_var_change
+from sw_character_generator.gui.gui_functions.persistence import bind_model_vars, on_var_change
 
 
 # Layout / sizing constants
@@ -30,6 +30,11 @@ VALUE_MIN_W = 160
 ENTRY_WIDTH = 20
 PADX = 8
 PADY = 6
+
+def update_model_from_view(self, var_name):
+    """Update the model when a GUI variable changes."""
+    if self.is_updating:
+        return
 
 
 class App:
@@ -155,7 +160,7 @@ class App:
         self._build_ui()
 
         # Bind GUI variables/widgets back to model
-        self._bind_model_vars()
+        bind_model_vars(self)
 
         # Populate the view initially from the model
         update_view_from_model(self)
@@ -554,14 +559,17 @@ class App:
         with self.suppress_updates():
             update_view_from_model(self)
     
-    def _bind_model_vars(self):
-        """Bind GUI variables/widgets back to the model."""
-        for field in asdict(self.new_player).keys():
-            var = getattr(self, f"{field}_var", None)
-            if var is None:
-                continue
-            var.trace_add("write", lambda *a, f=field, v=var: on_var_change(f, v))
+    def on_var_change(self, var_name: str, *args):
+        """Callback when a Tk variable changes; updates the model and view."""
+        if self.is_updating:
+            return  # Prevent recursive updates
 
+        print(f"Debug on_var_change: Variable '{var_name}' changed.")
+        with self.suppress_updates():
+            update_model_from_view(self, var_name)
+            update_view_from_model(self)
+            
+    
     # ----------------- run -----------------
     def run(self):
         """Run the main Tk event loop."""
