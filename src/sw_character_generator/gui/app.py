@@ -12,8 +12,8 @@ from tkinter import messagebox
 
 from src.sw_character_generator.classes.playerclass import PlayerClass
 from src.sw_character_generator.functions.modify_hp import modify_hp
-from src.sw_character_generator.functions.character_handling import save_character, load_character, new_characterobj
-from sw_character_generator.gui.gui_functions.gui_new_character import apply_character
+from src.sw_character_generator.functions.character_handling import save_character, load_character
+from src.sw_character_generator.gui.gui_functions.gui_new_character import apply_character, new_characterobj
 from .gui_functions.gui_dice_roller import dice_roller
 from .gui_functions.gui_alignment_change import on_alignment_change
 from .gui_functions.gui_race_change import on_race_change
