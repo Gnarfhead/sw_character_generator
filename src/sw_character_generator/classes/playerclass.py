@@ -6,6 +6,7 @@ class PlayerClass:
     """Class representing a character in the game."""
     player_name: str = "Unknown"
     character_name: str = "Unnamed Hero"
+    character_created: bool = False
     profession: str = "Undefined"
     hp_dice: int = 0
     main_stats: str = "Undefined"
@@ -92,6 +93,7 @@ class PlayerClass:
             f"INT: {self.stat_int}    INT_mod: max. additional languages={self.max_add_langs}, Spell Level={self.highest_spell_level}, "
             f"Understands Spell={self.understand_spell}%, "
             f"min/max Spells per Level={self.min_spells_per_level}/{self.max_spells_per_level}\n"
+            f"Spells Lvl1-9: {self.spells_lvl1}, {self.spells_lvl2}, {self.spells_lvl3}, {self.spells_lvl4}, {self.spells_lvl5}, {self.spells_lvl6}, {self.spells_lvl7}, {self.spells_lvl8}, {self.spells_lvl9}\n"
             f"WIS: {self.stat_wis}\n"
             f"CHA: {self.stat_char}    CHA_mod: Max Hirelings={self.cap_spec_hirelings}\n"
             f"State: {self.player_state}, Alignment: {self.alignment}, Race: {self.race}, Gender: {self.gender}, God: {self.god}, Age: {self.age}\n"
@@ -105,6 +107,7 @@ class PlayerClass:
             f"Hide in Shadows: {self.hide_in_shadows}%, Move Silently: {self.move_silently}%, Open Locks: {self.open_locks}%, Surprised: {self.surprised}:6\n"
             f"Allowed Alignment: {self.allowed_alignment}, Allowed Races: {self.allowed_races}\n"
             f"Allowed Weapon: {self.allowed_weapon}, Allowed Armor: {self.allowed_armor}\n"
+            f"Character Created: {self.character_created}\n"
         )
     
     def to_dict(self):
@@ -112,6 +115,7 @@ class PlayerClass:
         return {
             "player_name": self.player_name,
             "character_name": self.character_name,
+            "character_created": self.character_created,
             "profession": self.profession,
             "hp_dice": self.hp_dice,
             "main_stats": self.main_stats,
@@ -210,6 +214,7 @@ class PlayerClass:
 
         self.player_name = stats.get("player_name", self.player_name)
         self.character_name = data.get("character_name", self.character_name)
+        self.character_created = data.get("character_created", self.character_created)
         self.profession = data.get("profession", self.profession)
         self.hp_dice = data.get("hp_dice", self.hp_dice)
         self.main_stats = data.get("main_stats", self.main_stats)

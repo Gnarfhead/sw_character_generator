@@ -13,6 +13,7 @@ from tkinter import messagebox
 from src.sw_character_generator.classes.playerclass import PlayerClass
 from src.sw_character_generator.functions.modify_hp import modify_hp
 from src.sw_character_generator.functions.character_handling import save_character, load_character, new_characterobj
+from sw_character_generator.gui.gui_functions.gui_new_character import apply_character
 from .gui_functions.gui_dice_roller import dice_roller
 from .gui_functions.gui_alignment_change import on_alignment_change
 from .gui_functions.gui_race_change import on_race_change
@@ -493,7 +494,7 @@ class App:
         # place Save / Load buttons inside footer_frame on a new row so they're visually nearby
         self.btn_new = ttk.Button(self.footer_frame, text="New", command=lambda: new_characterobj(self))
         self.btn_new.grid(row=0, column=0, sticky="w", padx=PADX, pady=PADY)
-        self.btn_apply = ttk.Button(self.footer_frame, text="Apply", command="")
+        self.btn_apply = ttk.Button(self.footer_frame, text="Apply", command=lambda: apply_character(self, self.new_player))
         self.btn_apply.grid(row=0, column=1, sticky="e", padx=PADX, pady=PADY)
         self.btn_save = ttk.Button(self.footer_frame, text="Save", command=lambda: save_character(self.new_player))
         self.btn_save.grid(row=0, column=1, sticky="e", padx=PADX, pady=PADY)
@@ -537,7 +538,7 @@ class App:
         finally:
             self._updating = prev
 
-    def _rebuild_ui(self):
+    def rebuild_ui(self):
         """Zerstört alle Kinder der Root und baut UI neu auf."""
         for child in self.root.winfo_children():
             child.destroy()
