@@ -5,21 +5,20 @@ as a collection of functions. The module still exposes start_gui() for backwards
 compatibility (main.py imports start_gui).
 """
 from contextlib import contextmanager
-from dataclasses import asdict, field
 import tkinter as tk
 import tkinter.ttk as ttk
 import tkinter.scrolledtext as scrolledtext
-import tkinter.messagebox
+from tkinter import messagebox
 
 from sw_character_generator.classes.playerclass import PlayerClass
 from sw_character_generator.core.persistence import save_characterobj
 from sw_character_generator.functions.modify_hp import modify_hp
-from sw_character_generator.gui.gui_functions.gui_alignment_change import on_alignment_change
-from sw_character_generator.gui.gui_functions.gui_race_change import on_race_change
-from sw_character_generator.gui.gui_functions.gui_role_stats import role_stats, switch_stats
-from sw_character_generator.gui.gui_functions.gui_profession_change import on_profession_change
-from sw_character_generator.gui.gui_functions.gui_update_view_from_model import update_view_from_model
-from sw_character_generator.gui.gui_functions.persistence import bind_model_vars, on_var_change
+from .gui_functions.gui_alignment_change import on_alignment_change
+from .gui_functions.gui_race_change import on_race_change
+from .gui_functions.gui_role_stats import role_stats, switch_stats
+from .gui_functions.gui_profession_change import on_profession_change
+from .gui_functions.gui_update_view_from_model import update_view_from_model
+from .gui_functions.persistence import bind_model_vars
 
 
 # Layout / sizing constants
@@ -30,11 +29,6 @@ VALUE_MIN_W = 160
 ENTRY_WIDTH = 20
 PADX = 8
 PADY = 6
-
-def update_model_from_view(self, var_name):
-    """Update the model when a GUI variable changes."""
-    if self.is_updating:
-        return
 
 
 class App:
@@ -500,13 +494,13 @@ class App:
         self.footer_frame.grid(row=3, column=0, columnspan=3, padx=10, pady=10, sticky="ew")
 
         # place Save / Load buttons inside footer_frame on a new row so they're visually nearby
-        self.btn_new = ttk.Button(self.footer_frame, text="New", command=lambda: self._new_characterobj())
+        self.btn_new = ttk.Button(self.footer_frame, text="New", command=self._new_characterobj)
         self.btn_new.grid(row=0, column=0, sticky="w", padx=PADX, pady=PADY)
         self.btn_save = ttk.Button(self.footer_frame, text="Save", command=lambda: save_characterobj(self.new_player))
         self.btn_save.grid(row=0, column=1, sticky="e", padx=PADX, pady=PADY)
         self.btn_load = ttk.Button(self.footer_frame, text="Load", command="")
         self.btn_load.grid(row=0, column=2, sticky="w", padx=PADX, pady=PADY)
-        self.btn_exit = ttk.Button(self.footer_frame, text="Exit", command=lambda: tkinter.messagebox.askokcancel("Exit", "Do you really want to exit?", parent=self.root) and self.root.destroy())
+        self.btn_exit = ttk.Button(self.footer_frame, text="Exit", command=lambda: messagebox.askokcancel("Exit", "Do you really want to exit?", parent=self.root) and self.root.destroy())
         self.btn_exit.grid(row=0, column=3, sticky="e", padx=PADX, pady=PADY)
 
 

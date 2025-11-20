@@ -5,7 +5,7 @@ from .gui_update_view_from_model import update_view_from_model
 
 def on_var_change(app, field, var):
     """Callback when a GUI variable changes; update the model accordingly."""
-    if suppress_updates := getattr(app, "_suppress_updates", False):
+    if getattr(app, "is_updating", False):
         return
     try:
         raw = var.get()
