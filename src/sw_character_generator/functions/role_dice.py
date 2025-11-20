@@ -1,3 +1,4 @@
+"""Functions for rolling various dice used in character generation."""
 import random
 
 def wuerfle_3d6(str_desc: str, drop_low: bool = None) -> int:

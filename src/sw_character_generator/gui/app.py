@@ -10,16 +10,16 @@ import tkinter.ttk as ttk
 import tkinter.scrolledtext as scrolledtext
 from tkinter import messagebox
 
-from sw_character_generator.classes.playerclass import PlayerClass
-from sw_character_generator.core.persistence import save_characterobj
-from sw_character_generator.functions.modify_hp import modify_hp
+from src.sw_character_generator.classes.playerclass import PlayerClass
+from src.sw_character_generator.core.persistence import save_characterobj
+from src.sw_character_generator.functions.modify_hp import modify_hp
 from .gui_functions.gui_alignment_change import on_alignment_change
 from .gui_functions.gui_race_change import on_race_change
 from .gui_functions.gui_role_stats import role_stats, switch_stats
 from .gui_functions.gui_profession_change import on_profession_change
 from .gui_functions.gui_update_view_from_model import update_view_from_model
-from .gui_functions.persistence import bind_model_vars
-from .gui_functions.widgets import label_entry, label_combobox, label_spinbox, label_button
+from .gui_functions.gui_persistence import bind_model_vars
+from .gui_functions.gui_widgets import label_entry, label_combobox, label_spinbox, label_button
 
 
 # Layout / sizing constants
@@ -128,14 +128,11 @@ class App:
                         padding=8)
         style.map("Attention.TButton",
                 background=[("active", "#c82333"), ("pressed", "#e2e3e5"), ("disabled", "#e2e3e5")],)
-
         # Labels with different styles
         style.configure("Standard.TLabel",
                         foreground="#000000")
-        
         style.configure("Attention.TLabel",
                         foreground="#c82333")
-        
         # Frames with different styles
         style.configure("Standard.TFrame",
                         borderwidth=2,
@@ -150,7 +147,6 @@ class App:
                         bordercolor="#c82333")
 
     # ----------------- build UI -----------------
-       
         # Build UI
         self._build_ui()
 
@@ -159,7 +155,6 @@ class App:
 
         # Populate the view initially from the model
         update_view_from_model(self)
-  
     # ----------------- UI building -----------------
 
     def _build_ui(self):
@@ -507,7 +502,7 @@ class App:
 
         # Status bar at the very bottom
         self.status_bar = ttk.Label(self.root, textvariable=self.status_var, relief="sunken", anchor="w", padding=(4,4))
-        self.status_bar.grid(row=4, column=0, columnspan=3, sticky="ew")        
+        self.status_bar.grid(row=4, column=0, columnspan=3, sticky="ew")
 
         # ----------------- configure resizing behavior -----------------
 
@@ -553,7 +548,6 @@ class App:
         self._build_ui()
         with self.suppress_updates():
             update_view_from_model(self)
-               
     # ----------------- run -----------------
     def run(self):
         """Run the main Tk event loop."""

@@ -1,6 +1,5 @@
 """Functions to analyze character stats and return corresponding modifiers."""
-from sw_character_generator.classes.playerclass import PlayerClass
-
+from src.sw_character_generator.classes.playerclass import PlayerClass
 
 def analyze_mod_str(player_character: PlayerClass):
     """Calculate strength-based modifiers. Positive bonuses only apply to fighters."""
@@ -166,7 +165,7 @@ def analyze_mod_wis(player_character: PlayerClass):
 def analyze_mod_char(player_character: PlayerClass):
     """Calculate charisma based modifiers."""
     if 3 <= player_character.stat_char <= 4:
-        player_character.cap_spec_hirelings = 1 
+        player_character.cap_spec_hirelings = 1
     elif 5 <= player_character.stat_char <= 6:
         player_character.cap_spec_hirelings = 2
     elif 7 <= player_character.stat_char <= 8:

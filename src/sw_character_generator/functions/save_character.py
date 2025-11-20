@@ -1,3 +1,4 @@
+"""Save character data to a JSON file with a timestamped filename."""
 import json
 import os
 from datetime import datetime
@@ -27,6 +28,4 @@ def save_character(character_data: PlayerClass) -> None:
     # Datei speichern
     with open(path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4)
-        
     print(f"File saved at: {path}")
-    
