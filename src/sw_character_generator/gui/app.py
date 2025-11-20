@@ -106,11 +106,11 @@ class App:
     # ----------------- setup UI -----------------
 
         style = ttk.Style()
-        # Optional: anderes Theme wählen (manche Themes erlauben bessere Farbkontrolle)
-        # verfügbare Themes: style.theme_names()
+        # Optional: choose a different theme (some themes allow better color control)
+        # available themes: style.theme_names()
         style.theme_use("clam")
 
-        # Buttons mit verschiedenen Styles
+        # Buttons with different styles
         style.configure("Standard.TButton",
                 background="#e2e3e5",
                 foreground="black",
@@ -128,14 +128,14 @@ class App:
         style.map("Attention.TButton",
                 background=[("active", "#c82333"), ("pressed", "#e2e3e5"), ("disabled", "#e2e3e5")],)
 
-        # Labels mit verschiedenen Styles
+        # Labels with different styles
         style.configure("Standard.TLabel",
                         foreground="#000000")
         
         style.configure("Attention.TLabel",
                         foreground="#c82333")
         
-        # Frames mit verschiedenen Styles
+        # Frames with different styles
         style.configure("Standard.TFrame",
                         borderwidth=2,
                         relief="ridge",
@@ -414,8 +414,8 @@ class App:
         special_abilities_txt = scrolledtext.ScrolledText(
         self.stats_frame,
         wrap="word",
-        height=5,        # sichtbare Zeilenhöhe (kann angepasst werden)
-        width=40,        # sichtbare Spaltenbreite (char-basiert)
+        height=5,        # visible row height (can be adjusted)
+        width=40,        # visible column width (char-based)
         font=("TkDefaultFont", 10)
         )
         special_abilities_txt.grid(row=9, column=1, columnspan=2, sticky="nsew", padx=PADX, pady=PADY)
@@ -472,8 +472,8 @@ class App:
         treasure_txt = scrolledtext.ScrolledText(
         self.inventory_frame,
         wrap="word",
-        height=5,        # sichtbare Zeilenhöhe (kann angepasst werden)
-        width=50,        # sichtbare Spaltenbreite (char-basiert)
+        height=5,        # visible row height (can be adjusted)
+        width=50,        # visible column width (char-based)
         font=("TkDefaultFont", 10)
         )
         treasure_txt.grid(row=1, column=1, sticky="nsew", padx=PADX, pady=PADY)
@@ -483,8 +483,8 @@ class App:
         inventory_txt = scrolledtext.ScrolledText(
         self.inventory_frame,
         wrap="word",
-        height=5,        # sichtbare Zeilenhöhe (kann angepasst werden)
-        width=50,        # sichtbare Spaltenbreite (char-basiert)
+        height=5,        # visible row height (can be adjusted)
+        width=50,        # visible column width (char-based)
         font=("TkDefaultFont", 10)
         )
         inventory_txt.grid(row=2, column=1, sticky="nsew", padx=PADX, pady=PADY)
