@@ -499,7 +499,7 @@ class App:
         self.btn_save.grid(row=0, column=1, sticky="e", padx=PADX, pady=PADY)
         self.btn_load = ttk.Button(self.footer_frame, text="Load", command=lambda: load_character(self))
         self.btn_load.grid(row=0, column=2, sticky="w", padx=PADX, pady=PADY)
-        self.btn_diceroaler = ttk.Button(self.footer_frame, text="Dice Roller", command=lambda: dice_roller(self.root))
+        self.btn_diceroaler = ttk.Button(self.footer_frame, text="Dice Roller", command=lambda: dice_roller(self))
         self.btn_exit = ttk.Button(self.footer_frame, text="Exit", command=lambda: messagebox.askokcancel("Exit", "Do you really want to exit?", parent=self.root) and self.root.destroy())
         self.btn_exit.grid(row=0, column=3, sticky="e", padx=PADX, pady=PADY)
 
