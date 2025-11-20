@@ -36,3 +36,10 @@ def load_character(file_path: str) -> PlayerClass:
     except KeyError as e:
         raise ValueError(f"Missing key in character data: {e}")
     return character
+
+
+def new_characterobj(self):
+    """Create a new character object and update the view."""
+    print("Debug _new_characterobj: Creating new character object.")
+    self.new_player = PlayerClass()
+    self._rebuild_ui()

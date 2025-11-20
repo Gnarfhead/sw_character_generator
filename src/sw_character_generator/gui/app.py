@@ -12,7 +12,7 @@ from tkinter import messagebox
 
 from src.sw_character_generator.classes.playerclass import PlayerClass
 from src.sw_character_generator.functions.modify_hp import modify_hp
-from src.sw_character_generator.functions.character_handling import save_character, load_character
+from src.sw_character_generator.functions.character_handling import save_character, load_character, new_characterobj
 from .gui_functions.gui_dice_roller import dice_roller
 from .gui_functions.gui_alignment_change import on_alignment_change
 from .gui_functions.gui_race_change import on_race_change
@@ -491,7 +491,7 @@ class App:
         self.footer_frame.grid(row=3, column=0, columnspan=3, padx=10, pady=10, sticky="ew")
 
         # place Save / Load buttons inside footer_frame on a new row so they're visually nearby
-        self.btn_new = ttk.Button(self.footer_frame, text="New", command=self._new_characterobj)
+        self.btn_new = ttk.Button(self.footer_frame, text="New", command=lambda: new_characterobj(self))
         self.btn_new.grid(row=0, column=0, sticky="w", padx=PADX, pady=PADY)
         self.btn_apply = ttk.Button(self.footer_frame, text="Apply", command="")
         self.btn_apply.grid(row=0, column=1, sticky="e", padx=PADX, pady=PADY)
@@ -536,12 +536,6 @@ class App:
             yield
         finally:
             self._updating = prev
-
-    def _new_characterobj(self):
-        """Create a new character object and update the view."""
-        print("Debug _new_characterobj: Creating new character object.")
-        self.new_player = PlayerClass()
-        self._rebuild_ui()
 
     def _rebuild_ui(self):
         """Zerstört alle Kinder der Root und baut UI neu auf."""
