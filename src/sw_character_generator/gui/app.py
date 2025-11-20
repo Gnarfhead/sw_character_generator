@@ -19,6 +19,7 @@ from .gui_functions.gui_role_stats import role_stats, switch_stats
 from .gui_functions.gui_profession_change import on_profession_change
 from .gui_functions.gui_update_view_from_model import update_view_from_model
 from .gui_functions.persistence import bind_model_vars
+from .gui_functions.widgets import label_entry, label_combobox, label_spinbox, label_button
 
 
 # Layout / sizing constants
