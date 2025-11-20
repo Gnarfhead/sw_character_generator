@@ -164,7 +164,7 @@ class App:
         # Create top frame and place it with grid (do not mix pack/grid on root)
         self.top_frame = ttk.Frame(self.root, borderwidth=5, relief="ridge", padding=(6, 6), style="Standard.TFrame")
         self.top_frame.grid(row=0, column=0, columnspan=3, padx=10, pady=10, sticky="ew")
-       
+    
         # Row 0: basic fields
         self.lbl_player_name = ttk.Label(self.top_frame, text="Spieler:in:", style="Standard.TLabel")
         self.lbl_player_name.grid(row=0, column=0, sticky="w", padx=PADX, pady=PADY)

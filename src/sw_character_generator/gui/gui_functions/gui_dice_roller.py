@@ -1,6 +1,8 @@
 """GUI functions for the dice roller window."""
 import tkinter as tk
-from tkinter import ttk
+
+
+from src.sw_character_generator.gui.gui_functions.gui_widgets import widget_checkbutton, widget_entry, widget_label, widget_spinbox
 
 
 def dice_roller(parent: tk.Tk):
@@ -12,29 +14,19 @@ def dice_roller(parent: tk.Tk):
     win.grab_set()  # Make modal
 
     # GUI Elements - row 0
-    lbl_headline = ttk.Label(win, text="Dice Roller Functionality Here")
-    lbl_headline.grid(row=0, column=0, padx=10, pady=10)
+    widget_label(win, "Dice Roller Functionality Here", row=0, column=0, width=30, columnspan=6)
 
     # row 1
-    lbl_dice_count = ttk.Label(win, text="Dice Count:")
-    lbl_dice_count.grid(row=1, column=0, padx=10, pady=5)
-    lbl_dice_side = ttk.Label(win, text="Dice Sides:")
-    lbl_dice_side.grid(row=1, column=1, padx=10, pady=5)
-    lbl_bonus = ttk.Label(win, text="Bonus:")
-    lbl_bonus.grid(row=1, column=2, padx=10, pady=5)
-    lbl_malus = ttk.Label(win, text="Malus:")
-    lbl_malus.grid(row=1, column=3, padx=10, pady=5)
+    widget_label(win, "Dice Count:", row=1, column=0, width=10)
+    widget_label(win, "Dice Sides:", row=1, column=1, width=10)
+    widget_label(win, "Bonus:", row=1, column=2, width=10)
+    widget_label(win, "Malus:", row=1, column=3, width=10)
 
     # row 2
-    entry_dice_count = ttk.Entry(win, width=5, textvariable=tk.IntVar())
-    entry_dice_count.grid(row=2, column=0, padx=10, pady=5)
-    entry_dice_side = ttk.Entry(win, width=5, textvariable=tk.IntVar())
-    entry_dice_side.grid(row=2, column=1, padx=10, pady=5)
-    sbx_bonus = ttk.Spinbox(win, from_=-100, to=100, width=5, variable=tk.IntVar())
-    sbx_bonus.grid(row=2, column=2, padx=10, pady=5)
-    sbx_malus = ttk.Spinbox(win, from_=-100, to=100, width=5, variable=tk.IntVar())
-    sbx_malus.grid(row=2, column=3, padx=10, pady=5)
-    chk_advantage = ttk.Checkbutton(win, text="Advantage", variable=tk.IntVar())
-    chk_advantage.grid(row=2, column=4, padx=10, pady=5)
-    chk_disadvantage = ttk.Checkbutton(win, text="Disadvantage", variable=tk.IntVar())
-    chk_disadvantage.grid(row=2, column=5, padx=10, pady=5)
+    widget_entry(win, "Count:", row=2, column=0, width=10)
+    widget_entry(win, "Sides:", row=2, column=1, width=10)
+    widget_spinbox(win, "Bonus:", row=2, column=2, from_=-100, to=100, width=10)
+    widget_spinbox(win, "Malus:", row=2, column=3, from_=-100, to=100, width=10)
+    widget_checkbutton(win, "Advantage", row=2, column=4)
+    widget_checkbutton(win, "Disadvantage", row=2, column=5)
+    
