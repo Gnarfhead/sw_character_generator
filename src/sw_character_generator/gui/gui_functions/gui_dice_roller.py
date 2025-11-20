@@ -35,13 +35,13 @@ def dice_roller(parent: tk.Tk):
     widget_label(win, "Malus:", row=1, column=3, width=10)
 
     # row 2
-    widget_entry(win, "Count:", row=2, column=0, width=10, variable=tk.StringVar(value="1"))
-    widget_entry(win, "Sides:", row=2, column=1, width=10, variable=tk.StringVar(value="6"))
-    widget_spinbox(win, "Bonus:", row=2, column=2, from_=-100, to=100, width=10, variable=tk.StringVar(value="0"))
-    widget_spinbox(win, "Malus:", row=2, column=3, from_=-100, to=100, width=10, variable=tk.StringVar(value="0"))
+    widget_entry(win, "Count:", row=2, column=0, width=10, textvariable=tk.StringVar(value="1"))
+    widget_entry(win, "Sides:", row=2, column=1, width=10, textvariable=tk.StringVar(value="6"))
+    widget_spinbox(win, "Bonus:", row=2, column=2, from_=-100, to=100, width=10, textvariable=tk.StringVar(value="0"))
+    widget_spinbox(win, "Malus:", row=2, column=3, from_=-100, to=100, width=10, textvariable=tk.StringVar(value="0"))
     widget_checkbutton(win, "Advantage", row=2, column=4, variable=tk.BooleanVar(value=False))
     widget_checkbutton(win, "Disadvantage", row=2, column=5, variable=tk.BooleanVar(value=False))
-    
+        
     # row 3
     widget_label(win, "Result:", row=3, column=0, width=10)
     widget_label(win, "Total:", row=3, column=1, width=10)
