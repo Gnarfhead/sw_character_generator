@@ -44,14 +44,14 @@ class App:
         self._updating = False  # flag to prevent recursive updates
         self.root = tk.Tk()
         self.root.title("Swords & Wizardry Charaktergenerator")
-        self.root.minsize(ROOT_MIN_W, ROOT_MIN_H)
+        self.root.minsize(900, 600)
 
         # Global player character instance (to be used by save/load functions)
         self.new_player = PlayerClass()
 
         # Make root use grid for all direct children and allow columns to expand
         for c in range(3):
-            self.root.grid_columnconfigure(c, weight=1, minsize=VALUE_MIN_W)
+            self.root.grid_columnconfigure(c, weight=1, minsize=160)
 
         # GUI-bound variables (created after root exists)
         self.player_name_var = tk.StringVar(master=self.root)
