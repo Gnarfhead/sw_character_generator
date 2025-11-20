@@ -1,3 +1,4 @@
+"""GUI persistence functions: binding GUI variables/widgets to the model."""
 from dataclasses import asdict
 import tkinter as tk
 from .gui_update_view_from_model import update_view_from_model

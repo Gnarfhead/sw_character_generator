@@ -1,4 +1,4 @@
-import tkinter as tk
+"""Common GUI widgets for the  character generator application."""
 import tkinter.ttk as ttk
 
 PADX = 8
