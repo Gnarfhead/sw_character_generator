@@ -36,3 +36,11 @@ def label_button(parent, text, row, column, command=None, **grid_opts):
     btn = ttk.Button(parent, text="Modify", command=command)
     btn.grid(row=row, column=column + 1, sticky="ew", padx=PADX, pady=PADY, **grid_opts)
     return lbl, btn
+
+def label_checkbutton(parent, text, row, column, var=None, **grid_opts):
+    """Create a labeled Checkbutton widget in a grid."""
+    lbl = ttk.Label(parent, text=text)
+    lbl.grid(row=row, column=column, sticky="w", padx=PADX, pady=PADY)
+    chk = ttk.Checkbutton(parent, variable=var)
+    chk.grid(row=row, column=column + 1, sticky="w", padx=PADX, pady=PADY, **grid_opts)
+    return lbl, chk
