@@ -21,8 +21,7 @@ from .gui_functions.gui_role_stats import role_stats, switch_stats
 from .gui_functions.gui_profession_change import on_profession_change
 from .gui_functions.gui_update_view_from_model import update_view_from_model
 from .gui_functions.gui_persistence import bind_model_vars
-from .gui_functions.gui_widgets import label_entry, label_combobox, label_spinbox, label_button, label_checkbutton
-
+from .gui_functions.gui_widgets import widget_button, widget_label, widget_entry, widget_combobox, widget_spinbox, widget_checkbutton
 
 # Layout / sizing constants
 ROOT_MIN_W = 900
