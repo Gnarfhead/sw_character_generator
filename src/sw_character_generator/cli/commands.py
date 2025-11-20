@@ -5,7 +5,7 @@ from sw_character_generator.functions.choosen_profession import choosen_professi
 from sw_character_generator.functions.choosen_race import choosen_race_modifiers
 from sw_character_generator.functions.gen_char_stat_mods import analyze_mod_char, analyze_mod_con, analyze_mod_dex, analyze_mod_int, analyze_mod_str
 from sw_character_generator.functions.role_dice import wuerfle_3d6
-from sw_character_generator.functions.save_character import save_character
+from sw_character_generator.functions.character_handling import save_character
 
 
 def start_cli():

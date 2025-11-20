@@ -11,21 +11,28 @@ def save_character(character_data: PlayerClass) -> None:
 
     #print("Current working directory:", os.getcwd())
 
-    # Zeitstempel erzeugen
+    # Create timestamp
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    #print(f"Saving character at {timestamp}")
-
-    # Dateiname zusammensetzen
+    
+    # Compose filename
     filename = f"{data['player_name']}-{data['profession']}-{data['character_name']}-{timestamp}.json"
-    #print(f"Generated filename: {filename}")
-    filename = filename.replace(" ", "_")  # Leerzeichen vermeiden
-    #print(f"Sanitized filename: {filename}")
+    filename = filename.replace(" ", "_")  # Avoid spaces
 
-    # Pfad vorbereiten
+    # Prepare path
     path = os.path.join("saved_data", filename)
     os.makedirs(os.path.dirname(path), exist_ok=True)
 
-    # Datei speichern
+    # Save file
     with open(path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4)
     print(f"File saved at: {path}")
+
+def load_character(file_path: str) -> PlayerClass:
+    """Load character data from a JSON file."""
+    with open(file_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    try:
+        character = PlayerClass.from_dict(data)
+    except KeyError as e:
+        raise ValueError(f"Missing key in character data: {e}")
+    return character

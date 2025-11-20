@@ -23,8 +23,9 @@ class PlayerClass:
     save_throw: int = 0
     save_bonuses: tuple[str, ...] = field(default_factory=tuple)
     immunity: tuple[str, ...] = field(default_factory=tuple)
-    special_abilities: tuple[str, ...] = field(default_factory=tuple)
+    special_abilities: list[str] = field(default_factory=list)
     ac: int = 10
+    languages: list[str] = field(default_factory=list)
     stat_str: int = field(default=0)
     stat_dex: int = field(default=0)
     stat_con: int = field(default=0)
@@ -46,7 +47,6 @@ class PlayerClass:
     min_spells_per_level: int = 0
     max_spells_per_level: int = 0
     cap_spec_hirelings: int = 0
-    add_langs: tuple[str, ...] = field(default_factory=tuple)
     treasure: list[str] = field(default_factory=list)
     coins: int = field(default=0)
     allowed_alignment: str = "Undefined"
@@ -97,7 +97,7 @@ class PlayerClass:
             f"State: {self.player_state}, Alignment: {self.alignment}, Race: {self.race}, Gender: {self.gender}, God: {self.god}, Age: {self.age}\n"
             f"Save Throw: {self.save_throw}, Save Bonuses: {list(self.save_bonuses)}, Immunity: {list(self.immunity)}, AC: {self.ac}\n"
             f"Special Abilities: {list(self.special_abilities)}\n"
-            f"Languages: {list(self.add_langs)}\n"
+            f"Languages: {list(self.languages)}\n"
             f"Inventory: {self.inventory}\n"
             f"Treasure: {self.treasure}\n"
             f"Darkvision: {self.darkvision}, Parry: {self.parry}\n"
@@ -113,24 +113,26 @@ class PlayerClass:
             "player_name": self.player_name,
             "character_name": self.character_name,
             "profession": self.profession,
+            "hp_dice": self.hp_dice,
             "main_stats": self.main_stats,
             "player_state": self.player_state,
-            "hp_dice": self.hp_dice,
-            "level": self.level,
             "alignment": self.alignment,
+            "level": self.level,
             "race": self.race,
             "gender": self.gender,
             "god": self.god,
             "age": self.age,
-            "xp": self.xp,
             "xp_bonus": self.xp_bonus,
+            "xp": self.xp,
             "hp": self.hp,
+            "hp_current": self.hp_current,
             "save_throw": self.save_throw,
             "save_bonuses": list(self.save_bonuses),
             "immunity": list(self.immunity),
             "special_abilities": list(self.special_abilities),
-            "languages": list(self.add_langs),
             "ac": self.ac,
+            "languages": list(self.languages),
+            
             "stats": {
                 "str": self.stat_str,
                 "dex": self.stat_dex,
@@ -139,6 +141,7 @@ class PlayerClass:
                 "int": self.stat_int,
                 "cha": self.stat_char
             },
+            "inventory": self.inventory,
             "modifiers": {
                 "strength": {
                     "attack": self.strength_atck_mod,
@@ -155,7 +158,7 @@ class PlayerClass:
                     "raise_dead_chance": self.raise_dead_mod
                 },
                 "intelligence": {
-                    "languages": self.max_add_langs,
+                    "max_languages": self.max_add_langs,
                     "spell_level": self.highest_spell_level,
                     "understand_spell": self.understand_spell,
                     "min_spells_per_level": self.min_spells_per_level,
@@ -165,7 +168,7 @@ class PlayerClass:
                     "max_hirelings": self.cap_spec_hirelings
                 }
             },
-            "inventory": self.inventory,
+            
             "treasure": self.treasure,
             "coins": self.coins,
             "allowed_alignment": self.allowed_alignment,
@@ -180,5 +183,95 @@ class PlayerClass:
             "open_locks": self.open_locks,
             "surprised": self.surprised,
             "darkvision": self.darkvision,
-            "parry": self.parry
+            "parry": self.parry,
+            "spells": {
+                "spells_lvl1": self.spells_lvl1,
+                "spells_lvl2": self.spells_lvl2,
+                "spells_lvl3": self.spells_lvl3,
+                "spells_lvl4": self.spells_lvl4,
+                "spells_lvl5": self.spells_lvl5,
+                "spells_lvl6": self.spells_lvl6,
+                "spells_lvl7": self.spells_lvl7,
+                "spells_lvl8": self.spells_lvl8,
+                "spells_lvl9": self.spells_lvl9
+            }
         }
+
+    def from_dict(self, data: dict) -> "PlayerClass":
+        """Create a PlayerClass instance from a dictionary."""
+        stats = data.get("stats", {})
+        modifiers = data.get("modifiers", {})
+        strength_mods = modifiers.get("strength", {})
+        dexterity_mods = modifiers.get("dexterity", {})
+        constitution_mods = modifiers.get("constitution", {})
+        intelligence_mods = modifiers.get("intelligence", {})
+        charisma_mods = modifiers.get("charisma", {})
+        spells = data.get("spells", {})
+
+        self.player_name = stats.get("player_name", self.player_name)
+        self.character_name = data.get("character_name", self.character_name)
+        self.profession = data.get("profession", self.profession)
+        self.hp_dice = data.get("hp_dice", self.hp_dice)
+        self.main_stats = data.get("main_stats", self.main_stats)
+        self.player_state = data.get("player_state", self.player_state)
+        self.alignment = data.get("alignment", self.alignment)
+        self.level = data.get("level", self.level)
+        self.race = data.get("race", self.race)
+        self.gender = data.get("gender", self.gender)
+        self.god = data.get("god", self.god)
+        self.age = data.get("age", self.age)
+        self.xp_bonus = data.get("xp_bonus", self.xp_bonus)
+        self.xp = data.get("xp", self.xp)
+        self.hp = data.get("hp", self.hp)
+        self.hp_current = data.get("hp_current", self.hp_current)
+        self.save_throw = data.get("save_throw", self.save_throw)
+        self.save_bonuses = tuple(data.get("save_bonuses", self.save_bonuses))
+        self.immunity = tuple(data.get("immunity", self.immunity))
+        self.special_abilities = data.get("special_abilities", self.special_abilities)
+        self.ac = data.get("ac", self.ac)
+        self.languages = data.get("languages", self.languages)
+        self.stat_str = stats.get("str", self.stat_str)
+        self.stat_dex = stats.get("dex", self.stat_dex)
+        self.stat_con = stats.get("con", self.stat_con)
+        self.stat_wis = stats.get("wis", self.stat_wis)
+        self.stat_int = stats.get("int", self.stat_int)
+        self.stat_char = stats.get("cha", self.stat_char)
+        self.inventory = data.get("inventory", self.inventory)
+        self.strength_atck_mod = strength_mods.get("attack", self.strength_atck_mod)
+        self.strength_damage_mod = strength_mods.get("damage", self.strength_damage_mod)
+        self.carry_capacity_mod = strength_mods.get("carry_capacity", self.carry_capacity_mod)
+        self.door_crack_mod = strength_mods.get("door_crack", self.door_crack_mod)
+        self.ranged_atck_mod = dexterity_mods.get("ranged_attack", self.ranged_atck_mod)
+        self.ac_mod = dexterity_mods.get("ac_mod", self.ac_mod)
+        self.hp_mod = constitution_mods.get("hp_mod", self.hp_mod)
+        self.raise_dead_mod = constitution_mods.get("raise_dead_chance", self.raise_dead_mod)
+        self.max_add_langs = intelligence_mods.get("max_languages", self.max_add_langs)
+        self.highest_spell_level = intelligence_mods.get("spell_level", self.highest_spell_level)
+        self.understand_spell = intelligence_mods.get("understand_spell", self.understand_spell)
+        self.min_spells_per_level = intelligence_mods.get("min_spells_per_level", self.min_spells_per_level)
+        self.max_spells_per_level = intelligence_mods.get("max_spells_per_level", self.max_spells_per_level)
+        self.cap_spec_hirelings = charisma_mods.get("max_hirelings", self.cap_spec_hirelings)
+        self.treasure = data.get("treasure", self.treasure)
+        self.coins = data.get("coins", self.coins)
+        self.allowed_alignment = data.get("allowed_alignment", self.allowed_alignment)
+        self.allowed_races = data.get("allowed_races", self.allowed_races)
+        self.allowed_armor = data.get("allowed_armor", self.allowed_armor)
+        self.allowed_weapon = data.get("allowed_weapon", self.allowed_weapon)
+        self.delicate_tasks = data.get("delicate_tasks", self.delicate_tasks)
+        self.climb_walls = data.get("climb_walls", self.climb_walls)
+        self.hear_sounds = data.get("hear_sounds", self.hear_sounds)
+        self.hide_in_shadows = data.get("hide_in_shadows", self.hide_in_shadows)
+        self.move_silently = data.get("move_silently", self.move_silently)
+        self.open_locks = data.get("open_locks", self.open_locks)
+        self.surprised = data.get("surprised", self.surprised)
+        self.darkvision = data.get("darkvision", self.darkvision)
+        self.parry = data.get("parry", self.parry)
+        self.spells_lvl1 = spells.get("spells_lvl1", self.spells_lvl1)
+        self.spells_lvl2 = spells.get("spells_lvl2", self.spells_lvl2)
+        self.spells_lvl3 = spells.get("spells_lvl3", self.spells_lvl3)
+        self.spells_lvl4 = spells.get("spells_lvl4", self.spells_lvl4)
+        self.spells_lvl5 = spells.get("spells_lvl5", self.spells_lvl5)
+        self.spells_lvl6 = spells.get("spells_lvl6", self.spells_lvl6)
+        self.spells_lvl7 = spells.get("spells_lvl7", self.spells_lvl7)
+        self.spells_lvl8 = spells.get("spells_lvl8", self.spells_lvl8)
+        self.spells_lvl9 = spells.get("spells_lvl9", self.spells_lvl9)

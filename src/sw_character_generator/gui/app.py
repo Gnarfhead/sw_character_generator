@@ -11,8 +11,9 @@ import tkinter.scrolledtext as scrolledtext
 from tkinter import messagebox
 
 from src.sw_character_generator.classes.playerclass import PlayerClass
-from src.sw_character_generator.core.persistence import save_characterobj
 from src.sw_character_generator.functions.modify_hp import modify_hp
+from src.sw_character_generator.functions.character_handling import save_character, load_character
+from .gui_functions.gui_dice_roller import dice_roller
 from .gui_functions.gui_alignment_change import on_alignment_change
 from .gui_functions.gui_race_change import on_race_change
 from .gui_functions.gui_role_stats import role_stats, switch_stats
@@ -89,7 +90,7 @@ class App:
         self.ac_var = tk.IntVar(master=self.root, value=0)
         self.darkvision_var = tk.StringVar(master=self.root, value="No")
         self.parry_var = tk.IntVar(master=self.root, value=0)
-        self.add_langs_var = tk.IntVar(master=self.root, value=0)
+        self.languages_var = tk.StringVar(master=self.root, value="")
         self.special_abilities_var = tk.StringVar(master=self.root, value="")
         self.immunities_var = tk.StringVar(master=self.root, value="")
         self.strength_atck_mod_var = tk.DoubleVar(master=self.root, value=0.0)
@@ -395,7 +396,7 @@ class App:
 
         self.lbl_add_langs = ttk.Label(self.stats_frame, text="Languages:", style="Standard.TLabel")
         self.lbl_add_langs.grid(row=7, column=0, sticky="w", padx=PADX, pady=PADY)
-        self.entry_add_langs = ttk.Label(self.stats_frame, textvariable=self.add_langs_var)
+        self.entry_add_langs = ttk.Label(self.stats_frame, textvariable=self.languages_var)
         self.entry_add_langs.grid(row=7, column=1, sticky="w", padx=PADX, pady=PADY)
 
         self.lbl_immunities = ttk.Label(self.stats_frame, text="Immunities:", style="Standard.TLabel")
@@ -492,10 +493,13 @@ class App:
         # place Save / Load buttons inside footer_frame on a new row so they're visually nearby
         self.btn_new = ttk.Button(self.footer_frame, text="New", command=self._new_characterobj)
         self.btn_new.grid(row=0, column=0, sticky="w", padx=PADX, pady=PADY)
-        self.btn_save = ttk.Button(self.footer_frame, text="Save", command=lambda: save_characterobj(self.new_player))
+        self.btn_apply = ttk.Button(self.footer_frame, text="Apply", command="")
+        self.btn_apply.grid(row=0, column=1, sticky="e", padx=PADX, pady=PADY)
+        self.btn_save = ttk.Button(self.footer_frame, text="Save", command=lambda: save_character(self.new_player))
         self.btn_save.grid(row=0, column=1, sticky="e", padx=PADX, pady=PADY)
-        self.btn_load = ttk.Button(self.footer_frame, text="Load", command="")
+        self.btn_load = ttk.Button(self.footer_frame, text="Load", command=lambda: load_character(self))
         self.btn_load.grid(row=0, column=2, sticky="w", padx=PADX, pady=PADY)
+        self.btn_diceroaler = ttk.Button(self.footer_frame, text="Dice Roller", command=lambda: dice_roller(self.root))
         self.btn_exit = ttk.Button(self.footer_frame, text="Exit", command=lambda: messagebox.askokcancel("Exit", "Do you really want to exit?", parent=self.root) and self.root.destroy())
         self.btn_exit.grid(row=0, column=3, sticky="e", padx=PADX, pady=PADY)
 
