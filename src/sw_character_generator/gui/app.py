@@ -558,18 +558,7 @@ class App:
         self._build_ui()
         with self.suppress_updates():
             update_view_from_model(self)
-    
-    def on_var_change(self, var_name: str, *args):
-        """Callback when a Tk variable changes; updates the model and view."""
-        if self.is_updating:
-            return  # Prevent recursive updates
-
-        print(f"Debug on_var_change: Variable '{var_name}' changed.")
-        with self.suppress_updates():
-            update_model_from_view(self, var_name)
-            update_view_from_model(self)
-            
-    
+               
     # ----------------- run -----------------
     def run(self):
         """Run the main Tk event loop."""
