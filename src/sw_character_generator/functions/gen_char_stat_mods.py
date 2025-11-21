@@ -159,9 +159,7 @@ def analyze_mod_wis(player_character: PlayerClass):
     """Calculate wisdom based modifiers."""
     if player_character.stat_wis >= 13:
         player_character.xp_bonus += 5
-    else:
-        raise ValueError("Wisdom stat out of bounds:", player_character.stat_wis)
-
+    
 def analyze_mod_char(player_character: PlayerClass):
     """Calculate charisma based modifiers."""
     if 3 <= player_character.stat_char <= 4:

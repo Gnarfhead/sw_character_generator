@@ -138,7 +138,7 @@ def role_stats(app, character, chk_opt_4d6dl_var, btn_roll_stats=None, btn_switc
         btn_roll_stats.config(text="Stats Rolled", state="disabled") # Disable roll button after rolling
         app.chk_opt_4d6dl.config(state="disabled") # Disable 4d6 drop lowest option
         btn_switch_stats.config(state="normal") # Enable switch stats button
-        app.profession_cb.config(state="normal") # Enable profession combobox
+        app.cb_profession.config(state="normal") # Enable profession combobox
         app.top_frame.config(style="Attention.TFrame") # Highlight top frame to indicate next step
         app.lbl_profession.config(style="Attention.TLabel") # Highlight profession label
         app.attr_frame.config(style="Standard.TFrame") # Reset attribute frame style in case it was highlighted before

@@ -15,8 +15,8 @@ def on_profession_change(app, *args):
         # Update the model with the new profession
         choosen_profession_modifiers(app.new_player, name) # update profession and related stats
         app.status_var.set(f"Profession changed to {name}")
-        app.race_cb.config(state="normal") # enable race selection
-        app.alignment_cb.config(state="normal") # enable alignment selection
+        app.cb_race.config(state="normal") # enable race selection
+        app.cb_alignment.config(state="normal") # enable alignment selection
         app.race_var.set("Undefined") # reset if profession gets changed
         app.alignment_var.set("Undefined") # reset if profession gets changed
         app.lbl_profession.config(style="Standard.TLabel")
@@ -31,11 +31,11 @@ def on_profession_change(app, *args):
 
 def refresh_race_values(app):
     """Refresh the race combobox values based on the new player's allowed races."""
-    app.race_cb.config(values=list(getattr(app.new_player, "allowed_races", ())))
-    print(f"DEBUG refresh_race_values: Updated race combobox values to {app.race_cb['values']}")
+    app.cb_race.config(values=list(getattr(app.new_player, "allowed_races", ())))
+    print(f"DEBUG refresh_race_values: Updated race combobox values to {app.cb_race['values']}")
 
 def refresh_alignment_values(app):
     """Refresh the alignment combobox values based on the new player's allowed alignments."""
-    app.alignment_cb.config(values=list(getattr(app.new_player, "allowed_alignment", ())))
-    print(f"DEBUG refresh_alignment_values: Updated alignment combobox values to {app.alignment_cb['values']}")
+    app.cb_alignment.config(values=list(getattr(app.new_player, "allowed_alignment", ())))
+    print(f"DEBUG refresh_alignment_values: Updated alignment combobox values to {app.cb_alignment['values']}")
 

@@ -11,7 +11,7 @@ import tkinter.scrolledtext as scrolledtext
 from tkinter import messagebox
 
 from src.sw_character_generator.classes.playerclass import PlayerClass
-from sw_character_generator.functions.manage_hp import modify_hp, roll_starting_hp
+from sw_character_generator.functions.manage_hp import modify_hp, roll_starting_hp, set_roll_hp_button
 from src.sw_character_generator.functions.character_handling import save_character, load_character
 from src.sw_character_generator.gui.gui_functions.gui_new_character import apply_character, new_characterobj
 from .gui_functions.gui_dice_roller import dice_roller
@@ -21,7 +21,7 @@ from .gui_functions.gui_role_stats import role_stats, switch_stats
 from .gui_functions.gui_profession_change import on_profession_change
 from .gui_functions.gui_update_view_from_model import update_view_from_model
 from .gui_functions.gui_persistence import bind_model_vars
-from .gui_functions.gui_widgets import widget_button, widget_label, widget_entry, widget_combobox, widget_spinbox, widget_checkbutton
+from .gui_functions.gui_widgets import widget_button, widget_extlabel, widget_label, widget_entry, widget_combobox, widget_spinbox, widget_checkbutton
 
 # Layout / sizing constants
 ROOT_MIN_W = 900
@@ -105,6 +105,7 @@ class App:
         self.cap_spec_hirelings_var = tk.IntVar(master=self.root, value=0)
         self.chk_opt_4d6dl_var = tk.BooleanVar(master=self.root, value=False)
         self.chk_opt_fullhplvl1_var = tk.BooleanVar(master=self.root, value=False)
+        self.chk_opt_fullhplvl1_var.trace_add("write", lambda *args: set_roll_hp_button(self, self.chk_opt_fullhplvl1_var))
 
     # ----------------- setup UI -----------------
 
@@ -163,105 +164,37 @@ class App:
 
         # Create top frame and place it with grid (do not mix pack/grid on root)
         self.top_frame = ttk.Frame(self.root, borderwidth=5, relief="ridge", padding=(6, 6), style="Standard.TFrame")
-        self.top_frame.grid(row=0, column=0, columnspan=3, padx=10, pady=10, sticky="ew")
+        self.top_frame.grid(row=0, column=0, columnspan=3, padx=PADX, pady=PADY, sticky="ew")
     
         # Row 0: basic fields
-        widget_entry(self.top_frame, "Player Name:", 0, 0, var=self.player_name_var)
-        widget_entry(self.top_frame, "Character Name:", 0, 2, var=self.character_name_var)
-        widget_entry(self.top_frame, "Level:", 0, 4, var=self.level_var)
+        widget_entry(self.top_frame, "Player Name:", 0, 0, var=self.player_name_var, owner=self, name_label="lbl_player_name", name_entry="entry_player_name")
+        widget_entry(self.top_frame, "Character Name:", 0, 2, var=self.character_name_var, owner=self, name_label="lbl_character_name", name_entry="entry_character_name")
+        widget_entry(self.top_frame, "Level:", 0, 4, var=self.level_var, owner=self, name_label="lbl_level", name_entry="entry_level")
 
         # Row 1
-        #widget_label(self.top_frame, "Profession:", 1, 0, self.profession_var, ["Fighter", "Cleric", "Thief", "Wizard", "Ranger", "Paladin", "Druid", "Assassin", "Monk"], ENTRY_WIDTH, state="enabled")
-        self.lbl_profession = ttk.Label(self.top_frame, text="Profession:", style="Standard.TLabel")
-        self.lbl_profession.grid(row=1, column=0, sticky="w", padx=PADX, pady=PADY)
-        self.profession_cb = ttk.Combobox(self.top_frame, textvariable=self.profession_var, state="disabled")
-        self.profession_cb.grid(row=1, column=1, sticky="ew", padx=PADX, pady=PADY)
-        self.profession_cb.config(values=["Fighter", "Cleric", "Thief", "Wizard", "Ranger", "Paladin", "Druid", "Assassin", "Monk"])
-
-        self.lbl_race = ttk.Label(self.top_frame, text="Rasse:", style="Standard.TLabel")
-        self.lbl_race.grid(row=1, column=2, sticky="w", padx=PADX, pady=PADY)
-        self.race_cb = ttk.Combobox(self.top_frame, textvariable=self.race_var, state="disabled")
-        self.race_cb.grid(row=1, column=3, sticky="ew", padx=PADX, pady=PADY)
-        self.race_cb.config(values=list(getattr(self.new_player, "allowed_races", ())))
-
-        self.lbl_gender = ttk.Label(self.top_frame, text="Geschlecht:", style="Standard.TLabel")
-        self.lbl_gender.grid(row=1, column=4, sticky="w", padx=PADX, pady=PADY)
-        self.gender_cb = ttk.Combobox(self.top_frame, textvariable=self.gender_var)
-        self.gender_cb.grid(row=1, column=5, sticky="ew", padx=PADX, pady=PADY)
-        self.gender_cb.config(values=["Male", "Female", "Other"])
-
+        widget_combobox(self.top_frame, "Profession:", 1, 0, self.profession_var, ["Fighter", "Cleric", "Thief", "Wizard", "Ranger", "Paladin", "Druid", "Assassin", "Monk"], owner=self, name_label="lbl_profession", name_combo="cb_profession")
+        widget_combobox(self.top_frame, "Race:", 1, 2, self.race_var, list(getattr(self.new_player, "allowed_races", ())), state="disabled", owner=self, name_label="lbl_race", name_combo="cb_race")
+        widget_combobox(self.top_frame, "Gender:", 1, 4, self.gender_var, ["Male", "Female", "Other"], state="active", owner=self, name_label="lbl_gender", name_combo="cb_gender")
+   
         # Row 2
-        self.lbl_alignment = ttk.Label(self.top_frame, text="Gesinnung:", style="Standard.TLabel")
-        self.lbl_alignment.grid(row=2, column=0, sticky="w", padx=PADX, pady=PADY)
-        self.alignment_cb = ttk.Combobox(self.top_frame, textvariable=self.alignment_var, state="disabled")
-        self.alignment_cb.grid(row=2, column=1, sticky="ew", padx=PADX, pady=PADY)
-        self.alignment_cb.config(values=["Good", "Neutral", "Evil"])
-
-        self.lbl_god = ttk.Label(self.top_frame, text="Gottheit:", style="Standard.TLabel")
-        self.lbl_god.grid(row=2, column=2, sticky="w", padx=PADX, pady=PADY)
-        self.entry_god = ttk.Entry(self.top_frame, textvariable=self.god_var)
-        self.entry_god.grid(row=2, column=3, sticky="ew", padx=PADX, pady=PADY)
-
-        self.lbl_age = ttk.Label(self.top_frame, text="Alter:", style="Standard.TLabel")
-        self.lbl_age.grid(row=2, column=4, sticky="w", padx=PADX, pady=PADY)
-        self.entry_age = ttk.Entry(self.top_frame, textvariable=self.age_var)
-        self.entry_age.grid(row=2, column=5, sticky="ew", padx=PADX, pady=PADY)
+        widget_combobox(self.top_frame, "Alignment:", 2, 0, self.alignment_var, ["Good", "Neutral", "Evil"], state="disabled", owner=self, name_label="lbl_alignment", name_combo="cb_alignment")
+        widget_entry(self.top_frame, "Gottheit:", 2, 2, var=self.god_var, owner=self, name_label="lbl_god", name_entry="entry_god")
+        widget_entry(self.top_frame, "Alter:", 2, 4, var=self.age_var, owner=self, name_label="lbl_age", name_entry="entry_age")
 
         # Row 3 - main stats and XP
-        self.lbl_main_stats = ttk.Label(self.top_frame, text="Main Stats:", style="Standard.TLabel")
-        self.lbl_main_stats.grid(row=3, column=0, sticky="w", padx=PADX, pady=PADY)
-        self.entry_main_stats = ttk.Label(self.top_frame, textvariable=self.main_stats_var)
-        self.entry_main_stats.grid(row=3, column=1, columnspan=1, sticky="w", padx=PADX, pady=PADY)
-
-        self.lbl_xp_bonus = ttk.Label(self.top_frame, text="EP-Bonus (%):", style="Standard.TLabel")
-        self.lbl_xp_bonus.grid(row=3, column=2, sticky="w", padx=PADX, pady=PADY)
-        self.entry_xp_bonus = ttk.Label(self.top_frame, textvariable=self.xp_bonus_var)
-        self.entry_xp_bonus.grid(row=3, column=3, sticky="w", padx=PADX, pady=PADY)
-
-        self.lbl_xp = ttk.Label(self.top_frame, text="EP:", style="Standard.TLabel")
-        self.lbl_xp.grid(row=3, column=4, sticky="w", padx=PADX, pady=PADY)
-        self.entry_xp = ttk.Label(self.top_frame, textvariable=self.xp_var)
-        self.entry_xp.grid(row=3, column=5, sticky="w", padx=PADX, pady=PADY)
-
+        widget_extlabel(self.top_frame, "Main Stats:", 3, 0, var=self.main_stats_var, owner=self, name_label="lbl_main_stats", name_value="entry_main_stats")
+        widget_extlabel(self.top_frame, "EP-Bonus (%):", 3, 2, var=self.xp_bonus_var, owner=self, name_label="lbl_xp_bonus", name_value="entry_xp_bonus")
+        widget_extlabel(self.top_frame, "EP:", 3, 4, var=self.xp_var, owner=self, name_label="lbl_xp", name_value="entry_xp")
+        
         # Attribute frame (use LabelFrame for nicer title)
         self.attr_frame = ttk.LabelFrame(self.root, text="Attribute", borderwidth=5, padding=(6, 6), style="Attention.TFrame")
         self.attr_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
-
-        # Row 0
-        self.lbl_str = ttk.Label(self.attr_frame, text="Strength (STR):", style="Standard.TLabel")
-        self.lbl_str.grid(row=0, column=0, sticky="w", padx=PADX, pady=PADY)
-        self.entry_str = ttk.Label(self.attr_frame, textvariable=self.stat_str_var)
-        self.entry_str.grid(row=0, column=1, sticky="w", padx=PADX, pady=PADY)
-
-        # Row 1
-        self.lbl_dex = ttk.Label(self.attr_frame, text="Dexterity (DEX):", style="Standard.TLabel")
-        self.lbl_dex.grid(row=1, column=0, sticky="w", padx=PADX, pady=PADY)
-        self.entry_dex = ttk.Label(self.attr_frame, textvariable=self.stat_dex_var)
-        self.entry_dex.grid(row=1, column=1, sticky="w", padx=PADX, pady=PADY)
-
-        # Row 2
-        self.lbl_con = ttk.Label(self.attr_frame, text="Constitution (CON):", style="Standard.TLabel")
-        self.lbl_con.grid(row=2, column=0, sticky="w", padx=PADX, pady=PADY)
-        self.entry_con = ttk.Label(self.attr_frame, textvariable=self.stat_con_var)
-        self.entry_con.grid(row=2, column=1, sticky="w", padx=PADX, pady=PADY)
-
-        # Row 3
-        self.lbl_int = ttk.Label(self.attr_frame, text="Intelligence (INT):", style="Standard.TLabel")
-        self.lbl_int.grid(row=3, column=0, sticky="w", padx=PADX, pady=PADY)
-        self.entry_int = ttk.Label(self.attr_frame, textvariable=self.stat_int_var)
-        self.entry_int.grid(row=3, column=1, sticky="w", padx=PADX, pady=PADY)
-
-        # Row 4
-        self.lbl_wis = ttk.Label(self.attr_frame, text="Wisdom (WIS):", style="Standard.TLabel")
-        self.lbl_wis.grid(row=4, column=0, sticky="w", padx=PADX, pady=PADY)
-        self.entry_wis = ttk.Label(self.attr_frame, textvariable=self.stat_wis_var)
-        self.entry_wis.grid(row=4, column=1, sticky="w", padx=PADX, pady=PADY)
-
-        # Row 5
-        self.lbl_cha = ttk.Label(self.attr_frame, text="Charisma (CHA):", style="Standard.TLabel")
-        self.lbl_cha.grid(row=5, column=0, sticky="w", padx=PADX, pady=PADY)
-        self.entry_cha = ttk.Label(self.attr_frame, textvariable=self.stat_char_var)
-        self.entry_cha.grid(row=5, column=1, sticky="w", padx=PADX, pady=PADY)
+        widget_extlabel(self.attr_frame, "Strength (STR):", 0, 0, var=self.stat_str_var, owner=self, name_label="lbl_str", name_value="entry_str")
+        widget_extlabel(self.attr_frame, "Dexterity (DEX):", 1, 0, var=self.stat_dex_var, owner=self, name_label="lbl_dex", name_value="entry_dex")
+        widget_extlabel(self.attr_frame, "Constitution (CON):", 2, 0, var=self.stat_con_var, owner=self, name_label="lbl_con", name_value="entry_con")
+        widget_extlabel(self.attr_frame, "Intelligence (INT):", 3, 0, var=self.stat_int_var, owner=self, name_label="lbl_int", name_value="entry_int")
+        widget_extlabel(self.attr_frame, "Wisdom (WIS):", 4, 0, var=self.stat_wis_var, owner=self, name_label="lbl_wis", name_value="entry_wis")
+        widget_extlabel(self.attr_frame, "Charisma (CHA):", 5, 0, var=self.stat_char_var, owner=self, name_label="lbl_cha", name_value="entry_cha")
 
         # place Roll Stats button inside attr_frame
         self.btn_roll_stats = ttk.Button(self.attr_frame, text="Roll Stats", style="Attention.TButton", command=lambda: role_stats(self, self.new_player, self.chk_opt_4d6dl_var.get(), self.btn_roll_stats, self.btn_switch_stats))
@@ -269,7 +202,7 @@ class App:
 
         # Homebrew frame (use LabelFrame for nicer title)
         self.attr_homebrew_frame = ttk.LabelFrame(self.attr_frame, text="Homebrew", borderwidth=5, padding=(6, 6), style="Standard.TFrame")
-        self.attr_homebrew_frame.grid(row=7, column=0, padx=10, pady=10, sticky="nsew")
+        self.attr_homebrew_frame.grid(row=7, column=0, padx=PADX, pady=PADY, sticky="nsew")
 
         # Switch Stats button inside homebrew frame
         def homebrew_switch_stats(self, character, btn_switch_stats):
@@ -281,125 +214,48 @@ class App:
         self.btn_switch_stats = ttk.Button(self.attr_homebrew_frame, text="Switch Stats", style="Standard.TButton", command=lambda: homebrew_switch_stats(self, self.new_player, self.btn_switch_stats))
         self.btn_switch_stats.config(state="disabled")  # Disabled for now
         self.btn_switch_stats.grid(row=0, column=1, sticky="ew", padx=PADX, pady=PADY)
-        self.chk_opt_4d6dl = ttk.Checkbutton(self.attr_homebrew_frame, text="4d6 drop lowest", variable=self.chk_opt_4d6dl_var)
+        self.chk_opt_4d6dl = ttk.Checkbutton(self.attr_homebrew_frame, text="4d6 dl", variable=self.chk_opt_4d6dl_var)
         self.chk_opt_4d6dl.grid(row=0, column=0, sticky="ew", padx=PADX, pady=PADY)
 
         # Bonuses frame
         self.bonus_frame = ttk.LabelFrame(self.root, text="Attribute Bonuses", borderwidth=5, padding=(6, 6), style="Standard.TFrame")
-        self.bonus_frame.grid(row=1, column=1, padx=10, pady=10, sticky="nsew")
+        self.bonus_frame.grid(row=1, column=1, padx=PADX, pady=PADY, sticky="nsew")
 
         # Create bonus labels and values
-        self.lbl_strength_atck_bonus = ttk.Label(self.bonus_frame, text="Melee Attack Bonus:", style="Standard.TLabel")
-        self.lbl_strength_atck_bonus.grid(row=0, column=0, sticky="w", padx=PADX, pady=PADY)
-        self.entry_strength_atck_bonus = ttk.Label(self.bonus_frame, textvariable=self.strength_atck_mod_var)
-        self.entry_strength_atck_bonus.grid(row=0, column=1, sticky="w", padx=PADX, pady=PADY)
-
-        self.lbl_strength_damage_bonus = ttk.Label(self.bonus_frame, text="Melee Damage Bonus:", style="Standard.TLabel")
-        self.lbl_strength_damage_bonus.grid(row=1, column=0, sticky="w", padx=PADX, pady=PADY)
-        self.entry_strength_damage_bonus = ttk.Label(self.bonus_frame, textvariable=self.strength_damage_mod_var)
-        self.entry_strength_damage_bonus.grid(row=1, column=1, sticky="w", padx=PADX, pady=PADY)
-
-        self.lbl_carry_capacity_bonus = ttk.Label(self.bonus_frame, text="Carry Capacity Bonus:", style="Standard.TLabel")
-        self.lbl_carry_capacity_bonus.grid(row=2, column=0, sticky="w", padx=PADX, pady=PADY)
-        self.entry_carry_capacity_bonus = ttk.Label(self.bonus_frame, textvariable=self.carry_capacity_mod_var)
-        self.entry_carry_capacity_bonus.grid(row=2, column=1, sticky="w", padx=PADX, pady=PADY)
-
-        self.lbl_door_crack_bonus = ttk.Label(self.bonus_frame, text="Door Crack Bonus:", style="Standard.TLabel")
-        self.lbl_door_crack_bonus.grid(row=3, column=0, sticky="w", padx=PADX, pady=PADY)
-        self.entry_door_crack_bonus = ttk.Label(self.bonus_frame, textvariable=self.door_crack_mod_var)
-        self.entry_door_crack_bonus.grid(row=3, column=1, sticky="w", padx=PADX, pady=PADY)
-
-        self.lbl_ranged_atk_bonus = ttk.Label(self.bonus_frame, text="Ranged Attack Bonus:", style="Standard.TLabel")
-        self.lbl_ranged_atk_bonus.grid(row=4, column=0, sticky="w", padx=PADX, pady=PADY)
-        self.entry_ranged_atk_bonus = ttk.Label(self.bonus_frame, textvariable=self.ranged_atck_mod_var)
-        self.entry_ranged_atk_bonus.grid(row=4, column=1, sticky="w", padx=PADX, pady=PADY)
-
-        self.lbl_ac_bonus = ttk.Label(self.bonus_frame, text="AC Bonus:", style="Standard.TLabel")
-        self.lbl_ac_bonus.grid(row=5, column=0, sticky="w", padx=PADX, pady=PADY)
-        self.entry_ac_bonus = ttk.Label(self.bonus_frame, textvariable=self.ac_mod_var)
-        self.entry_ac_bonus.grid(row=5, column=1, sticky="w", padx=PADX, pady=PADY)
-
-        self.lbl_hp_bonus = ttk.Label(self.bonus_frame, text="HP Bonus:", style="Standard.TLabel")
-        self.lbl_hp_bonus.grid(row=6, column=0, sticky="w", padx=PADX, pady=PADY)
-        self.entry_hp_bonus = ttk.Label(self.bonus_frame, textvariable=self.hp_mod_var)
-        self.entry_hp_bonus.grid(row=6, column=1, sticky="w", padx=PADX, pady=PADY)
-
-        self.lbl_raise_dead_mod = ttk.Label(self.bonus_frame, text="Raise Dead Modifier:", style="Standard.TLabel")
-        self.lbl_raise_dead_mod.grid(row=7, column=0, sticky="w", padx=PADX, pady=PADY)
-        self.entry_raise_dead_mod = ttk.Label(self.bonus_frame, textvariable=self.raise_dead_mod_var)
-        self.entry_raise_dead_mod.grid(row=7, column=1, sticky="w", padx=PADX, pady=PADY)
-
-        self.lbl_max_add_langs = ttk.Label(self.bonus_frame, text="Max Additional Languages:", style="Standard.TLabel")
-        self.lbl_max_add_langs.grid(row=8, column=0, sticky="w", padx=PADX, pady=PADY)
-        self.entry_max_add_langs = ttk.Label(self.bonus_frame, textvariable=self.max_add_langs_var)
-        self.entry_max_add_langs.grid(row=8, column=1, sticky="w", padx=PADX, pady=PADY)
-
-        self.lbl_cap_spec_hirelings = ttk.Label(self.bonus_frame, text="Special Hirelings Cap:", style="Standard.TLabel")
-        self.lbl_cap_spec_hirelings.grid(row=9, column=0, sticky="w", padx=PADX, pady=PADY)
-        self.entry_cap_spec_hirelings = ttk.Label(self.bonus_frame, textvariable=self.cap_spec_hirelings_var)
-        self.entry_cap_spec_hirelings.grid(row=9, column=1, sticky="w", padx=PADX, pady=PADY)
-
+        widget_extlabel(self.bonus_frame, "Melee Attack Bonus:", 0, 0, var=self.strength_atck_mod_var, owner=self, name_label="lbl_strength_atck_bonus", name_value="entry_strength_atck_bonus")
+        widget_extlabel(self.bonus_frame, "Melee Damage Bonus:", 1, 0, var=self.strength_damage_mod_var, owner=self, name_label="lbl_strength_damage_bonus", name_value="entry_strength_damage_bonus")
+        widget_extlabel(self.bonus_frame, "Carry Capacity Bonus:", 2, 0, var=self.carry_capacity_mod_var, owner=self, name_label="lbl_carry_capacity_bonus", name_value="entry_carry_capacity_bonus")
+        widget_extlabel(self.bonus_frame, "Door Crack Bonus:", 3, 0, var=self.door_crack_mod_var, owner=self, name_label="lbl_door_crack_bonus", name_value="entry_door_crack_bonus")
+        widget_extlabel(self.bonus_frame, "Ranged Attack Bonus:", 4, 0, var=self.ranged_atck_mod_var, owner=self, name_label="lbl_ranged_atk_bonus", name_value="entry_ranged_atk_bonus")
+        widget_extlabel(self.bonus_frame, "AC Bonus:", 5, 0, var=self.ac_mod_var, owner=self, name_label="lbl_ac_bonus", name_value="entry_ac_bonus")
+        widget_extlabel(self.bonus_frame, "HP Bonus:", 6, 0, var=self.hp_mod_var, owner=self, name_label="lbl_hp_bonus", name_value="entry_hp_bonus")
+        widget_extlabel(self.bonus_frame, "Raise Dead Modifier:", 7, 0, var=self.raise_dead_mod_var, owner=self, name_label="lbl_raise_dead_mod", name_value="entry_raise_dead_mod")
+        widget_extlabel(self.bonus_frame, "Max Additional Languages:", 8, 0, var=self.max_add_langs_var, owner=self, name_label="lbl_max_add_langs", name_value="entry_max_add_langs")
+        widget_extlabel(self.bonus_frame, "Special Hirelings Cap:", 9, 0, var=self.cap_spec_hirelings_var, owner=self, name_label="lbl_cap_spec_hirelings", name_value="entry_cap_spec_hirelings")
+        
         # Stats / Other panels
         self.stats_frame = ttk.LabelFrame(self.root, text="Stats / Derived", borderwidth=5, padding=(6, 6), style="Standard.TFrame")
-        self.stats_frame.grid(row=1, column=2, padx=10, pady=10, sticky="nsew")
+        self.stats_frame.grid(row=1, column=2, padx=PADX, pady=PADY, sticky="nsew")
 
         # Create stat labels and values
-        self.lbl_hp = ttk.Label(self.stats_frame, text="Hit Points max.:", style="Standard.TLabel")
-        self.lbl_hp.grid(row=0, column=0, sticky="w", padx=PADX, pady=PADY)
-        self.entry_hp = ttk.Label(self.stats_frame, textvariable=self.hp_var)
-        self.entry_hp.grid(row=0, column=1, sticky="w", padx=PADX, pady=PADY)
+        widget_extlabel(self.stats_frame, "Hit Points max.:", 0, 0, var=self.hp_var, owner=self, name_label="lbl_hp", name_value="entry_hp")
         self.btn_rollhp = ttk.Button(self.stats_frame, text="Roll HP", style="Standard.TButton", command=lambda: roll_starting_hp(self.new_player))
         self.btn_rollhp.grid(row=0, column=2, sticky="e", padx=PADX, pady=PADY)
         widget_checkbutton(self.stats_frame, "Full TP on Level 1", 0, 3, self.chk_opt_fullhplvl1_var)
-
-        self.lbl_hp_current = ttk.Label(self.stats_frame, text="Hit Points current:", style="Standard.TLabel")
-        self.lbl_hp_current.grid(row=1, column=0, sticky="w", padx=PADX, pady=PADY)
-        self.entry_hp_current = ttk.Label(self.stats_frame, textvariable=self.hp_current_var)
-        self.entry_hp_current.grid(row=1, column=1, sticky="w", padx=PADX, pady=PADY)
+        widget_extlabel(self.stats_frame, "Hit Points current:", 1, 0, var=self.hp_current_var, owner=self, name_label="lbl_hp_current", name_value="entry_hp_current")
         self.btn_modify_hp = ttk.Button(self.stats_frame, text="Modify HP", style="Standard.TButton", command=lambda: modify_hp(self.hp_modify_var.get(), self.new_player))
         self.btn_modify_hp.grid(row=1, column=2, sticky="e", padx=PADX, pady=PADY)
         self.sbx_modify_hp = ttk.Spinbox(self.stats_frame, from_=-100, to=100, textvariable=self.hp_modify_var, width=5)
         self.sbx_modify_hp.grid(row=1, column=3, sticky="e", padx=PADX, pady=PADY)
-
-
-        self.lbl_player_state = ttk.Label(self.stats_frame, text="State:", style="Standard.TLabel")
-        self.lbl_player_state.grid(row=2, column=0, sticky="w", padx=PADX, pady=PADY)
-        self.entry_player_state = ttk.Label(self.stats_frame, textvariable=self.player_state_var)
-        self.entry_player_state.grid(row=2, column=1, sticky="w", padx=PADX, pady=PADY)
-
-        self.lbl_save_throw = ttk.Label(self.stats_frame, text="Saving Throw:", style="Standard.TLabel")
-        self.lbl_save_throw.grid(row=3, column=0, sticky="w", padx=PADX, pady=PADY)
-        self.entry_save_throw = ttk.Label(self.stats_frame, textvariable=self.save_throw_var)
-        self.entry_save_throw.grid(row=3, column=1, sticky="w", padx=PADX, pady=PADY)
-
-        self.lbl_ac = ttk.Label(self.stats_frame, text="Armor Class (AC):", style="Standard.TLabel")
-        self.lbl_ac.grid(row=4, column=0, sticky="w", padx=PADX, pady=PADY)
-        self.entry_ac = ttk.Label(self.stats_frame, textvariable=self.ac_var)
-        self.entry_ac.grid(row=4, column=1, sticky="w", padx=PADX, pady=PADY)
-
-        self.lbl_darkvision = ttk.Label(self.stats_frame, text="Darkvision:", style="Standard.TLabel")
-        self.lbl_darkvision.grid(row=5, column=0, sticky="w", padx=PADX, pady=PADY)
-        self.entry_darkvision = ttk.Label(self.stats_frame, textvariable=self.darkvision_var)
-        self.entry_darkvision.grid(row=5, column=1, sticky="w", padx=PADX, pady=PADY)
-
-        self.lbl_parry = ttk.Label(self.stats_frame, text="Parry:", style="Standard.TLabel")
-        self.lbl_parry.grid(row=6, column=0, sticky="w", padx=PADX, pady=PADY)
-        self.entry_parry = ttk.Label(self.stats_frame, textvariable=self.parry_var)
-        self.entry_parry.grid(row=6, column=1, sticky="w", padx=PADX, pady=PADY)
-
-        self.lbl_add_langs = ttk.Label(self.stats_frame, text="Languages:", style="Standard.TLabel")
-        self.lbl_add_langs.grid(row=7, column=0, sticky="w", padx=PADX, pady=PADY)
-        self.entry_add_langs = ttk.Label(self.stats_frame, textvariable=self.languages_var)
-        self.entry_add_langs.grid(row=7, column=1, sticky="w", padx=PADX, pady=PADY)
-
-        self.lbl_immunities = ttk.Label(self.stats_frame, text="Immunities:", style="Standard.TLabel")
-        self.lbl_immunities.grid(row=8, column=0, sticky="w", padx=PADX, pady=PADY)
-        self.entry_immunities = ttk.Label(self.stats_frame, textvariable=self.immunities_var)
-        self.entry_immunities.grid(row=8, column=1, sticky="w", padx=PADX, pady=PADY)
-
-        self.lbl_special_abilities = ttk.Label(self.stats_frame, text="Special Abilities:", style="Standard.TLabel")
-        self.lbl_special_abilities.grid(row=9, column=0, sticky="w", padx=PADX, pady=PADY)
-
+        widget_extlabel(self.stats_frame, "State:", 2, 0, var=self.player_state_var, owner=self, name_label="lbl_player_state", name_value="entry_player_state")
+        widget_extlabel(self.stats_frame, "Saving Throw:", 3, 0, var=self.save_throw_var, owner=self, name_label="lbl_save_throw", name_value="entry_save_throw")
+        widget_extlabel(self.stats_frame, "Armor Class (AC):", 4, 0, var=self.ac_var, owner=self, name_label="lbl_ac", name_value="entry_ac")
+        widget_extlabel(self.stats_frame, "Darkvision:", 5, 0, var=self.darkvision_var, owner=self, name_label="lbl_darkvision", name_value="entry_darkvision")
+        widget_extlabel(self.stats_frame, "Parry:", 6, 0, var=self.parry_var, owner=self, name_label="lbl_parry", name_value="entry_parry")
+        widget_extlabel(self.stats_frame, "Languages:", 7, 0, var=self.languages_var, owner=self, name_label="lbl_add_langs", name_value="entry_add_langs")
+        widget_extlabel(self.stats_frame, "Immunities:", 8, 0, var=self.immunities_var, owner=self, name_label="lbl_immunities", name_value="entry_immunities")
+        widget_label(self.stats_frame, "Special Abilities:", 9, 0, owner=self, name_label="lbl_special_abilities")
+        
         # Use scrolledtext for special abilities
         special_abilities_txt = scrolledtext.ScrolledText(
         self.stats_frame,
@@ -408,56 +264,34 @@ class App:
         width=40,        # visible column width (char-based)
         font=("TkDefaultFont", 10)
         )
-        special_abilities_txt.grid(row=9, column=1, columnspan=2, sticky="nsew", padx=PADX, pady=PADY)
+        special_abilities_txt.grid(row=9, column=1, columnspan=4, sticky="nsew", padx=PADX, pady=PADY)
 
 
         # Thief skills panel
         self.thief_frame = ttk.LabelFrame(self.root, text="Thief Skills", borderwidth=5, padding=(6, 6), style="Standard.TFrame")
-        self.thief_frame.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
+        self.thief_frame.grid(row=2, column=0, padx=PADX, pady=PADY, sticky="nsew")
   
         # Create thief skill labels and values
-        self.lbl_delicate_tasks = ttk.Label(self.thief_frame, text="Delicate Tasks:", style="Standard.TLabel")
-        self.lbl_delicate_tasks.grid(row=0, column=0, sticky="w", padx=PADX, pady=PADY)
-        self.entry_delicate_tasks = ttk.Label(self.thief_frame, textvariable=self.delicate_tasks_var)
-        self.entry_delicate_tasks.grid(row=0, column=1, sticky="w", padx=PADX, pady=PADY)
-
-        self.lbl_climb_walls = ttk.Label(self.thief_frame, text="Climb Walls:", style="Standard.TLabel")
-        self.lbl_climb_walls.grid(row=1, column=0, sticky="w", padx=PADX, pady=PADY)
-        self.entry_climb_walls = ttk.Label(self.thief_frame, textvariable=self.climb_walls_var)
-        self.entry_climb_walls.grid(row=1, column=1, sticky="w", padx=PADX, pady=PADY)
-
-        self.lbl_hear_sounds = ttk.Label(self.thief_frame, text="Hear Sounds:", style="Standard.TLabel")
-        self.lbl_hear_sounds.grid(row=2, column=0, sticky="w", padx=PADX, pady=PADY)
-        self.entry_hear_sounds = ttk.Label(self.thief_frame, textvariable=self.hear_sounds_var)
-        self.entry_hear_sounds.grid(row=2, column=1, sticky="w", padx=PADX, pady=PADY)
-
-        self.lbl_hide_in_shadows = ttk.Label(self.thief_frame, text="Hide in Shadows:", style="Standard.TLabel")
-        self.lbl_hide_in_shadows.grid(row=3, column=0, sticky="w", padx=PADX, pady=PADY)
-        self.entry_hide_in_shadows = ttk.Label(self.thief_frame, textvariable=self.hide_in_shadows_var)
-        self.entry_hide_in_shadows.grid(row=3, column=1, sticky="w", padx=PADX, pady=PADY)
-
-        self.lbl_move_silently = ttk.Label(self.thief_frame, text="Move Silently:", style="Standard.TLabel")
-        self.lbl_move_silently.grid(row=4, column=0, sticky="w", padx=PADX, pady=PADY)
-        self.entry_move_silently = ttk.Label(self.thief_frame, textvariable=self.move_silently_var)
-        self.entry_move_silently.grid(row=4, column=1, sticky="w", padx=PADX, pady=PADY)
-
-        self.lbl_open_locks = ttk.Label(self.thief_frame, text="Open Locks:", style="Standard.TLabel")
-        self.lbl_open_locks.grid(row=5, column=0, sticky="w", padx=PADX, pady=PADY)
-        self.entry_open_locks = ttk.Label(self.thief_frame, textvariable=self.open_locks_var)
-        self.entry_open_locks.grid(row=5, column=1, sticky="w", padx=PADX, pady=PADY)
+        widget_extlabel(self.thief_frame, "Delicate Tasks:", 0, 0, var=self.delicate_tasks_var, owner=self, name_label="lbl_delicate_tasks", name_value="entry_delicate_tasks")
+        widget_extlabel(self.thief_frame, "Climb Walls:", 1, 0, var=self.climb_walls_var, owner=self, name_label="lbl_climb_walls", name_value="entry_climb_walls")
+        widget_extlabel(self.thief_frame, "Hear Sounds:", 2, 0, var=self.hear_sounds_var, owner=self, name_label="lbl_hear_sounds", name_value="entry_hear_sounds")
+        widget_extlabel(self.thief_frame, "Hide in Shadows:", 3, 0, var=self.hide_in_shadows_var, owner=self, name_label="lbl_hide_in_shadows", name_value="entry_hide_in_shadows")
+        widget_extlabel(self.thief_frame, "Move Silently:", 4, 0, var=self.move_silently_var, owner=self, name_label="lbl_move_silently", name_value="entry_move_silently")
+        widget_extlabel(self.thief_frame, "Open Locks:", 5, 0, var=self.open_locks_var, owner=self, name_label="lbl_open_locks", name_value="entry_open_locks") 
 
         # Weapons & Armor frame
         self.weapons_frame = ttk.LabelFrame(self.root, text="Weapons & Armor", borderwidth=5, padding=(6,6), style="Standard.TFrame")
-        self.weapons_frame.grid(row=2, column=1, padx=10, pady=10, sticky="nsew")
+        self.weapons_frame.grid(row=2, column=1, padx=PADX, pady=PADY, sticky="nsew")
 
         # Inventory frame
         self.inventory_frame = ttk.LabelFrame(self.root, text="Inventory", borderwidth=5, padding=(6,6), style="Standard.TFrame")
-        self.inventory_frame.grid(row=2, column=2, padx=10, pady=10, sticky="nsew")
+        self.inventory_frame.grid(row=2, column=2, padx=PADX, pady=PADY, sticky="nsew")
 
         ttk.Label(self.inventory_frame, text="Coins:").grid(row=0, column=0, sticky="w", padx=PADX, pady=PADY)
         ttk.Label(self.inventory_frame, textvariable=self.coins_var).grid(row=0, column=1, sticky="w", padx=PADX, pady=PADY)
+
+
         ttk.Label(self.inventory_frame, text="Treasure:").grid(row=1, column=0, sticky="nw", padx=PADX, pady=PADY)
-        
         # Use scrolledtext for treasure
         treasure_txt = scrolledtext.ScrolledText(
         self.inventory_frame,
@@ -467,8 +301,9 @@ class App:
         font=("TkDefaultFont", 10)
         )
         treasure_txt.grid(row=1, column=1, sticky="nsew", padx=PADX, pady=PADY)
+
+
         ttk.Label(self.inventory_frame, text="Inventory:").grid(row=2, column=0, sticky="nw", padx=PADX, pady=PADY)
-        
         # Use scrolledtext for inventory
         inventory_txt = scrolledtext.ScrolledText(
         self.inventory_frame,
@@ -481,7 +316,7 @@ class App:
 
         # Footerframe (if needed in future)
         self.footer_frame = ttk.Frame(self.root, borderwidth=5, padding=(6,6), style="Standard.TFrame")
-        self.footer_frame.grid(row=3, column=0, columnspan=3, padx=10, pady=10, sticky="ew")
+        self.footer_frame.grid(row=3, column=0, columnspan=3, padx=PADX, pady=PADY, sticky="ew")
 
         # place Save / Load buttons inside footer_frame on a new row so they're visually nearby
         self.btn_new = ttk.Button(self.footer_frame, text="New", command=lambda: new_characterobj(self))

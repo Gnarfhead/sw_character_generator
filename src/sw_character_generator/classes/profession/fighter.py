@@ -38,15 +38,15 @@ def apply_fighter_dependent_modifiers(character):
 
     # Calculate parry based on DEX
     if character.stat_dex == 14:
-        character.parry += -1
+        character.parry = -1
     elif character.stat_dex == 15:
-        character.parry += -2
+        character.parry = -2
     elif character.stat_dex == 16:
-        character.parry += -3
+        character.parry = -3
     elif character.stat_dex == 17:
-        character.parry += -4
+        character.parry = -4
     elif character.stat_dex == 18:
-        character.parry += -5
+        character.parry = -5
 
     # Calculate total HP
     character.hp = wuerfle_1d10(1) + character.hp_mod
