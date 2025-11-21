@@ -49,9 +49,9 @@ def apply_fighter_dependent_modifiers(character):
         character.parry = -5
 
     # Calculate total HP
-    character.hp = wuerfle_1d10(1) + character.hp_mod
-    if character.hp < 1:
-        character.hp = 1
+    #character.hp = wuerfle_1d10(1) + character.hp_mod
+    #if character.hp < 1:
+    #    character.hp = 1
 
     # Calculate XP bonus
     if character.stat_str >= 13:

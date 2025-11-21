@@ -21,6 +21,7 @@ class PlayerClass:
     xp: int = 0
     hp: int = 0
     hp_current: int = 0
+    hp_last_roll: int = 0
     save_throw: int = 0
     save_bonuses: tuple[str, ...] = field(default_factory=tuple)
     immunity: tuple[str, ...] = field(default_factory=tuple)
@@ -107,7 +108,7 @@ class PlayerClass:
             f"Hide in Shadows: {self.hide_in_shadows}%, Move Silently: {self.move_silently}%, Open Locks: {self.open_locks}%, Surprised: {self.surprised}:6\n"
             f"Allowed Alignment: {self.allowed_alignment}, Allowed Races: {self.allowed_races}\n"
             f"Allowed Weapon: {self.allowed_weapon}, Allowed Armor: {self.allowed_armor}\n"
-            f"Character Created: {self.character_created}\n"
+            f"Character Created: {self.character_created}, HP Last Roll: {self.hp_last_roll}\n"
         )
     
     def to_dict(self):
@@ -130,6 +131,7 @@ class PlayerClass:
             "xp": self.xp,
             "hp": self.hp,
             "hp_current": self.hp_current,
+            "hp_last_roll": self.hp_last_roll,
             "save_throw": self.save_throw,
             "save_bonuses": list(self.save_bonuses),
             "immunity": list(self.immunity),
@@ -229,6 +231,7 @@ class PlayerClass:
         self.xp = data.get("xp", self.xp)
         self.hp = data.get("hp", self.hp)
         self.hp_current = data.get("hp_current", self.hp_current)
+        self.hp_last_roll = data.get("hp_last_roll", self.hp_last_roll)
         self.save_throw = data.get("save_throw", self.save_throw)
         self.save_bonuses = tuple(data.get("save_bonuses", self.save_bonuses))
         self.immunity = tuple(data.get("immunity", self.immunity))

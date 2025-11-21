@@ -2,13 +2,13 @@
 from sw_character_generator.functions.choosen_profession import choosen_profession_modifiers
 from sw_character_generator.gui.gui_functions.gui_update_view_from_model import update_view_from_model
 
-def on_profession_change(app, *args):
+def on_profession_change(app, character, *args):
     """Handle profession combobox changes."""
     if getattr(app, "is_updating", False):
         print("DEBUG on_profession_change: Profession change ignored due to is_updating flag.")
         return
-    name = app.profession_var.get()
-    if not name:
+    name = app.profession_var.get() # get selected profession name
+    if not name: # no profession selected
         print("DEBUG on_profession_change: No profession selected.")
         return
     try:
@@ -22,6 +22,11 @@ def on_profession_change(app, *args):
         app.lbl_profession.config(style="Standard.TLabel")
         app.lbl_race.config(style="Attention.TLabel")
         app.lbl_alignment.config(style="Attention.TLabel")
+        app.new_player.hp = 0 # reset HP values
+        app.new_player.hp_current = 0 # reset current HP
+        app.new_player.hp_last_roll = 0 # reset last rolled HP
+        app.btn_rollhp.config(state="normal")
+        app.btn_modify_hp.config(state="normal")
         refresh_race_values(app) # update race combobox values
         refresh_alignment_values(app) # update alignment combobox values
         update_view_from_model(app) # refresh GUI to reflect model changes

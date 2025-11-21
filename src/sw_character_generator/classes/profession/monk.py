@@ -55,9 +55,9 @@ def apply_monk_dependent_modifiers(character):
 
 
     # Calculate total HP
-    character.hp = wuerfle_1d4(1) + character.hp_mod
-    if character.hp < 1:
-        character.hp = 1
+    #character.hp = wuerfle_1d4(1) + character.hp_mod
+    #if character.hp < 1:
+    #    character.hp = 1
 
     # Calculate XP bonus
     if character.stat_wis >= 13:

@@ -11,7 +11,7 @@ import tkinter.scrolledtext as scrolledtext
 from tkinter import messagebox
 
 from src.sw_character_generator.classes.playerclass import PlayerClass
-from sw_character_generator.functions.manage_hp import modify_hp, roll_starting_hp, set_roll_hp_button
+from sw_character_generator.functions.manage_hp import modify_hp, set_starting_hp, set_roll_hp_button
 from src.sw_character_generator.functions.character_handling import save_character, load_character
 from src.sw_character_generator.gui.gui_functions.gui_new_character import apply_character, new_characterobj
 from .gui_functions.gui_dice_roller import dice_roller
@@ -85,6 +85,7 @@ class App:
         self.player_state_var = tk.StringVar(master=self.root, value="Normal")
         self.hp_var = tk.IntVar(master=self.root, value=0)
         self.hp_current_var = tk.IntVar(master=self.root, value=0)
+        self.hp_last_roll_var = tk.IntVar(master=self.root, value=0)
         self.hp_modify_var = tk.IntVar(master=self.root, value=0)
         self.save_throw_var = tk.IntVar(master=self.root, value=0)
         self.ac_var = tk.IntVar(master=self.root, value=0)
@@ -172,7 +173,7 @@ class App:
         widget_entry(self.top_frame, "Level:", 0, 4, var=self.level_var, owner=self, name_label="lbl_level", name_entry="entry_level")
 
         # Row 1
-        widget_combobox(self.top_frame, "Profession:", 1, 0, self.profession_var, ["Fighter", "Cleric", "Thief", "Wizard", "Ranger", "Paladin", "Druid", "Assassin", "Monk"], owner=self, name_label="lbl_profession", name_combo="cb_profession")
+        widget_combobox(self.top_frame, "Profession:", 1, 0, self.profession_var, ["Fighter", "Cleric", "Thief", "Wizard", "Ranger", "Paladin", "Druid", "Assassin", "Monk"], state="disabled", owner=self, name_label="lbl_profession", name_combo="cb_profession")
         widget_combobox(self.top_frame, "Race:", 1, 2, self.race_var, list(getattr(self.new_player, "allowed_races", ())), state="disabled", owner=self, name_label="lbl_race", name_combo="cb_race")
         widget_combobox(self.top_frame, "Gender:", 1, 4, self.gender_var, ["Male", "Female", "Other"], state="active", owner=self, name_label="lbl_gender", name_combo="cb_gender")
    
@@ -239,11 +240,11 @@ class App:
 
         # Create stat labels and values
         widget_extlabel(self.stats_frame, "Hit Points max.:", 0, 0, var=self.hp_var, owner=self, name_label="lbl_hp", name_value="entry_hp")
-        self.btn_rollhp = ttk.Button(self.stats_frame, text="Roll HP", style="Standard.TButton", command=lambda: roll_starting_hp(self.new_player))
+        self.btn_rollhp = ttk.Button(self.stats_frame, text="Roll HP", style="Standard.TButton", command=lambda: set_starting_hp(self, self.new_player), state="disabled")
         self.btn_rollhp.grid(row=0, column=2, sticky="e", padx=PADX, pady=PADY)
         widget_checkbutton(self.stats_frame, "Full TP on Level 1", 0, 3, self.chk_opt_fullhplvl1_var)
         widget_extlabel(self.stats_frame, "Hit Points current:", 1, 0, var=self.hp_current_var, owner=self, name_label="lbl_hp_current", name_value="entry_hp_current")
-        self.btn_modify_hp = ttk.Button(self.stats_frame, text="Modify HP", style="Standard.TButton", command=lambda: modify_hp(self.hp_modify_var.get(), self.new_player))
+        self.btn_modify_hp = ttk.Button(self.stats_frame, text="Modify HP", style="Standard.TButton", command=lambda: modify_hp(self.hp_modify_var.get(), self.new_player), state="disabled")
         self.btn_modify_hp.grid(row=1, column=2, sticky="e", padx=PADX, pady=PADY)
         self.sbx_modify_hp = ttk.Spinbox(self.stats_frame, from_=-100, to=100, textvariable=self.hp_modify_var, width=5)
         self.sbx_modify_hp.grid(row=1, column=3, sticky="e", padx=PADX, pady=PADY)

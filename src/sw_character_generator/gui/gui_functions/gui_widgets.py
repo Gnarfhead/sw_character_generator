@@ -3,7 +3,7 @@ import tkinter.ttk as ttk
 
 PADX = 8
 PADY = 6
-WIDTH = 5
+WIDTH = 10
 ENTRY_WIDTH = 25
 COLUMNSPAN_DEFAULT = 1
 
