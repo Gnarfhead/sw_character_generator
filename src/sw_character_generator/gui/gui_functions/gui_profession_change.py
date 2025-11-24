@@ -3,7 +3,7 @@ from sw_character_generator.functions.choosen_profession import choosen_professi
 from sw_character_generator.functions.manage_xp import calculate_next_level_xp, calculate_xp_bonus
 from sw_character_generator.gui.gui_functions.gui_update_view_from_model import update_view_from_model
 
-def on_profession_change(app, *args):
+def on_profession_change(app):
     """Handle profession combobox changes."""
     if getattr(app, "is_updating", False):
         print("DEBUG on_profession_change: Profession change ignored due to is_updating flag.")
