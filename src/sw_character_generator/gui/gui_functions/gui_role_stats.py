@@ -139,7 +139,8 @@ def role_stats(app, character, chk_opt_4d6dl_var, btn_roll_stats=None, btn_switc
         character.stat_char = wuerfle_3d6("charisma", drop_low=False)
 
     # Update buttons if provided
-    if btn_roll_stats is not None:
+    if btn_roll_stats is not None: # Update roll stats button
+        print("DEBUG gui_role_stats: Button found, updating...")
         btn_roll_stats.config(text="Stats Rolled", state="disabled") # Disable roll button after rolling
         app.chk_opt_4d6dl.config(state="disabled") # Disable 4d6 drop lowest option
         btn_switch_stats.config(state="normal") # Enable switch stats button
@@ -147,12 +148,15 @@ def role_stats(app, character, chk_opt_4d6dl_var, btn_roll_stats=None, btn_switc
         app.top_frame.config(style="Attention.TFrame") # Highlight top frame to indicate next step
         app.lbl_profession.config(style="Attention.TLabel") # Highlight profession label
         app.attr_frame.config(style="Standard.TFrame") # Reset attribute frame style in case it was highlighted before
+        
 
     # Starting coins: roll 3d6 and multiply by 10
     print("DEBUG gui_role_stats: Rolling starting coins (3d6 * 10):")
     character.coins = wuerfle_3d6(str_desc="Starting Coins") * 10
+    print("DEBUG gui_role_stats: Starting coins rolled:", character.coins)
 
     # Analyze stat modifiers and apply to character
+    print("DEBUG gui_role_stats: Analyzing stat modifiers and applying to character...")
     analyze_mod_str(character) # Apply strength modifier
     analyze_mod_dex(character) # Apply dexterity modifier
     analyze_mod_con(character) # Apply constitution modifier
@@ -162,6 +166,7 @@ def role_stats(app, character, chk_opt_4d6dl_var, btn_roll_stats=None, btn_switc
     calculate_xp_bonus(app, character)
 
     # Update status and GUI
+    print("DEBUG gui_role_Stats: Set Frame styles and status message...")
     app.status_var.set("Stats and start coins rolled.")
 
     # Update the GUI from the model

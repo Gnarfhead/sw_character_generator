@@ -65,11 +65,11 @@ def widget_button(parent, text, row, column, command=None, state=None, *, owner=
     _assign(owner, {name_button: btn})
     return btn
 
-def widget_checkbutton(parent, text, row, column, var=None, *, owner=None, name=None, **grid_opts):
+def widget_checkbutton(parent, text, row, column, var=None, *, owner=None, name_label=None, name_checkbutton=None, **grid_opts):
     """Create a labeled Checkbutton widget in a grid."""
     lbl = ttk.Label(parent, text=text)
     lbl.grid(row=row, column=column, sticky="w", padx=PADX, pady=PADY)
     chk = ttk.Checkbutton(parent, variable=var)
     chk.grid(row=row, column=column + 1, sticky="ew", padx=PADX, pady=PADY, **grid_opts)
-    _assign(owner, {"checkbutton": chk, "name": name})
+    _assign(owner, {name_label: lbl, name_checkbutton: chk})
     return lbl, chk

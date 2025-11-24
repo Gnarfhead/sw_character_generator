@@ -72,24 +72,58 @@ def calculate_xp_bonus(app, character=None):
     print(f"DEBUG calculate_xp_bonus: Total XP bonus calculated: {player.xp_bonus}")
 
     # Update the GUI to reflect the new XP bonus
-    if hasattr(app, "new_player"):
-        update_view_from_model(app)
-    
+    update_view_from_model(app)
 
-def add_xp(app, amount):
-    """Fügt dem Charakter XP hinzu und aktualisiert die Ansicht."""
+
+def calculate_next_level_xp(app, character=None):
+    """Berechnet die XP-Anforderungen für die nächste Stufe und aktualisiert die Ansicht."""
+
+    # Determine the character to use
     if hasattr(app, "new_player"):
         player = app.new_player
-        current_level = player.level
-        next_level = player.xp_progression.get(current_level + 1)
-        #next_level_xp = 
-        print(f"DEBUG add_xp: Current level: {current_level}")
-        
-        
-        player.xp = max(0, player.xp + amount) # Ensure XP does not go below 0
-        
-        
-        print(f"DEBUG add_xp: Added {amount} XP. New total: {player.xp}")
-        update_view_from_model(app)
+    elif character is not None:
+        player = character
     else:
-        raise ValueError("ERROR add_xp: No character available to add XP to.")
+        raise ValueError("ERROR calculate_next_level_xp: No character provided for XP calculation.")
+
+    # Determine current and next level XP requirements
+    current_level = player.level
+    print("DEBUG add_xp: Current level is:", current_level)
+    next_level = player.level + 1
+    print("DEBUG add_xp: Next level is:", next_level)
+    next_level_xp = player.xp_progression.get(next_level, None)  # XP required for the level after next
+    print("DEBUG add_xp: Next level XP requirement is:", next_level_xp)
+    app.nextlevel_var.set(next_level_xp)
+    print("DEBUG add_xp: Current XP:", player.xp)
+
+    # Calculate the XP needed for the next level
+    update_view_from_model(app)
+
+
+def add_xp(app, amount = 0, character=None):
+    """Fügt dem Charakter XP hinzu und aktualisiert die Ansicht."""
+
+    # Determine the character to use
+    if hasattr(app, "new_player"):
+        player = app.new_player
+    elif character is not None:
+        player = character
+    else:
+        raise ValueError("ERROR add_xp: No character provided for XP calculation.")
+
+    # Apply XP bonus
+    print("DEBUG add_xp: Base amount to add:", amount)
+    modified_amount = round(amount * (1 + player.xp_bonus / 100), 0) # Apply XP bonus
+    print("DEBUG add_xp: Modified amount and type after applying bonus and rounding:", modified_amount, type(modified_amount))
+    modified_amount = int(modified_amount)
+    print("DEBUG add_xp: Modified amount and type after conversion to integer:", modified_amount, type(modified_amount))
+
+    # Update player's XP
+    print("DEBUG add_xp: Adding amount:", amount)
+    player.xp = max(0, player.xp + modified_amount) # Ensure XP does not go below 0
+    print("DEBUG add_xp: New XP:", player.xp)
+    app.status_var.set(f"Added {modified_amount} XP (base: {amount}, bonus: {player.xp_bonus}%). New XP: {player.xp}.")
+    app.spin_add_xp.set(0)  # Reset the add XP spinbox
+
+    # Update the GUI to reflect the new XP values
+    update_view_from_model(app)

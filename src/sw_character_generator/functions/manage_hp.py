@@ -31,6 +31,9 @@ def modify_hp(delta: int, app, character=None):
         print(f"DEBUG modify_hp: Decreasing HP by {abs(delta)}.")
         player.hp_current = max(player.hp_current + delta, 0) # Prevent going below 0 HP
 
+    # Reset the modify HP spinbox to 0
+    app.spin_modify_hp.set(0)  # Reset the spinbox to 0 after modification
+
     # Set player player_state based on current HP percentage
     if player.hp_current <= 0:
         print("DEBUG modify_hp: Player HP is 0 or less; setting state to Dead.")
@@ -97,12 +100,13 @@ def set_starting_hp(app, character:PlayerClass):
         character.hp = starting_hp # Set max HP
         character.hp_current = starting_hp # Set current HP to max HP
         character.player_state = "Healthy"
-        print(f"DEBUG set_starting_hp: Rolled starting HP: {starting_hp} (Hit Die: d{hit_die}, CON Mod: {character.hp_mod})")
+        print(f"DEBUG set_starting_hp: Rolled starting HP: {starting_hp} (Hit Die: d{hit_die}, Rolled: {rolled_hp}, CON Mod: {character.hp_mod})")
 
     app.status_var.set(f"Starting HP set to {starting_hp}")
-    update_view_from_model(app)
     app.btn_rollhp.config(state="disabled")
-    #app.chk_opt_fullhplvl1_var.config(state="disabled")
+    app.chk_opt_fullhplvl1.config(state="disabled")
+    app.stats_frame.config(style="Standard.TFrame") # Reset stats frame style in case it was highlighted before
+    update_view_from_model(app)
     return starting_hp
 
 def recalculate_hp(character: PlayerClass):

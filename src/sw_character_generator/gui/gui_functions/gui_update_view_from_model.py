@@ -23,9 +23,9 @@ def update_view_from_model(app):
             continue
 
         if field == "main_stats":
-            print(f"DEBUG update_view_from_model: Formatting main_stats value: {value}")
+            #print(f"DEBUG update_view_from_model: Formatting main_stats value: {value}")
             value = _format_change_mainstats(value)
-            print(f"DEBUG update_view_from_model: Formatted main_stats value: {value}")
+            #print(f"DEBUG update_view_from_model: Formatted main_stats value: {value}")
 
         # Normalize numeric targets
         if isinstance(var, (tk.IntVar, tk.DoubleVar)):
