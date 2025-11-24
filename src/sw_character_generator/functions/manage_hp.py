@@ -5,22 +5,64 @@ from sw_character_generator.gui import app
 from sw_character_generator.gui.gui_functions.gui_update_view_from_model import update_view_from_model
 
 
-def modify_hp(delta: int, character: PlayerClass):
+def modify_hp(delta: int, app, character=None):
     """Adjust current HP by delta; clamp; set state."""
-    current = character.hp_current
-    maximum = character.hp_max
-    new_value = max(0, min(current + delta, maximum))
-    character.hp_current = new_value
-    if new_value <= 0:
-        character.state = "Dead"
-    elif new_value <= maximum * 0.25:
-        character.state = "Critical"
-    elif new_value <= maximum * 0.5:
-        character.state = "Injured"
-    elif new_value <= maximum * 0.75:
-        character.state = "Wounded"
+
+    # Determine the character to use
+    if hasattr(app, "new_player"):
+        player = app.new_player
+    elif character is not None:
+        player = character
     else:
-        character.state = "Healthy"
+        raise ValueError("ERROR modify_hp: No character provided for HP bonus calculation.")
+
+    # Modify current HP
+    current = player.hp_current # Current HP
+    print(f"DEBUG modify_hp: Current HP before modification: {current}/{player.hp}")
+    maximum = player.hp # Max HP
+    print(f"DEBUG modify_hp: Max HP: {maximum}")
+    print(f"DEBUG modify_hp: Modifying HP by {delta}.")
+
+    # Adjust current HP based on delta
+    if delta >= 0:
+        print(f"DEBUG modify_hp: Increasing HP by {delta}.")
+        player.hp_current = min(player.hp_current + delta, maximum) # Prevent exceeding max HP
+    else:
+        print(f"DEBUG modify_hp: Decreasing HP by {abs(delta)}.")
+        player.hp_current = max(player.hp_current + delta, 0) # Prevent going below 0 HP
+
+    # Set player player_state based on current HP percentage
+    if player.hp_current <= 0:
+        print("DEBUG modify_hp: Player HP is 0 or less; setting state to Dead.")
+        player.player_state = "Dead"
+        app.entry_player_state.config(style="Attention.TLabel")
+    elif player.hp_current <= player.hp * 0.25:
+        print("DEBUG modify_hp: Player HP is 25% or less; setting state to Critical.")
+        player.player_state = "Critical"
+        app.entry_player_state.config(style="Attention.TLabel")
+    elif player.hp_current <= player.hp * 0.5:
+        print("DEBUG modify_hp: Player HP is 50% or less; setting state to Injured.")
+        player.player_state = "Injured"
+        app.entry_player_state.config(style="Warning.TLabel")
+    elif player.hp_current <= player.hp * 0.75:
+        print("DEBUG modify_hp: Player HP is 75% or less; setting state to Wounded.")
+        player.player_state = "Wounded"
+        app.entry_player_state.config(style="Warning.TLabel")
+    else:
+        print("DEBUG modify_hp: Player HP is above 75%; setting state to Healthy.")
+        player.player_state = "Healthy"
+        app.entry_player_state.config(style="Standard.TLabel")
+
+
+    # Update the UI to reflect the new HP values
+    if hasattr(app, "new_player"): # If app has new_player attribute
+        print(f"DEBUG modify_hp: HP modified by {delta}. Current HP: {player.hp_current}/{player.hp} ({player.player_state})")
+        app.status_var.set(f"HP modified by {delta}. Current HP: {player.hp_current}/{player.hp} ({player.player_state})")
+        update_view_from_model(app)
+    else:
+        print(f"DEBUG modify_hp: HP modified by {delta}. Current HP: {player.hp_current}/{player.hp} ({player.player_state})")
+        app.status_var.set(f"HP modified by {delta}. Current HP: {player.hp_current}/{player.hp} ({player.player_state})")
+        update_view_from_model(app)
 
 def set_roll_hp_button(app, chk_starting_hp):
     """Set the roll HP button text based on checkbox state."""

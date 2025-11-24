@@ -14,7 +14,6 @@ from src.sw_character_generator.classes.playerclass import PlayerClass
 from sw_character_generator.functions.manage_hp import modify_hp, set_starting_hp, set_roll_hp_button
 from src.sw_character_generator.functions.character_handling import save_character, load_character
 from src.sw_character_generator.gui.gui_functions.gui_new_character import apply_character, new_characterobj
-from sw_character_generator.functions.manage_xp import calculate_xp_bonus
 from .gui_functions.gui_dice_roller import dice_roller
 from .gui_functions.gui_alignment_change import on_alignment_change
 from .gui_functions.gui_race_change import on_race_change
@@ -67,7 +66,6 @@ class App:
         self.god_var = tk.StringVar(master=self.root)
         self.age_var = tk.IntVar(master=self.root, value=0)
         self.xp_bonus_var = tk.IntVar(master=self.root, value=0)
-        #self.xp_bonus_var.trace_add("write", lambda *args: calculate_xp_bonus(self, self.new_player))
         self.xp_var = tk.IntVar(master=self.root, value=0)
         self.main_stats_var = tk.StringVar(master=self.root)
         self.status_var = tk.StringVar(master=self.root, value="Ready")
@@ -134,11 +132,15 @@ class App:
                         padding=8)
         style.map("Attention.TButton",
                 background=[("active", "#c82333"), ("pressed", "#e2e3e5"), ("disabled", "#e2e3e5")],)
+        
         # Labels with different styles
         style.configure("Standard.TLabel",
                         foreground="#000000")
+        style.configure("Warning.TLabel",
+                        foreground="#FA9702E4")
         style.configure("Attention.TLabel",
                         foreground="#c82333")
+        
         # Frames with different styles
         style.configure("Standard.TFrame",
                         borderwidth=2,
@@ -246,7 +248,7 @@ class App:
         self.btn_rollhp.grid(row=0, column=2, sticky="e", padx=PADX, pady=PADY)
         widget_checkbutton(self.stats_frame, "Full TP on Level 1", 0, 3, self.chk_opt_fullhplvl1_var)
         widget_extlabel(self.stats_frame, "Hit Points current:", 1, 0, var=self.hp_current_var, owner=self, name_label="lbl_hp_current", name_value="entry_hp_current")
-        self.btn_modify_hp = ttk.Button(self.stats_frame, text="Modify HP", style="Standard.TButton", command=lambda: modify_hp(self.hp_modify_var.get(), self.new_player), state="disabled")
+        self.btn_modify_hp = ttk.Button(self.stats_frame, text="Modify HP", style="Standard.TButton", command=lambda: modify_hp(self.hp_modify_var.get(), self, self.new_player), state="disabled")
         self.btn_modify_hp.grid(row=1, column=2, sticky="e", padx=PADX, pady=PADY)
         self.sbx_modify_hp = ttk.Spinbox(self.stats_frame, from_=-100, to=100, textvariable=self.hp_modify_var, width=5)
         self.sbx_modify_hp.grid(row=1, column=3, sticky="e", padx=PADX, pady=PADY)

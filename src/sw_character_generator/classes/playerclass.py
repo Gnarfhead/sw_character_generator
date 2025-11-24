@@ -10,7 +10,7 @@ class PlayerClass:
     profession: str = "Undefined"
     hp_dice: int = 0
     main_stats: tuple[str, ...] = field(default_factory=tuple)
-    player_state: str = "alive"
+    player_state: str = "Undefined"
     alignment: str = "Undefined"
     level: int = 1
     race: str = "Undefined"

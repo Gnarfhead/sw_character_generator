@@ -6,13 +6,13 @@ from sw_character_generator.gui.gui_functions.gui_update_view_from_model import 
 
 def calculate_xp_bonus(app, character=None):
     """Berechnet XP-Bonus; akzeptiert entweder App oder (fallback) Character direkt."""
-    # Auflösen des Character-Objekts
+    # Determine the character to use
     if hasattr(app, "new_player"):
         player = app.new_player
     elif character is not None:
         player = character
     else:
-        raise ValueError("No character provided for XP bonus calculation.")
+        raise ValueError("ERROR calculate_xp_bonus: No character provided for XP bonus calculation.")
     
     # General bonus calculation
     print("DEBUG calculate_xp_bonus: Calculating XP bonus for character...")    # General attribute bonuses
