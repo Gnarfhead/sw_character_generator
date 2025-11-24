@@ -44,7 +44,7 @@ def analyze_mod_str(player_character: PlayerClass):
         player_character.carry_capacity_mod = 25
         player_character.door_crack_mod = 5
     else:
-        raise ValueError("Strength stat out of bounds:", player_character.stat_str)
+        raise ValueError("DEBUG analyze_mod_str: Strength stat out of bounds:", player_character.stat_str)
 
 def analyze_mod_dex(player_character: PlayerClass):
     """Calculate dexterity based modifiers."""
@@ -58,7 +58,7 @@ def analyze_mod_dex(player_character: PlayerClass):
         player_character.ranged_atck_mod = 1
         player_character.ac_mod = 1
     else:
-        raise ValueError("Dexterity stat out of bounds:", player_character.stat_dex)
+        raise ValueError("DEBUG analyze_mod_dex: Dexterity stat out of bounds:", player_character.stat_dex)
 
     # Update AC with DEX modifier
     player_character.ac = 10 # base AC
@@ -76,7 +76,7 @@ def analyze_mod_con(player_character: PlayerClass):
         player_character.hp_mod = 1
         player_character.raise_dead_mod = 100
     else:
-        raise ValueError("Constitution stat out of bounds:", player_character.stat_con)
+        raise ValueError("DEBUG analyze_mod_con: Constitution stat out of bounds:", player_character.stat_con)
 
 def analyze_mod_int(player_character: PlayerClass):
     """Calculate intelligence based modifiers."""
@@ -153,12 +153,13 @@ def analyze_mod_int(player_character: PlayerClass):
         player_character.min_spells_per_level = 8
         player_character.max_spells_per_level = 100
     else:
-        raise ValueError("Intelligence stat out of bounds:", player_character.stat_int)
+        raise ValueError("DEBUG analyze_mod_int: Intelligence stat out of bounds:", player_character.stat_int)
     
 def analyze_mod_wis(player_character: PlayerClass):
     """Calculate wisdom based modifiers."""
-    if player_character.stat_wis >= 13:
-        player_character.xp_bonus += 5
+    if player_character.stat_wis <= 3:
+        raise ValueError("DEBUG analyze_mod_wis: Wisdom stat out of bounds:", player_character.stat_wis)
+
     
 def analyze_mod_char(player_character: PlayerClass):
     """Calculate charisma based modifiers."""
@@ -177,8 +178,5 @@ def analyze_mod_char(player_character: PlayerClass):
     elif player_character.stat_char == 18:
         player_character.cap_spec_hirelings = 7
     else:
-        raise ValueError("Charisma stat out of bounds:", player_character.stat_char)
-    
-    # Calculate XP bonus
-    if player_character.stat_char >= 13:
-        player_character.xp_bonus += 5
+        raise ValueError("DEBUG analyze_mod_char: Charisma stat out of bounds:", player_character.stat_char)
+

@@ -38,14 +38,9 @@ def apply_cleric_dependent_modifiers(character):
     character.spells_lvl8 = 0
     character.spells_lvl9 = 0
 
-    # Calculate total HP
-    #character.hp = wuerfle_1d6(1) + character.hp_mod
-    #if character.hp < 1:
-    #    character.hp = 1
-
     # Calculate XP bonus
-    if character.stat_wis >= 13:
-        character.xp_bonus += 5
+    #if character.stat_wis >= 13:
+    #    character.xp_bonus += 5
 
     # Calculate spell-related attributes
     if character.stat_wis >= 15:

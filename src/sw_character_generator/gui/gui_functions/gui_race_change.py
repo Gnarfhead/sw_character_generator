@@ -33,4 +33,4 @@ def on_race_change(app, *args):
 
     except Exception as e:
         #app.status_var.set(f"DEBUG on_race_change: Error updating race: {e}")
-        print(f"DEBUG on_race_change: Race change error: {e}")
+        print(f"ERROR on_race_change: Race change error: {e}")

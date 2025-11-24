@@ -6,7 +6,7 @@ def apply_druid_dependent_modifiers(character):
     # Set profession attributes
     character.profession = "druid"
     character.hp_dice = 6
-    character.main_stats = ("wisdom", "charisma")
+    character.main_stats = ("wisdom", "charisma",)
     character.allowed_alignment = ("neutral", "evil", "good")
     character.allowed_races = ("human",)
     character.allowed_weapon = ("daggers", "sickles", "spears", "slings", "oil flasks")
@@ -43,13 +43,8 @@ def apply_druid_dependent_modifiers(character):
     character.spells_lvl8 = 0
     character.spells_lvl9 = 0
 
-    # Calculate total HP
-    #character.hp = wuerfle_1d6(1) + character.hp_mod
-    #if character.hp < 1:
-    #    character.hp = 1
-
     # Calculate XP bonus
-    if character.stat_wis >= 13:
-        character.xp_bonus += 5
-    if character.stat_char >= 13:
-        character.xp_bonus += 5
+    #if character.stat_wis >= 13:
+    #    character.xp_bonus += 5
+    #if character.stat_char >= 13:
+    #    character.xp_bonus += 5

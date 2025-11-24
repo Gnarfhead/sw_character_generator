@@ -1,8 +1,9 @@
 """Callback when profession_var changes; update model profession accordingly."""
 from sw_character_generator.functions.choosen_profession import choosen_profession_modifiers
+from sw_character_generator.functions.manage_xp import calculate_xp_bonus
 from sw_character_generator.gui.gui_functions.gui_update_view_from_model import update_view_from_model
 
-def on_profession_change(app, character, *args):
+def on_profession_change(app, *args):
     """Handle profession combobox changes."""
     if getattr(app, "is_updating", False):
         print("DEBUG on_profession_change: Profession change ignored due to is_updating flag.")
@@ -27,6 +28,7 @@ def on_profession_change(app, character, *args):
         app.new_player.hp_last_roll = 0 # reset last rolled HP
         app.btn_rollhp.config(state="normal")
         app.btn_modify_hp.config(state="normal")
+        calculate_xp_bonus(app, app.new_player) # recalculate XP bonus
         refresh_race_values(app) # update race combobox values
         refresh_alignment_values(app) # update alignment combobox values
         update_view_from_model(app) # refresh GUI to reflect model changes

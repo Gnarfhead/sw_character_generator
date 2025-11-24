@@ -9,7 +9,7 @@ class PlayerClass:
     character_created: bool = False
     profession: str = "Undefined"
     hp_dice: int = 0
-    main_stats: str = "Undefined"
+    main_stats: tuple[str, ...] = field(default_factory=tuple)
     player_state: str = "alive"
     alignment: str = "Undefined"
     level: int = 1
@@ -17,7 +17,7 @@ class PlayerClass:
     gender: str = "Undefined"
     god: str = "Undefined"
     age: int = 0
-    xp_bonus = 0
+    xp_bonus: int = 0
     xp: int = 0
     hp: int = 0
     hp_current: int = 0

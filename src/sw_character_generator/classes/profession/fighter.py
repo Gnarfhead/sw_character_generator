@@ -48,14 +48,9 @@ def apply_fighter_dependent_modifiers(character):
     elif character.stat_dex == 18:
         character.parry = -5
 
-    # Calculate total HP
-    #character.hp = wuerfle_1d10(1) + character.hp_mod
-    #if character.hp < 1:
-    #    character.hp = 1
-
     # Calculate XP bonus
-    if character.stat_str >= 13:
-        character.xp_bonus += 5
+    #if character.stat_str >= 13:
+    #    character.xp_bonus += 5
 
     # Analyze stat modifiers and apply to character (fighter specific Bonus to STR)
     analyze_mod_str(character)

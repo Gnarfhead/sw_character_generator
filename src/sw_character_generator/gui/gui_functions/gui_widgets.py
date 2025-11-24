@@ -3,8 +3,7 @@ import tkinter.ttk as ttk
 
 PADX = 8
 PADY = 6
-WIDTH = 10
-ENTRY_WIDTH = 25
+WIDTH = 30
 COLUMNSPAN_DEFAULT = 1
 
 def _assign(owner, mapping):
@@ -15,9 +14,8 @@ def _assign(owner, mapping):
         if attr:  # If the attribute name is not empty
             setattr(owner, attr, widget)  # Assign the widget to the owner
 
-
-
 def widget_label(parent, text, row, column, *, owner=None, name_label=None, **grid_opts):
+    """Create a Label widget in a grid."""
     lbl = ttk.Label(parent, text=text)
     lbl.grid(row=row, column=column, sticky="w", padx=PADX, pady=PADY, **grid_opts)
     _assign(owner, {name_label: lbl})
@@ -32,7 +30,7 @@ def widget_extlabel(parent, text, row, column, var=None, width=WIDTH, columnspan
     _assign(owner, {name_label: lbl, name_value: ext_lbl})
     return lbl, ext_lbl
 
-def widget_entry(parent, text, row, column, var=None, width=ENTRY_WIDTH, columnspan=1, *, owner=None, name_label=None, name_entry=None, **grid_opts):
+def widget_entry(parent, text, row, column, var=None, width=WIDTH, columnspan=1, *, owner=None, name_label=None, name_entry=None, **grid_opts):
     """Create a labeled Entry widget (or other text input widget) in a grid."""
     lbl = ttk.Label(parent, text=text)
     lbl.grid(row=row, column=column, sticky="w", padx=PADX, pady=PADY)

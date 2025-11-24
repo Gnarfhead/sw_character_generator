@@ -33,12 +33,6 @@ def apply_ranger_dependent_modifiers(character):
     character.spells_lvl8 = 0
     character.spells_lvl9 = 0
 
-
-    # Calculate total HP
-    #character.hp = wuerfle_1d8(2) + character.hp_mod
-    #if character.hp < 1:
-    #    character.hp = 1
-
     # Calculate XP bonus
-    if character.stat_str >= 13:
-        character.xp_bonus += 5
+    #if character.stat_str >= 13:
+    #    character.xp_bonus += 5

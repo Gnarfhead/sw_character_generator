@@ -6,7 +6,7 @@ def apply_assassin_dependent_modifiers(character):
     # Set profession attributes
     character.profession = "assassin"
     character.hp_dice = 6
-    character.main_stats = ("strength", "dexterity", "intelligence")
+    character.main_stats = ("strength", "dexterity", "intelligence",)
     character.allowed_alignment = ("neutral", "evil")
     character.allowed_races = ("human",)
     character.allowed_weapon = ("light weapons",)
@@ -39,17 +39,12 @@ def apply_assassin_dependent_modifiers(character):
     character.spells_lvl8 = 0
     character.spells_lvl9 = 0
 
-    # Calculate total HP
-    #character.hp = wuerfle_1d6(1) + character.hp_mod
-    #if character.hp < 1:
-    #    character.hp = 1
-
     # Calculate XP bonus
-    if character.stat_str >= 13:
-        character.xp_bonus += 5
-    if character.stat_dex >= 13:
-        character.xp_bonus += 5
-    if character.stat_int >= 13:
-        character.xp_bonus += 5
+    #if character.stat_str >= 13:
+    #    character.xp_bonus += 5
+    #if character.stat_dex >= 13:
+    #    character.xp_bonus += 5
+    #if character.stat_int >= 13:
+    #    character.xp_bonus += 5
 
 

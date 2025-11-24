@@ -5,6 +5,7 @@ from src.sw_character_generator.functions.gen_char_stat_mods import analyze_mod_
 from src.sw_character_generator.functions.role_dice import wuerfle_3d6
 from src.sw_character_generator.gui import app
 from src.sw_character_generator.gui.gui_functions.gui_update_view_from_model import update_view_from_model
+from sw_character_generator.functions.manage_xp import calculate_xp_bonus
 from sw_character_generator.functions.manage_hp import recalculate_hp
 
 def switch_stats(parent: tk.Tk, character, btn_switch_stats=None) -> str | None:
@@ -91,6 +92,7 @@ def switch_stats(parent: tk.Tk, character, btn_switch_stats=None) -> str | None:
         analyze_mod_wis(character)
         analyze_mod_int(character)
         analyze_mod_char(character)
+        calculate_xp_bonus(app, character)
 
         # Update buttons if provided
         if btn_switch_stats is not None:
@@ -157,6 +159,7 @@ def role_stats(app, character, chk_opt_4d6dl_var, btn_roll_stats=None, btn_switc
     analyze_mod_int(character) # Apply intelligence modifier
     analyze_mod_wis(character) # Apply wisdom modifier
     analyze_mod_char(character) # Apply charisma modifier
+    calculate_xp_bonus(app, character)
 
     # Update status and GUI
     app.status_var.set("Stats and start coins rolled.")
