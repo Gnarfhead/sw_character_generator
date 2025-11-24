@@ -72,8 +72,24 @@ def calculate_xp_bonus(app, character=None):
     print(f"DEBUG calculate_xp_bonus: Total XP bonus calculated: {player.xp_bonus}")
 
     # Update the GUI to reflect the new XP bonus
-    #app.entry_xp_bonus.config(text="test")
     if hasattr(app, "new_player"):
         update_view_from_model(app)
     
 
+def add_xp(app, amount):
+    """Fügt dem Charakter XP hinzu und aktualisiert die Ansicht."""
+    if hasattr(app, "new_player"):
+        player = app.new_player
+        current_level = player.level
+        next_level = player.xp_progression.get(current_level + 1)
+        #next_level_xp = 
+        print(f"DEBUG add_xp: Current level: {current_level}")
+        
+        
+        player.xp = max(0, player.xp + amount) # Ensure XP does not go below 0
+        
+        
+        print(f"DEBUG add_xp: Added {amount} XP. New total: {player.xp}")
+        update_view_from_model(app)
+    else:
+        raise ValueError("ERROR add_xp: No character available to add XP to.")

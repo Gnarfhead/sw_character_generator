@@ -1,4 +1,4 @@
-from src.sw_character_generator.functions.role_dice import wuerfle_1d4
+
 
 def apply_monk_dependent_modifiers(character):
     """Apply monk-specific modifiers to the character."""
@@ -43,6 +43,56 @@ def apply_monk_dependent_modifiers(character):
     )
     character.xp_bonus = 0
     character.parry = 0
+
+        # XP progression
+    character.xp_progression = {
+        1: 0,
+        2: 1500,
+        3: 3000,
+        4: 6000,
+        5: 12000,
+        6: 24000,
+        7: 48000,
+        8: 96000,
+        9: 192000,
+        10: 275000,
+        11: 400000,
+        12: 550000,
+        13: 750000,
+        14: 850000,
+        15: 1000000,
+        16: 1150000,
+        17: 1300000,
+        18: 1450000,
+        19: 1600000,
+        20: 1750000,
+    }
+
+    # Save throw progression
+    character.save_throw_progression = {
+        1: 15,
+        2: 14,
+        3: 13,
+        4: 12,
+        5: 11,
+        6: 10,
+        7: 9,
+        8: 8,
+        9: 7,
+        10: 6,
+        11: 5,
+        12: 4,
+        13: 4,
+        14: 4,
+        15: 4,
+        16: 4,
+        17: 4,
+        18: 4,
+        19: 4,
+        20: 4,
+    }
+
+    # Spells per level
     character.spells_lvl1 = 0
     character.spells_lvl2 = 0
     character.spells_lvl3 = 0
@@ -52,7 +102,3 @@ def apply_monk_dependent_modifiers(character):
     character.spells_lvl7 = 0
     character.spells_lvl8 = 0
     character.spells_lvl9 = 0
-
-    # Calculate XP bonus
-    #if character.stat_wis >= 13:
-    #    character.xp_bonus += 5

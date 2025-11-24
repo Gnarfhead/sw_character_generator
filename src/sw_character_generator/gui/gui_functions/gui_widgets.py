@@ -4,6 +4,7 @@ import tkinter.ttk as ttk
 PADX = 8
 PADY = 6
 WIDTH = 30
+WIDTH_SPINBOX = 10
 COLUMNSPAN_DEFAULT = 1
 
 def _assign(owner, mapping):
@@ -48,23 +49,21 @@ def widget_combobox(parent, text, row, column, var=None, values=None, width=WIDT
     _assign(owner, {name_label: lbl, name_combo: combo})
     return lbl, combo
 
-def widget_spinbox(parent, text, row, column, var=None, from_=0, to=100, width=WIDTH, *, owner=None, name=None, **grid_opts):
+def widget_spinbox(parent, text, row, column, var=None, from_=-100000, to=100000, width=WIDTH_SPINBOX, *, owner=None, name_label=None, name_spinbox=None, **grid_opts):
     """Create a labeled Spinbox widget in a grid."""
     lbl = ttk.Label(parent, text=text)
     lbl.grid(row=row, column=column, sticky="w", padx=PADX, pady=PADY)
     spin = ttk.Spinbox(parent, textvariable=var, from_=from_, to=to, width=width)
     spin.grid(row=row, column=column + 1, sticky="ew", padx=PADX, pady=PADY, **grid_opts)
-    _assign(owner, {"spinbox": spin, "name": name})
+    _assign(owner, {name_spinbox: spin, name_label: lbl})
     return lbl, spin
 
-def widget_button(parent, text, row, column, command=None, *, owner=None, name=None, **grid_opts):
+def widget_button(parent, text, row, column, command=None, state=None, *, owner=None, name_button=None, **grid_opts):
     """Create a labeled Button widget in a grid."""
-    lbl = ttk.Label(parent, text=text)
-    lbl.grid(row=row, column=column, sticky="w", padx=PADX, pady=PADY)
-    btn = ttk.Button(parent, text="Modify", command=command)
+    btn = ttk.Button(parent, text=text, command=command, state=state)
     btn.grid(row=row, column=column + 1, sticky="ew", padx=PADX, pady=PADY, **grid_opts)
-    _assign(owner, {"button": btn, "name": name})
-    return lbl, btn
+    _assign(owner, {name_button: btn})
+    return btn
 
 def widget_checkbutton(parent, text, row, column, var=None, *, owner=None, name=None, **grid_opts):
     """Create a labeled Checkbutton widget in a grid."""

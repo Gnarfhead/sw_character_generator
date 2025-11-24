@@ -19,6 +19,7 @@ class PlayerClass:
     age: int = 0
     xp_bonus: int = 0
     xp: int = 0
+    xp_progress: dict[str, int] = field(default_factory=dict)
     hp: int = 0
     hp_current: int = 0
     hp_last_roll: int = 0

@@ -84,6 +84,7 @@ def set_starting_hp(app, character:PlayerClass):
         starting_hp = max(1, starting_hp)  # Ensure at least 1 HP
         character.hp = starting_hp # Set max HP
         character.hp_current = starting_hp # Set current HP to max HP
+        character.player_state = "Healthy"
         print(f"DEBUG set_starting_hp: Setting current HP to max HP: {character.hp}")
         starting_hp = character.hp
     else:
@@ -95,6 +96,7 @@ def set_starting_hp(app, character:PlayerClass):
         starting_hp = max(1, starting_hp)  # Ensure at least 1 HP
         character.hp = starting_hp # Set max HP
         character.hp_current = starting_hp # Set current HP to max HP
+        character.player_state = "Healthy"
         print(f"DEBUG set_starting_hp: Rolled starting HP: {starting_hp} (Hit Die: d{hit_die}, CON Mod: {character.hp_mod})")
 
     app.status_var.set(f"Starting HP set to {starting_hp}")

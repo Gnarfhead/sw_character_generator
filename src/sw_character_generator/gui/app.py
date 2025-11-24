@@ -14,6 +14,7 @@ from src.sw_character_generator.classes.playerclass import PlayerClass
 from sw_character_generator.functions.manage_hp import modify_hp, set_starting_hp, set_roll_hp_button
 from src.sw_character_generator.functions.character_handling import save_character, load_character
 from src.sw_character_generator.gui.gui_functions.gui_new_character import apply_character, new_characterobj
+from sw_character_generator.functions.manage_xp import add_xp
 from .gui_functions.gui_dice_roller import dice_roller
 from .gui_functions.gui_alignment_change import on_alignment_change
 from .gui_functions.gui_race_change import on_race_change
@@ -107,6 +108,7 @@ class App:
         self.chk_opt_4d6dl_var = tk.BooleanVar(master=self.root, value=False)
         self.chk_opt_fullhplvl1_var = tk.BooleanVar(master=self.root, value=False)
         self.chk_opt_fullhplvl1_var.trace_add("write", lambda *args: set_roll_hp_button(self, self.chk_opt_fullhplvl1_var))
+        self.add_xp_var = tk.IntVar(master=self.root, value=0)
 
     # ----------------- setup UI -----------------
 
@@ -174,23 +176,23 @@ class App:
         # Row 0: basic fields
         widget_entry(self.top_frame, "Player Name:", 0, 0, var=self.player_name_var, owner=self, name_label="lbl_player_name", name_entry="entry_player_name")
         widget_entry(self.top_frame, "Character Name:", 0, 2, var=self.character_name_var, owner=self, name_label="lbl_character_name", name_entry="entry_character_name")
-        widget_entry(self.top_frame, "Level:", 0, 4, var=self.level_var, owner=self, name_label="lbl_level", name_entry="entry_level")
+        widget_combobox(self.top_frame, "Gender:", 0, 4, self.gender_var, ["Male", "Female", "Other"], state="active", owner=self, name_label="lbl_gender", name_combo="cb_gender")
+        widget_extlabel(self.top_frame, "Level:", 0, 6, var=self.level_var, owner=self, name_label="lbl_level", name_value="entry_level")
 
         # Row 1
         widget_combobox(self.top_frame, "Profession:", 1, 0, self.profession_var, ["Fighter", "Cleric", "Thief", "Wizard", "Ranger", "Paladin", "Druid", "Assassin", "Monk"], state="disabled", owner=self, name_label="lbl_profession", name_combo="cb_profession")
         widget_combobox(self.top_frame, "Race:", 1, 2, self.race_var, list(getattr(self.new_player, "allowed_races", ())), state="disabled", owner=self, name_label="lbl_race", name_combo="cb_race")
-        widget_combobox(self.top_frame, "Gender:", 1, 4, self.gender_var, ["Male", "Female", "Other"], state="active", owner=self, name_label="lbl_gender", name_combo="cb_gender")
+        widget_combobox(self.top_frame, "Alignment:", 1, 4, self.alignment_var, ["Good", "Neutral", "Evil"], state="disabled", owner=self, name_label="lbl_alignment", name_combo="cb_alignment")
+        widget_extlabel(self.top_frame, "XP:", 1, 6, var=self.xp_var, owner=self, name_label="lbl_xp", name_value="entry_xp")
+        widget_extlabel(self.top_frame, "XP-Bonus (%):", 1, 8, var=self.xp_bonus_var, owner=self, name_label="lbl_xp_bonus", name_value="entry_xp_bonus")
    
         # Row 2
-        widget_combobox(self.top_frame, "Alignment:", 2, 0, self.alignment_var, ["Good", "Neutral", "Evil"], state="disabled", owner=self, name_label="lbl_alignment", name_combo="cb_alignment")
+        widget_extlabel(self.top_frame, "Main Stats:", 2, 0, var=self.main_stats_var, owner=self, name_label="lbl_main_stats", name_value="entry_main_stats")
         widget_entry(self.top_frame, "Gottheit:", 2, 2, var=self.god_var, owner=self, name_label="lbl_god", name_entry="entry_god")
         widget_entry(self.top_frame, "Alter:", 2, 4, var=self.age_var, owner=self, name_label="lbl_age", name_entry="entry_age")
-
-        # Row 3 - main stats and XP
-        widget_extlabel(self.top_frame, "Main Stats:", 3, 0, var=self.main_stats_var, owner=self, name_label="lbl_main_stats", name_value="entry_main_stats")
-        widget_extlabel(self.top_frame, "EP-Bonus (%):", 3, 2, var=self.xp_bonus_var, owner=self, name_label="lbl_xp_bonus", name_value="entry_xp_bonus")
-        widget_extlabel(self.top_frame, "EP:", 3, 4, var=self.xp_var, owner=self, name_label="lbl_xp", name_value="entry_xp")
-        
+        widget_spinbox(self.top_frame, "Add XP:", 2, 6, var=self.add_xp_var, owner=self, name_label="lbl_add_xp", name_spinbox="spin_add_xp")
+        widget_button(self.top_frame, "Add XP", 2, 7, command=lambda: add_xp(self, self.add_xp_var.get()), owner=self, name_button="btn_add_xp")
+ 
         # Attribute frame (use LabelFrame for nicer title)
         self.attr_frame = ttk.LabelFrame(self.root, text="Attribute", borderwidth=5, padding=(6, 6), style="Attention.TFrame")
         self.attr_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
@@ -244,14 +246,20 @@ class App:
 
         # Create stat labels and values
         widget_extlabel(self.stats_frame, "Hit Points max.:", 0, 0, var=self.hp_var, owner=self, name_label="lbl_hp", name_value="entry_hp")
-        self.btn_rollhp = ttk.Button(self.stats_frame, text="Roll HP", style="Standard.TButton", command=lambda: set_starting_hp(self, self.new_player), state="disabled")
-        self.btn_rollhp.grid(row=0, column=2, sticky="e", padx=PADX, pady=PADY)
-        widget_checkbutton(self.stats_frame, "Full TP on Level 1", 0, 3, self.chk_opt_fullhplvl1_var)
+        widget_checkbutton(self.stats_frame, "Full TP on Level 1", 0, 2, self.chk_opt_fullhplvl1_var)
+        widget_button(self.stats_frame, "Roll HP", 0, 4, command=lambda: set_starting_hp(self, self.new_player), state="disabled", owner=self, name_button="btn_rollhp")
+        #self.btn_rollhp = ttk.Button(self.stats_frame, text="Roll HP", style="Standard.TButton", command=lambda: set_starting_hp(self, self.new_player), state="disabled")
+        #self.btn_rollhp.grid(row=0, column=2, sticky="e", padx=PADX, pady=PADY)
+        
+
         widget_extlabel(self.stats_frame, "Hit Points current:", 1, 0, var=self.hp_current_var, owner=self, name_label="lbl_hp_current", name_value="entry_hp_current")
-        self.btn_modify_hp = ttk.Button(self.stats_frame, text="Modify HP", style="Standard.TButton", command=lambda: modify_hp(self.hp_modify_var.get(), self, self.new_player), state="disabled")
-        self.btn_modify_hp.grid(row=1, column=2, sticky="e", padx=PADX, pady=PADY)
-        self.sbx_modify_hp = ttk.Spinbox(self.stats_frame, from_=-100, to=100, textvariable=self.hp_modify_var, width=5)
-        self.sbx_modify_hp.grid(row=1, column=3, sticky="e", padx=PADX, pady=PADY)
+        widget_spinbox(self.stats_frame, "Modify HP by:", 1, 2, var=self.hp_modify_var, owner=self, name_label="lbl_modify_hp", name_spinbox="spin_modify_hp")
+        widget_button(self.stats_frame, "Modify HP", 1, 4, command=lambda: modify_hp(self.hp_modify_var.get(), self, self.new_player), state="disabled", owner=self, name_button="btn_modify_hp")
+        #self.btn_modify_hp = ttk.Button(self.stats_frame, text="Modify HP", style="Standard.TButton", command=lambda: modify_hp(self.hp_modify_var.get(), self, self.new_player), state="disabled")
+        #self.btn_modify_hp.grid(row=1, column=2, sticky="e", padx=PADX, pady=PADY)
+        
+        
+        
         widget_extlabel(self.stats_frame, "State:", 2, 0, var=self.player_state_var, owner=self, name_label="lbl_player_state", name_value="entry_player_state")
         widget_extlabel(self.stats_frame, "Saving Throw:", 3, 0, var=self.save_throw_var, owner=self, name_label="lbl_save_throw", name_value="entry_save_throw")
         widget_extlabel(self.stats_frame, "Armor Class (AC):", 4, 0, var=self.ac_var, owner=self, name_label="lbl_ac", name_value="entry_ac")
