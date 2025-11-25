@@ -16,7 +16,7 @@ def _format_change_mainstats(value):
 
 def update_view_from_model(app):
     """Safely copy model fields into Tkinter variables, normalizing types."""
-    model = app.new_player
+    model = app.new_player # Assuming new_player is the model instance
     for field, value in asdict(model).items():
         var = getattr(app, f"{field}_var", None)
         if var is None:

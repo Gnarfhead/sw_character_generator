@@ -1,100 +1,89 @@
 """Manage Experience Point (XP) calculations for characters."""
 
-
 from sw_character_generator.gui.gui_functions.gui_update_view_from_model import update_view_from_model
 
 
-def calculate_xp_bonus(app, character=None):
+def calculate_xp_bonus(character=None):
     """Berechnet XP-Bonus; akzeptiert entweder App oder (fallback) Character direkt."""
+
     # Determine the character to use
-    if hasattr(app, "new_player"):
-        player = app.new_player
-    elif character is not None:
-        player = character
-    else:
+    if character is None:
         raise ValueError("ERROR calculate_xp_bonus: No character provided for XP bonus calculation.")
     
     # General bonus calculation
     print("DEBUG calculate_xp_bonus: Calculating XP bonus for character...")    # General attribute bonuses
-    player.xp_bonus = 0  # Reset XP bonus
-    if player.stat_wis >= 13:
-        player.xp_bonus += 5
-    if player.stat_char >= 13:
-        player.xp_bonus += 5
+    character.xp_bonus = 0  # Reset XP bonus
+    if character.stat_wis >= 13:
+        character.xp_bonus += 5
+    if character.stat_char >= 13:
+        character.xp_bonus += 5
 
     # Profession-specific bonuses
-    if player.profession.lower() == "assassin":
+    if character.profession.lower() == "assassin":
         print("DEBUG calculate_xp_bonus: Profession is assassin.")
-        if player.stat_str >= 13:
-            player.xp_bonus += 5
-        if player.stat_dex >= 13:
-            player.xp_bonus += 5
-        if player.stat_int >= 13:
-            player.xp_bonus += 5
-    elif player.profession.lower() == "cleric":
+        if character.stat_str >= 13:
+            character.xp_bonus += 5
+        if character.stat_dex >= 13:
+            character.xp_bonus += 5
+        if character.stat_int >= 13:
+            character.xp_bonus += 5
+    elif character.profession.lower() == "cleric":
         print("DEBUG calculate_xp_bonus: Profession is cleric.")
-        if player.stat_wis >= 13:
-            player.xp_bonus += 5
-    elif player.profession.lower() == "druid":
+        if character.stat_wis >= 13:
+            character.xp_bonus += 5
+    elif character.profession.lower() == "druid":
         print("DEBUG calculate_xp_bonus: Profession is druid.")
-        if player.stat_wis >= 13:
-            player.xp_bonus += 5
-        if player.stat_char >= 13:
-            player.xp_bonus += 5
-    elif player.profession.lower() == "fighter":
+        if character.stat_wis >= 13:
+            character.xp_bonus += 5
+        if character.stat_char >= 13:
+            character.xp_bonus += 5
+    elif character.profession.lower() == "fighter":
         print("DEBUG calculate_xp_bonus: Profession is Fighter.")
-        if player.stat_str >= 13:
-            player.xp_bonus += 5
-    elif player.profession.lower() == "monk":
+        if character.stat_str >= 13:
+            character.xp_bonus += 5
+    elif character.profession.lower() == "monk":
         print("DEBUG calculate_xp_bonus: Profession is monk.")
-        if player.stat_wis >= 13:
-            player.xp_bonus += 5
-    elif player.profession.lower() == "paladin":
+        if character.stat_wis >= 13:
+            character.xp_bonus += 5
+    elif character.profession.lower() == "paladin":
         print("DEBUG calculate_xp_bonus: Profession is paladin.")
-        if player.stat_str >= 13:
-            player.xp_bonus += 5
-    elif player.profession.lower() == "ranger":
+        if character.stat_str >= 13:
+            character.xp_bonus += 5
+    elif character.profession.lower() == "ranger":
         print("DEBUG calculate_xp_bonus: Profession is ranger.")
-        if player.stat_str >= 13:
-            player.xp_bonus += 5
-    elif player.profession.lower() == "thief":
+        if character.stat_str >= 13:
+            character.xp_bonus += 5
+    elif character.profession.lower() == "thief":
         print("DEBUG calculate_xp_bonus: Profession is thief.")
-        if player.stat_dex >= 13:
-            player.xp_bonus += 5
-    elif player.profession.lower() == "wizard":
+        if character.stat_dex >= 13:
+            character.xp_bonus += 5
+    elif character.profession.lower() == "wizard":
         print("DEBUG calculate_xp_bonus: Profession is wizard.")
-        if player.stat_int >= 13:
-            player.xp_bonus += 5
+        if character.stat_int >= 13:
+            character.xp_bonus += 5
     else:
-        print(f"ERROR calculate_xp_bonus: Unknown profession '{player.profession}'")
+        print(f"ERROR calculate_xp_bonus: Unknown profession '{character.profession}'")
 
     # Final debug output
-    print(f"DEBUG calculate_xp_bonus: Total XP bonus calculated: {player.xp_bonus}")
-
-    # Update the GUI to reflect the new XP bonus
-    update_view_from_model(app)
+    print(f"DEBUG calculate_xp_bonus: Total XP bonus calculated: {character.xp_bonus}")
 
 
-def calculate_next_level_xp(app, character=None):
+def calculate_next_level_xp(app, character):
     """Berechnet die XP-Anforderungen für die nächste Stufe und aktualisiert die Ansicht."""
 
     # Determine the character to use
-    if hasattr(app, "new_player"):
-        player = app.new_player
-    elif character is not None:
-        player = character
-    else:
+    if character is None:
         raise ValueError("ERROR calculate_next_level_xp: No character provided for XP calculation.")
 
     # Determine current and next level XP requirements
-    current_level = player.level
+    current_level = character.level
     print("DEBUG add_xp: Current level is:", current_level)
-    next_level = player.level + 1
+    next_level = character.level + 1
     print("DEBUG add_xp: Next level is:", next_level)
-    next_level_xp = player.xp_progression.get(next_level, None)  # XP required for the level after next
+    next_level_xp = character.xp_progression.get(next_level, None)  # XP required for the level after next
     print("DEBUG add_xp: Next level XP requirement is:", next_level_xp)
     app.nextlevel_var.set(next_level_xp)
-    print("DEBUG add_xp: Current XP:", player.xp)
+    print("DEBUG add_xp: Current XP:", character.xp)
 
     # Calculate the XP needed for the next level
     update_view_from_model(app)
@@ -105,8 +94,10 @@ def add_xp(app, amount = 0, character=None):
 
     # Determine the character to use
     if hasattr(app, "new_player"):
+        print("DEBUG add_xp: Using app.new_player.")
         player = app.new_player
     elif character is not None:
+        print("DEBUG add_xp: Using provided character.")
         player = character
     else:
         raise ValueError("ERROR add_xp: No character provided for XP calculation.")

@@ -58,7 +58,7 @@ class App:
         self.character_name_var = tk.StringVar(master=self.root)
         self.level_var = tk.IntVar(master=self.root, value=1)
         self.profession_var = tk.StringVar(master=self.root)
-        self.profession_var.trace_add("write", lambda *args: on_profession_change(self, *args))
+        self.profession_var.trace_add("write", lambda *args: on_profession_change(self))
         self.race_var = tk.StringVar(master=self.root)
         self.race_var.trace_add("write", lambda *args: on_race_change(self, *args))
         self.gender_var = tk.StringVar(master=self.root)
@@ -216,7 +216,7 @@ class App:
 
         # Switch Stats button inside homebrew frame
         def homebrew_switch_stats(self, character, btn_switch_stats):
-            switch_stats(self.root, character, btn_switch_stats)
+            switch_stats(self.root, character, btn_switch_stats) #
             self.status_var.set("Stats switched.")
             update_view_from_model(self)
 

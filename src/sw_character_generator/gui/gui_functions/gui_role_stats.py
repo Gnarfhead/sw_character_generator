@@ -3,17 +3,21 @@ import tkinter as tk
 from tkinter import ttk
 from src.sw_character_generator.functions.gen_char_stat_mods import analyze_mod_char, analyze_mod_con, analyze_mod_dex, analyze_mod_int, analyze_mod_str, analyze_mod_wis
 from src.sw_character_generator.functions.role_dice import wuerfle_3d6
-from src.sw_character_generator.gui import app
+#from src.sw_character_generator.gui import app
 from src.sw_character_generator.gui.gui_functions.gui_update_view_from_model import update_view_from_model
 from sw_character_generator.functions.manage_xp import calculate_xp_bonus
 from sw_character_generator.functions.manage_hp import recalculate_hp
+#from sw_character_generator.gui import app
+
 
 def switch_stats(parent: tk.Tk, character, btn_switch_stats=None) -> str | None:
     """
     Open a modal Toplevel that returns a value to the caller.
     We set an attribute on the child window and read it after wait_window.
     """
-    win = tk.Toplevel(parent) # Create the modal window
+    print("DEBUG switch_stats: type(parent) =", {type(parent)})
+
+    win = tk.Toplevel(parent)  # Use parent as the modal window
     win.title("Return value") # Set the title of the window
     win.transient(parent) # Set to be on top of the main window
     win.grab_set() # Make modal
@@ -41,9 +45,14 @@ def switch_stats(parent: tk.Tk, character, btn_switch_stats=None) -> str | None:
     chkbox_stat_char = ttk.Checkbutton(win, text="Charisma", variable=char_var)
     chkbox_stat_char.grid(row=3, column=1, sticky="w", padx=20, pady=5)
     
+ 
+
     # Internal function to switch stats
     def internal_switch_stats():
         """Switch the two selected stats in the character object."""
+        #print("DEBUG internal_switch_stats: type(app_instance)", {type(app_instance)})
+        #print("DEBUG internal_switch_stats: hasattr new_player =", {hasattr(app_instance, 'new_player')})
+
         selected_stats = []
         if str_var.get():
             selected_stats.append("Strength")
@@ -62,7 +71,7 @@ def switch_stats(parent: tk.Tk, character, btn_switch_stats=None) -> str | None:
         if len(selected_stats) != 2:
             tk.messagebox.showerror("Error", "Please select exactly 2 stats.")
             return
-                
+                    
         # Mapping von stat Namen zu character Attributen
         stat_mapping = {
             "Strength": "stat_str",
@@ -72,13 +81,13 @@ def switch_stats(parent: tk.Tk, character, btn_switch_stats=None) -> str | None:
             "Wisdom": "stat_wis",
             "Charisma": "stat_char"
         }
-        
+            
         # Die beiden ausgewählten Stats tauschen
         stat1_attr = stat_mapping[selected_stats[0]]
         print("DEBUG gui_role_stats: stat1_attr =", stat1_attr)
         stat2_attr = stat_mapping[selected_stats[1]]
         print("DEBUG gui_role_stats: stat2_attr =", stat2_attr)
-        
+            
         # Werte zwischenspeichern und tauschen
         temp_value = getattr(character, stat1_attr)
         setattr(character, stat1_attr, getattr(character, stat2_attr))
@@ -92,7 +101,8 @@ def switch_stats(parent: tk.Tk, character, btn_switch_stats=None) -> str | None:
         analyze_mod_wis(character)
         analyze_mod_int(character)
         analyze_mod_char(character)
-        calculate_xp_bonus(app, character)
+        #calculate_xp_bonus(app=app, character=character)
+        calculate_xp_bonus(character)
 
         # Update buttons if provided
         if btn_switch_stats is not None:
@@ -103,17 +113,20 @@ def switch_stats(parent: tk.Tk, character, btn_switch_stats=None) -> str | None:
         win.result = f"Switched stats: {selected_stats[0]} and {selected_stats[1]}"
         win.destroy()    
 
-    # Switch Button
-    btn_internal_switch_stats = ttk.Button(win, text="Switch", command=internal_switch_stats)
-    btn_internal_switch_stats.grid(row=4, column=0, pady=(10, 10))
-    std_btn = ttk.Button(win, text="Cancel", command=win.destroy)
-    std_btn.grid(row=4, column=1, pady=(10, 10))
 
-    # Center the window over parent
+    # Switch button
+    btn_switch = ttk.Button(win, text="Switch Stats", command=internal_switch_stats)
+    btn_switch.grid(row=4, column=0, columnspan=1, pady=(10, 10))
+    btn_exit = ttk.Button(win, text="Cancel", command=win.destroy)
+    btn_exit.grid(row=4, column=1, columnspan=1, pady=(10, 10))
+
+    # Wait for window to close
     win.focus_set()
-    parent.wait_window(win)  # blocks until win is closed
-    return getattr(win, "result", None) # Return the result set in internal_switch_stats
+    parent.wait_window(win)
 
+    # Set result and close window
+    #win.result = f"Switched stats: {selected_stats[0]} and {selected_stats[1]}"
+    #swin.destroy()    
 
 def role_stats(app, character, chk_opt_4d6dl_var, btn_roll_stats=None, btn_switch_stats=None):
     """Rolls and assigns role stats to the character based on the 4d6 drop lowest option."""
@@ -163,7 +176,7 @@ def role_stats(app, character, chk_opt_4d6dl_var, btn_roll_stats=None, btn_switc
     analyze_mod_int(character) # Apply intelligence modifier
     analyze_mod_wis(character) # Apply wisdom modifier
     analyze_mod_char(character) # Apply charisma modifier
-    calculate_xp_bonus(app, character)
+    calculate_xp_bonus(character)
 
     # Update status and GUI
     print("DEBUG gui_role_Stats: Set Frame styles and status message...")
