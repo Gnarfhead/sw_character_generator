@@ -140,7 +140,7 @@ class App:
         style.configure("Standard.TLabel",
                         foreground="#000000")
         style.configure("Warning.TLabel",
-                        foreground="#FA9702E4")
+                        foreground="#ff8e25")
         style.configure("Attention.TLabel",
                         foreground="#c82333")
         

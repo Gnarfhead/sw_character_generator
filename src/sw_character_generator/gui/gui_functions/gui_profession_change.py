@@ -32,7 +32,6 @@ def on_profession_change(app):
         app.btn_rollhp.config(style="Attention.TButton")
         app.stats_frame.config(style="Attention.TFrame")
         calculate_xp_bonus(app.new_player) # recalculate XP bonus
-        #calculate_next_level_xp(app, app.new_player) # recalculate next level XP
         calculate_next_level_xp(app, app.new_player) # recalculate next level XP
         refresh_race_values(app) # update race combobox values
         refresh_alignment_values(app) # update alignment combobox values

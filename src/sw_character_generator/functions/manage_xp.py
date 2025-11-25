@@ -68,7 +68,7 @@ def calculate_xp_bonus(character=None):
     print(f"DEBUG calculate_xp_bonus: Total XP bonus calculated: {character.xp_bonus}")
 
 
-def calculate_next_level_xp(app, character):
+def calculate_next_level_xp(app, character=None):
     """Berechnet die XP-Anforderungen für die nächste Stufe und aktualisiert die Ansicht."""
 
     # Determine the character to use
@@ -76,14 +76,14 @@ def calculate_next_level_xp(app, character):
         raise ValueError("ERROR calculate_next_level_xp: No character provided for XP calculation.")
 
     # Determine current and next level XP requirements
-    current_level = character.level
-    print("DEBUG add_xp: Current level is:", current_level)
-    next_level = character.level + 1
-    print("DEBUG add_xp: Next level is:", next_level)
+    current_level = character.level # Current level of the character
+    print("DEBUG calculate_next_level_xp: Current level is:", current_level)
+    next_level = character.level + 1 # Next level to reach
+    print("DEBUG calculate_next_level_xp: Next level is:", next_level)
     next_level_xp = character.xp_progression.get(next_level, None)  # XP required for the level after next
-    print("DEBUG add_xp: Next level XP requirement is:", next_level_xp)
-    app.nextlevel_var.set(next_level_xp)
-    print("DEBUG add_xp: Current XP:", character.xp)
+    print("DEBUG calculate_next_level_xp: Next level XP requirement is:", next_level_xp)
+    app.nextlevel_var.set(next_level_xp) # Update the GUI variable
+    print("DEBUG calculate_next_level_xp: Current XP:", character.xp)
 
     # Calculate the XP needed for the next level
     update_view_from_model(app)
@@ -115,6 +115,24 @@ def add_xp(app, amount = 0, character=None):
     print("DEBUG add_xp: New XP:", player.xp)
     app.status_var.set(f"Added {modified_amount} XP (base: {amount}, bonus: {player.xp_bonus}%). New XP: {player.xp}.")
     app.spin_add_xp.set(0)  # Reset the add XP spinbox
+
+    # Level up calculation
+    next_level_xp = player.xp_progression.get(player.level + 1, None)
+    print("DEBUG add_xp: Next level xp requirement:", next_level_xp)
+    if next_level_xp is not None and player.xp >= next_level_xp:
+        player.level += 1
+        print("DEBUG add_xp: Level up! New level:", player.level)
+        app.status_var.set(f"Congratulations! You've reached level {player.level}!")
+        calculate_next_level_xp(app, player)
+    elif next_level_xp is not None and player.xp < player.xp_progression.get(player.level, 0):
+        player.level -= 1 if player.level > 1 else 1
+        print("DEBUG add_xp: Level down! New level:", player.level)
+        app.status_var.set(f"You have dropped to level {player.level}.")
+        calculate_next_level_xp(app, player)
+    else:   
+        print("DEBUG add_xp: No level change.")
+        
+        
 
     # Update the GUI to reflect the new XP values
     update_view_from_model(app)

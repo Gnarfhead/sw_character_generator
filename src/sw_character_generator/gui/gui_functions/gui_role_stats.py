@@ -101,7 +101,6 @@ def switch_stats(parent: tk.Tk, character, btn_switch_stats=None) -> str | None:
         analyze_mod_wis(character)
         analyze_mod_int(character)
         analyze_mod_char(character)
-        #calculate_xp_bonus(app=app, character=character)
         calculate_xp_bonus(character)
 
         # Update buttons if provided
