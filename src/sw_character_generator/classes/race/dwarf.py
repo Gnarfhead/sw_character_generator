@@ -7,14 +7,32 @@ def apply_dwarf_dependent_modifiers(character):
     character.race = "Dwarf"
     character.darkvision = True
 
-    print("DEBUG apply_dwarf_dependent_modifiers: type of character.special_abilities before assignment:", type(character.special_abilities))
+
+    # Ensure special_abilities is a set
+    if not isinstance(character.special_abilities, set): # Ensure it's a set
+        print("DEBUG apply_dwarf_dependent_modifiers: Converting character.special_abilities to set from", type(character.special_abilities))
+        if isinstance(character.special_abilities, str): # Single string
+            character.special_abilities = {character.special_abilities} if character.special_abilities else set() # single ability to set
+        elif isinstance(character.special_abilities, (list, tuple)): # Multiple abilities
+            character.special_abilities = set(character.special_abilities) # convert list/tuple to set
+        else:
+            character.special_abilities = set() # default to empty set
     character.special_abilities.add("Stonecunning")
     character.special_abilities.add("Saving throw bonus against magic +4")
     print("DEBUG apply_dwarf_dependent_modifiers: type of character.special_abilities after assignment:", type(character.special_abilities))
 
-    if character.languages is not None: # Check if languages set exists
-        character.languages.clear()
-    if not character.languages: # Initialize languages set if it doesn't exist
-        character.languages = set()
-    character.languages.update("Common", "Dwarvish")
-
+    # Ensure languages is a set
+    print("DEBUG apply_dwarf_dependent_modifiers: type of character.languages before assignment:", type(character.languages))
+    if not isinstance(character.languages, set): # Ensure it's a set
+        print("DEBUG apply_dwarf_dependent_modifiers: Converting character.languages to set from", type(character.languages))
+        if isinstance(character.languages, str): # Single string
+            character.languages = {character.languages} if character.languages else set() # single language to set
+        elif isinstance(character.languages, (list, tuple)): # Multiple languages
+            character.languages = set(character.languages) # convert list/tuple to set
+        else:
+            character.languages = set() # default to empty set
+    character.languages.clear()  # Clear existing languages
+    character.languages.add("Common")
+    character.languages.add("Dwarvish")
+    print("DEBUG apply_dwarf_dependent_modifiers: character.languages after assignment:", character.languages)
+    print("DEBUG apply_dwarf_dependent_modifiers: type of character.languages after assignment:", type(character.languages))

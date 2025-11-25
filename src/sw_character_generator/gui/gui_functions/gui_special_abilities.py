@@ -11,10 +11,12 @@ def on_special_abilities_changed(app):
     # Read the content of the special_abilities_txt widget
     content = app.special_abilities_txt.get("1.0", "end-1c")
 
-    # Parse back to tuple if comma-separated, or keep as string
+    # Parse back to SET (not tuple!)
     if "," in content:  # multiple abilities
-        app.new_player.special_abilities = tuple(s.strip() for s in content.split(",")) # convert to tuple
+        app.new_player.special_abilities = {s.strip() for s in content.split(",") if s.strip()}  # ✓ set
     else:
-        app.new_player.special_abilities = (content,) if content else () # single ability or empty
+        app.new_player.special_abilities = {content} if content.strip() else set()  # ✓ set
 
-    app.special_abilities_txt.edit_modified(False) # reset modified flag
+    app.special_abilities_txt.edit_modified(False)  # reset modified flag
+
+    #print("DEBUG on_special_abilities_changed: Updated to", {app.new_player.special_abilities}, "type:", {type(app.new_player.special_abilities)},)

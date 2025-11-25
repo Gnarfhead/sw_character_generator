@@ -15,6 +15,7 @@ from sw_character_generator.functions.manage_hp import modify_hp, set_starting_h
 from src.sw_character_generator.functions.character_handling import save_character, load_character
 from src.sw_character_generator.gui.gui_functions.gui_new_character import apply_character, new_characterobj
 from sw_character_generator.functions.manage_xp import add_xp
+from sw_character_generator.gui.gui_functions.gui_immunities import on_immunities_changed
 from sw_character_generator.gui.gui_functions.gui_special_abilities import on_special_abilities_changed
 from .gui_functions.gui_dice_roller import dice_roller
 from .gui_functions.gui_alignment_change import on_alignment_change
@@ -261,9 +262,37 @@ class App:
         widget_extlabel(self.stats_frame, "Darkvision:", 5, 0, var=self.darkvision_var, owner=self, name_label="lbl_darkvision", name_value="entry_darkvision")
         widget_extlabel(self.stats_frame, "Parry:", 6, 0, var=self.parry_var, owner=self, name_label="lbl_parry", name_value="entry_parry")
         widget_extlabel(self.stats_frame, "Languages:", 7, 0, var=self.languages_var, owner=self, name_label="lbl_languages", name_value="entry_languages")
-        widget_extlabel(self.stats_frame, "Immunities:", 8, 0, var=self.immunities_var, owner=self, name_label="lbl_immunities", name_value="entry_immunities")
-        widget_label(self.stats_frame, "Special Abilities:", 9, 0, owner=self, name_label="lbl_special_abilities")
         
+        # Save Bonuses
+        widget_label(self.stats_frame, "Save Bonuses:", 8, 0, owner=self, name_label="lbl_save_bonuses")
+        # Use scrolledtext for save bonuses
+        self.save_bonuses_txt = scrolledtext.ScrolledText(
+        self.stats_frame,
+        wrap="word",
+        height=3,        # visible row height (can be adjusted)
+        width=40,        # visible column width (char-based)
+        font=("TkDefaultFont", 10)
+        )
+        self.save_bonuses_txt.grid(row=8, column=1, columnspan=4, sticky="nsew", padx=PADX, pady=PADY)
+        self.save_bonuses_txt.bind("<<Modified>>", lambda event: on_special_abilities_changed(self))
+
+        # Immunities
+        widget_extlabel(self.stats_frame, "Immunities:", 9, 0, var=self.immunities_var, owner=self, name_label="lbl_immunities", name_value="entry_immunities")
+        
+        # Use scrolledtext for immunities
+        self.immunities_txt = scrolledtext.ScrolledText(
+        self.stats_frame,
+        wrap="word",
+        height=3,        # visible row height (can be adjusted)
+        width=40,        # visible column width (char-based)
+        font=("TkDefaultFont", 10)
+        )
+        self.immunities_txt.grid(row=9, column=1, columnspan=4, sticky="nsew", padx=PADX, pady=PADY)
+        self.immunities_txt.bind("<<Modified>>", lambda event: on_immunities_changed(self))
+
+        # Special Abilities
+        widget_label(self.stats_frame, "Special Abilities:", 10, 0, owner=self, name_label="lbl_special_abilities")
+
         # Use scrolledtext for special abilities
         self.special_abilities_txt = scrolledtext.ScrolledText(
         self.stats_frame,
@@ -272,7 +301,7 @@ class App:
         width=40,        # visible column width (char-based)
         font=("TkDefaultFont", 10)
         )
-        self.special_abilities_txt.grid(row=9, column=1, columnspan=4, sticky="nsew", padx=PADX, pady=PADY)
+        self.special_abilities_txt.grid(row=10, column=1, columnspan=4, sticky="nsew", padx=PADX, pady=PADY)
         self.special_abilities_txt.bind("<<Modified>>", lambda event: on_special_abilities_changed(self))
 
 

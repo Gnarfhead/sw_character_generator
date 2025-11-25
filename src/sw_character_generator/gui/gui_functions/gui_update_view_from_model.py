@@ -1,6 +1,6 @@
 """Update view from model function."""
 import tkinter as tk
-from dataclasses import asdict
+from dataclasses import asdict, fields
 
 
 
@@ -22,15 +22,17 @@ def update_view_from_model(app):
         print("DEBUG update_view_from_model: No app provided, skipping update.")
         return
     model = app.new_player # Assuming new_player is the model instance
-    for field, value in asdict(model).items():
+
+    for field_obj in fields(model):
+        field = field_obj.name
+        value = getattr(model, field)
         var = getattr(app, f"{field}_var", None)
         if var is None:
             continue
 
-        if field == "main_stats":
-            #print(f"DEBUG update_view_from_model: Formatting main_stats value: {value}")
+        # Format special fields (main_stats, languages, special_abilities, immunity, etc.)
+        if field in ("main_stats", "languages", "special_abilities", "immunity", "save_bonuses"):
             value = _format_change_mainstats(value)
-            #print(f"DEBUG update_view_from_model: Formatted main_stats value: {value}")
 
         # Normalize numeric targets
         if isinstance(var, (tk.IntVar, tk.DoubleVar)): # Only for IntVar and DoubleVar
