@@ -3,6 +3,7 @@ from src.sw_character_generator.classes.playerclass import PlayerClass
 
 def choosen_alignment_modifiers(player_class: PlayerClass, alignment: str):
     """Apply alignment-specific modifiers to the character."""
+    print("DEBUG choosen_alignment_modifiers: ----------------------------------------------------------------")
     if alignment.lower() == "good" and "good" in player_class.allowed_alignment:
         print("DEBUG choosen_alignment_modifiers: Choosing Good alignment - alignment parameter:", alignment)
         player_class.alignment = "Good"

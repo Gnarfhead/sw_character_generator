@@ -5,7 +5,7 @@ from src.sw_character_generator.gui.gui_functions.gui_widgets import widget_butt
 
 def dice_roller(parent: tk.Tk):
     """Open the dice roller window."""
-
+    print("DEBUG dice_roller: ----------------------------------------------------------------")
     def on_close():
         """Handle the window close event."""
         win.grab_release()

@@ -132,7 +132,5 @@ def add_xp(app, amount = 0, character=None):
     else:   
         print("DEBUG add_xp: No level change.")
         
-        
-
     # Update the GUI to reflect the new XP values
     update_view_from_model(app)

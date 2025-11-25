@@ -24,11 +24,15 @@ class PlayerClass:
     hp_current: int = 0
     hp_last_roll: int = 0
     save_throw: int = 0
-    save_bonuses: tuple[str, ...] = field(default_factory=tuple)
-    immunity: tuple[str, ...] = field(default_factory=tuple)
-    special_abilities: list[str] = field(default_factory=list)
+    #save_bonuses: tuple[str, ...] = field(default_factory=tuple)
+    save_bonuses: set[str] = field(default_factory=set)
+    #immunity: tuple[str, ...] = field(default_factory=tuple)
+    immunity: set[str] = field(default_factory=set)
+    #immunity: str = ""
+    special_abilities: set[str] = field(default_factory=set)
+    #special_abilities: str = ""
     ac: int = 10
-    languages: list[str] = field(default_factory=list)
+    languages: set[str] = field(default_factory=set)
     stat_str: int = field(default=0)
     stat_dex: int = field(default=0)
     stat_con: int = field(default=0)
@@ -53,7 +57,8 @@ class PlayerClass:
     treasure: list[str] = field(default_factory=list)
     coins: int = field(default=0)
     allowed_alignment: str = "Undefined"
-    allowed_races: str = "Undefined"
+    #allowed_races: str = "Undefined"
+    allowed_races: tuple[str, ...] = field(default_factory=tuple)
     allowed_armor: str = "Undefined"
     allowed_weapon: str = "Undefined"
     delicate_tasks: int = 0
@@ -234,11 +239,11 @@ class PlayerClass:
         self.hp_current = data.get("hp_current", self.hp_current)
         self.hp_last_roll = data.get("hp_last_roll", self.hp_last_roll)
         self.save_throw = data.get("save_throw", self.save_throw)
-        self.save_bonuses = tuple(data.get("save_bonuses", self.save_bonuses))
-        self.immunity = tuple(data.get("immunity", self.immunity))
-        self.special_abilities = data.get("special_abilities", self.special_abilities)
+        self.save_bonuses = set(data.get("save_bonuses", []))
+        self.immunity = set(data.get("immunity", []))
+        self.special_abilities = set(data.get("special_abilities", []))
         self.ac = data.get("ac", self.ac)
-        self.languages = data.get("languages", self.languages)
+        self.languages = set(data.get("languages", []))
         self.stat_str = stats.get("str", self.stat_str)
         self.stat_dex = stats.get("dex", self.stat_dex)
         self.stat_con = stats.get("con", self.stat_con)
@@ -263,7 +268,7 @@ class PlayerClass:
         self.treasure = data.get("treasure", self.treasure)
         self.coins = data.get("coins", self.coins)
         self.allowed_alignment = data.get("allowed_alignment", self.allowed_alignment)
-        self.allowed_races = data.get("allowed_races", self.allowed_races)
+        self.allowed_races = tuple(data.get("allowed_races", []))
         self.allowed_armor = data.get("allowed_armor", self.allowed_armor)
         self.allowed_weapon = data.get("allowed_weapon", self.allowed_weapon)
         self.delicate_tasks = data.get("delicate_tasks", self.delicate_tasks)

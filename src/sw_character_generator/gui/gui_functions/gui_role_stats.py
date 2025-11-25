@@ -15,6 +15,7 @@ def switch_stats(parent: tk.Tk, character, btn_switch_stats=None) -> str | None:
     Open a modal Toplevel that returns a value to the caller.
     We set an attribute on the child window and read it after wait_window.
     """
+    print("DEBUG switch_stats: ----------------------------------------------------------------")
     print("DEBUG switch_stats: type(parent) =", {type(parent)})
 
     win = tk.Toplevel(parent)  # Use parent as the modal window
@@ -50,6 +51,7 @@ def switch_stats(parent: tk.Tk, character, btn_switch_stats=None) -> str | None:
     # Internal function to switch stats
     def internal_switch_stats():
         """Switch the two selected stats in the character object."""
+        print("DEBUG internal_switch_stats: ----------------------------------------------------------------")
         #print("DEBUG internal_switch_stats: type(app_instance)", {type(app_instance)})
         #print("DEBUG internal_switch_stats: hasattr new_player =", {hasattr(app_instance, 'new_player')})
 
@@ -129,6 +131,7 @@ def switch_stats(parent: tk.Tk, character, btn_switch_stats=None) -> str | None:
 
 def role_stats(app, character, chk_opt_4d6dl_var, btn_roll_stats=None, btn_switch_stats=None):
     """Rolls and assigns role stats to the character based on the 4d6 drop lowest option."""
+    print("DEBUG gui_role_stats: ----------------------------------------------------------------")
     print("DEBUG gui_role_stats: Rolling role stats...")
     print("DEBUG gui_role_stats: 4d6 drop lowest option is set to:", chk_opt_4d6dl_var)
 

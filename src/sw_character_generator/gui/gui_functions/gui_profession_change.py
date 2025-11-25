@@ -3,7 +3,7 @@ from sw_character_generator.functions.choosen_profession import choosen_professi
 from sw_character_generator.functions.manage_xp import calculate_next_level_xp, calculate_xp_bonus
 from sw_character_generator.gui.gui_functions.gui_update_view_from_model import update_view_from_model
 
-def on_profession_change(app):
+def on_profession_change(app, *args):
     """Handle profession combobox changes."""
     if getattr(app, "is_updating", False):
         print("DEBUG on_profession_change: Profession change ignored due to is_updating flag.")
@@ -18,6 +18,7 @@ def on_profession_change(app):
         app.status_var.set(f"Profession changed to {name}")
         app.cb_race.config(state="normal") # enable race selection
         app.cb_alignment.config(state="normal") # enable alignment selection
+
         app.race_var.set("Undefined") # reset if profession gets changed
         app.alignment_var.set("Undefined") # reset if profession gets changed
         app.lbl_profession.config(style="Standard.TLabel")

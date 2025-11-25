@@ -4,6 +4,7 @@ from sw_character_generator.gui.gui_functions.gui_update_view_from_model import 
 
 def on_alignment_change(app, *args):
     """Handle alignment combobox changes."""
+    print("DEBUG on_alignment_change: ------------------------------------------------")
     if getattr(app, "is_updating", False):
         print("DEBUG on_alignment_change: Alignment change ignored due to is_updating flag.")
         return

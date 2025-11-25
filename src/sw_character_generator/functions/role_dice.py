@@ -3,6 +3,7 @@ import random
 
 def wuerfle_3d6(str_desc: str, drop_low: bool = None) -> int:
     """Rolls three six-sided dice and returns the sum. If drop_low is provided, rolls four dice and drops the lowest."""
+    print("DEBUG wuerfle_3d6: ----------------------------------------------------------------")
     if drop_low is None or drop_low is False:
         wuerfe = [random.randint(1, 6) for _ in range(3)]
         print("Rolls: ", wuerfe)

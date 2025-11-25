@@ -18,9 +18,12 @@ def apply_wizard_dependent_modifiers(character):
     character.move_silently = 0
     character.open_locks = 0
     character.climb_walls = 0
-    character.save_bonuses = ()
-    character.immunity = ()
-    character.special_abilities = ()
+    
+    character.save_bonuses = set()
+    
+    character.immunity = set()
+    
+    character.special_abilities = set()
 
     character.xp_bonus = 0
     character.parry = 0

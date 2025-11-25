@@ -9,6 +9,7 @@ from src.sw_character_generator.classes.race.human import apply_human_dependent_
 
 def choosen_race_modifiers(player_class: PlayerClass, race: str):
     """Applies race-dependent modifiers to the player character based on the chosen race."""
+    print("DEBUG choosen_race_modifiers: ----------------------------------------------------------------")
     if race.lower() == "halfelf" and "halfelf" in player_class.allowed_races:
         print("DEBUG choosen_race_modifiers: Choosing Halfelf race - race parameter:", race)
         apply_halfelf_dependent_modifiers(player_class)
@@ -31,3 +32,12 @@ def choosen_race_modifiers(player_class: PlayerClass, race: str):
         player_class.race = "Human"
     else:
         raise ValueError("ERROR choosen_race_modifiers: Unknown or not allowed race:", race)
+
+    print("DEBUG choosen_race_modifiers: player_class.special_abilities after race modifiers:", player_class.special_abilities)
+    print("DEBUG choosen_race_modifiers: type of player_class.special_abilities:", type(player_class.special_abilities))
+    print("DEBUG choosen_race_modifiers: player_class.languages after race modifiers:", player_class.languages)
+    print("DEBUG choosen_race_modifiers: type of player_class.languages:", type(player_class.languages))
+    print("DEBUG choosen_race_modifiers: player_class.save_bonuses after race modifiers:", player_class.save_bonuses)
+    print("DEBUG choosen_race_modifiers: type of player_class.save_bonuses:", type(player_class.save_bonuses))
+    print("DEBUG choosen_race_modifiers: player_class.immunity after race modifiers:", player_class.immunity)
+    print("DEBUG choosen_race_modifiers: type of player_class.immunity:", type(player_class.immunity))

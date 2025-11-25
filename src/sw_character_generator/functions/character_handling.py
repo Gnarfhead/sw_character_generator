@@ -7,6 +7,7 @@ from src.sw_character_generator.classes.playerclass import PlayerClass
 
 def save_character(character_data: PlayerClass) -> None:
     """Save the Character data to a JSON file."""
+    print("DEBUG save_character: ----------------------------------------------------------------")
     data = character_data.to_dict()
 
     #print("Current working directory:", os.getcwd())
@@ -29,6 +30,7 @@ def save_character(character_data: PlayerClass) -> None:
 
 def load_character(file_path: str) -> PlayerClass:
     """Load character data from a JSON file."""
+    print("DEBUG load_character: ----------------------------------------------------------------")
     with open(file_path, "r", encoding="utf-8") as f:
         data = json.load(f)
     try:

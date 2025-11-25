@@ -4,19 +4,25 @@ from sw_character_generator.gui.gui_functions.gui_update_view_from_model import 
 
 def on_race_change(app, *args):
     """Handle race combobox changes."""
+    print("DEBUG on_race_change: ------------------------------------------------")
     if getattr(app, "is_updating", False):
         print("DEBUG on_race_change: Race change ignored due to is_updating flag.")
         return
+    # Get the selected race name
     name = app.race_var.get()
     if not name:
         print("DEBUG on_race_change: No race selected.")
         return
     try:
         # Update the model with the new race
+        print("DEBUG on_race_change: Changing race to", name)
         choosen_race_modifiers(app.new_player, name) # update race and related stats 
-        app.status_var.set(f"Race changed to {name}")
-        app.lbl_race.config(style="Standard.TLabel")
+        app.status_var.set(f"Race changed to {name}") # inform user of successful change
+        app.lbl_race.config(style="Standard.TLabel") # reset label style
         update_view_from_model(app) # refresh GUI to reflect model changes
+
+        print("DEBUG on_race_change: type of app.new_player.special_abilities:", type(app.new_player.special_abilities))
+        print("DEBUG on_race_change: app.new_player.special_abilities:", app.new_player.special_abilities)
 
         # Adjust top_frame style based on race and alignment selection
         print("DEBUG on_race_change: Checking race and alignment for top_frame style adjustment.")

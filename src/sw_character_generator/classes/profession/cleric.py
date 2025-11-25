@@ -18,14 +18,15 @@ def apply_cleric_dependent_modifiers(character):
     character.move_silently = 0
     character.open_locks = 0
     character.climb_walls = 0
-    character.save_bonuses = (
-        "+2 against paralysis and poison",
-    )
-    character.immunity = ()
-    character.special_abilities = (
-        "turn undead: clerics can turn undead creatures",
-        "religious fortress (Level 9): clerics can create a temple to gather followers",
-    )
+
+    character.save_bonuses = set()
+    character.save_bonuses.update("+2 against paralysis and poison")
+    
+    character.immunity = set()
+    
+    character.special_abilities = set()
+    character.special_abilities.update("turn undead: clerics can turn undead creatures")
+    character.special_abilities.update("religious fortress (Level 9): clerics can create a temple to gather followers")
 
     character.xp_bonus = 0
     character.parry = 0

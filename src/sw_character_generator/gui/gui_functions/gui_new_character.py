@@ -4,12 +4,14 @@ from src.sw_character_generator.gui.gui_functions.gui_update_view_from_model imp
 
 def new_characterobj(app):
     """Create a new character object and update the view."""
+    print("DEBUG new_characterobj: ----------------------------------------------------------------")
     print("Debug _new_characterobj: Creating new character object.")
     app.new_player = PlayerClass()
     app.rebuild_ui()
 
 def apply_character(app, character: PlayerClass):
     """Apply changes to the character object."""
+    print("DEBUG apply_character: ----------------------------------------------------------------")
     print("DEBUG apply_character: Applying changes to character object.")
     character.character_created = True
     app.cb_profession.config(state="disabled")

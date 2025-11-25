@@ -7,7 +7,7 @@ from sw_character_generator.gui.gui_functions.gui_update_view_from_model import 
 
 def modify_hp(delta: int, app, character=None):
     """Adjust current HP by delta; clamp; set state."""
-
+    print("DEBUG modify_hp: ----------------------------------------------------------------")
     # Determine the character to use
     if hasattr(app, "new_player"):
         player = app.new_player
@@ -69,6 +69,7 @@ def modify_hp(delta: int, app, character=None):
 
 def set_roll_hp_button(app, chk_starting_hp):
     """Set the roll HP button text based on checkbox state."""
+    print("DEBUG set_roll_hp_button: ----------------------------------------------------------------")
     print("DEBUG set_roll_hp_button: Called with chk_starting_hp =", chk_starting_hp.get())
     if app.chk_opt_fullhplvl1_var.get() is True:
         print("DEBUG set_roll_hp_button: Setting roll HP button to 'Set HP'")
@@ -79,6 +80,7 @@ def set_roll_hp_button(app, chk_starting_hp):
 
 def set_starting_hp(app, character:PlayerClass):
     """Roll/set starting HP for the character."""
+    print("DEBUG set_starting_hp: ----------------------------------------------------------------")
     if app.chk_opt_fullhplvl1_var.get() is True:
         hit_die = character.hp_dice # Use max HP from hit die
         rolled_hp = hit_die # Max HP from hit die
@@ -111,6 +113,8 @@ def set_starting_hp(app, character:PlayerClass):
 
 def recalculate_hp(character: PlayerClass):
     """Recalculate max HP based on level and constitution modifier."""
+    print("DEBUG recalculate_hp: ----------------------------------------------------------------")
+    print("DEBUG recalculate_hp: Recalculating HP for character at level", character.level)
     character.hp = character.hp_last_roll + character.hp_mod # Recalculate max HP
     character.hp = max(1, character.hp)  # Ensure at least 1 HP
     character.hp_current = character.hp # Set current HP to max HP
