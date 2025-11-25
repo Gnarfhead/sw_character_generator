@@ -25,12 +25,12 @@ def apply_paladin_dependent_modifiers(character):
     character.immunity.update("immunity against disease")
     
     character.special_abilities = set()
-    character.special_abilities.update("lay on hands: paladins can heal 2 HP by laying on hands or cure a disease once per day")
-    character.special_abilities.update("magic items: paladins can use magic items that are usable by fighters. A total of 4 magic items, including max 3 weapons, 1 armor and 1 shield")
-    character.special_abilities.update("warhorse: paladins can summon a warhorse which is very intelligent and strong (5 HP dice)")
-    character.special_abilities.update("banish evil (Level 8): like the cleric spell")
-    character.special_abilities.update("detect evil (Level 8): like the cleric spell")
-    character.special_abilities.update("fortress (Level 9): paladins can create a stronghold to gather followers")
+    character.special_abilities.add("lay on hands: paladins can heal 2 HP by laying on hands or cure a disease once per day")
+    character.special_abilities.add("magic items: paladins can use magic items that are usable by fighters. A total of 4 magic items, including max 3 weapons, 1 armor and 1 shield")
+    character.special_abilities.add("warhorse: paladins can summon a warhorse which is very intelligent and strong (5 HP dice)")
+    character.special_abilities.add("banish evil (Level 8): like the cleric spell")
+    character.special_abilities.add("detect evil (Level 8): like the cleric spell")
+    character.special_abilities.add("fortress (Level 9): paladins can create a stronghold to gather followers")
     character.xp_bonus = 0
     character.parry = 0
 

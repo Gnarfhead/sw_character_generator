@@ -7,10 +7,14 @@ def apply_dwarf_dependent_modifiers(character):
     character.race = "Dwarf"
     character.darkvision = True
 
-    character.special_abilities.update("Stonecunning")
-    character.special_abilities.update("Saving throw bonus against magic +4")
+    print("DEBUG apply_dwarf_dependent_modifiers: type of character.special_abilities before assignment:", type(character.special_abilities))
+    character.special_abilities.add("Stonecunning")
+    character.special_abilities.add("Saving throw bonus against magic +4")
+    print("DEBUG apply_dwarf_dependent_modifiers: type of character.special_abilities after assignment:", type(character.special_abilities))
 
-    character.languages = set()
-    character.languages.update("Common")
-    character.languages.update("Dwarvish")
+    if character.languages is not None: # Check if languages set exists
+        character.languages.clear()
+    if not character.languages: # Initialize languages set if it doesn't exist
+        character.languages = set()
+    character.languages.update("Common", "Dwarvish")
 

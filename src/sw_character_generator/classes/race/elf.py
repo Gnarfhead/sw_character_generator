@@ -7,6 +7,9 @@ def apply_elf_dependent_modifiers(character):
     character.special_abilities.update("Geheimtüren finden: Aktiv 4:6, Passiv:1:6")
     character.immunity.update("Ghulische Lähmung")
 
-    character.languages = set()
-    character.languages.update("Common")
-    character.languages.update("Elbisch")
+
+    if character.languages is not None: # Check if languages set exists
+        character.languages.clear()
+    if not character.languages: # Initialize languages set if it doesn't exist
+        character.languages = set()
+    character.languages.update("Common", "Elbisch")

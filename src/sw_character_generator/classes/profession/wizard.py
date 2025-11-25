@@ -23,7 +23,9 @@ def apply_wizard_dependent_modifiers(character):
     
     character.immunity = set()
     
+    print("DEBUG apply_wizard_dependent_modifiers: type of character.special_abilities before assignment:", type(character.special_abilities))
     character.special_abilities = set()
+    print("DEBUG apply_wizard_dependent_modifiers: type of character.special_abilities after assignment:", type(character.special_abilities))
 
     character.xp_bonus = 0
     character.parry = 0

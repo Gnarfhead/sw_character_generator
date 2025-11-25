@@ -26,11 +26,11 @@ def apply_druid_dependent_modifiers(character):
     character.immunity.update("Immunity against fay spells and magical effects (Level 5)")
 
     character.special_abilities = set()
-    character.special_abilities.update("secret language: druids know a secret language understood only by other druids of neutral alignment")
-    character.special_abilities.update("magic items: druids can use magic items that are usable by clerics, except scrolls with cleric-spells")
-    character.special_abilities.update("first mysteries (Level 2): ")
-    character.special_abilities.update("shape change (Level 5): druids can change their shape into that of a small or medium-sized animal three times per day")
-    character.special_abilities.update("Druid fortress (Level 9): druids can create a sanctuary")
+    character.special_abilities.add("secret language: druids know a secret language understood only by other druids of neutral alignment")
+    character.special_abilities.add("magic items: druids can use magic items that are usable by clerics, except scrolls with cleric-spells")
+    character.special_abilities.add("first mysteries (Level 2): ")
+    character.special_abilities.add("shape change (Level 5): druids can change their shape into that of a small or medium-sized animal three times per day")
+    character.special_abilities.add("Druid fortress (Level 9): druids can create a sanctuary")
 
     character.xp_bonus = 0
     character.parry = 0

@@ -23,10 +23,12 @@ def apply_fighter_dependent_modifiers(character):
     character.save_bonuses = set()
 
     character.immunity = set()
-    
+
+    print("DEBUG apply_fighter_dependent_modifiers: type of character.special_abilities before assignment:", type(character.special_abilities))
     character.special_abilities = set()
-    character.special_abilities.update("multiple attacks: against creatures with 1 tp or less, fighters strike one attack per level per round")
-    character.special_abilities.update("fortress (Level 9): fighters can create a stronghold to gather followers and protect themselves")
+    character.special_abilities.add("multiple attacks: against creatures with 1 tp or less, fighters strike one attack per level per round")
+    character.special_abilities.add("fortress (Level 9): fighters can create a stronghold to gather followers and protect themselves")
+    print("DEBUG apply_fighter_dependent_modifiers: type of character.special_abilities after assignment:", type(character.special_abilities))
 
     character.xp_bonus = 0
 

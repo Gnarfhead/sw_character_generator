@@ -21,12 +21,12 @@ def apply_assassin_dependent_modifiers(character):
     character.immunity = set()
 
     character.special_abilities = set()
-    character.special_abilities.update("sneak attack: assassins gain a +4 bonus to attack and damage rolls are doubled when attacking opponent from behind")
-    character.special_abilities.update("poison use: assassins are skilled in the use of poisoning weapons")
-    character.special_abilities.update("magic items: assassins can use magic items that are usable by thieves; additionally, they can use magic weapons, leather armor and shields")
-    character.special_abilities.update("disguise self: assassins can cast disguise self; danger of being discovered 5% -10% based on intelligence/wisdom of opponent")
-    character.special_abilities.update("create guild (Level 14): assassins can create an assassins' guild to gather followers")
-    
+    character.special_abilities.add("sneak attack: assassins gain a +4 bonus to attack and damage rolls are doubled when attacking opponent from behind")
+    character.special_abilities.add("poison use: assassins are skilled in the use of poisoning weapons")
+    character.special_abilities.add("magic items: assassins can use magic items that are usable by thieves; additionally, they can use magic weapons, leather armor and shields")
+    character.special_abilities.add("disguise self: assassins can cast disguise self; danger of being discovered 5% -10% based on intelligence/wisdom of opponent")
+    character.special_abilities.add("create guild (Level 14): assassins can create an assassins' guild to gather followers")
+
     character.xp_bonus = 0
     character.parry = 0
 
