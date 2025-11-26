@@ -24,13 +24,9 @@ class PlayerClass:
     hp_current: int = 0
     hp_last_roll: int = 0
     save_throw: int = 0
-    #save_bonuses: tuple[str, ...] = field(default_factory=tuple)
     save_bonuses: set[str] = field(default_factory=set)
-    #immunity: tuple[str, ...] = field(default_factory=tuple)
-    immunity: set[str] = field(default_factory=set)
-    #immunity: str = ""
+    immunities: set[str] = field(default_factory=set)
     special_abilities: set[str] = field(default_factory=set)
-    #special_abilities: str = ""
     ac: int = 10
     languages: set[str] = field(default_factory=set)
     stat_str: int = field(default=0)
@@ -104,7 +100,7 @@ class PlayerClass:
             f"WIS: {self.stat_wis}\n"
             f"CHA: {self.stat_char}    CHA_mod: Max Hirelings={self.cap_spec_hirelings}\n"
             f"State: {self.player_state}, Alignment: {self.alignment}, Race: {self.race}, Gender: {self.gender}, God: {self.god}, Age: {self.age}\n"
-            f"Save Throw: {self.save_throw}, Save Bonuses: {list(self.save_bonuses)}, Immunity: {list(self.immunity)}, AC: {self.ac}\n"
+            f"Save Throw: {self.save_throw}, Save Bonuses: {list(self.save_bonuses)}, Immunities: {list(self.immunities)}, AC: {self.ac}\n"
             f"Special Abilities: {list(self.special_abilities)}\n"
             f"Languages: {list(self.languages)}\n"
             f"Inventory: {self.inventory}\n"
@@ -140,7 +136,7 @@ class PlayerClass:
             "hp_last_roll": self.hp_last_roll,
             "save_throw": self.save_throw,
             "save_bonuses": list(self.save_bonuses),
-            "immunity": list(self.immunity),
+            "immunities": list(self.immunities),
             "special_abilities": list(self.special_abilities),
             "ac": self.ac,
             "languages": list(self.languages),
@@ -240,7 +236,7 @@ class PlayerClass:
         self.hp_last_roll = data.get("hp_last_roll", self.hp_last_roll)
         self.save_throw = data.get("save_throw", self.save_throw)
         self.save_bonuses = set(data.get("save_bonuses", []))
-        self.immunity = set(data.get("immunity", []))
+        self.immunities = set(data.get("immunities", []))
         self.special_abilities = set(data.get("special_abilities", []))
         self.ac = data.get("ac", self.ac)
         self.languages = set(data.get("languages", []))

@@ -277,7 +277,7 @@ class App:
         self.save_bonuses_txt.bind("<<Modified>>", lambda event: on_special_abilities_changed(self))
 
         # Immunities
-        widget_extlabel(self.stats_frame, "Immunities:", 9, 0, var=self.immunities_var, owner=self, name_label="lbl_immunities", name_value="entry_immunities")
+        widget_label(self.stats_frame, "Immunities:", 9, 0, owner=self, name_label="lbl_immunities")
         
         # Use scrolledtext for immunities
         self.immunities_txt = scrolledtext.ScrolledText(

@@ -26,17 +26,17 @@ def apply_assassin_dependent_modifiers(character):
             character.save_bonuses = set(character.save_bonuses) # convert list/tuple to set
         else:
             character.save_bonuses = set() # default to empty set
-    
-    # Ensure immunity is a set
-    character.immunity.clear()  # Clear existing immunities
-    if not isinstance(character.immunity, set): # Ensure it's a set
-        print("DEBUG apply_assassin_dependent_modifiers: Converting character.immunity to set from", type(character.immunity))
-        if isinstance(character.immunity, str): # Single string
-            character.immunity = {character.immunity} if character.immunity else set() # single ability to set
-        elif isinstance(character.immunity, (list, tuple)): # Multiple abilities
-            character.immunity = set(character.immunity) # convert list/tuple to set
+
+    # Ensure immunities is a set
+    character.immunities.clear()  # Clear existing immunities
+    if not isinstance(character.immunities, set): # Ensure it's a set
+        print("DEBUG apply_assassin_dependent_modifiers: Converting character.immunities to set from", type(character.immunities))
+        if isinstance(character.immunities, str): # Single string
+            character.immunities = {character.immunities} if character.immunities else set() # single ability to set
+        elif isinstance(character.immunities, (list, tuple)): # Multiple abilities
+            character.immunities = set(character.immunities) # convert list/tuple to set
         else:
-            character.immunity = set() # default to empty set
+            character.immunities = set() # default to empty set
 
     # Ensure special_abilities is a set
     character.special_abilities.clear()  # Clear existing special abilities

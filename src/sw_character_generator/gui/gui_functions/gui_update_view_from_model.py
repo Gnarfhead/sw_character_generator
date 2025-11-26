@@ -1,6 +1,6 @@
 """Update view from model function."""
 import tkinter as tk
-from dataclasses import asdict, fields
+from dataclasses import fields
 
 
 
@@ -30,8 +30,8 @@ def update_view_from_model(app):
         if var is None:
             continue
 
-        # Format special fields (main_stats, languages, special_abilities, immunity, etc.)
-        if field in ("main_stats", "languages", "special_abilities", "immunity", "save_bonuses"):
+        # Format special fields (main_stats, languages, special_abilities, immunities, save_bonuses)
+        if field in ("main_stats", "languages", "special_abilities", "immunities", "save_bonuses"):
             value = _format_change_mainstats(value)
 
         # Normalize numeric targets
@@ -77,6 +77,29 @@ def update_view_from_model(app):
             app.special_abilities_txt.insert("1.0", new_text)
             app.special_abilities_txt.edit_modified(False)
     
+    # Special handling for immunities_txt widget
+    if hasattr(app, "immunities_txt"):
+        print("DEBUG update_view_from_model: Updating immunities_txt widget.")
+        current_text = app.immunities_txt.get("1.0", "end-1c")
+        new_text = _format_change_mainstats(model.immunities)
+        if current_text != new_text:
+            print(f"DEBUG update_view_from_model: immunities_txt: '{current_text}' -> '{new_text}'")
+            app.immunities_txt.delete("1.0", "end")
+            app.immunities_txt.insert("1.0", new_text)
+            app.immunities_txt.edit_modified(False)
+    
+    # Special handling for save_bonuses_txt widget
+    if hasattr(app, "save_bonuses_txt"):
+        print("DEBUG update_view_from_model: Updating save_bonuses_txt widget.")
+        current_text = app.save_bonuses_txt.get("1.0", "end-1c")
+        new_text = _format_change_mainstats(model.save_bonuses)
+        if current_text != new_text:
+            print(f"DEBUG update_view_from_model: save_bonuses_txt: '{current_text}' -> '{new_text}'")
+            app.save_bonuses_txt.delete("1.0", "end")
+            app.save_bonuses_txt.insert("1.0", new_text)
+            app.save_bonuses_txt.edit_modified(False)
+
+    # Special handling for treasure_txt widget
     if hasattr(app, "treasure_txt"):
         print("DEBUG update_view_from_model: Updating treasure_txt widget.")
         current_text = app.treasure_txt.get("1.0", "end-1c")
@@ -87,6 +110,7 @@ def update_view_from_model(app):
             app.treasure_txt.insert("1.0", new_text)
             app.treasure_txt.edit_modified(False)
     
+    # Special handling for inventory_txt widget
     if hasattr(app, "inventory_txt"):
         print("DEBUG update_view_from_model: Updating inventory_txt widget.")
         current_text = app.inventory_txt.get("1.0", "end-1c")

@@ -19,11 +19,38 @@ def apply_ranger_dependent_modifiers(character):
     character.open_locks = 0
     character.climb_walls = 0
 
-    character.save_bonuses = set()
+    # Ensure save_bonuses is a set
+    character.save_bonuses.clear()  # Clear existing bonuses
+    if not isinstance(character.save_bonuses, set): # Ensure it's a set
+        print("DEBUG apply_ranger_dependent_modifiers: Converting character.save_bonuses to set from", type(character.save_bonuses))
+        if isinstance(character.save_bonuses, str): # Single string
+            character.save_bonuses = {character.save_bonuses} if character.save_bonuses else set() # single ability to set
+        elif isinstance(character.save_bonuses, (list, tuple)): # Multiple abilities
+            character.save_bonuses = set(character.save_bonuses) # convert list/tuple to set
+        else:
+            character.save_bonuses = set() # default to empty set
     
-    character.immunity = set()
+    # Ensure immunities is a set
+    character.immunities.clear()  # Clear existing immunities
+    if not isinstance(character.immunities, set): # Ensure it's a set
+        print("DEBUG apply_ranger_dependent_modifiers: Converting character.immunities to set from", type(character.immunities))
+        if isinstance(character.immunities, str): # Single string
+            character.immunities = {character.immunities} if character.immunities else set() # single ability to set
+        elif isinstance(character.immunities, (list, tuple)): # Multiple abilities
+            character.immunities = set(character.immunities) # convert list/tuple to set
+        else:
+            character.immunities = set() # default to empty set
 
-    character.special_abilities = set()
+    # Ensure special_abilities is a set
+    character.special_abilities.clear()  # Clear existing special abilities
+    if not isinstance(character.special_abilities, set): # Ensure it's a set
+        print("DEBUG apply_ranger_dependent_modifiers: Converting character.special_abilities to set from", type(character.special_abilities))
+        if isinstance(character.special_abilities, str): # Single string
+            character.special_abilities = {character.special_abilities} if character.special_abilities else set() # single ability to set
+        elif isinstance(character.special_abilities, (list, tuple)): # Multiple abilities
+            character.special_abilities = set(character.special_abilities) # convert list/tuple to set
+        else:
+            character.special_abilities = set() # default to empty set
 
     character.xp_bonus = 0
     character.parry = 0
