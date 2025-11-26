@@ -6,7 +6,6 @@ from sw_character_generator.gui.gui_functions.gui_immunities import on_immunitie
 from sw_character_generator.gui.gui_functions.gui_inventory import on_inventory_changed
 from sw_character_generator.gui.gui_functions.gui_save_bonuses import on_save_bonuses_changed
 from sw_character_generator.gui.gui_functions.gui_special_abilities import on_special_abilities_changed
-from sw_character_generator.classes.item import Item
 from sw_character_generator.gui.gui_functions.gui_treasure import on_treasure_changed
 
 
@@ -27,23 +26,22 @@ def _format_change_stringlabel(value):
         return ", ".join(f"{k}={v}" for k, v in value.items()) # Key=Value pairs
     return str(value) # Fallback to string conversion
 
-def _format_items(items: list) -> str:
+def _format_items_dict(items: dict) -> str:
     """Format list of Item objects for display."""
     
     if not items:
         return ""
     
     lines = []
-    for item in items:
-        if isinstance(item, Item):
-            if item.quantity > 1:
-                lines.append(f"{item.name} x{item.quantity}")
-            else:
-                lines.append(item.name)
+    for name, qty in sorted(items.items(), key=lambda kv: kv[0].lower()):
+        try:
+            q = int(qty)
+        except Exception:
+            q = 1
+        if q > 1:
+            lines.append(f"{name} x{q}")
         else:
-            # Fallback for non-Item objects
-            lines.append(str(item))
-    
+            lines.append(name)
     return "\n".join(lines)
 
 def update_view_from_model(app):
@@ -157,34 +155,28 @@ def update_view_from_model(app):
         # Rebind the event
         app.save_bonuses_txt.bind("<<Modified>>", lambda event: on_save_bonuses_changed(app))
 
-    # Special handling for inventory_txt
     if hasattr(app, "inventory_txt"):
         print("DEBUG update_view_from_model: Updating inventory_txt widget.")
-        app.inventory_txt.unbind("<<Modified>>")
         
         current_text = app.inventory_txt.get("1.0", "end-1c")
-        new_text = _format_items(model.inventory)  # ✓ Use new formatter
+        new_text = _format_items_dict(model.inventory)
         
         if current_text != new_text:
             print(f"DEBUG update_view_from_model: inventory_txt: '{current_text}' -> '{new_text}'")
+            app.inventory_txt.config(state="normal")  # FIX: Temporarily enable
             app.inventory_txt.delete("1.0", "end")
             app.inventory_txt.insert("1.0", new_text)
-        
-        app.inventory_txt.edit_modified(False)
-        app.inventory_txt.bind("<<Modified>>", lambda event: on_inventory_changed(app))
+            app.inventory_txt.config(state="disabled")  # FIX: Disable again
     
-    # Special handling for treasure_txt
     if hasattr(app, "treasure_txt"):
         print("DEBUG update_view_from_model: Updating treasure_txt widget.")
-        app.treasure_txt.unbind("<<Modified>>")
         
         current_text = app.treasure_txt.get("1.0", "end-1c")
-        new_text = _format_items(model.treasure)  # ✓ Use new formatter
+        new_text = _format_items_dict(model.treasure)
         
         if current_text != new_text:
             print(f"DEBUG update_view_from_model: treasure_txt: '{current_text}' -> '{new_text}'")
+            app.treasure_txt.config(state="normal")  # FIX: Temporarily enable
             app.treasure_txt.delete("1.0", "end")
             app.treasure_txt.insert("1.0", new_text)
-        
-        app.treasure_txt.edit_modified(False)
-        app.treasure_txt.bind("<<Modified>>", lambda event: on_treasure_changed(app))
+            app.treasure_txt.config(state="disabled")  # FIX: Disable again

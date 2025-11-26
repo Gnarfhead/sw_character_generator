@@ -1,7 +1,6 @@
 """Module defining the PlayerClass dataclass for character representation."""
 from dataclasses import dataclass, field
 
-from sw_character_generator.classes.item import Item
 
 @dataclass
 class PlayerClass:
@@ -43,7 +42,7 @@ class PlayerClass:
     stat_wis: int = field(default=0)
     stat_int: int = field(default=0)
     stat_char: int = field(default=0)
-    inventory: list[Item] = field(default_factory=list)
+    inventory: dict[str, int] = field(default_factory=dict)
     strength_atck_mod: float = 0.0
     strength_damage_mod: float = 0.0
     carry_capacity_mod: float = 0.0
@@ -58,7 +57,7 @@ class PlayerClass:
     min_spells_per_level: int = 0
     max_spells_per_level: int = 0
     cap_spec_hirelings: int = 0
-    treasure: list[Item] = field(default_factory=list)
+    treasure: dict[str, int] = field(default_factory=dict)
     coins_platinum: int = field(default=0)
     coins_gold: int = field(default=0)
     coins_electrum: int = field(default=0)
@@ -123,20 +122,7 @@ class PlayerClass:
 
     def __post_init__(self):
         """Initialize derived attributes after the main initialization."""
-        if not self.inventory:
-            self.inventory = [
-                Item(name="Rope", weight=5.0, value_copper=10, category="Tool"),
-                Item(name="Torch", quantity=3, weight=0.5, value_copper=1, category="Tool"),
-                Item(name="Backpack", weight=2.0, value_copper=20, category="Container"),
-                Item(name="Bedroll", weight=5.0, value_copper=5, category="Tool"),
-                Item(name="Waterskin", weight=4.0, value_copper=8, category="Tool"),
-                Item(name="Mess Kit", weight=1.0, value_copper=2, category="Tool")
-            ]
-        if not self.treasure:
-            self.treasure = [
-                Item(name="Gold Coin", quantity=10, weight=0.1, value_copper=100, category="Currency"),
-                Item(name="Silver Ring", weight=0.05, value_copper=500, category="Jewelry")
-            ]
+        
 
 
     def __repr__(self):
@@ -213,7 +199,7 @@ class PlayerClass:
                 "int": self.stat_int,
                 "cha": self.stat_char
             },
-            "inventory": [Item.to_dict(item) for item in self.inventory],
+            "inventory": self.inventory,
             "modifiers": {
                 "strength": {
                     "attack": self.strength_atck_mod,
@@ -240,7 +226,7 @@ class PlayerClass:
                     "max_hirelings": self.cap_spec_hirelings
                 }
             },
-            "treasure": [Item.to_dict(item) for item in self.treasure],
+            "treasure": self.treasure,
             "coins_platinum": self.coins_platinum,
             "coins_gold": self.coins_gold,
             "coins_electrum": self.coins_electrum,

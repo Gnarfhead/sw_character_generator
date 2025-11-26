@@ -1,40 +1,35 @@
 """Handle changes to the treasure text widget."""
-from sw_character_generator.classes.item import Item
-
 
 def on_treasure_changed(app):
-    """Callback when user edits treasure_txt."""
-    print("DEBUG on_treasure_changed: ------------------------------------------------")
 
     if getattr(app, "is_updating", False):
-        print("DEBUG on_treasure_changed: Change ignored due to is_updating flag.")
         return
-
-    content = app.treasure_txt.get("1.0", "end-1c")
-
-    # Parse treasure entries (same format as inventory)
-    treasure = []
-    if "\n" in content or "," in content:
-        lines = content.replace(",", "\n").split("\n")
-        for line in lines:
-            line = line.strip()
-            if not line:
+    content = app.treasure_txt.get("1.0", "end-1c").strip() # Get content
+    new: dict[str,int] = {} # New treasure dictionary
+    if content: # If there's content
+        lines = content.replace(",", "\n").splitlines() # Split into lines
+        for line in lines: # Process each line
+            s = line.strip() # Strip whitespace
+            if not s: # Skip empty lines
                 continue
-            
-            if " x" in line or " X" in line:
-                parts = line.replace(" X", " x").split(" x")
-                name = parts[0].strip()
+            qty = 1 # Default quantity
+            if " x" in s.lower(): # Check for " xN"
+                parts = s.rsplit("x", 1) # Split at last 'x'
+                name = parts[0].strip() # Get name
                 try:
-                    quantity = int(parts[1].strip())
-                except (ValueError, IndexError):
-                    quantity = 1
-                treasure.append(Item(name=name, quantity=quantity, category="Treasure"))
+                    qty = int(parts[1].strip())  # Get quantity
+                except Exception: 
+                    qty = 1 # Default to 1 on error
+            elif ":" in s: # Check for ": N"
+                parts = s.rsplit(":", 1) # Split at last ':'
+                name = parts[0].strip() # Get name
+                try:
+                    qty = int(parts[1].strip()) # Get quantity
+                except Exception:
+                    qty = 1 # Default to 1 on error
             else:
-                treasure.append(Item(name=line, category="Treasure"))
-    elif content.strip():
-        treasure.append(Item(name=content.strip(), category="Treasure"))
-
-    app.new_player.treasure = treasure
-
+                name = s # Just the name
+            new[name] = new.get(name, 0) + qty # Update quantity
+    app.new_player.treasure = new
     app.treasure_txt.edit_modified(False)
     print(f"DEBUG on_treasure_changed: Updated treasure to: {app.new_player.treasure}")

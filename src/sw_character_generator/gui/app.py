@@ -341,31 +341,69 @@ class App:
         wrap="word",
         height=3,        # visible row height (can be adjusted)
         width=40,        # visible column width (char-based)
-        font=("TkDefaultFont", 10)
+        font=("TkDefaultFont", 10),
+        state="disabled"
         )
         self.treasure_txt.grid(row=0, column=1, columnspan=5, sticky="nsew", padx=PADX, pady=PADY)
-        self.treasure_txt.bind("<<Modified>>", lambda event: on_treasure_changed(self))
+        #self.treasure_txt.bind("<<Modified>>", lambda event: on_treasure_changed(self))
 
-        # Row 1: Inventory
-        widget_label(self.inventory_frame, "Inventory:", 1, 0, owner=self, name_label="lbl_inventory")
+        # Row 0.5: Add Treasure controls
+        widget_label(self.inventory_frame, "Add Treasure:", 1, 0, owner=self, name_label="lbl_add_treasure")
+        self.treasure_name_var = tk.StringVar(master=self.root, value="")
+        self.treasure_qty_var = tk.IntVar(master=self.root, value=1)
+        
+        self.entry_treasure_name = ttk.Entry(self.inventory_frame, textvariable=self.treasure_name_var, width=20)
+        self.entry_treasure_name.grid(row=1, column=1, sticky="ew", padx=PADX, pady=PADY)
+        
+        self.spin_treasure_qty = ttk.Spinbox(self.inventory_frame, from_=1, to=9999, textvariable=self.treasure_qty_var, width=8)
+        self.spin_treasure_qty.grid(row=1, column=2, sticky="w", padx=PADX, pady=PADY)
+        
+        self.btn_add_treasure = ttk.Button(
+            self.inventory_frame, 
+            text="Add", 
+            command=lambda: self._add_item_to_dict("treasure", self.treasure_name_var.get(), self.treasure_qty_var.get())
+        )
+        self.btn_add_treasure.grid(row=1, column=3, sticky="w", padx=PADX, pady=PADY)
+
+        # Row 2: Inventory
+        widget_label(self.inventory_frame, "Inventory:", 2, 0, owner=self, name_label="lbl_inventory")
         # Use scrolledtext for inventory
         self.inventory_txt = scrolledtext.ScrolledText(
         self.inventory_frame,
         wrap="word",
         height=3,        # visible row height (can be adjusted)
         width=40,        # visible column width (char-based)
-        font=("TkDefaultFont", 10)
+        font=("TkDefaultFont", 10),
+        state="disabled"
         )
-        self.inventory_txt.grid(row=1, column=1, columnspan=5, sticky="nsew", padx=PADX, pady=PADY)
-        self.inventory_txt.bind("<<Modified>>", lambda event: on_inventory_changed(self))
+        self.inventory_txt.grid(row=2, column=1, columnspan=5, sticky="nsew", padx=PADX, pady=PADY)
+        #self.inventory_txt.bind("<<Modified>>", lambda event: on_inventory_changed(self))
 
-        # Row 2: Coins
-        widget_label(self.inventory_frame, "Coins:", 2, 0, owner=self, name_label="lbl_coins")
-        widget_extlabel(self.inventory_frame, "Platinum:", 2, 2, var=self.coins_platinum_var, owner=self, name_label="lbl_coins_platinum", name_value="entry_coins_platinum")
-        widget_extlabel(self.inventory_frame, "Gold:", 3, 2, var=self.coins_gold_var, owner=self, name_label="lbl_coins_gold", name_value="entry_coins_gold")
-        widget_extlabel(self.inventory_frame, "Electrum:", 4, 2, var=self.coins_electrum_var, owner=self, name_label="lbl_coins_electrum", name_value="entry_coins_electrum")
-        widget_extlabel(self.inventory_frame, "Silver:", 5, 2, var=self.coins_silver_var, owner=self, name_label="lbl_coins_silver", name_value="entry_coins_silver")
-        widget_extlabel(self.inventory_frame, "Copper:", 6, 2, var=self.coins_copper_var, owner=self, name_label="lbl_coins_copper", name_value="entry_coins_copper")
+        # Row 2.5: Add Inventory controls
+        widget_label(self.inventory_frame, "Add Item:", 3, 0, owner=self, name_label="lbl_add_inventory")
+        self.inventory_name_var = tk.StringVar(master=self.root, value="")
+        self.inventory_qty_var = tk.IntVar(master=self.root, value=1)
+        
+        self.entry_inventory_name = ttk.Entry(self.inventory_frame, textvariable=self.inventory_name_var, width=20)
+        self.entry_inventory_name.grid(row=3, column=1, sticky="ew", padx=PADX, pady=PADY)
+        
+        self.spin_inventory_qty = ttk.Spinbox(self.inventory_frame, from_=1, to=9999, textvariable=self.inventory_qty_var, width=8)
+        self.spin_inventory_qty.grid(row=3, column=2, sticky="w", padx=PADX, pady=PADY)
+        
+        self.btn_add_inventory = ttk.Button(
+            self.inventory_frame, 
+            text="Add", 
+            command=lambda: self._add_item_to_dict("inventory", self.inventory_name_var.get(), self.inventory_qty_var.get())
+        )
+        self.btn_add_inventory.grid(row=3, column=3, sticky="w", padx=PADX, pady=PADY)
+
+        # Row 4: Coins
+        widget_label(self.inventory_frame, "Coins:", 4, 0, owner=self, name_label="lbl_coins")
+        widget_extlabel(self.inventory_frame, "Platinum:", 4, 2, var=self.coins_platinum_var, owner=self, name_label="lbl_coins_platinum", name_value="entry_coins_platinum")
+        widget_extlabel(self.inventory_frame, "Gold:", 5, 2, var=self.coins_gold_var, owner=self, name_label="lbl_coins_gold", name_value="entry_coins_gold")
+        widget_extlabel(self.inventory_frame, "Electrum:", 6, 2, var=self.coins_electrum_var, owner=self, name_label="lbl_coins_electrum", name_value="entry_coins_electrum")
+        widget_extlabel(self.inventory_frame, "Silver:", 7, 2, var=self.coins_silver_var, owner=self, name_label="lbl_coins_silver", name_value="entry_coins_silver")
+        widget_extlabel(self.inventory_frame, "Copper:", 8, 2, var=self.coins_copper_var, owner=self, name_label="lbl_coins_copper", name_value="entry_coins_copper")
 
         # Footerframe (if needed in future)
         self.footer_frame = ttk.Frame(self.root, borderwidth=5, padding=(6,6), style="Standard.TFrame")
@@ -404,6 +442,37 @@ class App:
 
     # ----------------- model-view synchronization -----------------
 
+    def _add_item_to_dict(self, dict_name: str, item_name: str, quantity: int):
+        """Add/merge item into inventory or treasure dict and refresh GUI."""
+        if not item_name.strip():
+            self.status_var.set("Error: Item name cannot be empty.")
+            return
+        
+        item_name = item_name.strip()
+        
+        # Get the target dict
+        target_dict = getattr(self.new_player, dict_name, {})
+        if not isinstance(target_dict, dict):
+            target_dict = {}
+            setattr(self.new_player, dict_name, target_dict)
+        
+        # Merge quantity
+        target_dict[item_name] = target_dict.get(item_name, 0) + quantity
+        
+        # Clear input fields
+        if dict_name == "inventory":
+            self.inventory_name_var.set("")
+            self.inventory_qty_var.set(1)
+        elif dict_name == "treasure":
+            self.treasure_name_var.set("")
+            self.treasure_qty_var.set(1)
+        
+        # Refresh GUI
+        with self.suppress_updates():
+            update_view_from_model(self)
+        
+        self.status_var.set(f"Added {quantity}x {item_name} to {dict_name}.")
+    
     @property
     def is_updating(self) -> bool:
         """Public, read-only view of the updating flag."""
