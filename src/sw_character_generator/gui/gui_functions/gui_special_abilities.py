@@ -20,4 +20,4 @@ def on_special_abilities_changed(app):
 
     app.special_abilities_txt.edit_modified(False)  # reset modified flag
 
-    # print("DEBUG on_special_abilities_changed: Updated to", {app.new_player.special_abilities}, "type:", {type(app.new_player.special_abilities)},)
+    # print("DEBUG on_special_abilities_changed: Updated to", app.new_player.special_abilities)

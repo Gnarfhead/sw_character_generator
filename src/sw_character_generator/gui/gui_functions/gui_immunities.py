@@ -20,4 +20,4 @@ def on_immunities_changed(app):
 
     app.immunities_txt.edit_modified(False)  # reset modified flag
 
-    # print("DEBUG on_immunities_changed: Updated to", {app.new_player.immunities}, "type:", {type(app.new_player.immunities)},)
+    # print("DEBUG on_immunities_changed: Updated to", app.new_player.immunities)

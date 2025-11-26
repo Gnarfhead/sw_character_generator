@@ -19,10 +19,11 @@ def on_race_change(app, *args):
         choosen_race_modifiers(app.new_player, name) # update race and related stats 
         app.status_var.set(f"Race changed to {name}") # inform user of successful change
         app.lbl_race.config(style="Standard.TLabel") # reset label style
-        update_view_from_model(app) # refresh GUI to reflect model changes
+        
+        # Refresh the GUI to reflect model changes
+        with app.suppress_updates(): # prevent recursive updates
+            update_view_from_model(app) # refresh GUI to reflect model changes
 
-        print("DEBUG on_race_change: type of app.new_player.special_abilities:", type(app.new_player.special_abilities))
-        print("DEBUG on_race_change: app.new_player.special_abilities:", app.new_player.special_abilities)
 
         # Adjust top_frame style based on race and alignment selection
         print("DEBUG on_race_change: Checking race and alignment for top_frame style adjustment.")

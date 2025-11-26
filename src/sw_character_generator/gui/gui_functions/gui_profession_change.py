@@ -36,7 +36,10 @@ def on_profession_change(app, *args):
         calculate_next_level_xp(app, app.new_player) # recalculate next level XP
         refresh_race_values(app) # update race combobox values
         refresh_alignment_values(app) # update alignment combobox values
-        update_view_from_model(app) # refresh GUI to reflect model changes
+
+        # Refresh the GUI to reflect model changes
+        with app.suppress_updates(): # prevent recursive updates
+            update_view_from_model(app) # refresh GUI to reflect model changes
     except Exception as e:
         #app.status_var.set(f"DEBUG on_profession_change: Error updating profession: {e}")
         print(f"DEBUG on_profession_change: Profession change error: {e}")

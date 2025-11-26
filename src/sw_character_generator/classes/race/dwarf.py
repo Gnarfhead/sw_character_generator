@@ -17,6 +17,7 @@ def apply_dwarf_dependent_modifiers(character):
             character.special_abilities = set(character.special_abilities) # convert list/tuple to set
         else:
             character.special_abilities = set() # default to empty set
+    #character.special_abilities.clear()  # Clear existing special abilities
     character.special_abilities.add("- Stonecunning")
     character.special_abilities.add("- Saving throw bonus against magic +4")
     # print("DEBUG apply_dwarf_dependent_modifiers: type of character.special_abilities after assignment:", type(character.special_abilities))
@@ -30,10 +31,10 @@ def apply_dwarf_dependent_modifiers(character):
             character.save_bonuses = set(character.save_bonuses) # convert list/tuple to set
         else:
             character.save_bonuses = set() # default to empty set
+    #character.save_bonuses.clear()  # Clear existing save bonuses
     # print("DEBUG apply_dwarf_dependent_modifiers: type of character.save_bonuses after assignment:", type(character.save_bonuses))
 
     # Ensure immunities is a set
-    character.immunities.clear()  # Clear existing immunities
     if not isinstance(character.immunities, set): # Ensure it's a set
         print("DEBUG apply_dwarf_dependent_modifiers: Converting character.immunities to set from", type(character.immunities))
         if isinstance(character.immunities, str): # Single string
@@ -42,6 +43,7 @@ def apply_dwarf_dependent_modifiers(character):
             character.immunities = set(character.immunities) # convert list/tuple to set
         else:
             character.immunities = set() # default to empty set
+    #character.immunities.clear()  # Clear existing immunities
     # print("DEBUG apply_dwarf_dependent_modifiers: type of character.immunities after assignment:", type(character.immunities))
 
     # Ensure languages is a set

@@ -20,4 +20,4 @@ def on_save_bonuses_changed(app):
 
     app.save_bonuses_txt.edit_modified(False)  # reset modified flag
 
-    # print("DEBUG on_save_bonuses_changed: Updated to", {app.new_player.save_bonuses}, "type:", {type(app.new_player.save_bonuses)},)
+    # print("DEBUG on_save_bonuses_changed: Updated to", app.new_player.save_bonuses)
