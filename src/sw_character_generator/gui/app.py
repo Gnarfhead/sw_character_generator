@@ -305,7 +305,7 @@ class App:
         self.special_abilities_txt = scrolledtext.ScrolledText(
         self.stats_frame,
         wrap="word",
-        height=5,        # visible row height (can be adjusted)
+        height=3,        # visible row height (can be adjusted)
         width=40,        # visible column width (char-based)
         font=("TkDefaultFont", 10)
         )
@@ -339,7 +339,7 @@ class App:
         self.treasure_txt = scrolledtext.ScrolledText(
         self.inventory_frame,
         wrap="word",
-        height=5,        # visible row height (can be adjusted)
+        height=3,        # visible row height (can be adjusted)
         width=40,        # visible column width (char-based)
         font=("TkDefaultFont", 10)
         )
@@ -352,7 +352,7 @@ class App:
         self.inventory_txt = scrolledtext.ScrolledText(
         self.inventory_frame,
         wrap="word",
-        height=5,        # visible row height (can be adjusted)
+        height=3,        # visible row height (can be adjusted)
         width=40,        # visible column width (char-based)
         font=("TkDefaultFont", 10)
         )
