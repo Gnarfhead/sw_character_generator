@@ -2,6 +2,10 @@
 import tkinter as tk
 from dataclasses import fields
 
+from sw_character_generator.gui.gui_functions.gui_immunities import on_immunities_changed
+from sw_character_generator.gui.gui_functions.gui_save_bonuses import on_save_bonuses_changed
+from sw_character_generator.gui.gui_functions.gui_special_abilities import on_special_abilities_changed
+
 
 
 def _format_change_scrolledtext(value):
@@ -79,35 +83,57 @@ def update_view_from_model(app):
     # Special handling for ScrolledText widgets (NACH der Schleife!)
     if hasattr(app, "special_abilities_txt"):
         # print("DEBUG update_view_from_model: Updating special_abilities_txt widget.")
+        app.special_abilities_txt.unbind("<<Modified>>")  # Temporarily unbind to avoid triggering change event
+
         current_text = app.special_abilities_txt.get("1.0", "end-1c")
+        # Generate new text from model
         new_text = _format_change_scrolledtext(model.special_abilities)
+
         if current_text != new_text:
             print("DEBUG update_view_from_model: special_abilities_txt:", current_text, "->", new_text)
             app.special_abilities_txt.delete("1.0", "end")
             app.special_abilities_txt.insert("1.0", new_text)
-            app.special_abilities_txt.edit_modified(False)
+        
+        app.special_abilities_txt.edit_modified(False)
+        # Rebind the event
+        app.special_abilities_txt.bind("<<Modified>>", lambda event: on_special_abilities_changed(app))
+
     
     # Special handling for immunities_txt widget
     if hasattr(app, "immunities_txt"):
         # print("DEBUG update_view_from_model: Updating immunities_txt widget.")
+        app.immunities_txt.unbind("<<Modified>>")  # Temporarily unbind to avoid triggering change event
+
         current_text = app.immunities_txt.get("1.0", "end-1c")
+        # Generate new text from model
         new_text = _format_change_scrolledtext(model.immunities)
+
         if current_text != new_text:
             print(f"DEBUG update_view_from_model: immunities_txt: '{current_text}' -> '{new_text}'")
             app.immunities_txt.delete("1.0", "end")
             app.immunities_txt.insert("1.0", new_text)
-            app.immunities_txt.edit_modified(False)
+
+        app.immunities_txt.edit_modified(False)
+        # Rebind the event
+        app.immunities_txt.bind("<<Modified>>", lambda event: on_immunities_changed(app))
     
     # Special handling for save_bonuses_txt widget
     if hasattr(app, "save_bonuses_txt"):
         # print("DEBUG update_view_from_model: Updating save_bonuses_txt widget.")
+        app.save_bonuses_txt.unbind("<<Modified>>")  # Temporarily unbind to avoid triggering change event
+
         current_text = app.save_bonuses_txt.get("1.0", "end-1c")
+        # Generate new text from model
         new_text = _format_change_scrolledtext(model.save_bonuses)
+
         if current_text != new_text:
             print(f"DEBUG update_view_from_model: save_bonuses_txt: '{current_text}' -> '{new_text}'")
             app.save_bonuses_txt.delete("1.0", "end")
             app.save_bonuses_txt.insert("1.0", new_text)
-            app.save_bonuses_txt.edit_modified(False)
+        
+        app.save_bonuses_txt.edit_modified(False)
+        # Rebind the event
+        app.save_bonuses_txt.bind("<<Modified>>", lambda event: on_save_bonuses_changed(app))
 
     # Special handling for treasure_txt widget
     if hasattr(app, "treasure_txt"):

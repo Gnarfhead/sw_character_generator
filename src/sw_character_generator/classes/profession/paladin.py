@@ -20,44 +20,44 @@ def apply_paladin_dependent_modifiers(character):
     character.climb_walls = 0
     
     # Ensure save_bonuses is a set
-    if not isinstance(character.save_bonuses, set): # Ensure it's a set
-        print("DEBUG apply_paladin_dependent_modifiers: Converting character.save_bonuses to set from", type(character.save_bonuses))
-        if isinstance(character.save_bonuses, str): # Single string
-            character.save_bonuses = {character.save_bonuses} if character.save_bonuses else set() # single ability to set
-        elif isinstance(character.save_bonuses, (list, tuple)): # Multiple abilities
-            character.save_bonuses = set(character.save_bonuses) # convert list/tuple to set
+    if not isinstance(character.save_bonuses_profession, set): # Ensure it's a set
+        print("DEBUG apply_paladin_dependent_modifiers: Converting character.save_bonuses to set from", type(character.save_bonuses_profession))
+        if isinstance(character.save_bonuses_profession, str): # Single string
+            character.save_bonuses_profession = {character.save_bonuses_profession} if character.save_bonuses_profession else set() # single ability to set
+        elif isinstance(character.save_bonuses_profession, (list, tuple)): # Multiple abilities
+            character.save_bonuses_profession = set(character.save_bonuses_profession) # convert list/tuple to set
         else:
-            character.save_bonuses = set() # default to empty set
-    character.save_bonuses.clear()  # Clear existing bonuses
+            character.save_bonuses_profession = set() # default to empty set
+    character.save_bonuses_profession.clear()  # Clear existing bonuses
 
     # Ensure immunities is a set
-    if not isinstance(character.immunities, set): # Ensure it's a set
-        print("DEBUG apply_paladin_dependent_modifiers: Converting character.immunities to set from", type(character.immunities))
-        if isinstance(character.immunities, str): # Single string
-            character.immunities = {character.immunities} if character.immunities else set() # single ability to set
-        elif isinstance(character.immunities, (list, tuple)): # Multiple abilities
-            character.immunities = set(character.immunities) # convert list/tuple to set
+    if not isinstance(character.immunities_profession, set): # Ensure it's a set
+        print("DEBUG apply_paladin_dependent_modifiers: Converting character.immunities to set from", type(character.immunities_profession))
+        if isinstance(character.immunities_profession, str): # Single string
+            character.immunities_profession = {character.immunities_profession} if character.immunities_profession else set() # single ability to set
+        elif isinstance(character.immunities_profession, (list, tuple)): # Multiple abilities
+            character.immunities_profession = set(character.immunities_profession) # convert list/tuple to set
         else:
-            character.immunities = set() # default to empty set
-    character.immunities.clear()  # Clear existing immunities
-    character.immunities.add("- Immunity against disease")
-    
+            character.immunities_profession = set() # default to empty set
+    character.immunities_profession.clear()  # Clear existing immunities
+    character.immunities_profession.add("- Immunity against disease")
+
     # Ensure special_abilities is a set
-    if not isinstance(character.special_abilities, set): # Ensure it's a set
-        print("DEBUG apply_paladin_dependent_modifiers: Converting character.special_abilities to set from", type(character.special_abilities))
-        if isinstance(character.special_abilities, str): # Single string
-            character.special_abilities = {character.special_abilities} if character.special_abilities else set() # single ability to set
-        elif isinstance(character.special_abilities, (list, tuple)): # Multiple abilities
-            character.special_abilities = set(character.special_abilities) # convert list/tuple to set
+    if not isinstance(character.special_abilities_profession, set): # Ensure it's a set
+        print("DEBUG apply_paladin_dependent_modifiers: Converting character.special_abilities to set from", type(character.special_abilities_profession))
+        if isinstance(character.special_abilities_profession, str): # Single string
+            character.special_abilities_profession = {character.special_abilities_profession} if character.special_abilities_profession else set() # single ability to set
+        elif isinstance(character.special_abilities_profession, (list, tuple)): # Multiple abilities
+            character.special_abilities_profession = set(character.special_abilities_profession) # convert list/tuple to set
         else:
-            character.special_abilities = set() # default to empty set
-    character.special_abilities.clear()  # Clear existing special abilities
-    character.special_abilities.add("- Lay on hands: paladins can heal 2 HP by laying on hands or cure a disease once per day")
-    character.special_abilities.add("- Magic items: paladins can use magic items that are usable by fighters. A total of 4 magic items; including max 3 weapons; 1 armor and 1 shield")
-    character.special_abilities.add("- Warhorse: paladins can summon a warhorse which is very intelligent and strong (5 HP dice)")
-    character.special_abilities.add("- Banish evil (Level 8): like the cleric spell")
-    character.special_abilities.add("- Detect evil (Level 8): like the cleric spell")
-    character.special_abilities.add("- Fortress (Level 9): paladins can create a stronghold to gather followers")
+            character.special_abilities_profession = set() # default to empty set
+    character.special_abilities_profession.clear()  # Clear existing special abilities
+    character.special_abilities_profession.add("- Lay on hands: paladins can heal 2 HP by laying on hands or cure a disease once per day")
+    character.special_abilities_profession.add("- Magic items: paladins can use magic items that are usable by fighters. A total of 4 magic items; including max 3 weapons; 1 armor and 1 shield")
+    character.special_abilities_profession.add("- Warhorse: paladins can summon a warhorse which is very intelligent and strong (5 HP dice)")
+    character.special_abilities_profession.add("- Banish evil (Level 8): like the cleric spell")
+    character.special_abilities_profession.add("- Detect evil (Level 8): like the cleric spell")
+    character.special_abilities_profession.add("- Fortress (Level 9): paladins can create a stronghold to gather followers")
 
     character.xp_bonus = 0
     character.parry = 0

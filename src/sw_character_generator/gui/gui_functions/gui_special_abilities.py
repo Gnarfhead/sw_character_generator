@@ -14,10 +14,17 @@ def on_special_abilities_changed(app):
     # Parse back to SET (not tuple!)
     if "\n" in content or "," in content:  # multiple abilities
         lines = content.replace(",", "\n").split("\n")
-        app.new_player.special_abilities = {s.strip() for s in lines if s.strip()}  # ✓ set
+        user_entries = {s.strip() for s in lines if s.strip()}
     else:
-        app.new_player.special_abilities = {content.strip()} if content.strip() else set()  # ✓ set
+        user_entries = {content.strip()} if content.strip() else set()
 
-    app.special_abilities_txt.edit_modified(False)  # reset modified flag
+    # Combine user entries with auto-generated entries
+    auto_entries = app.new_player.special_abilities_race | app.new_player.special_abilities_profession    
+
+    # Update the character's special abilities
+    app.new_player.special_abilities_other = user_entries - auto_entries
+
+    # Update the text widget to reflect any changes (if needed)
+    app.special_abilities_txt.edit_modified(False)  # Reset the modified flag
 
     # print("DEBUG on_special_abilities_changed: Updated to", app.new_player.special_abilities)

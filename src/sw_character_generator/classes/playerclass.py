@@ -24,9 +24,15 @@ class PlayerClass:
     hp_current: int = 0
     hp_last_roll: int = 0
     save_throw: int = 0
-    save_bonuses: set[str] = field(default_factory=set)
-    immunities: set[str] = field(default_factory=set)
-    special_abilities: set[str] = field(default_factory=set)
+    save_bonuses_race: set[str] = field(default_factory=set)
+    save_bonuses_profession: set[str] = field(default_factory=set)
+    save_bonuses_other: set[str] = field(default_factory=set)
+    immunities_race: set[str] = field(default_factory=set)
+    immunities_profession: set[str] = field(default_factory=set)
+    immunities_other: set[str] = field(default_factory=set)
+    special_abilities_race: set[str] = field(default_factory=set)
+    special_abilities_profession: set[str] = field(default_factory=set)
+    special_abilities_other: set[str] = field(default_factory=set)
     ac: int = 10
     languages: set[str] = field(default_factory=set)
     stat_str: int = field(default=0)
@@ -53,7 +59,6 @@ class PlayerClass:
     treasure: list[str] = field(default_factory=list)
     coins: int = field(default=0)
     allowed_alignment: str = "Undefined"
-    #allowed_races: str = "Undefined"
     allowed_races: tuple[str, ...] = field(default_factory=tuple)
     allowed_armor: str = "Undefined"
     allowed_weapon: str = "Undefined"
@@ -75,6 +80,22 @@ class PlayerClass:
     spells_lvl7: int = 0
     spells_lvl8: int = 0
     spells_lvl9: int = 0
+
+    # Derived properties
+    @property
+    def save_bonuses(self) -> set[str]:
+        """Combine all save bonuses from race, class, and other sources."""
+        return self.save_bonuses_race | self.save_bonuses_profession | self.save_bonuses_other
+    
+    @property
+    def immunities(self) -> set[str]:
+        """Combine all immunities from race , class, and other sources."""
+        return self.immunities_race | self.immunities_profession | self.immunities_other
+    
+    @property
+    def special_abilities(self) -> set[str]:
+        """Combine all special abilities from race, class, and other sources."""
+        return self.special_abilities_race | self.special_abilities_profession | self.special_abilities_other
 
     def post_init(self):
         """Initialize derived attributes after the main initialization."""
@@ -135,9 +156,15 @@ class PlayerClass:
             "hp_current": self.hp_current,
             "hp_last_roll": self.hp_last_roll,
             "save_throw": self.save_throw,
-            "save_bonuses": list(self.save_bonuses),
-            "immunities": list(self.immunities),
-            "special_abilities": list(self.special_abilities),
+            "save_bonuses_race": list(self.save_bonuses),
+            "save_bonuses_profession": list(self.save_bonuses),
+            "save_bonuses_other": list(self.save_bonuses_other),
+            "immunities_race": list(self.immunities),
+            "immunities_profession": list(self.immunities),
+            "immunities_other": list(self.immunities_other),
+            "special_abilities_race": list(self.special_abilities),
+            "special_abilities_profession": list(self.special_abilities),
+            "special_abilities_other": list(self.special_abilities),
             "ac": self.ac,
             "languages": list(self.languages),
             
@@ -235,9 +262,15 @@ class PlayerClass:
         self.hp_current = data.get("hp_current", self.hp_current)
         self.hp_last_roll = data.get("hp_last_roll", self.hp_last_roll)
         self.save_throw = data.get("save_throw", self.save_throw)
-        self.save_bonuses = set(data.get("save_bonuses", []))
-        self.immunities = set(data.get("immunities", []))
-        self.special_abilities = set(data.get("special_abilities", []))
+        self.save_bonuses_race = set(data.get("save_bonuses_race", []))
+        self.save_bonuses_profession = set(data.get("save_bonuses_profession", []))
+        self.save_bonuses_other = set(data.get("save_bonuses_other", []))
+        self.immunities_race = set(data.get("immunities_race", []))
+        self.immunities_profession = set(data.get("immunities_profession", []))
+        self.immunities_other = set(data.get("immunities_other", []))
+        self.special_abilities_race = set(data.get("special_abilities_race", []))
+        self.special_abilities_profession = set(data.get("special_abilities_profession", []))
+        self.special_abilities_other = set(data.get("special_abilities_other", []))
         self.ac = data.get("ac", self.ac)
         self.languages = set(data.get("languages", []))
         self.stat_str = stats.get("str", self.stat_str)

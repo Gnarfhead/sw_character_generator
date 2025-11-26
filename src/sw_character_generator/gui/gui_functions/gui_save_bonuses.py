@@ -14,10 +14,17 @@ def on_save_bonuses_changed(app):
     # Parse back to SET (not tuple!)
     if "\n" in content or "," in content:  # multiple save bonuses
         lines = content.replace(",", "\n").split("\n")
-        app.new_player.save_bonuses = {s.strip() for s in lines if s.strip()}  # ✓ set
+        user_entries = {s.strip() for s in lines if s.strip()}
     else:
-        app.new_player.save_bonuses = {content.strip()} if content.strip() else set()  # ✓ set
+        user_entries = {content.strip()} if content.strip() else set()
 
-    app.save_bonuses_txt.edit_modified(False)  # reset modified flag
+    # Combine user entries with auto-generated entries
+    auto_entries = app.new_player.save_bonuses_race | app.new_player.save_bonuses_profession
+
+    # Update the character's save bonuses
+    app.new_player.save_bonuses_other = user_entries - auto_entries
+
+    # Update the text widget to reflect combined entries
+    app.save_bonuses_txt.edit_modified(False)  # Reset the modified flag
 
     # print("DEBUG on_save_bonuses_changed: Updated to", app.new_player.save_bonuses)
