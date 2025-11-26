@@ -12,11 +12,12 @@ def on_save_bonuses_changed(app):
     content = app.save_bonuses_txt.get("1.0", "end-1c")
 
     # Parse back to SET (not tuple!)
-    if "," in content:  # multiple save bonuses
-        app.new_player.save_bonuses = {s.strip() for s in content.split(",") if s.strip()}  # ✓ set
+    if "\n" in content or "," in content:  # multiple save bonuses
+        lines = content.replace(",", "\n").split("\n")
+        app.new_player.save_bonuses = {s.strip() for s in lines if s.strip()}  # ✓ set
     else:
-        app.new_player.save_bonuses = {content} if content.strip() else set()  # ✓ set
+        app.new_player.save_bonuses = {content.strip()} if content.strip() else set()  # ✓ set
 
     app.save_bonuses_txt.edit_modified(False)  # reset modified flag
 
-    #print("DEBUG on_save_bonuses_changed: Updated to", {app.new_player.save_bonuses}, "type:", {type(app.new_player.save_bonuses)},)
+    # print("DEBUG on_save_bonuses_changed: Updated to", {app.new_player.save_bonuses}, "type:", {type(app.new_player.save_bonuses)},)

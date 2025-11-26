@@ -184,7 +184,7 @@ class App:
         widget_extlabel(self.top_frame, "XP-Bonus (%):", 0, 8, var=self.xp_bonus_var, owner=self, name_label="lbl_xp_bonus", name_value="entry_xp_bonus")
 
         # Row 1
-        widget_combobox(self.top_frame, "Profession:", 1, 0, self.profession_var, ["Fighter", "Cleric", "Thief", "Wizard", "Ranger", "Paladin", "Druid", "Assassin", "Monk"], state="disabled", owner=self, name_label="lbl_profession", name_combo="cb_profession")
+        widget_combobox(self.top_frame, "Profession:", 1, 0, self.profession_var, ["Assassin", "Cleric", "Druid", "Fighter", "Monk", "Paladin", "Ranger", "Thief", "Wizard"], state="disabled", owner=self, name_label="lbl_profession", name_combo="cb_profession")
         widget_combobox(self.top_frame, "Race:", 1, 2, self.race_var, list(getattr(self.new_player, "allowed_races", ())), state="disabled", owner=self, name_label="lbl_race", name_combo="cb_race")
         widget_combobox(self.top_frame, "Alignment:", 1, 4, self.alignment_var, ["Good", "Neutral", "Evil"], state="disabled", owner=self, name_label="lbl_alignment", name_combo="cb_alignment")
         widget_extlabel(self.top_frame, "XP:", 1, 6, var=self.xp_var, owner=self, name_label="lbl_xp", name_value="entry_xp")

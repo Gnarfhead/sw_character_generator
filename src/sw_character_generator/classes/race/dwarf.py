@@ -17,8 +17,8 @@ def apply_dwarf_dependent_modifiers(character):
             character.special_abilities = set(character.special_abilities) # convert list/tuple to set
         else:
             character.special_abilities = set() # default to empty set
-    character.special_abilities.add("Stonecunning")
-    character.special_abilities.add("Saving throw bonus against magic +4")
+    character.special_abilities.add("- Stonecunning")
+    character.special_abilities.add("- Saving throw bonus against magic +4")
     # print("DEBUG apply_dwarf_dependent_modifiers: type of character.special_abilities after assignment:", type(character.special_abilities))
 
     # Ensure save_bonuses is a set

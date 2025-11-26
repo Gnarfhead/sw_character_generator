@@ -29,7 +29,7 @@ def apply_druid_dependent_modifiers(character):
             character.save_bonuses = set(character.save_bonuses) # convert list/tuple to set
         else:
             character.save_bonuses = set() # default to empty set
-    character.save_bonuses.add("+2 against fire")
+    character.save_bonuses.add("- Bonus +2 against fire")
 
     # Ensure immunities is a set
     character.immunities.clear()  # Clear existing immunities
@@ -41,7 +41,7 @@ def apply_druid_dependent_modifiers(character):
             character.immunities = set(character.immunities) # convert list/tuple to set
         else:
             character.immunities = set() # default to empty set
-    character.immunities.add("Immunity against fay spells and magical effects (Level 5)")
+    character.immunities.add("- Immunity against fay spells and magical effects (Level 5)")
 
     # Ensure special_abilities is a set
     character.special_abilities.clear()  # Clear existing special abilities
@@ -53,11 +53,11 @@ def apply_druid_dependent_modifiers(character):
             character.special_abilities = set(character.special_abilities) # convert list/tuple to set
         else:
             character.special_abilities = set() # default to empty set
-    character.special_abilities.add("secret language: druids know a secret language understood only by other druids of neutral alignment")
-    character.special_abilities.add("magic items: druids can use magic items that are usable by clerics, except scrolls with cleric-spells")
-    character.special_abilities.add("first mysteries (Level 2): ")
-    character.special_abilities.add("shape change (Level 5): druids can change their shape into that of a small or medium-sized animal three times per day")
-    character.special_abilities.add("Druid fortress (Level 9): druids can create a sanctuary")
+    character.special_abilities.add("- Secret language: druids know a secret language understood only by other druids of neutral alignment")
+    character.special_abilities.add("- Magic items: druids can use magic items that are usable by clerics, except scrolls with cleric-spells")
+    character.special_abilities.add("- First mysteries (Level 2): ")
+    character.special_abilities.add("- Shape change (Level 5): druids can change their shape into that of a small or medium-sized animal three times per day")
+    character.special_abilities.add("- Druid fortress (Level 9): druids can create a sanctuary")
 
     character.xp_bonus = 0
     character.parry = 0

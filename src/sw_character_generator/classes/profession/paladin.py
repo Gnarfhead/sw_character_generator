@@ -40,7 +40,7 @@ def apply_paladin_dependent_modifiers(character):
             character.immunities = set(character.immunities) # convert list/tuple to set
         else:
             character.immunities = set() # default to empty set
-    character.immunities.add("immunity against disease")
+    character.immunities.add("- Immunity against disease")
     
     # Ensure special_abilities is a set
     character.special_abilities.clear()  # Clear existing special abilities
@@ -52,12 +52,12 @@ def apply_paladin_dependent_modifiers(character):
             character.special_abilities = set(character.special_abilities) # convert list/tuple to set
         else:
             character.special_abilities = set() # default to empty set
-    character.special_abilities.add("lay on hands: paladins can heal 2 HP by laying on hands or cure a disease once per day")
-    character.special_abilities.add("magic items: paladins can use magic items that are usable by fighters. A total of 4 magic items, including max 3 weapons, 1 armor and 1 shield")
-    character.special_abilities.add("warhorse: paladins can summon a warhorse which is very intelligent and strong (5 HP dice)")
-    character.special_abilities.add("banish evil (Level 8): like the cleric spell")
-    character.special_abilities.add("detect evil (Level 8): like the cleric spell")
-    character.special_abilities.add("fortress (Level 9): paladins can create a stronghold to gather followers")
+    character.special_abilities.add("- Lay on hands: paladins can heal 2 HP by laying on hands or cure a disease once per day")
+    character.special_abilities.add("- Magic items: paladins can use magic items that are usable by fighters. A total of 4 magic items, including max 3 weapons, 1 armor and 1 shield")
+    character.special_abilities.add("- Warhorse: paladins can summon a warhorse which is very intelligent and strong (5 HP dice)")
+    character.special_abilities.add("- Banish evil (Level 8): like the cleric spell")
+    character.special_abilities.add("- Detect evil (Level 8): like the cleric spell")
+    character.special_abilities.add("- Fortress (Level 9): paladins can create a stronghold to gather followers")
 
     character.xp_bonus = 0
     character.parry = 0

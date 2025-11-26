@@ -14,7 +14,7 @@ def apply_halfelf_dependent_modifiers(character):
             character.special_abilities = set(character.special_abilities) # convert list/tuple to set
         else:
             character.special_abilities = set() # default to empty set
-    character.special_abilities.add("Geheimtüren finden: Aktiv 4:6")
+    character.special_abilities.add("- Geheimtüren finden: Aktiv 4:6")
     # print("DEBUG apply_halfelf_dependent_modifiers: type of character.special_abilities after assignment:", type(character.special_abilities))
 
     # Ensure save_bonuses is a set

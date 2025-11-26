@@ -28,7 +28,7 @@ def apply_halfling_dependent_modifiers(character):
             character.save_bonuses = set(character.save_bonuses) # convert list/tuple to set
         else:
             character.save_bonuses = set() # default to empty set
-    character.save_bonuses.add("Rettungswurf +4 gegen Magie")
+    character.save_bonuses.add("- Rettungswurf +4 gegen Magie")
     # print("DEBUG apply_halfling_dependent_modifiers: type of character.save_bonuses after assignment:", type(character.save_bonuses))
 
     # Ensure immunities is a set

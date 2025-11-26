@@ -4,20 +4,25 @@ from dataclasses import fields
 
 
 
-def _format_change_mainstats(value):
+def _format_change_scrolledtext(value):
     """Format main_stats tuple into a readable string."""
     if isinstance(value, (tuple, list, set)): # Tuple, Liste or Set
-        return ", ".join(str(v) for v in value) # Join elements with commas
+        return "\n".join(str(v) for v in sorted(value)) # Join elements with newlines
+    if isinstance(value, dict): # Dict
+        return "\n".join(f"{k}={v}" for k, v in value.items()) # Key=Value pairs
+    return str(value) # Fallback to string conversion
+
+def _format_change_stringlabel(value):
+    """Format main_stats tuple into a comma-separated string."""
+    if isinstance(value, (tuple, list, set)): # Tuple, Liste or Set
+        return ", ".join(str(v) for v in sorted(value)) # Join elements with commas
     if isinstance(value, dict): # Dict
         return ", ".join(f"{k}={v}" for k, v in value.items()) # Key=Value pairs
     return str(value) # Fallback to string conversion
 
-
-
 def update_view_from_model(app):
     """Safely copy model fields into Tkinter variables, normalizing types."""
     print("DEBUG update_view_from_model: ----------------------------------------------------------------")
-    print("DEBUG update_view_from_model: app parameter:", app)
     if app is None:
         print("DEBUG update_view_from_model: No app provided, skipping update.")
         return
@@ -31,8 +36,13 @@ def update_view_from_model(app):
             continue
 
         # Format special fields (main_stats, languages, special_abilities, immunities, save_bonuses)
-        if field in ("main_stats", "languages", "special_abilities", "immunities", "save_bonuses"):
-            value = _format_change_mainstats(value)
+        #if field in ("main_stats", "languages", "special_abilities", "immunities", "save_bonuses"):
+        if field in ("special_abilities", "immunities", "save_bonuses"):
+            value = _format_change_scrolledtext(value)
+
+        # Format stringlabel fields
+        if field in ("languages", "main_stats"):
+            value = _format_change_stringlabel(value)
 
         # Normalize numeric targets
         if isinstance(var, (tk.IntVar, tk.DoubleVar)): # Only for IntVar and DoubleVar
@@ -56,7 +66,7 @@ def update_view_from_model(app):
             current = None
 
         if current != value: # Only update if value has changed
-            print(f"DEBUG update_view_from_model: Updating {field}_var from {current} to {value}")
+            # print(f"DEBUG update_view_from_model: Updating {field}_var from {current} to {value}")
             try:
                 var.set(value)
             except tk.TclError:
@@ -68,9 +78,9 @@ def update_view_from_model(app):
 
     # Special handling for ScrolledText widgets (NACH der Schleife!)
     if hasattr(app, "special_abilities_txt"):
-        print("DEBUG update_view_from_model: Updating special_abilities_txt widget.")
+        # print("DEBUG update_view_from_model: Updating special_abilities_txt widget.")
         current_text = app.special_abilities_txt.get("1.0", "end-1c")
-        new_text = _format_change_mainstats(model.special_abilities)
+        new_text = _format_change_scrolledtext(model.special_abilities)
         if current_text != new_text:
             print("DEBUG update_view_from_model: special_abilities_txt:", current_text, "->", new_text)
             app.special_abilities_txt.delete("1.0", "end")
@@ -79,9 +89,9 @@ def update_view_from_model(app):
     
     # Special handling for immunities_txt widget
     if hasattr(app, "immunities_txt"):
-        print("DEBUG update_view_from_model: Updating immunities_txt widget.")
+        # print("DEBUG update_view_from_model: Updating immunities_txt widget.")
         current_text = app.immunities_txt.get("1.0", "end-1c")
-        new_text = _format_change_mainstats(model.immunities)
+        new_text = _format_change_scrolledtext(model.immunities)
         if current_text != new_text:
             print(f"DEBUG update_view_from_model: immunities_txt: '{current_text}' -> '{new_text}'")
             app.immunities_txt.delete("1.0", "end")
@@ -90,9 +100,9 @@ def update_view_from_model(app):
     
     # Special handling for save_bonuses_txt widget
     if hasattr(app, "save_bonuses_txt"):
-        print("DEBUG update_view_from_model: Updating save_bonuses_txt widget.")
+        # print("DEBUG update_view_from_model: Updating save_bonuses_txt widget.")
         current_text = app.save_bonuses_txt.get("1.0", "end-1c")
-        new_text = _format_change_mainstats(model.save_bonuses)
+        new_text = _format_change_scrolledtext(model.save_bonuses)
         if current_text != new_text:
             print(f"DEBUG update_view_from_model: save_bonuses_txt: '{current_text}' -> '{new_text}'")
             app.save_bonuses_txt.delete("1.0", "end")
@@ -101,7 +111,7 @@ def update_view_from_model(app):
 
     # Special handling for treasure_txt widget
     if hasattr(app, "treasure_txt"):
-        print("DEBUG update_view_from_model: Updating treasure_txt widget.")
+        # print("DEBUG update_view_from_model: Updating treasure_txt widget.")
         current_text = app.treasure_txt.get("1.0", "end-1c")
         new_text = str(getattr(model, "treasure", ""))
         if current_text != new_text:
@@ -112,9 +122,9 @@ def update_view_from_model(app):
     
     # Special handling for inventory_txt widget
     if hasattr(app, "inventory_txt"):
-        print("DEBUG update_view_from_model: Updating inventory_txt widget.")
+        # print("DEBUG update_view_from_model: Updating inventory_txt widget.")
         current_text = app.inventory_txt.get("1.0", "end-1c")
-        new_text = _format_change_mainstats(getattr(model, "inventory", []))
+        new_text = str(getattr(model, "inventory", ""))
         if current_text != new_text:
             print("DEBUG update_view_from_model: inventory_txt:", current_text, "->", new_text)
             app.inventory_txt.delete("1.0", "end")

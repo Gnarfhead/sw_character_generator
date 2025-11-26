@@ -29,7 +29,7 @@ def apply_cleric_dependent_modifiers(character):
             character.save_bonuses = set(character.save_bonuses) # convert list/tuple to set
         else:
             character.save_bonuses = set() # default to empty set
-    character.save_bonuses.add("+2 against paralysis and poison")
+    character.save_bonuses.add("- Bonus +2 against paralysis and poison")
     
     # Ensure immunities is a set
     character.immunities.clear()  # Clear existing immunities
@@ -52,8 +52,8 @@ def apply_cleric_dependent_modifiers(character):
             character.special_abilities = set(character.special_abilities) # convert list/tuple to set
         else:
             character.special_abilities = set() # default to empty set
-    character.special_abilities.add("turn undead: clerics can turn undead creatures")
-    character.special_abilities.add("religious fortress (Level 9): clerics can create a temple to gather followers")
+    character.special_abilities.add("- Turn undead: clerics can turn undead creatures")
+    character.special_abilities.add("- Religious fortress (Level 9): clerics can create a temple to gather followers")
 
     character.xp_bonus = 0
     character.parry = 0

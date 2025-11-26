@@ -14,7 +14,7 @@ def apply_elf_dependent_modifiers(character):
                 character.special_abilities = set(character.special_abilities) # convert list/tuple to set
             else:
                 character.special_abilities = set() # default to empty set
-    character.special_abilities.add("Geheimtüren finden: Aktiv 4:6, Passiv:1:6")
+    character.special_abilities.add("- Geheimtüren finden: Aktiv 4:6, Passiv:1:6")
     # print("DEBUG apply_elf_dependent_modifiers: type of character.special_abilities after assignment:", type(character.special_abilities))
 
     # Ensure save_bonuses is a set
@@ -38,7 +38,7 @@ def apply_elf_dependent_modifiers(character):
             character.immunities = set(character.immunities) # convert list/tuple to set
         else:
             character.immunities = set() # default to empty set
-    character.immunities.add("Ghulische Lähmung")
+    character.immunities.add("- Ghulische Lähmung")
     # print("DEBUG apply_elf_dependent_modifiers: type of character.immunities after assignment:", type(character.immunities))
 
     # Ensure languages is a set

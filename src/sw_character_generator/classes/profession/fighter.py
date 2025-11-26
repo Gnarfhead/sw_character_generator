@@ -52,8 +52,8 @@ def apply_fighter_dependent_modifiers(character):
             character.special_abilities = set(character.special_abilities) # convert list/tuple to set
         else:
             character.special_abilities = set() # default to empty set
-    character.special_abilities.add("multiple attacks: against creatures with 1 tp or less, fighters strike one attack per level per round")
-    character.special_abilities.add("fortress (Level 9): fighters can create a stronghold to gather followers and protect themselves")
+    character.special_abilities.add("- Multiple attacks: against creatures with 1 tp or less, fighters strike one attack per level per round")
+    character.special_abilities.add("- Fortress (Level 9): fighters can create a stronghold to gather followers and protect themselves")
 
     character.xp_bonus = 0
 

@@ -12,11 +12,12 @@ def on_immunities_changed(app):
     content = app.immunities_txt.get("1.0", "end-1c")
 
     # Parse back to SET (not tuple!)
-    if "," in content:  # multiple immunities
-        app.new_player.immunities = {s.strip() for s in content.split(",") if s.strip()}  # ✓ set
+    if "\n" in content or "," in content:  # multiple immunities
+        lines = content.replace(",", "\n").split("\n")
+        app.new_player.immunities = {s.strip() for s in lines if s.strip()}  # ✓ set
     else:
-        app.new_player.immunities = {content} if content.strip() else set()  # ✓ set
+        app.new_player.immunities = {content.strip()} if content.strip() else set()  # ✓ set
 
     app.immunities_txt.edit_modified(False)  # reset modified flag
 
-    #print("DEBUG on_immunities_changed: Updated to", {app.new_player.immunities}, "type:", {type(app.new_player.immunities)},)
+    # print("DEBUG on_immunities_changed: Updated to", {app.new_player.immunities}, "type:", {type(app.new_player.immunities)},)

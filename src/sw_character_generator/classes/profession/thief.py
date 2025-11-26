@@ -41,7 +41,7 @@ def apply_thief_dependent_modifiers(character):
             character.immunities = set(character.immunities) # convert list/tuple to set
         else:
             character.immunities = set() # default to empty set
-    character.immunities.add("immunity against disease")
+    character.immunities.add("- Immunity against disease")
 
     # Ensure special_abilities is a set
     character.special_abilities.clear()  # Clear existing special abilities
@@ -53,10 +53,10 @@ def apply_thief_dependent_modifiers(character):
             character.special_abilities = set(character.special_abilities) # convert list/tuple to set
         else:
             character.special_abilities = set() # default to empty set
-    character.special_abilities.add("sneak attack: thieves gain a +4 bonus to attack and damage rolls are doubled when attacking opponent from behind")
-    character.special_abilities.add("read languages  (Level 3): thieves can read all written languages; 80% chance to understand maps and written information")
-    character.special_abilities.add("read magic language (Level 9): thieves can read magic inscriptions on magical items and scrolls and cast wizard-spells from scrolls")
-    character.special_abilities.add("create guild (Level 9): thieves can create a thieves' guild to gather followers")
+    character.special_abilities.add("- Sneak attack: thieves gain a +4 bonus to attack and damage rolls are doubled when attacking opponent from behind")
+    character.special_abilities.add("- Read languages  (Level 3): thieves can read all written languages; 80% chance to understand maps and written information")
+    character.special_abilities.add("- Read magic language (Level 9): thieves can read magic inscriptions on magical items and scrolls and cast wizard-spells from scrolls")
+    character.special_abilities.add("- Create guild (Level 9): thieves can create a thieves' guild to gather followers")
 
     character.xp_bonus = 0
     character.parry = 0

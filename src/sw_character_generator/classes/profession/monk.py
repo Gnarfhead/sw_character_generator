@@ -29,7 +29,7 @@ def apply_monk_dependent_modifiers(character):
             character.save_bonuses = set(character.save_bonuses) # convert list/tuple to set
         else:
             character.save_bonuses = set() # default to empty set
-    character.save_bonuses.add("+2 against paralysis and poison")
+    character.save_bonuses.add("- Bonus +2 against paralysis and poison")
 
     # Ensure immunities is a set
     character.immunities.clear()  # Clear existing immunities
@@ -41,8 +41,8 @@ def apply_monk_dependent_modifiers(character):
             character.immunities = set(character.immunities) # convert list/tuple to set
         else:
             character.immunities = set() # default to empty set
-    character.immunities.add("mastering self (Level 8): immune against mindcontrol, charm and hypnosis; except the spells 'geas' and 'command'")
-    character.immunities.add("be one with your self (Level 9): also immune against spells 'geas' and 'command'")
+    character.immunities.add("- Mastering self (Level 8): immune against mindcontrol, charm and hypnosis; except the spells 'geas' and 'command'")
+    character.immunities.add("- Be one with your self (Level 9): also immune against spells 'geas' and 'command'")
 
     # Ensure special_abilities is a set
     character.special_abilities.clear()  # Clear existing special abilities
@@ -54,19 +54,19 @@ def apply_monk_dependent_modifiers(character):
             character.special_abilities = set(character.special_abilities) # convert list/tuple to set
         else:
             character.special_abilities = set() # default to empty set
-    character.special_abilities.add("deflect missiles: monks can deflect magic missiles and arrows with a successful save throw")
-    character.special_abilities.add("magic items: you can't use magic healing potions. Monks can only use magic weapons and rings")
-    character.special_abilities.add("deadly strike: if attack roll is 5 points above opponents AC, chance is 75% to stun opponent for 2d6 rounds; opponents less 1 TP die instantly die by 25% chance")
-    character.special_abilities.add("alertness: your group isn't easy to surprise; opponents chance ist 1:6")
-    character.special_abilities.add("weapon damage (Level 2): +1 damage when using a weapon")
-    character.special_abilities.add("talk to animals (Level 4): monks can communicate with animals")
-    character.special_abilities.add("feather fall (Level 5): monks can fall from 6m height without taking damage")
-    character.special_abilities.add("mastering silence (Level 5): you can play dead for 1d6 *  monk level * 10 minutes")
-    character.special_abilities.add("mastering mind (Level 6): read you thoughts don't work with 90% chance")
-    character.special_abilities.add("weaponless combat (Level 6): when fight unarmed, you can strike multiple times")
-    character.special_abilities.add("mastering body (Level 7): you can heal yourself 1d6+1 TP per day")
-    character.special_abilities.add("create monastery (Level 11): monks can create a monastery to gather followers")
-    character.special_abilities.add("harmony touch (Level 13): connect through touch with another living being when TP die is equal or less; stop the heart and kill the being instantly")
+    character.special_abilities.add("- Deflect missiles: monks can deflect magic missiles and arrows with a successful save throw")
+    character.special_abilities.add("- Magic items: you can't use magic healing potions. Monks can only use magic weapons and rings")
+    character.special_abilities.add("- Deadly strike: if attack roll is 5 points above opponents AC, chance is 75% to stun opponent for 2d6 rounds; opponents less 1 TP die instantly die by 25% chance")
+    character.special_abilities.add("- Alertness: your group isn't easy to surprise; opponents chance ist 1:6")
+    character.special_abilities.add("- Weapon damage (Level 2): +1 damage when using a weapon")
+    character.special_abilities.add("- Talk to animals (Level 4): monks can communicate with animals")
+    character.special_abilities.add("- Feather fall (Level 5): monks can fall from 6m height without taking damage")
+    character.special_abilities.add("- Mastering silence (Level 5): you can play dead for 1d6 *  monk level * 10 minutes")
+    character.special_abilities.add("- Mastering mind (Level 6): read you thoughts don't work with 90% chance")
+    character.special_abilities.add("- Weaponless combat (Level 6): when fight unarmed, you can strike multiple times")
+    character.special_abilities.add("- Mastering body (Level 7): you can heal yourself 1d6+1 TP per day")
+    character.special_abilities.add("- Create monastery (Level 11): monks can create a monastery to gather followers")
+    character.special_abilities.add("- Harmony touch (Level 13): connect through touch with another living being when TP die is equal or less; stop the heart and kill the being instantly")
 
     character.xp_bonus = 0
     character.parry = 0
