@@ -15,7 +15,7 @@ def on_special_abilities_changed(app):
     if "\n" in content or "," in content:  # multiple abilities
         lines = content.replace(",", "\n").split("\n")
         user_entries = {s.strip() for s in lines if s.strip()}
-    else:
+    else: # single entry
         user_entries = {content.strip()} if content.strip() else set()
 
     # Combine user entries with auto-generated entries
