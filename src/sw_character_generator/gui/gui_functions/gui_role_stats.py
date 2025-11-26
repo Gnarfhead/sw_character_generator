@@ -167,8 +167,8 @@ def role_stats(app, character, chk_opt_4d6dl_var, btn_roll_stats=None, btn_switc
 
     # Starting coins: roll 3d6 and multiply by 10
     print("DEBUG gui_role_stats: Rolling starting coins (3d6 * 10):")
-    character.coins = wuerfle_3d6(str_desc="Starting Coins") * 10
-    print("DEBUG gui_role_stats: Starting coins rolled:", character.coins)
+    character.coins_gold = wuerfle_3d6(str_desc="Starting Coins") * 10
+    print("DEBUG gui_role_stats: Starting coins rolled:", character.coins_gold)
 
     # Analyze stat modifiers and apply to character
     print("DEBUG gui_role_stats: Analyzing stat modifiers and applying to character...")

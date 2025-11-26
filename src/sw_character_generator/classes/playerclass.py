@@ -41,7 +41,7 @@ class PlayerClass:
     stat_wis: int = field(default=0)
     stat_int: int = field(default=0)
     stat_char: int = field(default=0)
-    inventory: list[str] = field(default_factory=list)
+    inventory: set[str] = field(default_factory=set)
     strength_atck_mod: float = 0.0
     strength_damage_mod: float = 0.0
     carry_capacity_mod: float = 0.0
@@ -56,8 +56,12 @@ class PlayerClass:
     min_spells_per_level: int = 0
     max_spells_per_level: int = 0
     cap_spec_hirelings: int = 0
-    treasure: list[str] = field(default_factory=list)
-    coins: int = field(default=0)
+    treasure: set[str] = field(default_factory=set)
+    coins_platinum: int = field(default=0)
+    coins_gold: int = field(default=0)
+    coins_electrum: int = field(default=0)
+    coins_silver: int = field(default=0)
+    coins_copper: int = field(default=0)
     allowed_alignment: str = "Undefined"
     allowed_races: tuple[str, ...] = field(default_factory=tuple)
     allowed_armor: str = "Undefined"
@@ -80,6 +84,24 @@ class PlayerClass:
     spells_lvl7: int = 0
     spells_lvl8: int = 0
     spells_lvl9: int = 0
+
+    # Property for total coins
+    @property
+    def coins(self) -> int:  # Total coins in copper pieces
+        """Calculate total coins in copper pieces."""
+        return (self.coins_platinum * 1000) + (self.coins_gold * 100) + (self.coins_electrum * 50) + (self.coins_silver * 10) + self.coins_copper
+    @coins.setter
+    def coins(self, total_copper: int):  # Total coins in copper pieces
+        """Set coin values based on total copper pieces."""
+        self.coins_platinum = total_copper // 1000
+        remainder = total_copper % 1000
+        self.coins_gold = remainder // 100
+        remainder = remainder % 100
+        self.coins_electrum = remainder // 50
+        remainder = remainder % 50
+        self.coins_silver = remainder // 10
+        remainder = remainder % 10
+        self.coins_copper = remainder % 10
 
     # Derived properties
     @property
@@ -109,7 +131,8 @@ class PlayerClass:
             f"Player Name={self.player_name}, Character Name={self.character_name}\n"
             f"Profession={self.profession}, "
             f"Level={self.level}, HP Dice=d{self.hp_dice}, Main Stats={self.main_stats}\n"
-            f"XP={self.xp}, XP Bonus={self.xp_bonus}%, HP={self.hp}, Coins={self.coins}\n"
+            f"XP={self.xp}, XP Bonus={self.xp_bonus}%, HP={self.hp}\n"
+            f"Coins: Platinum={self.coins_platinum}, Gold={self.coins_gold}, Electrum={self.coins_electrum}, Silver={self.coins_silver}, Copper={self.coins_copper}\n"
             f"STR: {self.stat_str}    STR_mod: Attack={self.strength_atck_mod}, Damage={self.strength_damage_mod}, "
             f"Carry Capacity={self.carry_capacity_mod}, Door Crack={self.door_crack_mod}\n"
             f"DEX: {self.stat_dex}    DEX_mod: Ranged Attack={self.ranged_atck_mod}, AC Bonus={self.ac_mod}\n"
@@ -176,7 +199,7 @@ class PlayerClass:
                 "int": self.stat_int,
                 "cha": self.stat_char
             },
-            "inventory": self.inventory,
+            "inventory": list(self.inventory),
             "modifiers": {
                 "strength": {
                     "attack": self.strength_atck_mod,
@@ -204,8 +227,12 @@ class PlayerClass:
                 }
             },
             
-            "treasure": self.treasure,
-            "coins": self.coins,
+            "treasure": list(self.treasure),
+            "coins_platinum": self.coins_platinum,
+            "coins_gold": self.coins_gold,
+            "coins_electrum": self.coins_electrum,
+            "coins_silver": self.coins_silver,
+            "coins_copper": self.coins_copper,
             "allowed_alignment": self.allowed_alignment,
             "allowed_races": self.allowed_races,
             "allowed_armor": self.allowed_armor,
@@ -279,7 +306,7 @@ class PlayerClass:
         self.stat_wis = stats.get("wis", self.stat_wis)
         self.stat_int = stats.get("int", self.stat_int)
         self.stat_char = stats.get("cha", self.stat_char)
-        self.inventory = data.get("inventory", self.inventory)
+        self.inventory = set(data.get("inventory", []))
         self.strength_atck_mod = strength_mods.get("attack", self.strength_atck_mod)
         self.strength_damage_mod = strength_mods.get("damage", self.strength_damage_mod)
         self.carry_capacity_mod = strength_mods.get("carry_capacity", self.carry_capacity_mod)
@@ -294,8 +321,12 @@ class PlayerClass:
         self.min_spells_per_level = intelligence_mods.get("min_spells_per_level", self.min_spells_per_level)
         self.max_spells_per_level = intelligence_mods.get("max_spells_per_level", self.max_spells_per_level)
         self.cap_spec_hirelings = charisma_mods.get("max_hirelings", self.cap_spec_hirelings)
-        self.treasure = data.get("treasure", self.treasure)
-        self.coins = data.get("coins", self.coins)
+        self.treasure = set(data.get("treasure", []))
+        self.coins_platinum = data.get("coins_platinum", self.coins_platinum)
+        self.coins_gold = data.get("coins_gold", self.coins_gold)
+        self.coins_electrum = data.get("coins_electrum", self.coins_electrum)
+        self.coins_silver = data.get("coins_silver", self.coins_silver)
+        self.coins_copper = data.get("coins_copper", self.coins_copper)
         self.allowed_alignment = data.get("allowed_alignment", self.allowed_alignment)
         self.allowed_races = tuple(data.get("allowed_races", []))
         self.allowed_armor = data.get("allowed_armor", self.allowed_armor)

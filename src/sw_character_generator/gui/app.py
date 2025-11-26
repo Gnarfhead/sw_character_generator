@@ -16,7 +16,9 @@ from src.sw_character_generator.functions.character_handling import save_charact
 from src.sw_character_generator.gui.gui_functions.gui_new_character import apply_character, new_characterobj
 from sw_character_generator.functions.manage_xp import add_xp
 from sw_character_generator.gui.gui_functions.gui_immunities import on_immunities_changed
+from sw_character_generator.gui.gui_functions.gui_inventory import on_inventory_changed
 from sw_character_generator.gui.gui_functions.gui_special_abilities import on_special_abilities_changed
+from sw_character_generator.gui.gui_functions.gui_treasure import on_treasure_changed
 from .gui_functions.gui_dice_roller import dice_roller
 from .gui_functions.gui_alignment_change import on_alignment_change
 from .gui_functions.gui_race_change import on_race_change
@@ -78,7 +80,11 @@ class App:
         self.stat_int_var = tk.IntVar(master=self.root, value=0)
         self.stat_wis_var = tk.IntVar(master=self.root, value=0)
         self.stat_char_var = tk.IntVar(master=self.root, value=0)
-        self.coins_var = tk.IntVar(master=self.root, value=0)
+        self.coins_platinum_var = tk.IntVar(master=self.root, value=0)
+        self.coins_gold_var = tk.IntVar(master=self.root, value=0)
+        self.coins_electrum_var = tk.IntVar(master=self.root, value=0)
+        self.coins_silver_var = tk.IntVar(master=self.root, value=0)
+        self.coins_copper_var = tk.IntVar(master=self.root, value=0)
         self.delicate_tasks_var = tk.IntVar(master=self.root, value=0)
         self.climb_walls_var = tk.IntVar(master=self.root, value=0)
         self.hear_sounds_var = tk.IntVar(master=self.root, value=0)
@@ -97,6 +103,8 @@ class App:
         self.languages_var = tk.StringVar(master=self.root, value="")
         self.special_abilities_var = tk.StringVar(master=self.root, value="")
         self.immunities_var = tk.StringVar(master=self.root, value="")
+        self.treasure_var = tk.StringVar(master=self.root, value="")
+        self.inventory_var = tk.StringVar(master=self.root, value="")
         self.strength_atck_mod_var = tk.DoubleVar(master=self.root, value=0.0)
         self.strength_damage_mod_var = tk.DoubleVar(master=self.root, value=0.0)
         self.carry_capacity_mod_var = tk.DoubleVar(master=self.root, value=0.0)
@@ -273,7 +281,7 @@ class App:
         width=40,        # visible column width (char-based)
         font=("TkDefaultFont", 10)
         )
-        self.save_bonuses_txt.grid(row=8, column=1, columnspan=4, sticky="nsew", padx=PADX, pady=PADY)
+        self.save_bonuses_txt.grid(row=8, column=1, columnspan=5, sticky="nsew", padx=PADX, pady=PADY)
         self.save_bonuses_txt.bind("<<Modified>>", lambda event: on_special_abilities_changed(self))
 
         # Immunities
@@ -287,7 +295,7 @@ class App:
         width=40,        # visible column width (char-based)
         font=("TkDefaultFont", 10)
         )
-        self.immunities_txt.grid(row=9, column=1, columnspan=4, sticky="nsew", padx=PADX, pady=PADY)
+        self.immunities_txt.grid(row=9, column=1, columnspan=5, sticky="nsew", padx=PADX, pady=PADY)
         self.immunities_txt.bind("<<Modified>>", lambda event: on_immunities_changed(self))
 
         # Special Abilities
@@ -301,9 +309,8 @@ class App:
         width=40,        # visible column width (char-based)
         font=("TkDefaultFont", 10)
         )
-        self.special_abilities_txt.grid(row=10, column=1, columnspan=4, sticky="nsew", padx=PADX, pady=PADY)
+        self.special_abilities_txt.grid(row=10, column=1, columnspan=5, sticky="nsew", padx=PADX, pady=PADY)
         self.special_abilities_txt.bind("<<Modified>>", lambda event: on_special_abilities_changed(self))
-
 
 
         # Thief skills panel
@@ -326,32 +333,39 @@ class App:
         self.inventory_frame = ttk.LabelFrame(self.root, text="Inventory", borderwidth=5, padding=(6,6), style="Standard.TFrame")
         self.inventory_frame.grid(row=2, column=2, padx=PADX, pady=PADY, sticky="nsew")
 
-        ttk.Label(self.inventory_frame, text="Coins:").grid(row=0, column=0, sticky="w", padx=PADX, pady=PADY)
-        ttk.Label(self.inventory_frame, textvariable=self.coins_var).grid(row=0, column=1, sticky="w", padx=PADX, pady=PADY)
-
-
-        ttk.Label(self.inventory_frame, text="Treasure:").grid(row=1, column=0, sticky="nw", padx=PADX, pady=PADY)
+        # Row 0: Treasure
+        widget_label(self.inventory_frame, "Treasure:", 0, 0, owner=self, name_label="lbl_treasure")
         # Use scrolledtext for treasure
-        treasure_txt = scrolledtext.ScrolledText(
+        self.treasure_txt = scrolledtext.ScrolledText(
         self.inventory_frame,
         wrap="word",
         height=5,        # visible row height (can be adjusted)
-        width=50,        # visible column width (char-based)
+        width=40,        # visible column width (char-based)
         font=("TkDefaultFont", 10)
         )
-        treasure_txt.grid(row=1, column=1, sticky="nsew", padx=PADX, pady=PADY)
+        self.treasure_txt.grid(row=0, column=1, columnspan=5, sticky="nsew", padx=PADX, pady=PADY)
+        self.treasure_txt.bind("<<Modified>>", lambda event: on_treasure_changed(self))
 
-
-        ttk.Label(self.inventory_frame, text="Inventory:").grid(row=2, column=0, sticky="nw", padx=PADX, pady=PADY)
+        # Row 1: Inventory
+        widget_label(self.inventory_frame, "Inventory:", 1, 0, owner=self, name_label="lbl_inventory")
         # Use scrolledtext for inventory
-        inventory_txt = scrolledtext.ScrolledText(
+        self.inventory_txt = scrolledtext.ScrolledText(
         self.inventory_frame,
         wrap="word",
         height=5,        # visible row height (can be adjusted)
-        width=50,        # visible column width (char-based)
+        width=40,        # visible column width (char-based)
         font=("TkDefaultFont", 10)
         )
-        inventory_txt.grid(row=2, column=1, sticky="nsew", padx=PADX, pady=PADY)
+        self.inventory_txt.grid(row=1, column=1, columnspan=5, sticky="nsew", padx=PADX, pady=PADY)
+        self.inventory_txt.bind("<<Modified>>", lambda event: on_inventory_changed(self))
+
+        # Row 2: Coins
+        widget_label(self.inventory_frame, "Coins:", 2, 0, owner=self, name_label="lbl_coins")
+        widget_extlabel(self.inventory_frame, "Platinum:", 2, 2, var=self.coins_platinum_var, owner=self, name_label="lbl_coins_platinum", name_value="entry_coins_platinum")
+        widget_extlabel(self.inventory_frame, "Gold:", 3, 2, var=self.coins_gold_var, owner=self, name_label="lbl_coins_gold", name_value="entry_coins_gold")
+        widget_extlabel(self.inventory_frame, "Electrum:", 4, 2, var=self.coins_electrum_var, owner=self, name_label="lbl_coins_electrum", name_value="entry_coins_electrum")
+        widget_extlabel(self.inventory_frame, "Silver:", 5, 2, var=self.coins_silver_var, owner=self, name_label="lbl_coins_silver", name_value="entry_coins_silver")
+        widget_extlabel(self.inventory_frame, "Copper:", 6, 2, var=self.coins_copper_var, owner=self, name_label="lbl_coins_copper", name_value="entry_coins_copper")
 
         # Footerframe (if needed in future)
         self.footer_frame = ttk.Frame(self.root, borderwidth=5, padding=(6,6), style="Standard.TFrame")
