@@ -1,6 +1,8 @@
 """Module defining the PlayerClass dataclass for character representation."""
 from dataclasses import dataclass, field
 
+from sw_character_generator.classes.item import Item
+
 @dataclass
 class PlayerClass:
     """Class representing a character in the game."""
@@ -41,7 +43,7 @@ class PlayerClass:
     stat_wis: int = field(default=0)
     stat_int: int = field(default=0)
     stat_char: int = field(default=0)
-    inventory: set[str] = field(default_factory=set)
+    inventory: list[Item] = field(default_factory=list)
     strength_atck_mod: float = 0.0
     strength_damage_mod: float = 0.0
     carry_capacity_mod: float = 0.0
@@ -56,7 +58,7 @@ class PlayerClass:
     min_spells_per_level: int = 0
     max_spells_per_level: int = 0
     cap_spec_hirelings: int = 0
-    treasure: set[str] = field(default_factory=set)
+    treasure: list[Item] = field(default_factory=list)
     coins_platinum: int = field(default=0)
     coins_gold: int = field(default=0)
     coins_electrum: int = field(default=0)
@@ -121,8 +123,18 @@ class PlayerClass:
 
     def post_init(self):
         """Initialize derived attributes after the main initialization."""
-        self.inventory = ["Rope", "Torch", "Backpack", "Bedroll", "Waterskin", "Mess Kit"]
-        self.treasure = ["Gold Coin", "Silver Ring"]
+        self.inventory = [
+            Item(name="Rope", weight=5.0, value_copper=10, category="Tool"),
+            Item(name="Torch", quantity=3, weight=0.5, value_copper=1, category="Tool"),
+            Item(name="Backpack", weight=2.0, value_copper=20, category="Container"),
+            Item(name="Bedroll", weight=5.0, value_copper=5, category="Tool"),
+            Item(name="Waterskin", weight=4.0, value_copper=8, category="Tool"),
+            Item(name="Mess Kit", weight=1.0, value_copper=2, category="Tool")
+        ]
+        self.treasure = [
+            Item(name="Gold Coin", quantity=10, weight=0.1, value_copper=100, category="Currency"),
+            Item(name="Silver Ring", weight=0.05, value_copper=500, category="Jewelry")
+        ]
 
 
     def __repr__(self):
@@ -199,7 +211,7 @@ class PlayerClass:
                 "int": self.stat_int,
                 "cha": self.stat_char
             },
-            "inventory": list(self.inventory),
+            "inventory": [Item.to_dict(item) for item in self.inventory],
             "modifiers": {
                 "strength": {
                     "attack": self.strength_atck_mod,
@@ -226,8 +238,7 @@ class PlayerClass:
                     "max_hirelings": self.cap_spec_hirelings
                 }
             },
-            
-            "treasure": list(self.treasure),
+            "treasure": [Item.to_dict(item) for item in self.treasure],
             "coins_platinum": self.coins_platinum,
             "coins_gold": self.coins_gold,
             "coins_electrum": self.coins_electrum,
@@ -306,7 +317,7 @@ class PlayerClass:
         self.stat_wis = stats.get("wis", self.stat_wis)
         self.stat_int = stats.get("int", self.stat_int)
         self.stat_char = stats.get("cha", self.stat_char)
-        self.inventory = set(data.get("inventory", []))
+        self.inventory = [Item.from_dict(item) for item in data.get("inventory", [])]
         self.strength_atck_mod = strength_mods.get("attack", self.strength_atck_mod)
         self.strength_damage_mod = strength_mods.get("damage", self.strength_damage_mod)
         self.carry_capacity_mod = strength_mods.get("carry_capacity", self.carry_capacity_mod)
@@ -321,7 +332,7 @@ class PlayerClass:
         self.min_spells_per_level = intelligence_mods.get("min_spells_per_level", self.min_spells_per_level)
         self.max_spells_per_level = intelligence_mods.get("max_spells_per_level", self.max_spells_per_level)
         self.cap_spec_hirelings = charisma_mods.get("max_hirelings", self.cap_spec_hirelings)
-        self.treasure = set(data.get("treasure", []))
+        self.treasure = [Item.from_dict(item) for item in data.get("treasure", [])]
         self.coins_platinum = data.get("coins_platinum", self.coins_platinum)
         self.coins_gold = data.get("coins_gold", self.coins_gold)
         self.coins_electrum = data.get("coins_electrum", self.coins_electrum)

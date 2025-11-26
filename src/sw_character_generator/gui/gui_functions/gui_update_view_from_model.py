@@ -3,8 +3,11 @@ import tkinter as tk
 from dataclasses import fields
 
 from sw_character_generator.gui.gui_functions.gui_immunities import on_immunities_changed
+from sw_character_generator.gui.gui_functions.gui_inventory import on_inventory_changed
 from sw_character_generator.gui.gui_functions.gui_save_bonuses import on_save_bonuses_changed
 from sw_character_generator.gui.gui_functions.gui_special_abilities import on_special_abilities_changed
+from sw_character_generator.classes.item import Item
+from sw_character_generator.gui.gui_functions.gui_treasure import on_treasure_changed
 
 
 
@@ -23,6 +26,25 @@ def _format_change_stringlabel(value):
     if isinstance(value, dict): # Dict
         return ", ".join(f"{k}={v}" for k, v in value.items()) # Key=Value pairs
     return str(value) # Fallback to string conversion
+
+def _format_items(items: list) -> str:
+    """Format list of Item objects for display."""
+    
+    if not items:
+        return ""
+    
+    lines = []
+    for item in items:
+        if isinstance(item, Item):
+            if item.quantity > 1:
+                lines.append(f"{item.name} x{item.quantity}")
+            else:
+                lines.append(item.name)
+        else:
+            # Fallback for non-Item objects
+            lines.append(str(item))
+    
+    return "\n".join(lines)
 
 def update_view_from_model(app):
     """Safely copy model fields into Tkinter variables, normalizing types."""
@@ -135,24 +157,34 @@ def update_view_from_model(app):
         # Rebind the event
         app.save_bonuses_txt.bind("<<Modified>>", lambda event: on_save_bonuses_changed(app))
 
-    # Special handling for treasure_txt widget
-    if hasattr(app, "treasure_txt"):
-        # print("DEBUG update_view_from_model: Updating treasure_txt widget.")
-        current_text = app.treasure_txt.get("1.0", "end-1c")
-        new_text = str(getattr(model, "treasure", ""))
-        if current_text != new_text:
-            print("DEBUG update_view_from_model: treasure_txt:", current_text, "->", new_text)
-            app.treasure_txt.delete("1.0", "end")
-            app.treasure_txt.insert("1.0", new_text)
-            app.treasure_txt.edit_modified(False)
-    
-    # Special handling for inventory_txt widget
+    # Special handling for inventory_txt
     if hasattr(app, "inventory_txt"):
-        # print("DEBUG update_view_from_model: Updating inventory_txt widget.")
+        print("DEBUG update_view_from_model: Updating inventory_txt widget.")
+        app.inventory_txt.unbind("<<Modified>>")
+        
         current_text = app.inventory_txt.get("1.0", "end-1c")
-        new_text = str(getattr(model, "inventory", ""))
+        new_text = _format_items(model.inventory)  # ✓ Use new formatter
+        
         if current_text != new_text:
-            print("DEBUG update_view_from_model: inventory_txt:", current_text, "->", new_text)
+            print(f"DEBUG update_view_from_model: inventory_txt: '{current_text}' -> '{new_text}'")
             app.inventory_txt.delete("1.0", "end")
             app.inventory_txt.insert("1.0", new_text)
-            app.inventory_txt.edit_modified(False)
+        
+        app.inventory_txt.edit_modified(False)
+        app.inventory_txt.bind("<<Modified>>", lambda event: on_inventory_changed(app))
+    
+    # Special handling for treasure_txt
+    if hasattr(app, "treasure_txt"):
+        print("DEBUG update_view_from_model: Updating treasure_txt widget.")
+        app.treasure_txt.unbind("<<Modified>>")
+        
+        current_text = app.treasure_txt.get("1.0", "end-1c")
+        new_text = _format_items(model.treasure)  # ✓ Use new formatter
+        
+        if current_text != new_text:
+            print(f"DEBUG update_view_from_model: treasure_txt: '{current_text}' -> '{new_text}'")
+            app.treasure_txt.delete("1.0", "end")
+            app.treasure_txt.insert("1.0", new_text)
+        
+        app.treasure_txt.edit_modified(False)
+        app.treasure_txt.bind("<<Modified>>", lambda event: on_treasure_changed(app))
