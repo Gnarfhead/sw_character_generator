@@ -121,20 +121,22 @@ class PlayerClass:
         """Combine all special abilities from race, class, and other sources."""
         return self.special_abilities_race | self.special_abilities_profession | self.special_abilities_other
 
-    def post_init(self):
+    def __post_init__(self):
         """Initialize derived attributes after the main initialization."""
-        self.inventory = [
-            Item(name="Rope", weight=5.0, value_copper=10, category="Tool"),
-            Item(name="Torch", quantity=3, weight=0.5, value_copper=1, category="Tool"),
-            Item(name="Backpack", weight=2.0, value_copper=20, category="Container"),
-            Item(name="Bedroll", weight=5.0, value_copper=5, category="Tool"),
-            Item(name="Waterskin", weight=4.0, value_copper=8, category="Tool"),
-            Item(name="Mess Kit", weight=1.0, value_copper=2, category="Tool")
-        ]
-        self.treasure = [
-            Item(name="Gold Coin", quantity=10, weight=0.1, value_copper=100, category="Currency"),
-            Item(name="Silver Ring", weight=0.05, value_copper=500, category="Jewelry")
-        ]
+        if not self.inventory:
+            self.inventory = [
+                Item(name="Rope", weight=5.0, value_copper=10, category="Tool"),
+                Item(name="Torch", quantity=3, weight=0.5, value_copper=1, category="Tool"),
+                Item(name="Backpack", weight=2.0, value_copper=20, category="Container"),
+                Item(name="Bedroll", weight=5.0, value_copper=5, category="Tool"),
+                Item(name="Waterskin", weight=4.0, value_copper=8, category="Tool"),
+                Item(name="Mess Kit", weight=1.0, value_copper=2, category="Tool")
+            ]
+        if not self.treasure:
+            self.treasure = [
+                Item(name="Gold Coin", quantity=10, weight=0.1, value_copper=100, category="Currency"),
+                Item(name="Silver Ring", weight=0.05, value_copper=500, category="Jewelry")
+            ]
 
 
     def __repr__(self):
@@ -191,15 +193,15 @@ class PlayerClass:
             "hp_current": self.hp_current,
             "hp_last_roll": self.hp_last_roll,
             "save_throw": self.save_throw,
-            "save_bonuses_race": list(self.save_bonuses),
-            "save_bonuses_profession": list(self.save_bonuses),
+            "save_bonuses_race": list(self.save_bonuses_race),
+            "save_bonuses_profession": list(self.save_bonuses_profession),
             "save_bonuses_other": list(self.save_bonuses_other),
-            "immunities_race": list(self.immunities),
-            "immunities_profession": list(self.immunities),
+            "immunities_race": list(self.immunities_race),
+            "immunities_profession": list(self.immunities_profession),
             "immunities_other": list(self.immunities_other),
-            "special_abilities_race": list(self.special_abilities),
-            "special_abilities_profession": list(self.special_abilities),
-            "special_abilities_other": list(self.special_abilities),
+            "special_abilities_race": list(self.special_abilities_race),
+            "special_abilities_profession": list(self.special_abilities_profession),
+            "special_abilities_other": list(self.special_abilities_other),
             "ac": self.ac,
             "languages": list(self.languages),
             
