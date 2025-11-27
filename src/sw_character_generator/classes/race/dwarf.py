@@ -6,6 +6,10 @@ def apply_dwarf_dependent_modifiers(character):
     print("DEBUG apply_dwarf_dependent_modifiers: Applying Dwarf dependent modifiers.")
     character.race = "Dwarf"
     character.darkvision = True
+    character.delicate_tasks_race = 10
+    character.hide_in_shadows_race = 5
+    character.move_silently_race = 5
+    character.open_locks_race = 5
 
 
     # Ensure special_abilities is a set

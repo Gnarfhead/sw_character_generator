@@ -11,13 +11,6 @@ def apply_thief_dependent_modifiers(character):
     character.allowed_races = ("human", "halfling", "elf", "dwarf")
     character.allowed_weapon = ("light weapons",)
     character.allowed_armor = ("light",)
-    character.save_throw = 15
-    character.delicate_tasks = 15
-    character.hide_in_shadows = 10
-    character.hear_sounds = "3:6"
-    character.move_silently = 20
-    character.open_locks = 10
-    character.climb_walls = 85
 
     # Ensure save_bonuses is a set
     if not isinstance(character.save_bonuses_profession, set): # Ensure it's a set
@@ -107,6 +100,150 @@ def apply_thief_dependent_modifiers(character):
         18: 4,
         19: 4,
         20: 4,
+    }
+
+    # Delicate tasks thief skills progression
+    character.delicate_tasks_profession = {
+        1: 15,
+        2: 20,
+        3: 25,
+        4: 30,
+        5: 35,
+        6: 40,
+        7: 45,
+        8: 50,
+        9: 60,
+        10: 70,
+        11: 80,
+        12: 90,
+        13: 100,
+        14: 100,
+        15: 100,
+        16: 100,
+        17: 100,
+        18: 100,
+        19: 100,
+        20: 100,
+    }
+
+    # Climb walls thief skills progression
+    character.climb_walls_profession = {
+        1: 85,
+        2: 86,
+        3: 87,
+        4: 88,
+        5: 89,
+        6: 90,
+        7: 91,
+        8: 92,
+        9: 93,
+        10: 94,
+        11: 95,
+        12: 96,
+        13: 97,
+        14: 98,
+        15: 99,
+        16: 99,
+        17: 99,
+        18: 99,
+        19: 99,
+        20: 99,
+    } 
+
+    # Hear sounds thief skills progression
+    character.hear_sounds_profession = {
+        1: "3:6",
+        2: "3:6",
+        3: "4:6",
+        4: "4:6",
+        5: "4:6",
+        6: "4:6",
+        7: "5:6",
+        8: "5:6",
+        9: "5:6",
+        10: "5:6",
+        11: "6:6",
+        12: "6:6",
+        13: "6:6",
+        14: "6:6",
+        15: "6:6",
+        16: "6:6",
+        17: "6:6",
+        18: "6:6",
+        19: "6:6",
+        20: "6:6",
+    }
+
+    # Hide in shadows thief skills progression
+    character.hide_in_shadows_profession = {
+        1: 10,  
+        2: 15,
+        3: 20,
+        4: 25,
+        5: 30,
+        6: 35,
+        7: 40,
+        8: 55,
+        9: 65,
+        10: 75,
+        11: 85,
+        12: 95,
+        13: 100,
+        14: 100,
+        15: 100,
+        16: 100,
+        17: 100,
+        18: 100,
+        19: 100,
+        20: 100,
+    }
+
+    # Move silently thief skills progression
+    character.move_silently_profession = {
+        1: 20,
+        2: 25,
+        3: 30,
+        4: 35,
+        5: 40,
+        6: 45,
+        7: 50,
+        8: 60,
+        9: 70,
+        10: 80,
+        11: 90,
+        12: 100,
+        13: 100,
+        14: 100,
+        15: 100,
+        16: 100,
+        17: 100,
+        18: 100,
+        19: 100,
+        20: 100,
+    }
+
+    # Open locks thief skills progression
+    character.open_locks_profession = {
+        1: 10,
+        2: 15,
+        3: 20,
+        4: 25,
+        5: 30,
+        6: 35,
+        7: 40,
+        8: 55,
+        9: 65,
+        10: 75,
+        11: 85,
+        12: 95,
+        13: 100,
+        14: 100,
+        15: 100,
+        16: 100,
+        17: 100,
+        18: 100,
+        19: 100,
+        20: 100,
     }
 
     # Spells per level

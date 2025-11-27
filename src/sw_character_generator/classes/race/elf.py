@@ -4,6 +4,8 @@ def apply_elf_dependent_modifiers(character):
     print("DEBUG apply_elf_dependent_modifiers: Applying Elf dependent modifiers.")
     character.race = "Elf"
     character.darkvision = True
+    character.move_silently_race = 10
+    character.hide_in_shadows_race = 15
 
     # Ensure special_abilities is a set
     if not isinstance(character.special_abilities_race, set): # Ensure it's a set

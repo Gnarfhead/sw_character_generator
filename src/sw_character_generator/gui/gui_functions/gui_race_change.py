@@ -1,5 +1,6 @@
 """Handle changes to the race selection."""
 from sw_character_generator.functions.choosen_race import choosen_race_modifiers
+from sw_character_generator.functions.manage_thief_skills import calculate_thief_skills, reset_thief_skills
 from sw_character_generator.gui.gui_functions.gui_update_view_from_model import update_view_from_model
 
 def on_race_change(app, *args):
@@ -14,12 +15,22 @@ def on_race_change(app, *args):
         print("DEBUG on_race_change: No race selected.")
         return
     try:
-        # Update the model with the new race
+
+        # Reset race modifiers BEFORE applying new ones
+        app.new_player.immunities_race = set()
+        app.new_player.special_abilities_race = set()
+        app.new_player.save_bonuses_race = set()
+        reset_thief_skills(app.new_player) # reset thief skills before applying new race
+
+        # Apply new race modifiers
         print("DEBUG on_race_change: Changing race to", name)
         choosen_race_modifiers(app.new_player, name) # update race and related stats 
         app.status_var.set(f"Race changed to {name}") # inform user of successful change
         app.lbl_race.config(style="Standard.TLabel") # reset label style
         
+        # Recalculate thief skills if applicable
+        calculate_thief_skills(app.new_player) # recalculate thief skills based on new race
+
         # Refresh the GUI to reflect model changes
         with app.suppress_updates(): # prevent recursive updates
             update_view_from_model(app) # refresh GUI to reflect model changes

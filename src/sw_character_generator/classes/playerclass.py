@@ -67,11 +67,23 @@ class PlayerClass:
     allowed_races: tuple[str, ...] = field(default_factory=tuple)
     allowed_armor: str = "Undefined"
     allowed_weapon: str = "Undefined"
+    delicate_tasks_profession: dict[int, int] = field(default_factory=dict)
+    delicate_tasks_race: int = 0
     delicate_tasks: int = 0
+    climb_walls_profession: dict[int, int] = field(default_factory=dict)
+    # climb_walls_race: int = 0 # no race modifier in the rulebook
     climb_walls: int = 0
+    hear_sounds_profession: dict[str, int] = field(default_factory=dict)
+    # hear_sounds_race: str = "0:0" # no race modifier in the rulebook
     hear_sounds: str = "0:6"
+    hide_in_shadows_profession: dict[int, int] = field(default_factory=dict)
+    hide_in_shadows_race: int = 0
     hide_in_shadows: int = 0
+    move_silently_profession: dict[int, int] = field(default_factory=dict)
+    move_silently_race: int = 0
     move_silently: int = 0
+    open_locks_profession: dict[int, int] = field(default_factory=dict)
+    open_locks_race: int = 0
     open_locks: int = 0
     surprised: int = 2
     darkvision: bool = False
@@ -150,8 +162,9 @@ class PlayerClass:
             f"Inventory: {self.inventory}\n"
             f"Treasure: {self.treasure}\n"
             f"Darkvision: {self.darkvision}, Parry: {self.parry}\n"
-            f"Delicate Tasks: {self.delicate_tasks}%, Climb Walls: {self.climb_walls}%, Hear Sounds: {self.hear_sounds}%\n"
-            f"Hide in Shadows: {self.hide_in_shadows}%, Move Silently: {self.move_silently}%, Open Locks: {self.open_locks}%, Surprised: {self.surprised}:6\n"
+            f"Delicate Tasks: {self.delicate_tasks_profession}%, Delicate Tasks Race Bonus: {self.delicate_tasks_race}%, Climb Walls: {self.climb_walls_profession}%, Hear Sounds: {self.hear_sounds_profession}%\n"
+            f"Hide in Shadows: {self.hide_in_shadows_profession}%, Hide in Shadows Race Bonus: {self.hide_in_shadows_race}%, Move Silently: {self.move_silently_profession}%\n" 
+            f"Move Silently Race Bonus: {self.move_silently_race}%, Open Locks: {self.open_locks_profession}%, Open Locks Race Bonus: {self.open_locks_race}%, Surprised: {self.surprised}:6\n"
             f"Allowed Alignment: {self.allowed_alignment}, Allowed Races: {self.allowed_races}\n"
             f"Allowed Weapon: {self.allowed_weapon}, Allowed Armor: {self.allowed_armor}\n"
             f"Character Created: {self.character_created}, HP Last Roll: {self.hp_last_roll}\n"
@@ -236,12 +249,17 @@ class PlayerClass:
             "allowed_races": self.allowed_races,
             "allowed_armor": self.allowed_armor,
             "allowed_weapon": self.allowed_weapon,
-            "delicate_tasks": self.delicate_tasks,
-            "climb_walls": self.climb_walls,
-            "hear_sounds": self.hear_sounds,
-            "hide_in_shadows": self.hide_in_shadows,
-            "move_silently": self.move_silently,
-            "open_locks": self.open_locks,
+            "delicate_tasks_profession": self.delicate_tasks_profession,
+            "delicate_tasks_race": self.delicate_tasks_race,
+            "climb_walls_profession": self.climb_walls_profession,
+            "hear_sounds_profession": self.hear_sounds_profession,
+            "hide_in_shadows_profession": self.hide_in_shadows_profession,
+            "hide_in_shadows_race": self.hide_in_shadows_race,
+            "move_silently_profession": self.move_silently_profession,
+            "move_silently_race": self.move_silently_race,
+            "open_locks_profession": self.open_locks_profession,
+            "open_locks_race": self.open_locks_race,
+
             "surprised": self.surprised,
             "darkvision": self.darkvision,
             "parry": self.parry,
@@ -305,7 +323,7 @@ class PlayerClass:
         self.stat_wis = stats.get("wis", self.stat_wis)
         self.stat_int = stats.get("int", self.stat_int)
         self.stat_char = stats.get("cha", self.stat_char)
-        self.inventory = [Item.from_dict(item) for item in data.get("inventory", [])]
+        self.inventory = data.get("inventory", self.inventory)
         self.strength_atck_mod = strength_mods.get("attack", self.strength_atck_mod)
         self.strength_damage_mod = strength_mods.get("damage", self.strength_damage_mod)
         self.carry_capacity_mod = strength_mods.get("carry_capacity", self.carry_capacity_mod)
@@ -320,7 +338,7 @@ class PlayerClass:
         self.min_spells_per_level = intelligence_mods.get("min_spells_per_level", self.min_spells_per_level)
         self.max_spells_per_level = intelligence_mods.get("max_spells_per_level", self.max_spells_per_level)
         self.cap_spec_hirelings = charisma_mods.get("max_hirelings", self.cap_spec_hirelings)
-        self.treasure = [Item.from_dict(item) for item in data.get("treasure", [])]
+        self.treasure = data.get("treasure", self.treasure)
         self.coins_platinum = data.get("coins_platinum", self.coins_platinum)
         self.coins_gold = data.get("coins_gold", self.coins_gold)
         self.coins_electrum = data.get("coins_electrum", self.coins_electrum)
@@ -330,12 +348,16 @@ class PlayerClass:
         self.allowed_races = tuple(data.get("allowed_races", []))
         self.allowed_armor = data.get("allowed_armor", self.allowed_armor)
         self.allowed_weapon = data.get("allowed_weapon", self.allowed_weapon)
-        self.delicate_tasks = data.get("delicate_tasks", self.delicate_tasks)
-        self.climb_walls = data.get("climb_walls", self.climb_walls)
-        self.hear_sounds = data.get("hear_sounds", self.hear_sounds)
-        self.hide_in_shadows = data.get("hide_in_shadows", self.hide_in_shadows)
-        self.move_silently = data.get("move_silently", self.move_silently)
-        self.open_locks = data.get("open_locks", self.open_locks)
+        self.delicate_tasks_profession = data.get("delicate_tasks", self.delicate_tasks_profession)
+        self.delicate_tasks_race = data.get("delicate_tasks_race", self.delicate_tasks_race)
+        self.climb_walls_profession = data.get("climb_walls", self.climb_walls_profession)
+        self.hear_sounds_profession = data.get("hear_sounds", self.hear_sounds_profession)
+        self.hide_in_shadows_profession = data.get("hide_in_shadows", self.hide_in_shadows_profession)
+        self.hide_in_shadows_race = data.get("hide_in_shadows_race", self.hide_in_shadows_race)
+        self.move_silently_profession = data.get("move_silently", self.move_silently_profession)
+        self.move_silently_race = data.get("move_silently_race", self.move_silently_race)
+        self.open_locks_profession = data.get("open_locks", self.open_locks_profession)
+        self.open_locks_race = data.get("open_locks_race", self.open_locks_race)
         self.surprised = data.get("surprised", self.surprised)
         self.darkvision = data.get("darkvision", self.darkvision)
         self.parry = data.get("parry", self.parry)

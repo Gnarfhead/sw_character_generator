@@ -11,13 +11,7 @@ def apply_ranger_dependent_modifiers(character):
     character.allowed_races = ("human",)
     character.allowed_weapon = ("all",)
     character.allowed_armor = ("all",)
-    character.save_throw = 14
-    character.delicate_tasks = 0
-    character.hide_in_shadows = 0
-    character.hear_sounds = 0
-    character.move_silently = 0
-    character.open_locks = 0
-    character.climb_walls = 0
+
 
     # Ensure save_bonuses is a set
     if not isinstance(character.save_bonuses_profession, set): # Ensure it's a set

@@ -16,9 +16,7 @@ from src.sw_character_generator.functions.character_handling import save_charact
 from src.sw_character_generator.gui.gui_functions.gui_new_character import apply_character, new_characterobj
 from sw_character_generator.functions.manage_xp import add_xp
 from sw_character_generator.gui.gui_functions.gui_immunities import on_immunities_changed
-from sw_character_generator.gui.gui_functions.gui_inventory import on_inventory_changed
 from sw_character_generator.gui.gui_functions.gui_special_abilities import on_special_abilities_changed
-from sw_character_generator.gui.gui_functions.gui_treasure import on_treasure_changed
 from .gui_functions.gui_dice_roller import dice_roller
 from .gui_functions.gui_alignment_change import on_alignment_change
 from .gui_functions.gui_race_change import on_race_change
@@ -87,7 +85,7 @@ class App:
         self.coins_copper_var = tk.IntVar(master=self.root, value=0)
         self.delicate_tasks_var = tk.IntVar(master=self.root, value=0)
         self.climb_walls_var = tk.IntVar(master=self.root, value=0)
-        self.hear_sounds_var = tk.IntVar(master=self.root, value=0)
+        self.hear_sounds_var = tk.StringVar(master=self.root, value="0:6")
         self.hide_in_shadows_var = tk.IntVar(master=self.root, value=0)
         self.move_silently_var = tk.IntVar(master=self.root, value=0)
         self.open_locks_var = tk.IntVar(master=self.root, value=0)
@@ -180,7 +178,7 @@ class App:
 
     def _build_ui(self):
 
-        # Create top frame and place it with grid (do not mix pack/grid on root)
+        ### Create top frame and place it with grid (do not mix pack/grid on root)
         self.top_frame = ttk.Frame(self.root, borderwidth=5, relief="ridge", padding=(6, 6), style="Standard.TFrame")
         self.top_frame.grid(row=0, column=0, columnspan=3, padx=PADX, pady=PADY, sticky="ew")
     
@@ -206,7 +204,7 @@ class App:
         widget_spinbox(self.top_frame, "Add XP:", 2, 6, var=self.add_xp_var, owner=self, name_label="lbl_add_xp", name_spinbox="spin_add_xp")
         widget_button(self.top_frame, "Add XP", 2, 7, command=lambda: add_xp(self, self.add_xp_var.get()), owner=self, name_button="btn_add_xp", state="disabled")
  
-        # Attribute frame (use LabelFrame for nicer title)
+        ### Attribute frame (use LabelFrame for nicer title)
         self.attr_frame = ttk.LabelFrame(self.root, text="Attribute", borderwidth=5, padding=(6, 6), style="Attention.TFrame")
         self.attr_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
         widget_extlabel(self.attr_frame, "Strength (STR):", 0, 0, var=self.stat_str_var, owner=self, name_label="lbl_str", name_value="entry_str")
@@ -220,7 +218,7 @@ class App:
         self.btn_roll_stats = ttk.Button(self.attr_frame, text="Roll Stats", style="Attention.TButton", command=lambda: role_stats(self, self.new_player, self.chk_opt_4d6dl_var.get(), self.btn_roll_stats, self.btn_switch_stats))
         self.btn_roll_stats.grid(row=6, column=0, sticky="ew", padx=PADX, pady=PADY)
 
-        # Homebrew frame (use LabelFrame for nicer title)
+        ### Homebrew frame (use LabelFrame for nicer title)
         self.attr_homebrew_frame = ttk.LabelFrame(self.attr_frame, text="Homebrew", borderwidth=5, padding=(6, 6), style="Standard.TFrame")
         self.attr_homebrew_frame.grid(row=7, column=0, padx=PADX, pady=PADY, sticky="nsew")
 
@@ -237,7 +235,7 @@ class App:
         self.chk_opt_4d6dl = ttk.Checkbutton(self.attr_homebrew_frame, text="4d6 dl", variable=self.chk_opt_4d6dl_var)
         self.chk_opt_4d6dl.grid(row=0, column=0, sticky="ew", padx=PADX, pady=PADY)
 
-        # Bonuses frame
+        ### Bonuses frame
         self.bonus_frame = ttk.LabelFrame(self.root, text="Attribute Bonuses", borderwidth=5, padding=(6, 6), style="Standard.TFrame")
         self.bonus_frame.grid(row=1, column=1, padx=PADX, pady=PADY, sticky="nsew")
 
@@ -253,7 +251,7 @@ class App:
         widget_extlabel(self.bonus_frame, "Max Additional Languages:", 8, 0, var=self.max_add_langs_var, owner=self, name_label="lbl_max_add_langs", name_value="entry_max_add_langs")
         widget_extlabel(self.bonus_frame, "Special Hirelings Cap:", 9, 0, var=self.cap_spec_hirelings_var, owner=self, name_label="lbl_cap_spec_hirelings", name_value="entry_cap_spec_hirelings")
         
-        # Stats / Other panels
+        ### Stats / Other panels
         self.stats_frame = ttk.LabelFrame(self.root, text="Stats / Derived", borderwidth=5, padding=(6, 6), style="Standard.TFrame")
         self.stats_frame.grid(row=1, column=2, padx=PADX, pady=PADY, sticky="nsew")
 
@@ -312,10 +310,23 @@ class App:
         self.special_abilities_txt.grid(row=10, column=1, columnspan=5, sticky="nsew", padx=PADX, pady=PADY)
         self.special_abilities_txt.bind("<<Modified>>", lambda event: on_special_abilities_changed(self))
 
+        ### Create a notebook for lower panels
+        self.lower_notebook = ttk.Notebook(self.root)
+        self.lower_notebook.grid(row=2, column=0, columnspan=3, padx=PADX, pady=PADY, sticky="nsew")
+        # Create frames for each tab
+        self.thief_frame = ttk.Frame(self.lower_notebook)
+        self.weapons_frame = ttk.Frame(self.lower_notebook)
+        self.inventory_frame = ttk.Frame(self.lower_notebook)
+        self.magic_frame = ttk.Frame(self.lower_notebook)
+        # Add tabs to the notebook
+        self.lower_notebook.add(self.thief_frame, text="Thief Skills")
+        self.lower_notebook.add(self.weapons_frame, text="Weapons & Armor", state="disabled")
+        self.lower_notebook.add(self.inventory_frame, text="Inventory")
+        self.lower_notebook.add(self.magic_frame, text="Magic", state="disabled")
 
-        # Thief skills panel
-        self.thief_frame = ttk.LabelFrame(self.root, text="Thief Skills", borderwidth=5, padding=(6, 6), style="Standard.TFrame")
-        self.thief_frame.grid(row=2, column=0, padx=PADX, pady=PADY, sticky="nsew")
+        ### Thief skills Tab/Frame
+        self.thief_frame = ttk.LabelFrame(self.thief_frame, text="Thief Skills", borderwidth=5, padding=(6, 6), style="Standard.TFrame")
+        self.thief_frame.grid(row=0, column=0, padx=PADX, pady=PADY, sticky="nsew")
   
         # Create thief skill labels and values
         widget_extlabel(self.thief_frame, "Delicate Tasks:", 0, 0, var=self.delicate_tasks_var, owner=self, name_label="lbl_delicate_tasks", name_value="entry_delicate_tasks")
@@ -325,13 +336,13 @@ class App:
         widget_extlabel(self.thief_frame, "Move Silently:", 4, 0, var=self.move_silently_var, owner=self, name_label="lbl_move_silently", name_value="entry_move_silently")
         widget_extlabel(self.thief_frame, "Open Locks:", 5, 0, var=self.open_locks_var, owner=self, name_label="lbl_open_locks", name_value="entry_open_locks") 
 
-        # Weapons & Armor frame
-        self.weapons_frame = ttk.LabelFrame(self.root, text="Weapons & Armor", borderwidth=5, padding=(6,6), style="Standard.TFrame")
-        self.weapons_frame.grid(row=2, column=1, padx=PADX, pady=PADY, sticky="nsew")
+        ### Weapons & Armor Tab/Frame
+        self.weapons_frame = ttk.LabelFrame(self.weapons_frame, text="Weapons & Armor", borderwidth=5, padding=(6,6), style="Standard.TFrame")
+        self.weapons_frame.grid(row=0, column=0, padx=PADX, pady=PADY, sticky="nsew")
 
-        # Inventory frame
-        self.inventory_frame = ttk.LabelFrame(self.root, text="Inventory", borderwidth=5, padding=(6,6), style="Standard.TFrame")
-        self.inventory_frame.grid(row=2, column=2, padx=PADX, pady=PADY, sticky="nsew")
+        ### Inventory Tab/Frame
+        self.inventory_frame = ttk.LabelFrame(self.inventory_frame, text="Inventory", borderwidth=5, padding=(6,6), style="Standard.TFrame")
+        self.inventory_frame.grid(row=0, column=0, padx=PADX, pady=PADY, sticky="nsew")
 
         # Row 0: Treasure
         widget_label(self.inventory_frame, "Treasure:", 0, 0, owner=self, name_label="lbl_treasure")
@@ -345,17 +356,16 @@ class App:
         state="disabled"
         )
         self.treasure_txt.grid(row=0, column=1, columnspan=5, sticky="nsew", padx=PADX, pady=PADY)
-        #self.treasure_txt.bind("<<Modified>>", lambda event: on_treasure_changed(self))
-
-        # Row 0.5: Add Treasure controls
+        
+        # Row 1: Add Treasure controls
         widget_label(self.inventory_frame, "Add Treasure:", 1, 0, owner=self, name_label="lbl_add_treasure")
         self.treasure_name_var = tk.StringVar(master=self.root, value="")
         self.treasure_qty_var = tk.IntVar(master=self.root, value=1)
         
         self.entry_treasure_name = ttk.Entry(self.inventory_frame, textvariable=self.treasure_name_var, width=20)
         self.entry_treasure_name.grid(row=1, column=1, sticky="ew", padx=PADX, pady=PADY)
-        
-        self.spin_treasure_qty = ttk.Spinbox(self.inventory_frame, from_=1, to=9999, textvariable=self.treasure_qty_var, width=8)
+
+        self.spin_treasure_qty = ttk.Spinbox(self.inventory_frame, from_=-100, to=100, textvariable=self.treasure_qty_var, width=8)
         self.spin_treasure_qty.grid(row=1, column=2, sticky="w", padx=PADX, pady=PADY)
         
         self.btn_add_treasure = ttk.Button(
@@ -377,9 +387,8 @@ class App:
         state="disabled"
         )
         self.inventory_txt.grid(row=2, column=1, columnspan=5, sticky="nsew", padx=PADX, pady=PADY)
-        #self.inventory_txt.bind("<<Modified>>", lambda event: on_inventory_changed(self))
-
-        # Row 2.5: Add Inventory controls
+    
+        # Row 3: Add Inventory controls
         widget_label(self.inventory_frame, "Add Item:", 3, 0, owner=self, name_label="lbl_add_inventory")
         self.inventory_name_var = tk.StringVar(master=self.root, value="")
         self.inventory_qty_var = tk.IntVar(master=self.root, value=1)
@@ -387,7 +396,7 @@ class App:
         self.entry_inventory_name = ttk.Entry(self.inventory_frame, textvariable=self.inventory_name_var, width=20)
         self.entry_inventory_name.grid(row=3, column=1, sticky="ew", padx=PADX, pady=PADY)
         
-        self.spin_inventory_qty = ttk.Spinbox(self.inventory_frame, from_=1, to=9999, textvariable=self.inventory_qty_var, width=8)
+        self.spin_inventory_qty = ttk.Spinbox(self.inventory_frame, from_=-100, to=100, textvariable=self.inventory_qty_var, width=8)
         self.spin_inventory_qty.grid(row=3, column=2, sticky="w", padx=PADX, pady=PADY)
         
         self.btn_add_inventory = ttk.Button(
@@ -399,13 +408,13 @@ class App:
 
         # Row 4: Coins
         widget_label(self.inventory_frame, "Coins:", 4, 0, owner=self, name_label="lbl_coins")
-        widget_extlabel(self.inventory_frame, "Platinum:", 4, 2, var=self.coins_platinum_var, owner=self, name_label="lbl_coins_platinum", name_value="entry_coins_platinum")
-        widget_extlabel(self.inventory_frame, "Gold:", 5, 2, var=self.coins_gold_var, owner=self, name_label="lbl_coins_gold", name_value="entry_coins_gold")
-        widget_extlabel(self.inventory_frame, "Electrum:", 6, 2, var=self.coins_electrum_var, owner=self, name_label="lbl_coins_electrum", name_value="entry_coins_electrum")
-        widget_extlabel(self.inventory_frame, "Silver:", 7, 2, var=self.coins_silver_var, owner=self, name_label="lbl_coins_silver", name_value="entry_coins_silver")
-        widget_extlabel(self.inventory_frame, "Copper:", 8, 2, var=self.coins_copper_var, owner=self, name_label="lbl_coins_copper", name_value="entry_coins_copper")
+        widget_extlabel(self.inventory_frame, "Platinum:", 4, 1, var=self.coins_platinum_var, owner=self, name_label="lbl_coins_platinum", name_value="entry_coins_platinum")
+        widget_extlabel(self.inventory_frame, "Gold:", 4, 3, var=self.coins_gold_var, owner=self, name_label="lbl_coins_gold", name_value="entry_coins_gold")
+        widget_extlabel(self.inventory_frame, "Electrum:", 4, 5, var=self.coins_electrum_var, owner=self, name_label="lbl_coins_electrum", name_value="entry_coins_electrum")
+        widget_extlabel(self.inventory_frame, "Silver:", 4, 7, var=self.coins_silver_var, owner=self, name_label="lbl_coins_silver", name_value="entry_coins_silver")
+        widget_extlabel(self.inventory_frame, "Copper:", 4, 9, var=self.coins_copper_var, owner=self, name_label="lbl_coins_copper", name_value="entry_coins_copper")
 
-        # Footerframe (if needed in future)
+        ### Footerframe 
         self.footer_frame = ttk.Frame(self.root, borderwidth=5, padding=(6,6), style="Standard.TFrame")
         self.footer_frame.grid(row=3, column=0, columnspan=3, padx=PADX, pady=PADY, sticky="ew")
 
@@ -423,8 +432,7 @@ class App:
         self.btn_exit = ttk.Button(self.footer_frame, text="Exit", command=lambda: messagebox.askokcancel("Exit", "Do you really want to exit?", parent=self.root) and self.root.destroy())
         self.btn_exit.grid(row=0, column=5, sticky="e", padx=PADX, pady=PADY)
 
-
-        # Status bar at the very bottom
+        ### Status bar at the very bottom
         self.status_bar = ttk.Label(self.root, textvariable=self.status_var, relief="sunken", anchor="w", padding=(4,4))
         self.status_bar.grid(row=4, column=0, columnspan=3, sticky="ew")
 

@@ -11,13 +11,7 @@ def apply_druid_dependent_modifiers(character):
     character.allowed_races = ("human",)
     character.allowed_weapon = ("daggers", "sickles", "spears", "slings", "oil flasks")
     character.allowed_armor = ("leather", "wooden shield")
-    character.save_throw = 15
-    character.delicate_tasks = 0
-    character.hide_in_shadows = 0
-    character.hear_sounds = 0
-    character.move_silently = 0
-    character.open_locks = 0
-    character.climb_walls = 0
+
 
     # Ensure save_bonuses is a set
     if not isinstance(character.save_bonuses_profession, set): # Ensure it's a set

@@ -1,5 +1,6 @@
 """Callback when profession_var changes; update model profession accordingly."""
 from sw_character_generator.functions.choosen_profession import choosen_profession_modifiers
+from sw_character_generator.functions.manage_thief_skills import calculate_thief_skills, reset_thief_skills
 from sw_character_generator.functions.manage_xp import calculate_next_level_xp, calculate_xp_bonus
 from sw_character_generator.gui.gui_functions.gui_update_view_from_model import update_view_from_model
 
@@ -13,6 +14,11 @@ def on_profession_change(app, *args):
         print("DEBUG on_profession_change: No profession selected.")
         return
     try:
+        # reset previous profession-related attributes
+        app.new_player.immunities_profession = set() # reset immunities
+        app.new_player.special_abilities_profession = set() # reset special abilities
+        app.new_player.save_bonuses_profession = set() # reset save bonuses
+        
         # Update the model with the new profession
         choosen_profession_modifiers(app.new_player, name) # update profession and related stats
         app.status_var.set(f"Profession changed to {name}")
@@ -34,6 +40,7 @@ def on_profession_change(app, *args):
         app.stats_frame.config(style="Attention.TFrame")
         calculate_xp_bonus(app.new_player) # recalculate XP bonus
         calculate_next_level_xp(app, app.new_player) # recalculate next level XP
+        calculate_thief_skills(app.new_player) # recalculate thief skills
         refresh_race_values(app) # update race combobox values
         refresh_alignment_values(app) # update alignment combobox values
 

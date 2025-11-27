@@ -7,6 +7,10 @@ def apply_halfling_dependent_modifiers(character):
     character.race = "Halfling"
     character.darkvision = False
     character.ranged_atck_mod += 1
+    character.delicate_tasks_race = 5
+    character.hide_in_shadows_race = 10
+    character.move_silently_race = 10
+    character.open_locks_race = 10
 
     # Ensure special_abilities is a set
     if not isinstance(character.special_abilities_race, set): # Ensure it's a set
