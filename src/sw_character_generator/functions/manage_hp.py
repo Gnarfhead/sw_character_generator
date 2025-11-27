@@ -86,6 +86,7 @@ def set_starting_hp(app, character:PlayerClass):
         rolled_hp = hit_die # Max HP from hit die
         character.hp_last_roll = rolled_hp # Store the rolled HP before modifiers
         starting_hp = rolled_hp + character.hp_mod # Max HP at level 1
+        character.hp_all_rolls[character.level] = starting_hp # Store all rolls
         starting_hp = max(1, starting_hp)  # Ensure at least 1 HP
         character.hp = starting_hp # Set max HP
         character.hp_current = starting_hp # Set current HP to max HP
@@ -98,6 +99,7 @@ def set_starting_hp(app, character:PlayerClass):
         rolled_hp = random.randint(1, hit_die) # Roll the hit die
         character.hp_last_roll = rolled_hp # Store the rolled HP before modifiers
         starting_hp = rolled_hp + character.hp_mod # Add constitution modifier
+        character.hp_all_rolls[character.level] = starting_hp # Store all rolls
         starting_hp = max(1, starting_hp)  # Ensure at least 1 HP
         character.hp = starting_hp # Set max HP
         character.hp_current = starting_hp # Set current HP to max HP
@@ -118,7 +120,72 @@ def recalculate_hp(character: PlayerClass):
     character.hp = character.hp_last_roll + character.hp_mod # Recalculate max HP
     character.hp = max(1, character.hp)  # Ensure at least 1 HP
     character.hp_current = character.hp # Set current HP to max HP
-    #update_view_from_model(app)
+  
+def reenable_hp_roll_button(app):
+    """Re-enable the HP roll button for level up."""
+    print("DEBUG reenable_hp_roll_button: ----------------------------------------------------------------")
+    print("DEBUG reenable_hp_roll_button: Re-enabling HP roll button for level up.")
+    app.chk_opt_fullhplvl1.config(state="disabled")
+    app.btn_rollhp.config(state="enabled")
+    app.btn_rollhp.config(text="Roll HP")
+    app.btn_rollhp.config(style="Attention.TButton")
+    app.btn_rollhp.config(command=lambda: role_tp_for_level_up(app))
 
+def role_tp_for_level_up(app, character=None):
+    """Placeholder function for role TP allocation on level up."""
+    print("DEBUG role_tp_for_level_up: ----------------------------------------------------------------")
     
+    # Determine the character to use
+    if hasattr(app, "new_player"):
+        print("DEBUG role_tp_for_level_up: Using app.new_player.")
+        character = app.new_player
+    elif character is not None:
+        print("DEBUG role_tp_for_level_up: Using provided character.")
+    else:
+        raise ValueError("ERROR role_tp_for_level_up: No character provided for TP allocation.")
 
+    # Roll HP for level up
+    hit_die = character.hp_dice
+    rolled_hp = random.randint(1, hit_die) # Roll the hit die
+    character.hp_last_roll = rolled_hp # Store the rolled HP before modifiers
+    starting_hp = rolled_hp + character.hp_mod # Add constitution modifier
+    print(f"DEBUG role_tp_for_level_up: Total HP increase after CON mod: {starting_hp} (Rolled: {rolled_hp}, Hit die: d{hit_die}, CON Mod: {character.hp_mod})")
+    character.hp_all_rolls[character.level] = starting_hp # Store all rolls
+    starting_hp = max(1, starting_hp)  # Ensure at least 1 HP
+    character.hp += starting_hp # Increase max HP
+    print(f"DEBUG role_tp_for_level_up: New max HP after level up: {character.hp}")
+    character.hp_current += starting_hp # Increase current HP
+    print(f"DEBUG role_tp_for_level_up: New current HP after level up: {character.hp_current}")
+    
+    # Disable HP roll button after level up
+    app.btn_rollhp.config(state="disabled")
+    app.btn_rollhp.config(style="Standard.TButton")
+
+    # Update the UI to reflect the new HP values
+    update_view_from_model(app)
+
+
+def remove_tp_on_level_down(app, character=None):
+    """Placeholder function for removing role TP on level down."""
+    print("DEBUG remove_tp_on_level_down: ----------------------------------------------------------------")
+
+    # Determine the character to use
+    if hasattr(app, "new_player"):
+        print("DEBUG role_tp_for_level_up: Using app.new_player.")
+        character = app.new_player
+    elif character is not None:
+        print("DEBUG role_tp_for_level_up: Using provided character.")
+    else:
+        raise ValueError("ERROR role_tp_for_level_up: No character provided for TP allocation.")
+
+    # Remove HP gained from last level
+    last_level_tp = character.hp_all_rolls.get(character.level + 1, 0) # Get HP gained at last level
+    print(f"DEBUG remove_tp_on_level_down: Removing TP from last level: {last_level_tp}")
+    character.hp -= last_level_tp # Decrease max HP
+    print(f"DEBUG remove_tp_on_level_down: New max HP after level down: {character.hp}") # Decrease current HP accordingly
+    character.hp_current -= last_level_tp
+    print(f"DEBUG remove_tp_on_level_down: New current HP after level down: {character.hp_current}")
+    character.hp_all_rolls.pop(character.level + 1, None) # Remove last level's HP roll record
+    print(f"DEBUG remove_tp_on_level_down: Removed HP roll record for level {character.level + 1}")
+
+    update_view_from_model(app)

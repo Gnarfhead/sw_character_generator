@@ -24,6 +24,7 @@ class PlayerClass:
     hp: int = 0
     hp_current: int = 0
     hp_last_roll: int = 0
+    hp_all_rolls: dict[int, int] = field(default_factory=dict)
     save_throw: int = 0
     save_throw_progression: dict[int, int] = field(default_factory=dict)
     save_bonuses_race: set[str] = field(default_factory=set)
@@ -168,7 +169,7 @@ class PlayerClass:
             f"Move Silently Race Bonus: {self.move_silently_race}%, Open Locks: {self.open_locks_profession}%, Open Locks Race Bonus: {self.open_locks_race}%, Surprised: {self.surprised}:6\n"
             f"Allowed Alignment: {self.allowed_alignment}, Allowed Races: {self.allowed_races}\n"
             f"Allowed Weapon: {self.allowed_weapon}, Allowed Armor: {self.allowed_armor}\n"
-            f"Character Created: {self.character_created}, HP Last Roll: {self.hp_last_roll}\n"
+            f"Character Created: {self.character_created}, HP Last Roll: {self.hp_last_roll}, HP All Rolls: {self.hp_all_rolls}\n"
         )
     
     def to_dict(self):
@@ -192,6 +193,7 @@ class PlayerClass:
             "hp": self.hp,
             "hp_current": self.hp_current,
             "hp_last_roll": self.hp_last_roll,
+            "hp_all_rolls": self.hp_all_rolls,
             "save_throw": self.save_throw,
             "save_bonuses_race": list(self.save_bonuses_race),
             "save_bonuses_profession": list(self.save_bonuses_profession),
@@ -306,6 +308,7 @@ class PlayerClass:
         self.hp = data.get("hp", self.hp)
         self.hp_current = data.get("hp_current", self.hp_current)
         self.hp_last_roll = data.get("hp_last_roll", self.hp_last_roll)
+        self.hp_all_rolls = data.get("hp_all_rolls", self.hp_all_rolls)
         self.save_throw = data.get("save_throw", self.save_throw)
         self.save_bonuses_race = set(data.get("save_bonuses_race", []))
         self.save_bonuses_profession = set(data.get("save_bonuses_profession", []))

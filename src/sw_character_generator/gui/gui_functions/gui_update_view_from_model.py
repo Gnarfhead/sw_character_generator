@@ -110,7 +110,7 @@ def update_view_from_model(app):
         new_text = _format_change_scrolledtext(model.special_abilities)
 
         if current_text != new_text:
-            print("DEBUG update_view_from_model: special_abilities_txt:", current_text, "->", new_text)
+            # print("DEBUG update_view_from_model: special_abilities_txt:", current_text, "->", new_text)
             app.special_abilities_txt.delete("1.0", "end")
             app.special_abilities_txt.insert("1.0", new_text)
         
@@ -129,7 +129,7 @@ def update_view_from_model(app):
         new_text = _format_change_scrolledtext(model.immunities)
 
         if current_text != new_text:
-            print(f"DEBUG update_view_from_model: immunities_txt: '{current_text}' -> '{new_text}'")
+            # print(f"DEBUG update_view_from_model: immunities_txt: '{current_text}' -> '{new_text}'")
             app.immunities_txt.delete("1.0", "end")
             app.immunities_txt.insert("1.0", new_text)
 
@@ -147,7 +147,7 @@ def update_view_from_model(app):
         new_text = _format_change_scrolledtext(model.save_bonuses)
 
         if current_text != new_text:
-            print(f"DEBUG update_view_from_model: save_bonuses_txt: '{current_text}' -> '{new_text}'")
+            # print(f"DEBUG update_view_from_model: save_bonuses_txt: '{current_text}' -> '{new_text}'")
             app.save_bonuses_txt.delete("1.0", "end")
             app.save_bonuses_txt.insert("1.0", new_text)
         
@@ -156,26 +156,26 @@ def update_view_from_model(app):
         app.save_bonuses_txt.bind("<<Modified>>", lambda event: on_save_bonuses_changed(app))
 
     if hasattr(app, "inventory_txt"):
-        print("DEBUG update_view_from_model: Updating inventory_txt widget.")
+        # print("DEBUG update_view_from_model: Updating inventory_txt widget.")
         
         current_text = app.inventory_txt.get("1.0", "end-1c")
         new_text = _format_items_dict(model.inventory)
         
         if current_text != new_text:
-            print(f"DEBUG update_view_from_model: inventory_txt: '{current_text}' -> '{new_text}'")
+            # print(f"DEBUG update_view_from_model: inventory_txt: '{current_text}' -> '{new_text}'")
             app.inventory_txt.config(state="normal")  # FIX: Temporarily enable
             app.inventory_txt.delete("1.0", "end")
             app.inventory_txt.insert("1.0", new_text)
             app.inventory_txt.config(state="disabled")  # FIX: Disable again
     
     if hasattr(app, "treasure_txt"):
-        print("DEBUG update_view_from_model: Updating treasure_txt widget.")
+        # print("DEBUG update_view_from_model: Updating treasure_txt widget.")
         
         current_text = app.treasure_txt.get("1.0", "end-1c")
         new_text = _format_items_dict(model.treasure)
         
         if current_text != new_text:
-            print(f"DEBUG update_view_from_model: treasure_txt: '{current_text}' -> '{new_text}'")
+            # print(f"DEBUG update_view_from_model: treasure_txt: '{current_text}' -> '{new_text}'")
             app.treasure_txt.config(state="normal")  # FIX: Temporarily enable
             app.treasure_txt.delete("1.0", "end")
             app.treasure_txt.insert("1.0", new_text)

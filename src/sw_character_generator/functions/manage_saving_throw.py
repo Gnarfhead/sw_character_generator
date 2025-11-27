@@ -18,21 +18,6 @@ def calculate_saving_throw(character):
         print("ERROR calculate_saving_throw: Could not convert level to int, using 1 as fallback")
         current_level = 1
 
-    # Validate character input
-    if character is None:
-        raise ValueError("ERROR calculate_saving_throw: No character provided for saving throw calculation.")
-
-
-    # Convert level to int if it's a string
-    try:
-        print("DEBUG calculate_saving_throw: character.level type is", type(character.level), "with value", character.level)
-        current_level = int(character.level)
-        print("DEBUG calculate_saving_throw: current_level converted to int:", current_level)
-    except (ValueError, TypeError):
-        print("DEBUG calculate_saving_throw: current_level type is", type(current_level))
-        print("ERROR calculate_saving_throw: Could not convert level to int, using 1 as fallback")
-        current_level = 1
-
     # Helper: sichere Lookup + Konvertierung in int (falls möglich)
     def _get_prof_val_int(mapping, lvl, default=0):
         if not mapping:
