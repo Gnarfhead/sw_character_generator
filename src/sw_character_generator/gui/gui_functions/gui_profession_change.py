@@ -22,6 +22,7 @@ def on_profession_change(app, *args):
         app.new_player.save_bonuses_profession = set() # reset save bonuses
         
         # Update the model with the new profession
+        print("DEBUG on_profession_change: Changing profession to", name)
         choosen_profession_modifiers(app.new_player, name) # update profession and related stats
         app.status_var.set(f"Profession changed to {name}")
         app.cb_race.config(state="normal") # enable race selection
@@ -58,11 +59,11 @@ def refresh_race_values(app):
     """Refresh the race combobox values based on the new player's allowed races."""
     print("DEBUG refresh_race_values: ------------------------------------------------")
     app.cb_race.config(values=list(getattr(app.new_player, "allowed_races", ())))
-    print(f"DEBUG refresh_race_values: Updated race combobox values to {app.cb_race['values']}")
+    #print(f"DEBUG refresh_race_values: Updated race combobox values to {app.cb_race['values']}")
 
 def refresh_alignment_values(app):
     """Refresh the alignment combobox values based on the new player's allowed alignments."""
     print("DEBUG refresh_alignment_values: ------------------------------------------------")
     app.cb_alignment.config(values=list(getattr(app.new_player, "allowed_alignment", ())))
-    print(f"DEBUG refresh_alignment_values: Updated alignment combobox values to {app.cb_alignment['values']}")
+    #print(f"DEBUG refresh_alignment_values: Updated alignment combobox values to {app.cb_alignment['values']}")
 

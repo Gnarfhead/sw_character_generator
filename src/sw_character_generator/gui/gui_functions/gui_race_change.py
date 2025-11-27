@@ -37,17 +37,17 @@ def on_race_change(app, *args):
 
 
         # Adjust top_frame style based on race and alignment selection
-        print("DEBUG on_race_change: Checking race and alignment for top_frame style adjustment.")
+        #print("DEBUG on_race_change: Checking race and alignment for top_frame style adjustment.")
         if app.race_var.get() != "Undefined" and app.alignment_var.get() != "Undefined":
-            print("DEBUG on_race_change: app.race_var.get() =", app.race_var.get())
-            print("DEBUG on_race_change: app.alignment_var.get() =", app.alignment_var.get())
+            #print("DEBUG on_race_change: app.race_var.get() =", app.race_var.get())
+            #print("DEBUG on_race_change: app.alignment_var.get() =", app.alignment_var.get())
             app.top_frame.config(style="Standard.TFrame")
-            print("DEBUG on_race_change: Both race and alignment are defined; set top_frame to Standard.TFrame")
+            #print("DEBUG on_race_change: Both race and alignment are defined; set top_frame to Standard.TFrame")
         else:
-            print("DEBUG on_race_change: app.race_var.get() =", app.race_var.get())
-            print("DEBUG on_race_change: app.alignment_var.get() =", app.alignment_var.get())
+            #print("DEBUG on_race_change: app.race_var.get() =", app.race_var.get())
+            #print("DEBUG on_race_change: app.alignment_var.get() =", app.alignment_var.get())
             app.top_frame.config(style="Attention.TFrame")
-            print("DEBUG on_race_change: Either race or alignment is undefined; set top_frame to Attention.TFrame")
+            #print("DEBUG on_race_change: Either race or alignment is undefined; set top_frame to Attention.TFrame")
 
     except Exception as e:
         #app.status_var.set(f"DEBUG on_race_change: Error updating race: {e}")

@@ -70,7 +70,7 @@ def modify_hp(delta: int, app, character=None):
 def set_roll_hp_button(app, chk_starting_hp):
     """Set the roll HP button text based on checkbox state."""
     print("DEBUG set_roll_hp_button: ----------------------------------------------------------------")
-    print("DEBUG set_roll_hp_button: Called with chk_starting_hp =", chk_starting_hp.get())
+    #print("DEBUG set_roll_hp_button: Called with chk_starting_hp =", chk_starting_hp.get())
     if app.chk_opt_fullhplvl1_var.get() is True:
         print("DEBUG set_roll_hp_button: Setting roll HP button to 'Set HP'")
         app.btn_rollhp.config(text="Set HP")
@@ -137,7 +137,7 @@ def role_tp_for_level_up(app, character=None):
     
     # Determine the character to use
     if hasattr(app, "new_player"):
-        print("DEBUG role_tp_for_level_up: Using app.new_player.")
+        #print("DEBUG role_tp_for_level_up: Using app.new_player.")
         character = app.new_player
     elif character is not None:
         print("DEBUG role_tp_for_level_up: Using provided character.")
@@ -171,7 +171,7 @@ def remove_tp_on_level_down(app, character=None):
 
     # Determine the character to use
     if hasattr(app, "new_player"):
-        print("DEBUG role_tp_for_level_up: Using app.new_player.")
+        #print("DEBUG role_tp_for_level_up: Using app.new_player.")
         character = app.new_player
     elif character is not None:
         print("DEBUG role_tp_for_level_up: Using provided character.")

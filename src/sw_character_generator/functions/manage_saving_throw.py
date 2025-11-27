@@ -10,9 +10,9 @@ def calculate_saving_throw(character):
 
     # Convert level to int if it's a string
     try:
-        print("DEBUG calculate_saving_throw: character.level type is", type(character.level), "with value", character.level)
+        #print("DEBUG calculate_saving_throw: character.level type is", type(character.level), "with value", character.level)
         current_level = int(character.level)
-        print("DEBUG calculate_saving_throw: current_level converted to int:", current_level)
+        #print("DEBUG calculate_saving_throw: current_level converted to int:", current_level)
     except (ValueError, TypeError):
         print("DEBUG calculate_saving_throw: current_level type is", type(current_level))
         print("ERROR calculate_saving_throw: Could not convert level to int, using 1 as fallback")
@@ -35,9 +35,9 @@ def calculate_saving_throw(character):
            return default
             
     # Convert profession skill mappings to int values
-    print("DEBUG calculate_saving_throw: Converting mappings to int values.")
+    #print("DEBUG calculate_saving_throw: Converting mappings to int values.")
     character.saving_throw_to_int = _get_prof_val_int(character.save_throw_progression, current_level, 0)
-    print("DEBUG calculate_saving_throw: saving_throw_to_int set to", character.saving_throw_to_int)
+    #print("DEBUG calculate_saving_throw: saving_throw_to_int set to", character.saving_throw_to_int)
     character.save_throw = character.saving_throw_to_int
     print("DEBUG calculate_saving_throw: Final save_throw is", character.save_throw)
 
