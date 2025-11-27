@@ -25,6 +25,7 @@ class PlayerClass:
     hp_current: int = 0
     hp_last_roll: int = 0
     save_throw: int = 0
+    save_throw_progression: dict[int, int] = field(default_factory=dict)
     save_bonuses_race: set[str] = field(default_factory=set)
     save_bonuses_profession: set[str] = field(default_factory=set)
     save_bonuses_other: set[str] = field(default_factory=set)

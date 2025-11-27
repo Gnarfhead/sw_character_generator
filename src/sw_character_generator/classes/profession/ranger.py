@@ -97,6 +97,151 @@ def apply_ranger_dependent_modifiers(character):
         20: 4,
     }
 
+# Delicate tasks thief skills progression
+    character.delicate_tasks_profession = {
+        1: 0,
+        2: 0,
+        3: 0,
+        4: 0,
+        5: 0,
+        6: 0,
+        7: 0,
+        8: 0,
+        9: 0,
+        10: 0,
+        11: 0,
+        12: 0,
+        13: 0,
+        14: 0,
+        15: 0,
+        16: 0,
+        17: 0,
+        18: 0,
+        19: 0,
+        20: 0,
+    }
+
+    # Climb walls thief skills progression
+    character.climb_walls_profession = {
+        1: 0,
+        2: 0,
+        3: 0,
+        4: 0,
+        5: 0,
+        6: 0,
+        7: 0,
+        8: 0,
+        9: 0,
+        10: 0,
+        11: 0,
+        12: 0,
+        13: 0,
+        14: 0,
+        15: 0,
+        16: 0,
+        17: 0,
+        18: 0,
+        19: 0,
+        20: 0,
+    }
+
+    # Hear sounds thief skills progression
+    character.hear_sounds_profession = {
+        1: "0:6",
+        2: "0:6",
+        3: "0:6",
+        4: "0:6",
+        5: "0:6",
+        6: "0:6",
+        7: "0:6",
+        8: "0:6",
+        9: "0:6",
+        10: "0:6",
+        11: "0:6",
+        12: "0:6",
+        13: "0:6",
+        14: "0:6",
+        15: "0:6",
+        16: "0:6",
+        17: "0:6",
+        18: "0:6",
+        19: "0:6",
+        20: "0:6",
+    }
+
+    # Hide in shadows thief skills progression
+    character.hide_in_shadows_profession = {
+        1: 0,
+        2: 0,
+        3: 0,
+        4: 0,
+        5: 0,
+        6: 0,
+        7: 0,
+        8: 0,
+        9: 0,
+        10: 0,
+        11: 0,
+        12: 0,
+        13: 0,
+        14: 0,
+        15: 0,
+        16: 0,
+        17: 0,
+        18: 0,
+        19: 0,
+        20: 0,
+    }
+
+    # Move silently thief skills progression
+    character.move_silently_profession = {
+        1: 0,
+        2: 0,
+        3: 0,
+        4: 0,
+        5: 0,
+        6: 0,
+        7: 0,
+        8: 0,
+        9: 0,
+        10: 0,
+        11: 0,
+        12: 0,
+        13: 0,
+        14: 0,
+        15: 0,
+        16: 0,
+        17: 0,
+        18: 0,
+        19: 0,
+        20: 0,
+    
+    }
+
+    # Open locks thief skills progression
+    character.open_locks_profession = {
+        1: 0,
+        2: 0,
+        3: 0,
+        4: 0,
+        5: 0,
+        6: 0,
+        7: 0,
+        8: 0,
+        9: 0,
+        10: 0,
+        11: 0,
+        12: 0,
+        13: 0,
+        14: 0,
+        15: 0,
+        16: 0,
+        17: 0,
+        18: 0,
+        19: 0,
+        20: 0,
+    }
+
     # Spells per level
     character.spells_lvl1 = 0
     character.spells_lvl2 = 0

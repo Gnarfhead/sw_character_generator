@@ -78,14 +78,6 @@ def calculate_thief_skills(character):
     else:
         print("DEBUG calculate_thief_skills: Character is not a thief, assassin, or monk. Skipping thief skills calculation.")
         return  # No need to calculate thief skills for non-thief professions
-    
-    print("DEBUG calculate_thief_skills: Thief skills calculated:")
-    print(f"  Delicate Tasks: {character.delicate_tasks}%")
-    print(f"  Climb Walls: {character.climb_walls}%")
-    print(f"  Hear Sounds: {character.hear_sounds}")
-    print(f"  Hide in Shadows: {character.hide_in_shadows}%")
-    print(f"  Move Silently: {character.move_silently}%")
-    print(f"  Open Locks: {character.open_locks}%")
 
     # Final debug output
     print("DEBUG calculate_thief_skills: Thief skills calculation complete.")   
