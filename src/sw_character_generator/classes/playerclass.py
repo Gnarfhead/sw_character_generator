@@ -111,30 +111,30 @@ class PlayerClass:
         remainder = remainder % 50
         self.coins_silver = remainder // 10
         remainder = remainder % 10
-        self.coins_copper = remainder % 10
+        self.coins_copper = remainder
 
     # Derived properties
     @property
-    def save_bonuses(self) -> set[str]:
+    def save_bonuses(self) -> set[str]:  # Combine all save bonuses from race, class, and other sources.
         """Combine all save bonuses from race, class, and other sources."""
         return self.save_bonuses_race | self.save_bonuses_profession | self.save_bonuses_other
     
     @property
-    def immunities(self) -> set[str]:
+    def immunities(self) -> set[str]:  # Combine all immunities from race , class, and other sources.
         """Combine all immunities from race , class, and other sources."""
         return self.immunities_race | self.immunities_profession | self.immunities_other
     
     @property
-    def special_abilities(self) -> set[str]:
+    def special_abilities(self) -> set[str]: # Combine all special abilities from race, class, and other sources.
         """Combine all special abilities from race, class, and other sources."""
         return self.special_abilities_race | self.special_abilities_profession | self.special_abilities_other
 
-    def __post_init__(self):
+    def __post_init__(self):  # Initialize derived attributes after the main initialization.
         """Initialize derived attributes after the main initialization."""
         
 
 
-    def __repr__(self):
+    def __repr__(self):  # String representation of the PlayerClass instance.
         """Return a string representation of the PlayerClass instance."""
         return (
             f"Player Name={self.player_name}, Character Name={self.character_name}\n"
@@ -164,9 +164,10 @@ class PlayerClass:
             f"Allowed Alignment: {self.allowed_alignment}, Allowed Races: {self.allowed_races}\n"
             f"Allowed Weapon: {self.allowed_weapon}, Allowed Armor: {self.allowed_armor}\n"
             f"Character Created: {self.character_created}, HP Last Roll: {self.hp_last_roll}, HP All Rolls: {self.hp_all_rolls}\n"
+            f"Spells: {self.spell_table}\n"
         )
-    
-    def to_dict(self):
+
+    def to_dict(self):  # Convert the PlayerClass instance to a dictionary.
         """Convert the PlayerClass instance to a dictionary."""
         return {
             "player_name": self.player_name,
@@ -262,9 +263,10 @@ class PlayerClass:
             "parry": self.parry,
             "thief_class": self.thief_class,
             "magic_user_class": self.magic_user_class,
+            "spell_table": self.spell_table,
         }
 
-    def from_dict(self, data: dict) -> "PlayerClass":
+    def from_dict(self, data: dict) -> "PlayerClass":  # Create a PlayerClass instance from a dictionary.
         """Create a PlayerClass instance from a dictionary."""
         stats = data.get("stats", {})
         modifiers = data.get("modifiers", {})
@@ -273,8 +275,7 @@ class PlayerClass:
         constitution_mods = modifiers.get("constitution", {})
         intelligence_mods = modifiers.get("intelligence", {})
         charisma_mods = modifiers.get("charisma", {})
-        spells = data.get("spells", {})
-
+        
         self.player_name = stats.get("player_name", self.player_name)
         self.character_name = data.get("character_name", self.character_name)
         self.character_created = data.get("character_created", self.character_created)
@@ -352,3 +353,4 @@ class PlayerClass:
         self.parry = data.get("parry", self.parry)
         self.thief_class = data.get("thief_class", self.thief_class)
         self.magic_user_class = data.get("magic_user_class", self.magic_user_class)
+        self.spell_table = data.get("spell_table", self.spell_table)

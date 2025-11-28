@@ -250,7 +250,10 @@ class App:
         widget_extlabel(self.bonus_frame, "Raise Dead Modifier:", 7, 0, var=self.raise_dead_mod_var, owner=self, name_label="lbl_raise_dead_mod", name_value="entry_raise_dead_mod")
         widget_extlabel(self.bonus_frame, "Max Additional Languages:", 8, 0, var=self.max_add_langs_var, owner=self, name_label="lbl_max_add_langs", name_value="entry_max_add_langs")
         widget_extlabel(self.bonus_frame, "Special Hirelings Cap:", 9, 0, var=self.cap_spec_hirelings_var, owner=self, name_label="lbl_cap_spec_hirelings", name_value="entry_cap_spec_hirelings")
+        widget_extlabel(self.bonus_frame, "Parry:", 10, 0, var=self.parry_var, owner=self, name_label="lbl_parry", name_value="entry_parry")
+        widget_extlabel(self.bonus_frame, "Languages:", 11, 0, var=self.languages_var, owner=self, name_label="lbl_languages", name_value="entry_languages")
         
+
         ### Stats / Other panels
         self.stats_frame = ttk.LabelFrame(self.root, text="Stats / Derived", borderwidth=5, padding=(6, 6), style="Standard.TFrame")
         self.stats_frame.grid(row=1, column=2, padx=PADX, pady=PADY, sticky="nsew")
@@ -266,8 +269,6 @@ class App:
         widget_extlabel(self.stats_frame, "Saving Throw:", 3, 0, var=self.save_throw_var, owner=self, name_label="lbl_save_throw", name_value="entry_save_throw")
         widget_extlabel(self.stats_frame, "Armor Class (AC):", 4, 0, var=self.ac_var, owner=self, name_label="lbl_ac", name_value="entry_ac")
         widget_extlabel(self.stats_frame, "Darkvision:", 5, 0, var=self.darkvision_var, owner=self, name_label="lbl_darkvision", name_value="entry_darkvision")
-        widget_extlabel(self.stats_frame, "Parry:", 6, 0, var=self.parry_var, owner=self, name_label="lbl_parry", name_value="entry_parry")
-        widget_extlabel(self.stats_frame, "Languages:", 7, 0, var=self.languages_var, owner=self, name_label="lbl_languages", name_value="entry_languages")
         
         # Save Bonuses
         widget_label(self.stats_frame, "Save Bonuses:", 8, 0, owner=self, name_label="lbl_save_bonuses")

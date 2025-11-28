@@ -16,13 +16,15 @@ def on_profession_change(app, *args):
         print("DEBUG on_profession_change: No profession selected.")
         return
     try:
+        # Clear profession-related attributes before applying new profession
         for attr in ("immunities_profession", "special_abilities_profession", "save_bonuses_profession",
                      "immunities_other", "special_abilities_other", "save_bonuses_other"):
-            existing = getattr(app.new_player, attr, None)
-            if isinstance(existing, set):
-                existing.clear()
+            existing = getattr(app.new_player, attr, None) # get existing attribute
+            # print(f"DEBUG on_profession_change: Clearing attribute {attr}, existing value: {existing}")
+            if isinstance(existing, set): # clear set attributes
+                existing.clear() # clear existing set
             else:
-                setattr(app.new_player, attr, set())
+                setattr(app.new_player, attr, set()) # reset to empty set
         
         # Update the model with the new profession
         print("DEBUG on_profession_change: Changing profession to", name)
@@ -55,18 +57,17 @@ def on_profession_change(app, *args):
         with app.suppress_updates(): # prevent recursive updates
             update_view_from_model(app) # refresh GUI to reflect model changes
     except Exception as e:
-        #app.status_var.set(f"DEBUG on_profession_change: Error updating profession: {e}")
         print(f"DEBUG on_profession_change: Profession change error: {e}")
 
 def refresh_race_values(app):
     """Refresh the race combobox values based on the new player's allowed races."""
     print("DEBUG refresh_race_values: ------------------------------------------------")
     app.cb_race.config(values=list(getattr(app.new_player, "allowed_races", ())))
-    #print(f"DEBUG refresh_race_values: Updated race combobox values to {app.cb_race['values']}")
+    # print("DEBUG refresh_race_values: Updated race combobox values to", {app.cb_race['values']})
 
 def refresh_alignment_values(app):
     """Refresh the alignment combobox values based on the new player's allowed alignments."""
     print("DEBUG refresh_alignment_values: ------------------------------------------------")
     app.cb_alignment.config(values=list(getattr(app.new_player, "allowed_alignment", ())))
-    #print(f"DEBUG refresh_alignment_values: Updated alignment combobox values to {app.cb_alignment['values']}")
+    # print("DEBUG refresh_alignment_values: Updated alignment combobox values to", {app.cb_alignment['values']})
 
