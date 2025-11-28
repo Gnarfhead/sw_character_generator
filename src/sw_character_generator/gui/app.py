@@ -296,19 +296,7 @@ class App:
         self.immunities_txt.grid(row=9, column=1, columnspan=5, sticky="nsew", padx=PADX, pady=PADY)
         self.immunities_txt.bind("<<Modified>>", lambda event: on_immunities_changed(self))
 
-        # Special Abilities
-        widget_label(self.stats_frame, "Special Abilities:", 10, 0, owner=self, name_label="lbl_special_abilities")
-
-        # Use scrolledtext for special abilities
-        self.special_abilities_txt = scrolledtext.ScrolledText(
-        self.stats_frame,
-        wrap="word",
-        height=3,        # visible row height (can be adjusted)
-        width=40,        # visible column width (char-based)
-        font=("TkDefaultFont", 10)
-        )
-        self.special_abilities_txt.grid(row=10, column=1, columnspan=5, sticky="nsew", padx=PADX, pady=PADY)
-        self.special_abilities_txt.bind("<<Modified>>", lambda event: on_special_abilities_changed(self))
+        
 
         ### Create a notebook for lower panels
         self.lower_notebook = ttk.Notebook(self.root)
@@ -318,11 +306,13 @@ class App:
         self.weapons_frame = ttk.Frame(self.lower_notebook)
         self.inventory_frame = ttk.Frame(self.lower_notebook)
         self.magic_frame = ttk.Frame(self.lower_notebook)
+        self.special_abilities_frame = ttk.Frame(self.lower_notebook)
         # Add tabs to the notebook
-        self.lower_notebook.add(self.thief_frame, text="Thief Skills")
+        self.lower_notebook.add(self.thief_frame, text="Thief Skills", state="normal")
         self.lower_notebook.add(self.weapons_frame, text="Weapons & Armor", state="disabled")
-        self.lower_notebook.add(self.inventory_frame, text="Inventory")
+        self.lower_notebook.add(self.inventory_frame, text="Inventory", state="normal")
         self.lower_notebook.add(self.magic_frame, text="Magic", state="disabled")
+        self.lower_notebook.add(self.special_abilities_frame, text="Special Abilities", state="normal")
 
         ### Thief skills Tab/Frame
         self.thief_frame = ttk.LabelFrame(self.thief_frame, text="Thief Skills", borderwidth=5, padding=(6, 6), style="Standard.TFrame")
@@ -413,6 +403,24 @@ class App:
         widget_extlabel(self.inventory_frame, "Electrum:", 4, 5, var=self.coins_electrum_var, owner=self, name_label="lbl_coins_electrum", name_value="entry_coins_electrum")
         widget_extlabel(self.inventory_frame, "Silver:", 4, 7, var=self.coins_silver_var, owner=self, name_label="lbl_coins_silver", name_value="entry_coins_silver")
         widget_extlabel(self.inventory_frame, "Copper:", 4, 9, var=self.coins_copper_var, owner=self, name_label="lbl_coins_copper", name_value="entry_coins_copper")
+
+        ### Special Abilities Tab/Frame
+        self.special_abilities_frame = ttk.LabelFrame(self.special_abilities_frame, text="Special Abilities", borderwidth=5, padding=(6,6), style="Standard.TFrame")
+        self.special_abilities_frame.grid(row=0, column=0, padx=PADX, pady=PADY, sticky="nsew")
+
+        # Special Abilities
+        widget_label(self.special_abilities_frame, "Special Abilities:", 0, 0, owner=self, name_label="lbl_special_abilities")
+
+        # Use scrolledtext for special abilities
+        self.special_abilities_txt = scrolledtext.ScrolledText(
+        self.special_abilities_frame,
+        wrap="word",
+        height=10,        # visible row height (can be adjusted)
+        width=150,        # visible column width (char-based)
+        font=("TkDefaultFont", 10)
+        )
+        self.special_abilities_txt.grid(row=0, column=1, sticky="nsew", padx=PADX, pady=PADY)
+        self.special_abilities_txt.bind("<<Modified>>", lambda event: on_special_abilities_changed(self))
 
         ### Footerframe 
         self.footer_frame = ttk.Frame(self.root, borderwidth=5, padding=(6,6), style="Standard.TFrame")
