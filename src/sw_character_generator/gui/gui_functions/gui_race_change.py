@@ -20,6 +20,7 @@ def on_race_change(app, *args):
         app.new_player.immunities_race = set()
         app.new_player.special_abilities_race = set()
         app.new_player.save_bonuses_race = set()
+        app.new_player.ranged_atck_mod = 0  # reset because of race modifiers of halfling
         reset_thief_skills(app.new_player) # reset thief skills before applying new race
 
         # Apply new race modifiers
