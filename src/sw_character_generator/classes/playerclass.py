@@ -92,6 +92,7 @@ class PlayerClass:
     parry: int = 0
     thief_class: bool = False
     magic_user_class: bool = False
+    spell_table: dict[int, list[int]] = field(default_factory=dict)
  
 
     # Property for total coins

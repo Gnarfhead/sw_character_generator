@@ -16,10 +16,13 @@ def on_profession_change(app, *args):
         print("DEBUG on_profession_change: No profession selected.")
         return
     try:
-        # reset previous profession-related attributes
-        app.new_player.immunities_profession = set() # reset immunities
-        app.new_player.special_abilities_profession = set() # reset special abilities
-        app.new_player.save_bonuses_profession = set() # reset save bonuses
+        for attr in ("immunities_profession", "special_abilities_profession", "save_bonuses_profession",
+                     "immunities_other", "special_abilities_other", "save_bonuses_other"):
+            existing = getattr(app.new_player, attr, None)
+            if isinstance(existing, set):
+                existing.clear()
+            else:
+                setattr(app.new_player, attr, set())
         
         # Update the model with the new profession
         print("DEBUG on_profession_change: Changing profession to", name)
