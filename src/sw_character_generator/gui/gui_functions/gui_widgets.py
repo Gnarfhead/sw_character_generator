@@ -4,7 +4,8 @@ import tkinter.ttk as ttk
 PADX = 8
 PADY = 6
 WIDTH = 10
-WIDTH_ENTRY = 30
+WIDTH_ENTRY_SHORT = 4
+WIDTH_ENTRY_LONG = 40
 WIDTH_SPINBOX = 10
 COLUMNSPAN_DEFAULT = 1
 
@@ -32,7 +33,14 @@ def widget_extlabel(parent, text, row, column, var=None, width=WIDTH, columnspan
     _assign(owner, {name_label: lbl, name_value: ext_lbl})
     return lbl, ext_lbl
 
-def widget_entry(parent, text, row, column, var=None, width=WIDTH_ENTRY, columnspan=1, *, owner=None, name_label=None, name_entry=None, **grid_opts):
+def widget_entry_short(parent, row, column, var=None, width=WIDTH_ENTRY_SHORT, columnspan=1, *, owner=None, name_entry=None, **grid_opts):
+    """Create a labeled Entry widget (or other text input widget) in a grid."""
+    ent = ttk.Entry(parent, textvariable=var, width=width)
+    ent.grid(row=row, column=column, columnspan=columnspan, sticky="ew", padx=PADX, pady=PADY, **grid_opts)
+    _assign(owner, {name_entry: ent})
+    return ent
+
+def widget_entry_long(parent, text, row, column, var=None, width=WIDTH_ENTRY_LONG, columnspan=1, *, owner=None, name_label=None, name_entry=None, **grid_opts):
     """Create a labeled Entry widget (or other text input widget) in a grid."""
     lbl = ttk.Label(parent, text=text)
     lbl.grid(row=row, column=column, sticky="w", padx=PADX, pady=PADY)

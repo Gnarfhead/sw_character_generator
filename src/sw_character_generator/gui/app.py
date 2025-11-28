@@ -24,7 +24,7 @@ from .gui_functions.gui_role_stats import role_stats, switch_stats
 from .gui_functions.gui_profession_change import on_profession_change
 from .gui_functions.gui_update_view_from_model import update_view_from_model
 from .gui_functions.gui_persistence import bind_model_vars
-from .gui_functions.gui_widgets import widget_button, widget_extlabel, widget_label, widget_entry, widget_combobox, widget_spinbox, widget_checkbutton
+from .gui_functions.gui_widgets import widget_button, widget_entry_long, widget_entry_short, widget_extlabel, widget_label, widget_combobox, widget_spinbox, widget_checkbutton
 
 # Layout / sizing constants
 ROOT_MIN_W = 900
@@ -73,11 +73,17 @@ class App:
         self.main_stats_var = tk.StringVar(master=self.root)
         self.status_var = tk.StringVar(master=self.root, value="Ready")
         self.stat_str_var = tk.IntVar(master=self.root, value=0)
+        self.stat_str_temp_var = tk.IntVar(master=self.root, value=0)
         self.stat_dex_var = tk.IntVar(master=self.root, value=0)
+        self.stat_dex_temp_var = tk.IntVar(master=self.root, value=0)
         self.stat_con_var = tk.IntVar(master=self.root, value=0)
+        self.stat_con_temp_var = tk.IntVar(master=self.root, value=0)
         self.stat_int_var = tk.IntVar(master=self.root, value=0)
+        self.stat_int_temp_var = tk.IntVar(master=self.root, value=0)
         self.stat_wis_var = tk.IntVar(master=self.root, value=0)
+        self.stat_wis_temp_var = tk.IntVar(master=self.root, value=0)
         self.stat_char_var = tk.IntVar(master=self.root, value=0)
+        self.stat_char_temp_var = tk.IntVar(master=self.root, value=0)
         self.coins_platinum_var = tk.IntVar(master=self.root, value=0)
         self.coins_gold_var = tk.IntVar(master=self.root, value=0)
         self.coins_electrum_var = tk.IntVar(master=self.root, value=0)
@@ -103,12 +109,16 @@ class App:
         self.immunities_var = tk.StringVar(master=self.root, value="")
         self.treasure_var = tk.StringVar(master=self.root, value="")
         self.inventory_var = tk.StringVar(master=self.root, value="")
-        self.strength_atck_mod_var = tk.DoubleVar(master=self.root, value=0.0)
-        self.strength_damage_mod_var = tk.DoubleVar(master=self.root, value=0.0)
+        self.strength_atck_mod_var = tk.IntVar(master=self.root, value=0)
+        self.strength_atck_mod_temp_var = tk.IntVar(master=self.root, value=0)
+        self.strength_damage_mod_var = tk.IntVar(master=self.root, value=0)
+        self.strength_damage_mod_temp_var = tk.IntVar(master=self.root, value=0)
         self.carry_capacity_mod_var = tk.DoubleVar(master=self.root, value=0.0)
         self.door_crack_mod_var = tk.DoubleVar(master=self.root, value=0.0)
         self.ranged_atck_mod_var = tk.IntVar(master=self.root, value=0)
+        self.ranged_atck_mod_temp_var = tk.IntVar(master=self.root, value=0)
         self.ac_mod_var = tk.IntVar(master=self.root, value=0)
+        self.ac_mod_temp_var = tk.IntVar(master=self.root, value=0)
         self.hp_mod_var = tk.IntVar(master=self.root, value=0)
         self.raise_dead_mod_var = tk.IntVar(master=self.root, value=0)
         self.max_add_langs_var = tk.IntVar(master=self.root, value=0)
@@ -118,6 +128,10 @@ class App:
         self.chk_opt_fullhplvl1_var.trace_add("write", lambda *args: set_roll_hp_button(self, self.chk_opt_fullhplvl1_var))
         self.add_xp_var = tk.IntVar(master=self.root, value=0)
         self.nextlevel_var = tk.IntVar(master=self.root, value=0)
+        self.highest_spell_level_var = tk.IntVar(master=self.root, value=0)
+        self.understand_spell_var = tk.IntVar(master=self.root, value=0)
+        self.min_spells_per_level_var = tk.IntVar(master=self.root, value=0)
+        self.max_spells_per_level_var = tk.IntVar(master=self.root, value=0)
 
     # ----------------- setup UI -----------------
 
@@ -183,8 +197,8 @@ class App:
         self.top_frame.grid(row=0, column=0, columnspan=3, padx=PADX, pady=PADY, sticky="ew")
     
         # Row 0: basic fields
-        widget_entry(self.top_frame, "Player Name:", 0, 0, var=self.player_name_var, owner=self, name_label="lbl_player_name", name_entry="entry_player_name")
-        widget_entry(self.top_frame, "Character Name:", 0, 2, var=self.character_name_var, owner=self, name_label="lbl_character_name", name_entry="entry_character_name")
+        widget_entry_long(self.top_frame, "Player Name:", 0, 0, var=self.player_name_var, owner=self, name_label="lbl_player_name", name_entry="entry_player_name")
+        widget_entry_long(self.top_frame, "Character Name:", 0, 2, var=self.character_name_var, owner=self, name_label="lbl_character_name", name_entry="entry_character_name")
         widget_combobox(self.top_frame, "Gender:", 0, 4, self.gender_var, ["Male", "Female", "Other"], state="active", owner=self, name_label="lbl_gender", name_combo="cb_gender")
         widget_extlabel(self.top_frame, "Level:", 0, 6, var=self.level_var, owner=self, name_label="lbl_level", name_value="entry_level")
         widget_extlabel(self.top_frame, "XP-Bonus (%):", 0, 8, var=self.xp_bonus_var, owner=self, name_label="lbl_xp_bonus", name_value="entry_xp_bonus")
@@ -199,28 +213,37 @@ class App:
    
         # Row 2
         widget_extlabel(self.top_frame, "Main Stats:", 2, 0, var=self.main_stats_var, owner=self, name_label="lbl_main_stats", name_value="entry_main_stats")
-        widget_entry(self.top_frame, "Gottheit:", 2, 2, var=self.god_var, owner=self, name_label="lbl_god", name_entry="entry_god")
-        widget_entry(self.top_frame, "Alter:", 2, 4, var=self.age_var, owner=self, name_label="lbl_age", name_entry="entry_age")
+        widget_entry_long(self.top_frame, "Gottheit:", 2, 2, var=self.god_var, owner=self, name_label="lbl_god", name_entry="entry_god")
+        widget_entry_long(self.top_frame, "Alter:", 2, 4, var=self.age_var, owner=self, name_label="lbl_age", name_entry="entry_age")
         widget_spinbox(self.top_frame, "Add XP:", 2, 6, var=self.add_xp_var, owner=self, name_label="lbl_add_xp", name_spinbox="spin_add_xp")
         widget_button(self.top_frame, "Add XP", 2, 7, command=lambda: add_xp(self, self.add_xp_var.get()), owner=self, name_button="btn_add_xp", state="disabled")
  
         ### Attribute frame (use LabelFrame for nicer title)
         self.attr_frame = ttk.LabelFrame(self.root, text="Attribute", borderwidth=5, padding=(6, 6), style="Attention.TFrame")
         self.attr_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
-        widget_extlabel(self.attr_frame, "Strength (STR):", 0, 0, var=self.stat_str_var, owner=self, name_label="lbl_str", name_value="entry_str")
-        widget_extlabel(self.attr_frame, "Dexterity (DEX):", 1, 0, var=self.stat_dex_var, owner=self, name_label="lbl_dex", name_value="entry_dex")
-        widget_extlabel(self.attr_frame, "Constitution (CON):", 2, 0, var=self.stat_con_var, owner=self, name_label="lbl_con", name_value="entry_con")
-        widget_extlabel(self.attr_frame, "Intelligence (INT):", 3, 0, var=self.stat_int_var, owner=self, name_label="lbl_int", name_value="entry_int")
-        widget_extlabel(self.attr_frame, "Wisdom (WIS):", 4, 0, var=self.stat_wis_var, owner=self, name_label="lbl_wis", name_value="entry_wis")
-        widget_extlabel(self.attr_frame, "Charisma (CHA):", 5, 0, var=self.stat_char_var, owner=self, name_label="lbl_cha", name_value="entry_cha")
+        widget_label(self.attr_frame, "Attribute", 0, 0, owner=self, name_label="lbl_attribute_header")
+        widget_label(self.attr_frame, "Value", 0, 1, owner=self, name_label="lbl_value_header")
+        widget_label(self.attr_frame, "Temp", 0, 2, owner=self, name_label="lbl_temp_header")
+        widget_extlabel(self.attr_frame, "Strength (STR):", 1, 0, var=self.stat_str_var, owner=self, name_label="lbl_str", name_value="entry_str")
+        widget_entry_short(self.attr_frame, row=1, column=2, var=self.stat_str_temp_var, owner=self, name_entry="entry_str_temp")
+        widget_extlabel(self.attr_frame, "Dexterity (DEX):", 2, 0, var=self.stat_dex_var, owner=self, name_label="lbl_dex", name_value="entry_dex")
+        widget_entry_short(self.attr_frame, row=2, column=2, var=self.stat_dex_temp_var, owner=self, name_entry="entry_dex_temp")
+        widget_extlabel(self.attr_frame, "Constitution (CON):", 3, 0, var=self.stat_con_var, owner=self, name_label="lbl_con", name_value="entry_con")
+        widget_entry_short(self.attr_frame, row=3, column=2, var=self.stat_con_temp_var, owner=self, name_entry="entry_con_temp")
+        widget_extlabel(self.attr_frame, "Intelligence (INT):", 4, 0, var=self.stat_int_var, owner=self, name_label="lbl_int", name_value="entry_int")
+        widget_entry_short(self.attr_frame, row=4, column=2, var=self.stat_int_temp_var, owner=self, name_entry="entry_int_temp")
+        widget_extlabel(self.attr_frame, "Wisdom (WIS):", 5, 0, var=self.stat_wis_var, owner=self, name_label="lbl_wis", name_value="entry_wis")
+        widget_entry_short(self.attr_frame, row=5, column=2, var=self.stat_wis_temp_var, owner=self, name_entry="entry_wis_temp")
+        widget_extlabel(self.attr_frame, "Charisma (CHA):", 6, 0, var=self.stat_char_var, owner=self, name_label="lbl_cha", name_value="entry_cha")
+        widget_entry_short(self.attr_frame, row=6, column=2, var=self.stat_char_temp_var, owner=self, name_entry="entry_cha_temp")
 
         # place Roll Stats button inside attr_frame
         self.btn_roll_stats = ttk.Button(self.attr_frame, text="Roll Stats", style="Attention.TButton", command=lambda: role_stats(self, self.new_player, self.chk_opt_4d6dl_var.get(), self.btn_roll_stats, self.btn_switch_stats))
-        self.btn_roll_stats.grid(row=6, column=0, sticky="ew", padx=PADX, pady=PADY)
+        self.btn_roll_stats.grid(row=7, column=0, sticky="ew", padx=PADX, pady=PADY)
 
         ### Homebrew frame (use LabelFrame for nicer title)
         self.attr_homebrew_frame = ttk.LabelFrame(self.attr_frame, text="Homebrew", borderwidth=5, padding=(6, 6), style="Standard.TFrame")
-        self.attr_homebrew_frame.grid(row=7, column=0, padx=PADX, pady=PADY, sticky="nsew")
+        self.attr_homebrew_frame.grid(row=8, column=0, padx=PADX, pady=PADY, sticky="nsew")
 
         # Switch Stats button inside homebrew frame
         def homebrew_switch_stats(self, character, btn_switch_stats):
@@ -240,19 +263,26 @@ class App:
         self.bonus_frame.grid(row=1, column=1, padx=PADX, pady=PADY, sticky="nsew")
 
         # Create bonus labels and values
-        widget_extlabel(self.bonus_frame, "Melee Attack Bonus:", 0, 0, var=self.strength_atck_mod_var, owner=self, name_label="lbl_strength_atck_bonus", name_value="entry_strength_atck_bonus")
-        widget_extlabel(self.bonus_frame, "Melee Damage Bonus:", 1, 0, var=self.strength_damage_mod_var, owner=self, name_label="lbl_strength_damage_bonus", name_value="entry_strength_damage_bonus")
-        widget_extlabel(self.bonus_frame, "Carry Capacity Bonus:", 2, 0, var=self.carry_capacity_mod_var, owner=self, name_label="lbl_carry_capacity_bonus", name_value="entry_carry_capacity_bonus")
-        widget_extlabel(self.bonus_frame, "Door Crack Bonus:", 3, 0, var=self.door_crack_mod_var, owner=self, name_label="lbl_door_crack_bonus", name_value="entry_door_crack_bonus")
-        widget_extlabel(self.bonus_frame, "Ranged Attack Bonus:", 4, 0, var=self.ranged_atck_mod_var, owner=self, name_label="lbl_ranged_atk_bonus", name_value="entry_ranged_atk_bonus")
-        widget_extlabel(self.bonus_frame, "AC Bonus:", 5, 0, var=self.ac_mod_var, owner=self, name_label="lbl_ac_bonus", name_value="entry_ac_bonus")
-        widget_extlabel(self.bonus_frame, "HP Bonus:", 6, 0, var=self.hp_mod_var, owner=self, name_label="lbl_hp_bonus", name_value="entry_hp_bonus")
-        widget_extlabel(self.bonus_frame, "Raise Dead Modifier:", 7, 0, var=self.raise_dead_mod_var, owner=self, name_label="lbl_raise_dead_mod", name_value="entry_raise_dead_mod")
-        widget_extlabel(self.bonus_frame, "Max Additional Languages:", 8, 0, var=self.max_add_langs_var, owner=self, name_label="lbl_max_add_langs", name_value="entry_max_add_langs")
+        widget_label(self.bonus_frame, "Type", 0, 0, owner=self, name_label="lbl_bonus_type_header")
+        widget_label(self.bonus_frame, "Value", 0, 1, owner=self, name_label="lbl_bonus_value_header")
+        widget_label(self.bonus_frame, "Temp", 0, 2, owner=self, name_label="lbl_temp_bonus_header")
+        widget_extlabel(self.bonus_frame, "Melee Attack Bonus:", 1, 0, var=self.strength_atck_mod_var, owner=self, name_label="lbl_strength_atck_bonus", name_value="entry_strength_atck_bonus")
+        widget_entry_short(self.bonus_frame, row=1, column=2, var=self.strength_atck_mod_temp_var, owner=self, name_entry="entry_strength_atck_temp_bonus")
+        widget_extlabel(self.bonus_frame, "Melee Damage Bonus:", 2, 0, var=self.strength_damage_mod_var, owner=self, name_label="lbl_strength_damage_bonus", name_value="entry_strength_damage_bonus")
+        widget_entry_short(self.bonus_frame, row=2, column=2, var=self.strength_damage_mod_temp_var, owner=self, name_entry="entry_strength_damage_temp_bonus")
+        widget_extlabel(self.bonus_frame, "Ranged Attack Bonus:", 3, 0, var=self.ranged_atck_mod_var, owner=self, name_label="lbl_ranged_atk_bonus", name_value="entry_ranged_atk_bonus")
+        widget_entry_short(self.bonus_frame, row=3, column=2, var=self.ranged_atck_mod_temp_var, owner=self, name_entry="entry_ranged_atk_temp_bonus")
+        widget_extlabel(self.bonus_frame, "AC Bonus:", 4, 0, var=self.ac_mod_var, owner=self, name_label="lbl_ac_bonus", name_value="entry_ac_bonus")
+        widget_entry_short(self.bonus_frame, row=4, column=2, var=self.ac_mod_temp_var, owner=self, name_entry="entry_ac_temp_bonus")
+        widget_extlabel(self.bonus_frame, "Carry Capacity Bonus:", 5, 0, var=self.carry_capacity_mod_var, owner=self, name_label="lbl_carry_capacity_bonus", name_value="entry_carry_capacity_bonus")
+        widget_extlabel(self.bonus_frame, "Door Crack Bonus:", 6, 0, var=self.door_crack_mod_var, owner=self, name_label="lbl_door_crack_bonus", name_value="entry_door_crack_bonus")
+        widget_extlabel(self.bonus_frame, "HP Bonus:", 7, 0, var=self.hp_mod_var, owner=self, name_label="lbl_hp_bonus", name_value="entry_hp_bonus")
+        widget_extlabel(self.bonus_frame, "Raise Dead Modifier:", 8, 0, var=self.raise_dead_mod_var, owner=self, name_label="lbl_raise_dead_mod", name_value="entry_raise_dead_mod")
+        widget_extlabel(self.bonus_frame, "Max Additional Languages:", 9, 0, var=self.max_add_langs_var, owner=self, name_label="lbl_max_add_langs", name_value="entry_max_add_langs")
         widget_extlabel(self.bonus_frame, "Special Hirelings Cap:", 9, 0, var=self.cap_spec_hirelings_var, owner=self, name_label="lbl_cap_spec_hirelings", name_value="entry_cap_spec_hirelings")
         widget_extlabel(self.bonus_frame, "Parry:", 10, 0, var=self.parry_var, owner=self, name_label="lbl_parry", name_value="entry_parry")
         widget_extlabel(self.bonus_frame, "Languages:", 11, 0, var=self.languages_var, owner=self, name_label="lbl_languages", name_value="entry_languages")
-        
+
 
         ### Stats / Other panels
         self.stats_frame = ttk.LabelFrame(self.root, text="Stats / Derived", borderwidth=5, padding=(6, 6), style="Standard.TFrame")
@@ -312,7 +342,7 @@ class App:
         self.lower_notebook.add(self.thief_frame, text="Thief Skills", state="normal")
         self.lower_notebook.add(self.weapons_frame, text="Weapons & Armor", state="disabled")
         self.lower_notebook.add(self.inventory_frame, text="Inventory", state="normal")
-        self.lower_notebook.add(self.magic_frame, text="Magic", state="disabled")
+        self.lower_notebook.add(self.magic_frame, text="Magic", state="normal")
         self.lower_notebook.add(self.special_abilities_frame, text="Special Abilities", state="normal")
 
         ### Thief skills Tab/Frame
@@ -404,6 +434,15 @@ class App:
         widget_extlabel(self.inventory_frame, "Electrum:", 4, 5, var=self.coins_electrum_var, owner=self, name_label="lbl_coins_electrum", name_value="entry_coins_electrum")
         widget_extlabel(self.inventory_frame, "Silver:", 4, 7, var=self.coins_silver_var, owner=self, name_label="lbl_coins_silver", name_value="entry_coins_silver")
         widget_extlabel(self.inventory_frame, "Copper:", 4, 9, var=self.coins_copper_var, owner=self, name_label="lbl_coins_copper", name_value="entry_coins_copper")
+
+        ### Magic Tab/Frame
+        self.magic_frame = ttk.LabelFrame(self.magic_frame, text="Magic", borderwidth=5, padding=(6,6), style="Standard.TFrame")
+        self.magic_frame.grid(row=0, column=0, padx=PADX, pady=PADY, sticky="nsew")
+
+        widget_extlabel(self.magic_frame, "Highest Spell Level:", 0, 0, var=self.highest_spell_level_var, owner=self, name_label="lbl_highest_spell_level", name_value="entry_highest_spell_level")
+        widget_extlabel(self.magic_frame, "Understands Spells (%):", 1, 0, var=self.understand_spell_var, owner=self, name_label="lbl_understand_spell", name_value="entry_understand_spell")
+        widget_extlabel(self.magic_frame, "Min. Spell Level to Memorize:", 2, 0, var=self.min_spells_per_level_var, owner=self, name_label="lbl_min_spell_level", name_value="entry_min_spell_level")
+        widget_extlabel(self.magic_frame, "Max. Spell Level to Memorize:", 3, 0, var=self.max_spells_per_level_var, owner=self, name_label="lbl_max_spell_level", name_value="entry_max_spell_level")
 
         ### Special Abilities Tab/Frame
         self.special_abilities_frame = ttk.LabelFrame(self.special_abilities_frame, text="Special Abilities", borderwidth=5, padding=(6,6), style="Standard.TFrame")

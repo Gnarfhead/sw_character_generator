@@ -1,6 +1,6 @@
 """GUI functions for the dice roller window."""
 import tkinter as tk
-from src.sw_character_generator.gui.gui_functions.gui_widgets import widget_button, widget_checkbutton, widget_entry, widget_label, widget_spinbox
+from src.sw_character_generator.gui.gui_functions.gui_widgets import widget_button, widget_checkbutton, widget_entry_long, widget_label, widget_spinbox
 
 
 def dice_roller(parent: tk.Tk):
@@ -35,8 +35,8 @@ def dice_roller(parent: tk.Tk):
     widget_label(win, "Malus:", row=1, column=3, width=10)
 
     # row 2
-    widget_entry(win, "Count:", row=2, column=0, width=10, textvariable=tk.StringVar(value="1"))
-    widget_entry(win, "Sides:", row=2, column=1, width=10, textvariable=tk.StringVar(value="6"))
+    widget_entry_long(win, "Count:", row=2, column=0, width=10, textvariable=tk.StringVar(value="1"))
+    widget_entry_long(win, "Sides:", row=2, column=1, width=10, textvariable=tk.StringVar(value="6"))
     widget_spinbox(win, "Bonus:", row=2, column=2, from_=-100, to=100, width=10, textvariable=tk.StringVar(value="0"))
     widget_spinbox(win, "Malus:", row=2, column=3, from_=-100, to=100, width=10, textvariable=tk.StringVar(value="0"))
     widget_checkbutton(win, "Advantage", row=2, column=4, variable=tk.BooleanVar(value=False))
