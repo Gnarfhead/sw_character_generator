@@ -11,7 +11,8 @@ def apply_ranger_dependent_modifiers(character):
     character.allowed_races = ("human",)
     character.allowed_weapon = ("all",)
     character.allowed_armor = ("all",)
-
+    character.thief_class = False
+    character.magic_user_class = True
 
     # Ensure save_bonuses is a set
     if not isinstance(character.save_bonuses_profession, set): # Ensure it's a set
@@ -242,13 +243,14 @@ def apply_ranger_dependent_modifiers(character):
         20: 0,
     }
 
-    # Spells per level
-    character.spells_lvl1 = 0
-    character.spells_lvl2 = 0
-    character.spells_lvl3 = 0
-    character.spells_lvl4 = 0
-    character.spells_lvl5 = 0
-    character.spells_lvl6 = 0
-    character.spells_lvl7 = 0
-    character.spells_lvl8 = 0
-    character.spells_lvl9 = 0
+    character.spell_table = {
+        1: {1: 1},
+        2: {1: 2},
+        3: {1: 2, 2: 1},
+        4: {1: 3, 2: 2},
+        5: {1: 3, 2: 2, 3: 1},
+        6: {1: 4, 2: 3, 3: 2},
+        7: {1: 4, 2: 3, 3: 2, 4: 1},
+        8: {1: 5, 2: 4, 3: 3, 4: 2},
+        9: {1: 5, 2: 4, 3: 3, 4: 2, 5: 1},
+    }
