@@ -1,4 +1,5 @@
 """Callback when profession_var changes; update model profession accordingly."""
+from multiprocessing.util import DEBUG
 from sw_character_generator.functions.choosen_profession import choosen_profession_modifiers
 from sw_character_generator.functions.manage_saving_throw import calculate_saving_throw
 from sw_character_generator.functions.manage_thief_skills import calculate_thief_skills
@@ -25,7 +26,7 @@ def on_profession_change(app, *args):
                 existing.clear() # clear existing set
             else:
                 setattr(app.new_player, attr, set()) # reset to empty set
-        
+
         # Update the model with the new profession
         print("DEBUG on_profession_change: Changing profession to", name)
         choosen_profession_modifiers(app.new_player, name) # update profession and related stats
@@ -33,6 +34,7 @@ def on_profession_change(app, *args):
         app.cb_race.config(state="normal") # enable race selection
         app.cb_alignment.config(state="normal") # enable alignment selection
 
+        # Reset dependent selections and stats
         app.race_var.set("Undefined") # reset if profession gets changed
         app.alignment_var.set("Undefined") # reset if profession gets changed
         app.lbl_profession.config(style="Standard.TLabel")
@@ -52,6 +54,33 @@ def on_profession_change(app, *args):
         calculate_saving_throw(app.new_player) # recalculate saving throw
         refresh_race_values(app) # update race combobox values
         refresh_alignment_values(app) # update alignment combobox values
+
+        # Enable or disable magic frame based on magic user status
+        if app.new_player.magic_user_class is False:
+            print("DEBUG on_profession_change: Disabling magic frame for non-magic user.")
+            print("DEBUG on_profession_change: Magic user status is", app.new_player.magic_user_class)
+            app.lower_notebook.tab(app.magic_frame, state="disabled")
+        elif app.new_player.magic_user_class is True:
+            print("DEBUG on_profession_change: Enabling magic frame for magic user.")
+            print("DEBUG on_profession_change: Magic user status is", app.new_player.magic_user_class)
+            app.lower_notebook.tab(app.magic_frame, state="normal")
+        else:
+            print("DEBUG on_profession_change: Magic user status unknown, leaving magic frame unchanged.")
+            raise ValueError("Magic user status is not set properly.")
+
+        # Enable or disable thief_frame based on thief user status
+        if app.new_player.thief_class is False:
+            print("DEBUG on_profession_change: Disabling thief skills frame for non-thief user.")
+            print("DEBUG on_profession_change: Thief user status is", app.new_player.thief_class)
+            app.lower_notebook.tab(app.thief_frame, state="disabled")
+        elif app.new_player.thief_class is True:
+            print("DEBUG on_profession_change: Enabling thief skills frame for thief user.")
+            print("DEBUG on_profession_change: Thief user status is", app.new_player.thief_class)
+            app.lower_notebook.tab(app.thief_frame, state="normal")
+        else:
+            print("DEBUG on_profession_change: Thief user status unknown, leaving thief skills frame unchanged.")
+            raise ValueError("Thief user status is not set properly.")
+
 
         # Refresh the GUI to reflect model changes
         with app.suppress_updates(): # prevent recursive updates

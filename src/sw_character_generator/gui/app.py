@@ -339,37 +339,37 @@ class App:
         self.magic_frame = ttk.Frame(self.lower_notebook)
         self.special_abilities_frame = ttk.Frame(self.lower_notebook)
         # Add tabs to the notebook
-        self.lower_notebook.add(self.thief_frame, text="Thief Skills", state="normal")
+        self.lower_notebook.add(self.thief_frame, text="Thief Skills", state="disabled")
         self.lower_notebook.add(self.weapons_frame, text="Weapons & Armor", state="disabled")
         self.lower_notebook.add(self.inventory_frame, text="Inventory", state="normal")
-        self.lower_notebook.add(self.magic_frame, text="Magic", state="normal")
+        self.lower_notebook.add(self.magic_frame, text="Magic", state="disabled")
         self.lower_notebook.add(self.special_abilities_frame, text="Special Abilities", state="normal")
 
         ### Thief skills Tab/Frame
-        self.thief_frame = ttk.LabelFrame(self.thief_frame, text="Thief Skills", borderwidth=5, padding=(6, 6), style="Standard.TFrame")
-        self.thief_frame.grid(row=0, column=0, padx=PADX, pady=PADY, sticky="nsew")
+        self.thief_content_frame = ttk.LabelFrame(self.thief_frame, text="Thief Skills", borderwidth=5, padding=(6, 6), style="Standard.TFrame")
+        self.thief_content_frame.grid(row=0, column=0, padx=PADX, pady=PADY, sticky="nsew")
   
         # Create thief skill labels and values
-        widget_extlabel(self.thief_frame, "Delicate Tasks:", 0, 0, var=self.delicate_tasks_var, owner=self, name_label="lbl_delicate_tasks", name_value="entry_delicate_tasks")
-        widget_extlabel(self.thief_frame, "Climb Walls:", 1, 0, var=self.climb_walls_var, owner=self, name_label="lbl_climb_walls", name_value="entry_climb_walls")
-        widget_extlabel(self.thief_frame, "Hear Sounds:", 2, 0, var=self.hear_sounds_var, owner=self, name_label="lbl_hear_sounds", name_value="entry_hear_sounds")
-        widget_extlabel(self.thief_frame, "Hide in Shadows:", 3, 0, var=self.hide_in_shadows_var, owner=self, name_label="lbl_hide_in_shadows", name_value="entry_hide_in_shadows")
-        widget_extlabel(self.thief_frame, "Move Silently:", 4, 0, var=self.move_silently_var, owner=self, name_label="lbl_move_silently", name_value="entry_move_silently")
-        widget_extlabel(self.thief_frame, "Open Locks:", 5, 0, var=self.open_locks_var, owner=self, name_label="lbl_open_locks", name_value="entry_open_locks") 
+        widget_extlabel(self.thief_content_frame, "Delicate Tasks:", 0, 0, var=self.delicate_tasks_var, owner=self, name_label="lbl_delicate_tasks", name_value="entry_delicate_tasks")
+        widget_extlabel(self.thief_content_frame, "Climb Walls:", 1, 0, var=self.climb_walls_var, owner=self, name_label="lbl_climb_walls", name_value="entry_climb_walls")
+        widget_extlabel(self.thief_content_frame, "Hear Sounds:", 2, 0, var=self.hear_sounds_var, owner=self, name_label="lbl_hear_sounds", name_value="entry_hear_sounds")
+        widget_extlabel(self.thief_content_frame, "Hide in Shadows:", 3, 0, var=self.hide_in_shadows_var, owner=self, name_label="lbl_hide_in_shadows", name_value="entry_hide_in_shadows")
+        widget_extlabel(self.thief_content_frame, "Move Silently:", 4, 0, var=self.move_silently_var, owner=self, name_label="lbl_move_silently", name_value="entry_move_silently")
+        widget_extlabel(self.thief_content_frame, "Open Locks:", 5, 0, var=self.open_locks_var, owner=self, name_label="lbl_open_locks", name_value="entry_open_locks") 
 
         ### Weapons & Armor Tab/Frame
-        self.weapons_frame = ttk.LabelFrame(self.weapons_frame, text="Weapons & Armor", borderwidth=5, padding=(6,6), style="Standard.TFrame")
-        self.weapons_frame.grid(row=0, column=0, padx=PADX, pady=PADY, sticky="nsew")
+        self.weapons_content_frame = ttk.LabelFrame(self.weapons_frame, text="Weapons & Armor", borderwidth=5, padding=(6,6), style="Standard.TFrame")
+        self.weapons_content_frame.grid(row=0, column=0, padx=PADX, pady=PADY, sticky="nsew")
 
         ### Inventory Tab/Frame
-        self.inventory_frame = ttk.LabelFrame(self.inventory_frame, text="Inventory", borderwidth=5, padding=(6,6), style="Standard.TFrame")
-        self.inventory_frame.grid(row=0, column=0, padx=PADX, pady=PADY, sticky="nsew")
+        self.inventory_content_frame = ttk.LabelFrame(self.inventory_frame, text="Inventory", borderwidth=5, padding=(6,6), style="Standard.TFrame")
+        self.inventory_content_frame.grid(row=0, column=0, padx=PADX, pady=PADY, sticky="nsew")
 
         # Row 0: Treasure
-        widget_label(self.inventory_frame, "Treasure:", 0, 0, owner=self, name_label="lbl_treasure")
+        widget_label(self.inventory_content_frame, "Treasure:", 0, 0, owner=self, name_label="lbl_treasure")
         # Use scrolledtext for treasure
         self.treasure_txt = scrolledtext.ScrolledText(
-        self.inventory_frame,
+        self.inventory_content_frame,
         wrap="word",
         height=3,        # visible row height (can be adjusted)
         width=40,        # visible column width (char-based)
@@ -379,28 +379,28 @@ class App:
         self.treasure_txt.grid(row=0, column=1, columnspan=5, sticky="nsew", padx=PADX, pady=PADY)
         
         # Row 1: Add Treasure controls
-        widget_label(self.inventory_frame, "Add Treasure:", 1, 0, owner=self, name_label="lbl_add_treasure")
+        widget_label(self.inventory_content_frame, "Add Treasure:", 1, 0, owner=self, name_label="lbl_add_treasure")
         self.treasure_name_var = tk.StringVar(master=self.root, value="")
         self.treasure_qty_var = tk.IntVar(master=self.root, value=1)
-        
-        self.entry_treasure_name = ttk.Entry(self.inventory_frame, textvariable=self.treasure_name_var, width=20)
+
+        self.entry_treasure_name = ttk.Entry(self.inventory_content_frame, textvariable=self.treasure_name_var, width=20)
         self.entry_treasure_name.grid(row=1, column=1, sticky="ew", padx=PADX, pady=PADY)
 
-        self.spin_treasure_qty = ttk.Spinbox(self.inventory_frame, from_=-100, to=100, textvariable=self.treasure_qty_var, width=8)
+        self.spin_treasure_qty = ttk.Spinbox(self.inventory_content_frame, from_=-100, to=100, textvariable=self.treasure_qty_var, width=8)
         self.spin_treasure_qty.grid(row=1, column=2, sticky="w", padx=PADX, pady=PADY)
         
         self.btn_add_treasure = ttk.Button(
-            self.inventory_frame, 
-            text="Add", 
+            self.inventory_content_frame,
+            text="Add",
             command=lambda: self._add_item_to_dict("treasure", self.treasure_name_var.get(), self.treasure_qty_var.get())
         )
         self.btn_add_treasure.grid(row=1, column=3, sticky="w", padx=PADX, pady=PADY)
 
         # Row 2: Inventory
-        widget_label(self.inventory_frame, "Inventory:", 2, 0, owner=self, name_label="lbl_inventory")
+        widget_label(self.inventory_content_frame, "Inventory:", 2, 0, owner=self, name_label="lbl_inventory")
         # Use scrolledtext for inventory
         self.inventory_txt = scrolledtext.ScrolledText(
-        self.inventory_frame,
+        self.inventory_content_frame,
         wrap="word",
         height=3,        # visible row height (can be adjusted)
         width=40,        # visible column width (char-based)
@@ -410,50 +410,50 @@ class App:
         self.inventory_txt.grid(row=2, column=1, columnspan=5, sticky="nsew", padx=PADX, pady=PADY)
     
         # Row 3: Add Inventory controls
-        widget_label(self.inventory_frame, "Add Item:", 3, 0, owner=self, name_label="lbl_add_inventory")
+        widget_label(self.inventory_content_frame, "Add Item:", 3, 0, owner=self, name_label="lbl_add_inventory")
         self.inventory_name_var = tk.StringVar(master=self.root, value="")
         self.inventory_qty_var = tk.IntVar(master=self.root, value=1)
-        
-        self.entry_inventory_name = ttk.Entry(self.inventory_frame, textvariable=self.inventory_name_var, width=20)
+
+        self.entry_inventory_name = ttk.Entry(self.inventory_content_frame, textvariable=self.inventory_name_var, width=20)
         self.entry_inventory_name.grid(row=3, column=1, sticky="ew", padx=PADX, pady=PADY)
-        
-        self.spin_inventory_qty = ttk.Spinbox(self.inventory_frame, from_=-100, to=100, textvariable=self.inventory_qty_var, width=8)
+
+        self.spin_inventory_qty = ttk.Spinbox(self.inventory_content_frame, from_=-100, to=100, textvariable=self.inventory_qty_var, width=8)
         self.spin_inventory_qty.grid(row=3, column=2, sticky="w", padx=PADX, pady=PADY)
         
         self.btn_add_inventory = ttk.Button(
-            self.inventory_frame, 
-            text="Add", 
+            self.inventory_content_frame,
+            text="Add",
             command=lambda: self._add_item_to_dict("inventory", self.inventory_name_var.get(), self.inventory_qty_var.get())
         )
         self.btn_add_inventory.grid(row=3, column=3, sticky="w", padx=PADX, pady=PADY)
 
         # Row 4: Coins
-        widget_label(self.inventory_frame, "Coins:", 4, 0, owner=self, name_label="lbl_coins")
-        widget_extlabel(self.inventory_frame, "Platinum:", 4, 1, var=self.coins_platinum_var, owner=self, name_label="lbl_coins_platinum", name_value="entry_coins_platinum")
-        widget_extlabel(self.inventory_frame, "Gold:", 4, 3, var=self.coins_gold_var, owner=self, name_label="lbl_coins_gold", name_value="entry_coins_gold")
-        widget_extlabel(self.inventory_frame, "Electrum:", 4, 5, var=self.coins_electrum_var, owner=self, name_label="lbl_coins_electrum", name_value="entry_coins_electrum")
-        widget_extlabel(self.inventory_frame, "Silver:", 4, 7, var=self.coins_silver_var, owner=self, name_label="lbl_coins_silver", name_value="entry_coins_silver")
-        widget_extlabel(self.inventory_frame, "Copper:", 4, 9, var=self.coins_copper_var, owner=self, name_label="lbl_coins_copper", name_value="entry_coins_copper")
+        widget_label(self.inventory_content_frame, "Coins:", 4, 0, owner=self, name_label="lbl_coins")
+        widget_extlabel(self.inventory_content_frame, "Platinum:", 4, 1, var=self.coins_platinum_var, owner=self, name_label="lbl_coins_platinum", name_value="entry_coins_platinum")
+        widget_extlabel(self.inventory_content_frame, "Gold:", 4, 3, var=self.coins_gold_var, owner=self, name_label="lbl_coins_gold", name_value="entry_coins_gold")
+        widget_extlabel(self.inventory_content_frame, "Electrum:", 4, 5, var=self.coins_electrum_var, owner=self, name_label="lbl_coins_electrum", name_value="entry_coins_electrum")
+        widget_extlabel(self.inventory_content_frame, "Silver:", 4, 7, var=self.coins_silver_var, owner=self, name_label="lbl_coins_silver", name_value="entry_coins_silver")
+        widget_extlabel(self.inventory_content_frame, "Copper:", 4, 9, var=self.coins_copper_var, owner=self, name_label="lbl_coins_copper", name_value="entry_coins_copper")
 
         ### Magic Tab/Frame
-        self.magic_frame = ttk.LabelFrame(self.magic_frame, text="Magic", borderwidth=5, padding=(6,6), style="Standard.TFrame")
-        self.magic_frame.grid(row=0, column=0, padx=PADX, pady=PADY, sticky="nsew")
+        self.magic_content_frame = ttk.LabelFrame(self.magic_frame, text="Magic", borderwidth=5, padding=(6,6), style="Standard.TFrame")
+        self.magic_content_frame.grid(row=0, column=0, padx=PADX, pady=PADY, sticky="nsew")
 
-        widget_extlabel(self.magic_frame, "Highest Spell Level:", 0, 0, var=self.highest_spell_level_var, owner=self, name_label="lbl_highest_spell_level", name_value="entry_highest_spell_level")
-        widget_extlabel(self.magic_frame, "Understands Spells (%):", 1, 0, var=self.understand_spell_var, owner=self, name_label="lbl_understand_spell", name_value="entry_understand_spell")
-        widget_extlabel(self.magic_frame, "Min. Spell Level to Memorize:", 2, 0, var=self.min_spells_per_level_var, owner=self, name_label="lbl_min_spell_level", name_value="entry_min_spell_level")
-        widget_extlabel(self.magic_frame, "Max. Spell Level to Memorize:", 3, 0, var=self.max_spells_per_level_var, owner=self, name_label="lbl_max_spell_level", name_value="entry_max_spell_level")
+        widget_extlabel(self.magic_content_frame, "Highest Spell Level:", 0, 0, var=self.highest_spell_level_var, owner=self, name_label="lbl_highest_spell_level", name_value="entry_highest_spell_level")
+        widget_extlabel(self.magic_content_frame, "Understands Spells (%):", 1, 0, var=self.understand_spell_var, owner=self, name_label="lbl_understand_spell", name_value="entry_understand_spell")
+        widget_extlabel(self.magic_content_frame, "Min. Spell Level to Memorize:", 2, 0, var=self.min_spells_per_level_var, owner=self, name_label="lbl_min_spell_level", name_value="entry_min_spell_level")
+        widget_extlabel(self.magic_content_frame, "Max. Spell Level to Memorize:", 3, 0, var=self.max_spells_per_level_var, owner=self, name_label="lbl_max_spell_level", name_value="entry_max_spell_level")
 
         ### Special Abilities Tab/Frame
-        self.special_abilities_frame = ttk.LabelFrame(self.special_abilities_frame, text="Special Abilities", borderwidth=5, padding=(6,6), style="Standard.TFrame")
-        self.special_abilities_frame.grid(row=0, column=0, padx=PADX, pady=PADY, sticky="nsew")
+        self.special_abilities_content_frame = ttk.LabelFrame(self.special_abilities_frame, text="Special Abilities", borderwidth=5, padding=(6,6), style="Standard.TFrame")
+        self.special_abilities_content_frame.grid(row=0, column=0, padx=PADX, pady=PADY, sticky="nsew")
 
         # Special Abilities
-        widget_label(self.special_abilities_frame, "Special Abilities:", 0, 0, owner=self, name_label="lbl_special_abilities")
+        widget_label(self.special_abilities_content_frame, "Special Abilities:", 0, 0, owner=self, name_label="lbl_special_abilities")
 
         # Use scrolledtext for special abilities
         self.special_abilities_txt = scrolledtext.ScrolledText(
-        self.special_abilities_frame,
+        self.special_abilities_content_frame,
         wrap="word",
         height=10,        # visible row height (can be adjusted)
         width=150,        # visible column width (char-based)
