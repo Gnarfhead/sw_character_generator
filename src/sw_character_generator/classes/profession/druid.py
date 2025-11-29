@@ -12,7 +12,7 @@ def apply_druid_dependent_modifiers(character):
     character.allowed_weapon = ("daggers", "sickles", "spears", "slings", "oil flasks")
     character.allowed_armor = ("leather", "wooden shield")
     character.magic_user_class = True
-    character.thief_class = False
+    character.thief_user_class = False
 
 
     # Ensure save_bonuses is a set

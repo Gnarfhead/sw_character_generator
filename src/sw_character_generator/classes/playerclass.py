@@ -101,9 +101,10 @@ class PlayerClass:
     surprised: int = 2
     darkvision: bool = False
     parry: int = 0
-    thief_class: bool = False
+    thief_user_class: bool = False
     magic_user_class: bool = False
     spell_table: dict[int, list[int]] = field(default_factory=dict)
+    spell_table_2: dict[int, list[int]] = field(default_factory=dict)
  
 
     # Property for total coins
@@ -176,6 +177,7 @@ class PlayerClass:
             f"Allowed Weapon: {self.allowed_weapon}, Allowed Armor: {self.allowed_armor}\n"
             f"Character Created: {self.character_created}, HP Last Roll: {self.hp_last_roll}, HP All Rolls: {self.hp_all_rolls}\n"
             f"Spells: {self.spell_table}\n"
+            f"Spells 2: {self.spell_table_2}\n"
         )
 
     def to_dict(self):  # Convert the PlayerClass instance to a dictionary.
@@ -285,6 +287,7 @@ class PlayerClass:
             "thief_class": self.thief_class,
             "magic_user_class": self.magic_user_class,
             "spell_table": self.spell_table,
+            "spell_table_2": self.spell_table_2,
         }
 
     def from_dict(self, data: dict) -> "PlayerClass":  # Create a PlayerClass instance from a dictionary.
@@ -385,3 +388,4 @@ class PlayerClass:
         self.thief_class = data.get("thief_class", self.thief_class)
         self.magic_user_class = data.get("magic_user_class", self.magic_user_class)
         self.spell_table = data.get("spell_table", self.spell_table)
+        self.spell_table_2 = data.get("spell_table_2", self.spell_table_2)

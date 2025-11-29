@@ -12,7 +12,7 @@ def apply_fighter_dependent_modifiers(character):
     character.allowed_races = ("human", "halfling", "elf", "dwarf", "halfelf")
     character.allowed_weapon = ("all",)
     character.allowed_armor = ("heavy",)
-    character.thief_class = False
+    character.thief_user_class = False
     character.magic_user_class = False
 
 

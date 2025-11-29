@@ -1,5 +1,6 @@
 """Module to manage thief skills for characters in the SW Character Generator."""
 
+
 def calculate_thief_skills(character):
     """Calculate thief skills based on character attributes."""
     print("DEBUG calculate_thief_skills: ----------------------------------------------------------------")
@@ -101,4 +102,19 @@ def reset_thief_skills(character):
 
     print("DEBUG reset_thief_skills: Thief skills have been reset.")
 
+def manage_thief_tab(character, app):
+    """Evaluate if the character is a thief class and enable/disable thief tab."""
+    print("DEBUG manage_thief_tab: ----------------------------------------------------------------")
 
+    if character is None:
+        raise ValueError("ERROR manage_thief_tab: No character provided for thief class evaluation.")
+
+    # Enable or disable thief_frame based on thief user status
+    if character.thief_user_class is False:
+        print("DEBUG manage_thief_tab: Disabling thief skills tab for non-thief user.")
+        print("DEBUG manage_thief_tab: Thief user status is", character.thief_user_class)
+        app.lower_notebook.tab(app.thief_frame, state="disabled")
+    else:
+        print("DEBUG manage_thief_tab: Enabling thief skills tab for thief user.")
+        print("DEBUG manage_thief_tab: Thief user status is", character.thief_user_class)
+        app.lower_notebook.tab(app.thief_frame, state="normal")

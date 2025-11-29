@@ -9,7 +9,7 @@ def apply_assassin_dependent_modifiers(character):
     character.allowed_races = ("human",)
     character.allowed_weapon = ("light weapons",)
     character.allowed_armor = ("light",)
-    character.thief_class = True
+    character.thief_user_class = True
     character.magic_user_class = False
 
     # Ensure save_bonuses is a set

@@ -12,7 +12,7 @@ def apply_cleric_dependent_modifiers(character):
     character.allowed_weapon = ("blunt weapons",)
     character.allowed_armor = ("all",)
     character.magic_user_class = True
-    character.thief_class = False
+    character.thief_user_class = False
 
 
     # Ensure save_bonuses is a set
