@@ -115,7 +115,7 @@ class App:
         self.strength_damage_mod_var = tk.IntVar(master=self.root, value=0)
         self.strength_damage_mod_temp_var = tk.IntVar(master=self.root, value=0)
         self.carry_capacity_mod_var = tk.DoubleVar(master=self.root, value=0.0)
-        self.door_crack_mod_var = tk.DoubleVar(master=self.root, value=0.0)
+        self.door_crack_mod_var = tk.IntVar(master=self.root, value=0)
         self.ranged_atck_mod_var = tk.IntVar(master=self.root, value=0)
         self.ranged_atck_mod_temp_var = tk.IntVar(master=self.root, value=0)
         self.ac_mod_var = tk.IntVar(master=self.root, value=0)
@@ -195,7 +195,7 @@ class App:
 
         ### Create top frame and place it with grid (do not mix pack/grid on root)
         self.top_frame = ttk.Frame(self.root, borderwidth=5, relief="ridge", padding=(6, 6), style="Standard.TFrame")
-        self.top_frame.grid(row=0, column=0, columnspan=3, padx=PADX, pady=PADY, sticky="ew")
+        self.top_frame.grid(row=0, column=0, columnspan=3, padx=PADX, pady=PADY, sticky="new")
     
         # Row 0: basic fields
         widget_entry_long(self.top_frame, "Player Name:", 0, 0, var=self.player_name_var, owner=self, name_label="lbl_player_name", name_entry="entry_player_name")
@@ -220,7 +220,7 @@ class App:
  
         ### Attribute frame (use LabelFrame for nicer title)
         self.attr_frame = ttk.LabelFrame(self.root, text="Attribute", borderwidth=5, padding=(6, 6), style="Attention.TFrame")
-        self.attr_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
+        self.attr_frame.grid(row=1, column=0, padx=10, pady=10, sticky="new")
         widget_label(self.attr_frame, "Attribute", 0, 0, owner=self, name_label="lbl_attribute_header")
         widget_label(self.attr_frame, "Value", 0, 1, owner=self, name_label="lbl_value_header")
         widget_label(self.attr_frame, "Temp", 0, 2, owner=self, name_label="lbl_temp_header")
@@ -260,7 +260,7 @@ class App:
 
         ### Bonuses frame
         self.bonus_frame = ttk.LabelFrame(self.root, text="Attribute Bonuses", borderwidth=5, padding=(6, 6), style="Standard.TFrame")
-        self.bonus_frame.grid(row=1, column=1, padx=PADX, pady=PADY, sticky="nsew")
+        self.bonus_frame.grid(row=1, column=1, padx=PADX, pady=PADY, sticky="new")
 
         # Create bonus labels and values
         widget_label(self.bonus_frame, "Type", 0, 0, owner=self, name_label="lbl_bonus_type_header")
@@ -272,21 +272,20 @@ class App:
         widget_entry_short(self.bonus_frame, row=2, column=2, var=self.strength_damage_mod_temp_var, owner=self, name_entry="entry_strength_damage_temp_bonus")
         widget_extlabel_short(self.bonus_frame, "Ranged Attack Bonus:", 3, 0, var=self.ranged_atck_mod_var, owner=self, name_label="lbl_ranged_atk_bonus", name_value="entry_ranged_atk_bonus")
         widget_entry_short(self.bonus_frame, row=3, column=2, var=self.ranged_atck_mod_temp_var, owner=self, name_entry="entry_ranged_atk_temp_bonus")
-        widget_extlabel_short(self.bonus_frame, "AC Bonus:", 4, 0, var=self.ac_mod_var, owner=self, name_label="lbl_ac_bonus", name_value="entry_ac_bonus")
+        widget_extlabel_short(self.bonus_frame, "Armor Class Bonus:", 4, 0, var=self.ac_mod_var, owner=self, name_label="lbl_ac_bonus", name_value="entry_ac_bonus")
         widget_entry_short(self.bonus_frame, row=4, column=2, var=self.ac_mod_temp_var, owner=self, name_entry="entry_ac_temp_bonus")
-        widget_extlabel_short(self.bonus_frame, "Carry Capacity Bonus:", 5, 0, var=self.carry_capacity_mod_var, owner=self, name_label="lbl_carry_capacity_bonus", name_value="entry_carry_capacity_bonus")
-        widget_extlabel_short(self.bonus_frame, "Door Crack Bonus:", 6, 0, var=self.door_crack_mod_var, owner=self, name_label="lbl_door_crack_bonus", name_value="entry_door_crack_bonus")
-        widget_extlabel_short(self.bonus_frame, "HP Bonus:", 7, 0, var=self.hp_mod_var, owner=self, name_label="lbl_hp_bonus", name_value="entry_hp_bonus")
-        widget_extlabel_short(self.bonus_frame, "Raise Dead Modifier:", 8, 0, var=self.raise_dead_mod_var, owner=self, name_label="lbl_raise_dead_mod", name_value="entry_raise_dead_mod")
-        widget_extlabel_short(self.bonus_frame, "Max Additional Languages:", 9, 0, var=self.max_add_langs_var, owner=self, name_label="lbl_max_add_langs", name_value="entry_max_add_langs")
-        widget_extlabel_short(self.bonus_frame, "Special Hirelings Cap:", 9, 0, var=self.cap_spec_hirelings_var, owner=self, name_label="lbl_cap_spec_hirelings", name_value="entry_cap_spec_hirelings")
-        widget_extlabel_short(self.bonus_frame, "Parry:", 10, 0, var=self.parry_var, owner=self, name_label="lbl_parry", name_value="entry_parry")
-        
-
+        widget_extlabel_short(self.bonus_frame, "Armor Class effective:", 5, 0, var=self.ac_var, owner=self, name_label="lbl_ac", name_value="entry_ac")
+        widget_extlabel_short(self.bonus_frame, "Carry Capacity Bonus:", 6, 0, var=self.carry_capacity_mod_var, owner=self, name_label="lbl_carry_capacity_bonus", name_value="entry_carry_capacity_bonus")
+        widget_extlabel_short(self.bonus_frame, "Crack Doors (x:6):", 7, 0, var=self.door_crack_mod_var, owner=self, name_label="lbl_door_crack_bonus", name_value="entry_door_crack_bonus")
+        widget_extlabel_short(self.bonus_frame, "HP Bonus:", 8, 0, var=self.hp_mod_var, owner=self, name_label="lbl_hp_bonus", name_value="entry_hp_bonus")
+        widget_extlabel_short(self.bonus_frame, "Raise Dead Modifier (%):", 9, 0, var=self.raise_dead_mod_var, owner=self, name_label="lbl_raise_dead_mod", name_value="entry_raise_dead_mod")
+        widget_extlabel_short(self.bonus_frame, "Max Additional Languages:", 10, 0, var=self.max_add_langs_var, owner=self, name_label="lbl_max_add_langs", name_value="entry_max_add_langs")
+        widget_extlabel_short(self.bonus_frame, "Special Hirelings Cap:", 11, 0, var=self.cap_spec_hirelings_var, owner=self, name_label="lbl_cap_spec_hirelings", name_value="entry_cap_spec_hirelings")
+        widget_extlabel_short(self.bonus_frame, "Parry:", 12, 0, var=self.parry_var, owner=self, name_label="lbl_parry", name_value="entry_parry")
 
         ### Stats / Other panels
         self.stats_frame = ttk.LabelFrame(self.root, text="Stats / Derived", borderwidth=5, padding=(6, 6), style="Standard.TFrame")
-        self.stats_frame.grid(row=1, column=2, padx=PADX, pady=PADY, sticky="nsew")
+        self.stats_frame.grid(row=1, column=2, padx=PADX, pady=PADY, sticky="new")
 
         # Create stat labels and values
         widget_extlabel_short(self.stats_frame, "Hit Points max.:", 0, 0, var=self.hp_var, owner=self, name_label="lbl_hp", name_value="entry_hp")
@@ -297,12 +296,9 @@ class App:
         widget_button(self.stats_frame, "Modify HP", 1, 4, command=lambda: modify_hp(self.hp_modify_var.get(), self, self.new_player), state="disabled", owner=self, name_button="btn_modify_hp")
         widget_extlabel_short(self.stats_frame, "State:", 2, 0, var=self.player_state_var, owner=self, name_label="lbl_player_state", name_value="entry_player_state")
         widget_extlabel_short(self.stats_frame, "Saving Throw:", 3, 0, var=self.save_throw_var, owner=self, name_label="lbl_save_throw", name_value="entry_save_throw")
-        widget_extlabel_short(self.stats_frame, "Armor Class (AC):", 4, 0, var=self.ac_var, owner=self, name_label="lbl_ac", name_value="entry_ac")
         widget_extlabel_short(self.stats_frame, "Darkvision:", 5, 0, var=self.darkvision_var, owner=self, name_label="lbl_darkvision", name_value="entry_darkvision")
         widget_entry_long(self.stats_frame, "Languages:", 6, 0, var=self.languages_var, owner=self, name_label="lbl_languages", name_entry="entry_languages")
-        #widget_extlabel_short(self.stats_frame, "Languages:", 6, 0, var=self.languages_var, owner=self, name_label="lbl_languages", name_value="entry_languages")
-        widget_extlabel_short(self.stats_frame, "Max Additional Languages:", 6, 3, var=self.max_add_langs_var, owner=self, name_label="lbl_max_additional_languages", name_value="entry_max_additional_languages")
-
+        widget_extlabel_short(self.stats_frame, "Max. add. Languages:", 6, 2, var=self.max_add_langs_var, owner=self, name_label="lbl_max_additional_languages", name_value="entry_max_additional_languages")
 
         # Save Bonuses
         widget_label(self.stats_frame, "Save Bonuses:", 8, 0, owner=self, name_label="lbl_save_bonuses")
@@ -310,7 +306,7 @@ class App:
         self.save_bonuses_txt = scrolledtext.ScrolledText(
         self.stats_frame,
         wrap="word",
-        height=3,        # visible row height (can be adjusted)
+        height=6,        # visible row height (can be adjusted)
         width=40,        # visible column width (char-based)
         font=("TkDefaultFont", 10)
         )
@@ -335,7 +331,7 @@ class App:
 
         ### Create a notebook for lower panels
         self.lower_notebook = ttk.Notebook(self.root)
-        self.lower_notebook.grid(row=2, column=0, columnspan=3, padx=PADX, pady=PADY, sticky="nsew")
+        self.lower_notebook.grid(row=2, column=0, columnspan=3, padx=PADX, pady=PADY, sticky="new")
         # Create frames for each tab
         self.thief_frame = ttk.Frame(self.lower_notebook)
         self.weapons_frame = ttk.Frame(self.lower_notebook)
@@ -351,7 +347,7 @@ class App:
 
         ### Thief skills Tab/Frame
         self.thief_content_frame = ttk.LabelFrame(self.thief_frame, text="Thief Skills", borderwidth=5, padding=(6, 6), style="Standard.TFrame")
-        self.thief_content_frame.grid(row=0, column=0, padx=PADX, pady=PADY, sticky="nsew")
+        self.thief_content_frame.grid(row=0, column=0, padx=PADX, pady=PADY, sticky="new")
   
         # Create thief skill labels and values
         widget_extlabel_short(self.thief_content_frame, "Delicate Tasks:", 0, 0, var=self.delicate_tasks_var, owner=self, name_label="lbl_delicate_tasks", name_value="entry_delicate_tasks")
@@ -363,11 +359,11 @@ class App:
 
         ### Weapons & Armor Tab/Frame
         self.weapons_content_frame = ttk.LabelFrame(self.weapons_frame, text="Weapons & Armor", borderwidth=5, padding=(6,6), style="Standard.TFrame")
-        self.weapons_content_frame.grid(row=0, column=0, padx=PADX, pady=PADY, sticky="nsew")
+        self.weapons_content_frame.grid(row=0, column=0, padx=PADX, pady=PADY, sticky="new")
 
         ### Inventory Tab/Frame
         self.inventory_content_frame = ttk.LabelFrame(self.inventory_frame, text="Inventory", borderwidth=5, padding=(6,6), style="Standard.TFrame")
-        self.inventory_content_frame.grid(row=0, column=0, padx=PADX, pady=PADY, sticky="nsew")
+        self.inventory_content_frame.grid(row=0, column=0, padx=PADX, pady=PADY, sticky="new")
 
         # Row 0: Treasure
         widget_label(self.inventory_content_frame, "Treasure:", 0, 0, owner=self, name_label="lbl_treasure")
@@ -380,7 +376,7 @@ class App:
         font=("TkDefaultFont", 10),
         state="disabled"
         )
-        self.treasure_txt.grid(row=0, column=1, columnspan=5, sticky="nsew", padx=PADX, pady=PADY)
+        self.treasure_txt.grid(row=0, column=1, columnspan=5, sticky="new", padx=PADX, pady=PADY)
         
         # Row 1: Add Treasure controls
         widget_label(self.inventory_content_frame, "Add Treasure:", 1, 0, owner=self, name_label="lbl_add_treasure")
@@ -411,7 +407,7 @@ class App:
         font=("TkDefaultFont", 10),
         state="disabled"
         )
-        self.inventory_txt.grid(row=2, column=1, columnspan=5, sticky="nsew", padx=PADX, pady=PADY)
+        self.inventory_txt.grid(row=2, column=1, columnspan=5, sticky="new", padx=PADX, pady=PADY)
     
         # Row 3: Add Inventory controls
         widget_label(self.inventory_content_frame, "Add Item:", 3, 0, owner=self, name_label="lbl_add_inventory")
@@ -441,7 +437,7 @@ class App:
 
         ### Magic Tab/Frame
         self.magic_content_frame = ttk.LabelFrame(self.magic_frame, text="Spell Attributes", borderwidth=5, padding=(6,6), style="Standard.TFrame")
-        self.magic_content_frame.grid(row=0, column=0, padx=PADX, pady=PADY, sticky="nsew")
+        self.magic_content_frame.grid(row=0, column=0, padx=PADX, pady=PADY, sticky="new")
 
         widget_extlabel_short(self.magic_content_frame, "Highest Spell Level:", 0, 0, var=self.highest_spell_level_var, owner=self, name_label="lbl_highest_spell_level", name_value="entry_highest_spell_level")
         widget_extlabel_short(self.magic_content_frame, "Understands Spells (%):", 1, 0, var=self.understand_spell_var, owner=self, name_label="lbl_understand_spell", name_value="entry_understand_spell")
@@ -452,7 +448,7 @@ class App:
 
         ### Special Abilities Tab/Frame
         self.special_abilities_content_frame = ttk.LabelFrame(self.special_abilities_frame, text="Special Abilities", borderwidth=5, padding=(6,6), style="Standard.TFrame")
-        self.special_abilities_content_frame.grid(row=0, column=0, padx=PADX, pady=PADY, sticky="nsew")
+        self.special_abilities_content_frame.grid(row=0, column=0, padx=PADX, pady=PADY, sticky="new")
 
         # Special Abilities
         widget_label(self.special_abilities_content_frame, "Special Abilities:", 0, 0, owner=self, name_label="lbl_special_abilities")
@@ -465,7 +461,7 @@ class App:
         width=150,        # visible column width (char-based)
         font=("TkDefaultFont", 10)
         )
-        self.special_abilities_txt.grid(row=0, column=1, sticky="nsew", padx=PADX, pady=PADY)
+        self.special_abilities_txt.grid(row=0, column=1, sticky="new", padx=PADX, pady=PADY)
         self.special_abilities_txt.bind("<<Modified>>", lambda event: on_special_abilities_changed(self))
 
         ### Footerframe 
@@ -476,15 +472,18 @@ class App:
         self.btn_new = ttk.Button(self.footer_frame, text="New", command=lambda: new_characterobj(self))
         self.btn_new.grid(row=0, column=0, sticky="w", padx=PADX, pady=PADY)
         self.btn_apply = ttk.Button(self.footer_frame, text="Apply", command=lambda: apply_character(self, self.new_player))
-        self.btn_apply.grid(row=0, column=1, sticky="e", padx=PADX, pady=PADY)
+        self.btn_apply.grid(row=0, column=1, sticky="w", padx=PADX, pady=PADY)
         self.btn_save = ttk.Button(self.footer_frame, text="Save", command=lambda: save_character(self.new_player))
-        self.btn_save.grid(row=0, column=2, sticky="e", padx=PADX, pady=PADY)
+        self.btn_save.grid(row=0, column=2, sticky="w", padx=PADX, pady=PADY)
         self.btn_load = ttk.Button(self.footer_frame, text="Load", command=lambda: load_character(self))
         self.btn_load.grid(row=0, column=3, sticky="w", padx=PADX, pady=PADY)
         self.btn_dice_roller = ttk.Button(self.footer_frame, text="Dice Roller", command=lambda: dice_roller(self))
-        self.btn_dice_roller.grid(row=0, column=4, sticky="e", padx=PADX, pady=PADY)
+        self.btn_dice_roller.grid(row=0, column=4, sticky="w", padx=PADX, pady=PADY)
         self.btn_exit = ttk.Button(self.footer_frame, text="Exit", command=lambda: messagebox.askokcancel("Exit", "Do you really want to exit?", parent=self.root) and self.root.destroy())
-        self.btn_exit.grid(row=0, column=5, sticky="e", padx=PADX, pady=PADY)
+        self.btn_exit.grid(row=0, column=6, sticky="e", padx=PADX, pady=PADY)
+
+        # Configure column 5 to expand and push Exit button to the right
+        self.footer_frame.grid_columnconfigure(5, weight=1) # spacer column
 
         ### Status bar at the very bottom
         self.status_bar = ttk.Label(self.root, textvariable=self.status_var, relief="sunken", anchor="w", padding=(4,4))
