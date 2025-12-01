@@ -42,7 +42,7 @@ def apply_elf_dependent_modifiers(character):
         else:
             character.immunities_race = set() # default to empty set
     character.immunities_race.clear()  # Clear existing immunities
-    character.immunities_race.add("- Ghulische Lähmung")
+    character.immunities_race.add("- Ghulist paralysed")
     # print("DEBUG apply_elf_dependent_modifiers: type of character.immunities_race after assignment:", type(character.immunities_race))
 
     # Ensure languages is a set
@@ -57,5 +57,5 @@ def apply_elf_dependent_modifiers(character):
             character.languages = set() # default to empty set
     character.languages.clear()  # Clear existing languages
     character.languages.add("Common")
-    character.languages.add("Elbisch")
+    character.languages.add("Elf")
     # print("DEBUG apply_elf_dependent_modifiers: type of character.languages after assignment:", type(character.languages))

@@ -39,6 +39,7 @@ class PlayerClass:
     ac: int = 10
     ac_temp: int = 10
     languages: set[str] = field(default_factory=set)
+    additional_languages: list[str] = field(default_factory=list)
     stat_str: int = field(default=0)
     stat_str_temp: int = field(default=0)
     stat_dex: int = field(default=0)
@@ -166,7 +167,7 @@ class PlayerClass:
             f"State: {self.player_state}, Alignment: {self.alignment}, Race: {self.race}, Gender: {self.gender}, God: {self.god}, Age: {self.age}\n"
             f"Save Throw: {self.save_throw}, Save Bonuses: {list(self.save_bonuses)}, Immunities: {list(self.immunities)}, AC: {self.ac}\n"
             f"Special Abilities: {list(self.special_abilities)}\n"
-            f"Languages: {list(self.languages)}\n"
+            f"Languages: {list(self.languages)}, Additional Languages: {list(self.additional_languages)}\n"
             f"Inventory: {self.inventory}\n"
             f"Treasure: {self.treasure}\n"
             f"Darkvision: {self.darkvision}, Parry: {self.parry}\n"
@@ -214,7 +215,8 @@ class PlayerClass:
             "special_abilities_other": list(self.special_abilities_other),
             "ac": self.ac,
             "languages": list(self.languages),
-            
+            "additional_languages": list(self.additional_languages),
+
             "stats": {
                 "str": self.stat_str,
                 "str_temp": self.stat_str_temp,
@@ -331,6 +333,7 @@ class PlayerClass:
         self.special_abilities_other = set(data.get("special_abilities_other", []))
         self.ac = data.get("ac", self.ac)
         self.languages = set(data.get("languages", []))
+        self.additional_languages = data.get("additional_languages", self.additional_languages)
         self.stat_str = stats.get("str", self.stat_str)
         self.stat_str_temp = stats.get("str_temp", self.stat_str_temp)
         self.stat_dex = stats.get("dex", self.stat_dex)

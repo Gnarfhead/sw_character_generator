@@ -62,5 +62,5 @@ def apply_dwarf_dependent_modifiers(character):
             character.languages = set() # default to empty set
     character.languages.clear()  # Clear existing languages
     character.languages.add("Common")
-    character.languages.add("Dwarvish")
+    character.languages.add("Dwarve")
     # print("DEBUG apply_dwarf_dependent_modifiers: type of character.languages_race after assignment:", type(character.languages_race))

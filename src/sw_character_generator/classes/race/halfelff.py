@@ -15,7 +15,7 @@ def apply_halfelf_dependent_modifiers(character):
         else:
             character.special_abilities_race = set() # default to empty set
     character.special_abilities_race.clear()  # Clear existing special abilities
-    character.special_abilities_race.add("- Geheimtüren finden: Aktiv 4:6")
+    character.special_abilities_race.add("- Find secret doors: Active 4:6")
     # print("DEBUG apply_halfelf_dependent_modifiers: type of character.special_abilities_race after assignment:", type(character.special_abilities_race))
 
     # Ensure save_bonuses is a set

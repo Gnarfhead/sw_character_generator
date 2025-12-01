@@ -34,7 +34,7 @@ def apply_halfling_dependent_modifiers(character):
         else:
             character.save_bonuses_race = set() # default to empty set
     character.save_bonuses_race.clear()  # Clear existing save bonuses
-    character.save_bonuses_race.add("- Rettungswurf +4 gegen Magie")
+    character.save_bonuses_race.add("- Saving Throw +4 against Magic")
     # print("DEBUG apply_halfling_dependent_modifiers: type of character.save_bonuses_race after assignment:", type(character.save_bonuses_race))
 
     # Ensure immunities is a set
@@ -61,5 +61,5 @@ def apply_halfling_dependent_modifiers(character):
             character.languages = set() # default to empty set
     character.languages.clear()  # Clear existing languages
     character.languages.add("Common")
-    character.languages.add("Halflingisch")
+    character.languages.add("Halfling")
     # print("DEBUG apply_halfling_dependent_modifiers: type of character.languages after assignment:", type(character.languages))

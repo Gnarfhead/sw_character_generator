@@ -25,7 +25,7 @@ from .gui_functions.gui_role_stats import role_stats, switch_stats
 from .gui_functions.gui_profession_change import on_profession_change
 from .gui_functions.gui_update_view_from_model import update_view_from_model
 from .gui_functions.gui_persistence import bind_model_vars
-from .gui_functions.gui_widgets import widget_button, widget_entry_long, widget_entry_short, widget_extlabel_short, widget_label, widget_combobox, widget_spinbox, widget_checkbutton
+from .gui_functions.gui_widgets import widget_button, widget_entry_long, widget_entry_short, widget_extlabel_long, widget_extlabel_short, widget_label, widget_combobox, widget_spinbox, widget_checkbutton
 
 # Layout / sizing constants
 ROOT_MIN_W = 900
@@ -106,6 +106,7 @@ class App:
         self.darkvision_var = tk.StringVar(master=self.root, value="No")
         self.parry_var = tk.IntVar(master=self.root, value=0)
         self.languages_var = tk.StringVar(master=self.root, value="")
+        self.additional_languages_var = tk.StringVar(master=self.root, value="")
         self.special_abilities_var = tk.StringVar(master=self.root, value="")
         self.immunities_var = tk.StringVar(master=self.root, value="")
         self.treasure_var = tk.StringVar(master=self.root, value="")
@@ -279,9 +280,8 @@ class App:
         widget_extlabel_short(self.bonus_frame, "Crack Doors (x:6):", 7, 0, var=self.door_crack_mod_var, owner=self, name_label="lbl_door_crack_bonus", name_value="entry_door_crack_bonus")
         widget_extlabel_short(self.bonus_frame, "HP Bonus:", 8, 0, var=self.hp_mod_var, owner=self, name_label="lbl_hp_bonus", name_value="entry_hp_bonus")
         widget_extlabel_short(self.bonus_frame, "Raise Dead Modifier (%):", 9, 0, var=self.raise_dead_mod_var, owner=self, name_label="lbl_raise_dead_mod", name_value="entry_raise_dead_mod")
-        widget_extlabel_short(self.bonus_frame, "Max Additional Languages:", 10, 0, var=self.max_add_langs_var, owner=self, name_label="lbl_max_add_langs", name_value="entry_max_add_langs")
-        widget_extlabel_short(self.bonus_frame, "Special Hirelings Cap:", 11, 0, var=self.cap_spec_hirelings_var, owner=self, name_label="lbl_cap_spec_hirelings", name_value="entry_cap_spec_hirelings")
-        widget_extlabel_short(self.bonus_frame, "Parry:", 12, 0, var=self.parry_var, owner=self, name_label="lbl_parry", name_value="entry_parry")
+        widget_extlabel_short(self.bonus_frame, "Special Hirelings Cap:", 10, 0, var=self.cap_spec_hirelings_var, owner=self, name_label="lbl_cap_spec_hirelings", name_value="entry_cap_spec_hirelings")
+        widget_extlabel_short(self.bonus_frame, "Parry:", 11, 0, var=self.parry_var, owner=self, name_label="lbl_parry", name_value="entry_parry")
 
         ### Stats / Other panels
         self.stats_frame = ttk.LabelFrame(self.root, text="Stats / Derived", borderwidth=5, padding=(6, 6), style="Standard.TFrame")
@@ -297,8 +297,9 @@ class App:
         widget_extlabel_short(self.stats_frame, "State:", 2, 0, var=self.player_state_var, owner=self, name_label="lbl_player_state", name_value="entry_player_state")
         widget_extlabel_short(self.stats_frame, "Saving Throw:", 3, 0, var=self.save_throw_var, owner=self, name_label="lbl_save_throw", name_value="entry_save_throw")
         widget_extlabel_short(self.stats_frame, "Darkvision:", 5, 0, var=self.darkvision_var, owner=self, name_label="lbl_darkvision", name_value="entry_darkvision")
-        widget_entry_long(self.stats_frame, "Languages:", 6, 0, var=self.languages_var, owner=self, name_label="lbl_languages", name_entry="entry_languages")
-        widget_extlabel_short(self.stats_frame, "Max. add. Languages:", 6, 2, var=self.max_add_langs_var, owner=self, name_label="lbl_max_additional_languages", name_value="entry_max_additional_languages")
+        widget_extlabel_short(self.stats_frame, "Languages:", 6, 0, var=self.languages_var, owner=self, name_label="lbl_languages", name_value="entry_languages")
+        widget_extlabel_short(self.stats_frame, "Max. add. Languages:", 7, 0, var=self.max_add_langs_var, owner=self, name_label="lbl_max_additional_languages", name_value="entry_max_additional_languages")
+        widget_entry_long(self.stats_frame, "", 7, 1, var=self.additional_languages_var, owner=self, name_label="lbl_additional_languages", name_entry="entry_additional_languages")
 
         # Save Bonuses
         widget_label(self.stats_frame, "Save Bonuses:", 8, 0, owner=self, name_label="lbl_save_bonuses")
