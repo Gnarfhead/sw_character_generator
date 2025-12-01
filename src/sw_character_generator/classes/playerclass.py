@@ -284,7 +284,7 @@ class PlayerClass:
             "surprised": self.surprised,
             "darkvision": self.darkvision,
             "parry": self.parry,
-            "thief_class": self.thief_class,
+            "thief_user_class": self.thief_user_class,
             "magic_user_class": self.magic_user_class,
             "spell_table": self.spell_table,
             "spell_table_2": self.spell_table_2,
@@ -385,7 +385,7 @@ class PlayerClass:
         self.surprised = data.get("surprised", self.surprised)
         self.darkvision = data.get("darkvision", self.darkvision)
         self.parry = data.get("parry", self.parry)
-        self.thief_class = data.get("thief_class", self.thief_class)
+        self.thief_user_class = data.get("thief_class", self.thief_user_class)
         self.magic_user_class = data.get("magic_user_class", self.magic_user_class)
         self.spell_table = data.get("spell_table", self.spell_table)
         self.spell_table_2 = data.get("spell_table_2", self.spell_table_2)

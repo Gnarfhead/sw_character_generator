@@ -3,10 +3,9 @@ import tkinter as tk
 from dataclasses import fields
 
 from sw_character_generator.gui.gui_functions.gui_immunities import on_immunities_changed
-from sw_character_generator.gui.gui_functions.gui_inventory import on_inventory_changed
 from sw_character_generator.gui.gui_functions.gui_save_bonuses import on_save_bonuses_changed
 from sw_character_generator.gui.gui_functions.gui_special_abilities import on_special_abilities_changed
-from sw_character_generator.gui.gui_functions.gui_treasure import on_treasure_changed
+from sw_character_generator.gui.gui_functions.gui_magic import update_spell_table_widget
 
 
 
@@ -99,6 +98,13 @@ def update_view_from_model(app):
                     var.set(0)
                 else:
                     var.set(str(value))
+
+    # refresh magic spell table if present
+    try:
+        print("DEBUG update_view_from_model: Updating spell table widget.")
+        update_spell_table_widget(app)
+    except Exception:
+        print("DEBUG update_view_from_model: Failed to update spell table widget.")
 
     # Special handling for ScrolledText widgets (NACH der Schleife!)
     if hasattr(app, "special_abilities_txt"):

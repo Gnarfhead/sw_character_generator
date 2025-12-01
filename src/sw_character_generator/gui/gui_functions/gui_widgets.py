@@ -6,6 +6,8 @@ PADY = 6
 WIDTH = 10
 WIDTH_ENTRY_SHORT = 4
 WIDTH_ENTRY_LONG = 40
+WIDTH_LABEL_SHORT = 15
+WIDTH_LABEL_LONG = 40
 WIDTH_SPINBOX = 10
 COLUMNSPAN_DEFAULT = 1
 
@@ -24,7 +26,16 @@ def widget_label(parent, text, row, column, *, owner=None, name_label=None, **gr
     _assign(owner, {name_label: lbl})
     return lbl
 
-def widget_extlabel(parent, text, row, column, var=None, width=WIDTH, columnspan=1, *, owner=None, name_label=None, name_value=None, **grid_opts):
+def widget_extlabel_short(parent, text, row, column, var=None, width=WIDTH_LABEL_SHORT, columnspan=1, *, owner=None, name_label=None, name_value=None, **grid_opts):
+    """Create a labeled Label widget (with textvariable) in a grid."""
+    lbl = ttk.Label(parent, text=text)
+    lbl.grid(row=row, column=column, sticky="w", padx=PADX, pady=PADY, **grid_opts)
+    ext_lbl = ttk.Label(parent, textvariable=var, width=width)
+    ext_lbl.grid(row=row, column=column + 1, columnspan=columnspan, sticky="w", padx=PADX, pady=PADY, **grid_opts)
+    _assign(owner, {name_label: lbl, name_value: ext_lbl})
+    return lbl, ext_lbl
+
+def widget_extlabel_long(parent, text, row, column, var=None, width=WIDTH_LABEL_LONG, columnspan=1, *, owner=None, name_label=None, name_value=None, **grid_opts):
     """Create a labeled Label widget (with textvariable) in a grid."""
     lbl = ttk.Label(parent, text=text)
     lbl.grid(row=row, column=column, sticky="w", padx=PADX, pady=PADY, **grid_opts)
