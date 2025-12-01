@@ -62,7 +62,7 @@ class App:
             self.root.geometry(f"{screen_width}x{screen_height}+0+0")
         
         # Optional: F11 zum Togglen zwischen maximiert und normal
-        self.root.bind("<F11>", toggle_maximize)
+        self.root.bind("<F11>", lambda event: toggle_maximize(self, event))
 
         # Global player character instance (to be used by save/load functions)
         self.new_player = PlayerClass()
@@ -231,6 +231,25 @@ class App:
             canvas_width = self.scrollable_frame.winfo_reqwidth()
             if canvas_width > 10:  # ← Prüfung hinzufügen
                 self.main_canvas.itemconfig(self.canvas_window, width=canvas_width)
+
+            # Auto-hide/show scrollbars based on content size
+            self.root.update_idletasks()  # Ensure geometry is updated
+            
+            # Check if vertical scrollbar is needed
+            canvas_height = self.main_canvas.winfo_height()
+            content_height = self.scrollable_frame.winfo_reqheight()
+            if content_height > canvas_height:
+                self.v_scrollbar.grid()  # Show vertical scrollbar
+            else:
+                self.v_scrollbar.grid_remove()  # Hide vertical scrollbar
+            
+            # Check if horizontal scrollbar is needed
+            canvas_width_actual = self.main_canvas.winfo_width()
+            content_width = self.scrollable_frame.winfo_reqwidth()
+            if content_width > canvas_width_actual:
+                self.h_scrollbar.grid()  # Show horizontal scrollbar
+            else:
+                self.h_scrollbar.grid_remove()  # Hide horizontal scrollbar
 
         # Speichere als Instanz-Variable für späteren Zugriff
         self._configure_scroll_region = configure_scroll_region
