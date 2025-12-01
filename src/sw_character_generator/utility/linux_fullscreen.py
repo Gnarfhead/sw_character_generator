@@ -12,9 +12,9 @@ def toggle_maximize(app, event=None):
             app.root.state('normal')
     except tk.TclError:
         # Linux fallback - toggle geometry
-        if app.root.geometry().startswith(f"{app.root.winfo_screenwidth()}x"):
+        if app.root.geometry().startswith(f"{app.root.winfo_screenwidth()}x"): # currently maximized
             app.root.geometry("900x600+100+100")  # Normal size
         else:
-            screen_width = app.root.winfo_screenwidth()
-            screen_height = app.root.winfo_screenheight()
-            app.root.geometry(f"{screen_width}x{screen_height}+0+0")
+            screen_width = app.root.winfo_screenwidth() # Get screen width
+            screen_height = app.root.winfo_screenheight() # Get screen height
+            app.root.geometry(f"{screen_width}x{screen_height}+0+0") # Maximize
