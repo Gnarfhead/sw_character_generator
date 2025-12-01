@@ -1,9 +1,17 @@
-from typing import Dict
-import tkinter as tk
 import tkinter.ttk as ttk
+
+from sw_character_generator.gui.gui_functions.gui_widgets import widget_label
 
 def create_spell_table_widget(app):
     """Create a Treeview under magic_content_frame to display character.spell_table."""
+    print("DEBUG create_spell_table_widget: ----------------------------------------------------------------")
+    
+    # Add label above the table
+    spell_table_label = ttk.Label(app.magic_content_frame, text="Spells for:", 
+                                   font=("TkDefaultFont", 10, "bold"), 
+                                   style="Standard.TLabel")
+    spell_table_label.grid(row=4, column=0, columnspan=4, sticky="w", padx=6, pady=(12, 2))
+    
     # Initial setup with maximum possible columns (will be reconfigured in update)
     spell_levels = [str(i) for i in range(1, 10)]  # ["1", "2", ..., "9"]
     tree = ttk.Treeview(app.magic_content_frame, columns=spell_levels, show="tree headings", height=10)
@@ -20,18 +28,26 @@ def create_spell_table_widget(app):
     # Vertical scrollbar
     vs = ttk.Scrollbar(app.magic_content_frame, orient="vertical", command=tree.yview)
     tree.configure(yscrollcommand=vs.set)
-    tree.grid(row=4, column=0, columnspan=4, sticky="nsew", padx=6, pady=6)
-    vs.grid(row=4, column=4, sticky="ns", padx=(0,6), pady=6)
+    tree.grid(row=5, column=0, columnspan=4, sticky="nsew", padx=6, pady=6)
+    vs.grid(row=5, column=4, sticky="ns", padx=(0,6), pady=6)
 
     # Store on app for later updates
     app.spell_table_tree = tree
+    app.spell_table_label = spell_table_label  # ← Speichere Label für spätere Updates
 
 def update_spell_table_widget(app):
     """Refresh the Treeview to reflect app.new_player.spell_table and highest_spell_level."""
+    print("DEBUG update_spell_table_widget: ----------------------------------------------------------------")
     tree: ttk.Treeview = getattr(app, "spell_table_tree", None)
     if tree is None:
         return
     
+    # Update label with current profession
+    spell_table_label = getattr(app, "spell_table_label", None)
+    if spell_table_label:
+        profession = getattr(app.new_player, "profession", "Undefined")
+        spell_table_label.config(text=f"Spells for Profession: {profession}")
+
     # Clear existing rows
     for iid in tree.get_children():
         tree.delete(iid)
