@@ -16,10 +16,7 @@ from sw_character_generator.functions.manage_hp import modify_hp, set_starting_h
 from src.sw_character_generator.functions.character_handling import save_character, load_character
 from src.sw_character_generator.gui.gui_functions.gui_new_character import apply_character, new_characterobj
 from sw_character_generator.functions.manage_xp import add_xp
-from sw_character_generator.gui.gui_functions.gui_immunities import on_immunities_changed
 from sw_character_generator.gui.gui_functions.gui_inventory import on_inventory_text_changed
-from sw_character_generator.gui.gui_functions.gui_save_bonuses import on_save_bonuses_changed
-from sw_character_generator.gui.gui_functions.gui_special_abilities import on_special_abilities_changed
 from sw_character_generator.gui.gui_functions.gui_magic import create_spell_table_widget
 from .gui_functions.gui_dice_roller import dice_roller
 from .gui_functions.gui_alignment_change import on_alignment_change
@@ -50,7 +47,7 @@ class App:
         # Create root first, then StringVars etc.
         self._updating = False  # flag to prevent recursive updates
         self.root = tk.Tk()
-        self.root.title("Swords & Wizardry Charaktergenerator")
+        self.root.title("Swords & Wizardry Charactergenerator")
         self.root.minsize(900, 600)
    
         # Maximiere Fenster (plattformunabhängig)
@@ -414,7 +411,8 @@ class App:
         wrap="word",
         height=5,        # visible row height (can be adjusted)
         width=40,        # visible column width (char-based)
-        font=("TkDefaultFont", 10)
+        font=("TkDefaultFont", 10),
+        state="disabled"
         )
         self.save_bonuses_txt.grid(row=8, column=1, columnspan=5, sticky="nsew", padx=PADX, pady=PADY)
         self.save_bonuses_txt.bind("<<Modified>>", lambda event: on_save_bonuses_changed(self))
@@ -428,7 +426,8 @@ class App:
         wrap="word",
         height=3,        # visible row height (can be adjusted)
         width=40,        # visible column width (char-based)
-        font=("TkDefaultFont", 10)
+        font=("TkDefaultFont", 10),
+        state="disabled"
         )
         self.immunities_txt.grid(row=9, column=1, columnspan=5, sticky="nsew", padx=PADX, pady=PADY)
         self.immunities_txt.bind("<<Modified>>", lambda event: on_immunities_changed(self))
@@ -479,9 +478,10 @@ class App:
         self.inventory_txt = scrolledtext.ScrolledText(
         self.inventory_content_frame,
         wrap="word",
-        height=15,        # visible row height (can be adjusted)
+        height=20,        # visible row height (can be adjusted)
         width=80,        # visible column width (char-based)
-        font=("TkDefaultFont", 10)
+        font=("TkDefaultFont", 10),
+        state="normal"
         )
         self.inventory_txt.grid(row=1, column=1, columnspan=8, sticky="new", padx=PADX, pady=PADY)
         self.inventory_txt.bind("<FocusOut>", lambda event: on_inventory_text_changed(self, event))
@@ -529,10 +529,10 @@ class App:
         wrap="word",
         height=10,        # visible row height (can be adjusted)
         width=150,        # visible column width (char-based)
-        font=("TkDefaultFont", 10)
+        font=("TkDefaultFont", 10),
+        state="disabled"
         )
         self.special_abilities_txt.grid(row=0, column=1, sticky="new", padx=PADX, pady=PADY)
-        self.special_abilities_txt.bind("<<Modified>>", lambda event: on_special_abilities_changed(self))
 
         ### Footerframe 
         self.footer_frame = ttk.Frame(self.scrollable_frame, borderwidth=5, padding=(6,6), style="Standard.TFrame")

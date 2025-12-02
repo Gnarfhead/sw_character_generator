@@ -117,8 +117,10 @@ def update_view_from_model(app):
 
         if current_text != new_text:
             # print("DEBUG update_view_from_model: special_abilities_txt:", current_text, "->", new_text)
+            app.special_abilities_txt.configure(state="normal")  # Enable editing
             app.special_abilities_txt.delete("1.0", "end")
             app.special_abilities_txt.insert("1.0", new_text)
+            app.special_abilities_txt.configure(state="disabled")  # Disable editing
         
         app.special_abilities_txt.edit_modified(False)
         # Rebind the event
@@ -136,8 +138,10 @@ def update_view_from_model(app):
 
         if current_text != new_text:
             # print(f"DEBUG update_view_from_model: immunities_txt: '{current_text}' -> '{new_text}'")
+            app.immunities_txt.configure(state="normal")  # Enable editing
             app.immunities_txt.delete("1.0", "end")
             app.immunities_txt.insert("1.0", new_text)
+            app.immunities_txt.configure(state="disabled")  # Disable editing
 
         app.immunities_txt.edit_modified(False)
         # Rebind the event
@@ -154,8 +158,10 @@ def update_view_from_model(app):
 
         if current_text != new_text:
             # print(f"DEBUG update_view_from_model: save_bonuses_txt: '{current_text}' -> '{new_text}'")
+            app.save_bonuses_txt.configure(state="normal")  # Enable editing
             app.save_bonuses_txt.delete("1.0", "end")
             app.save_bonuses_txt.insert("1.0", new_text)
+            app.save_bonuses_txt.configure(state="disabled")  # Disable editing
         
         app.save_bonuses_txt.edit_modified(False)
         # Rebind the event
