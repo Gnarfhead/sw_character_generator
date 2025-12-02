@@ -4,6 +4,7 @@ import tkinter as tk
 
 def toggle_maximize(app, event=None):
     """Toggle between maximized and normal window state."""
+    print("DEBUG toggle_maximize: --------------------------------")
     try:
         current_state = app.root.state()
         if current_state == 'normal':

@@ -1,6 +1,8 @@
 """Handle changes to the inventory text widget."""
 
 def on_inventory_changed(app):
+    """Handle changes to the inventory text widget."""
+    print("DEBUG on_inventory_changed: --------------------------------")
 
     if getattr(app, "is_updating", False):
         return

@@ -1,6 +1,8 @@
 """Handle changes to the treasure text widget."""
 
 def on_treasure_changed(app):
+    """Handle changes to the treasure text widget."""
+    print("DEBUG on_treasure_changed: --------------------------------")
 
     if getattr(app, "is_updating", False):
         return

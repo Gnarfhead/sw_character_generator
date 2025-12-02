@@ -3,6 +3,7 @@ from src.sw_character_generator.classes.playerclass import PlayerClass
 
 def analyze_mod_str(player_character: PlayerClass):
     """Calculate strength-based modifiers. Positive bonuses only apply to fighters."""
+    print("DEBUG analyze_mod_str: --------------------------------")
     if 3 <= player_character.stat_str <= 4:
         player_character.strength_atck_mod = -2
         player_character.strength_damage_mod = -1
@@ -48,6 +49,7 @@ def analyze_mod_str(player_character: PlayerClass):
 
 def analyze_mod_dex(player_character: PlayerClass):
     """Calculate dexterity based modifiers."""
+    print("DEBUG analyze_mod_dex: --------------------------------")
     if 3 <= player_character.stat_dex <= 8:
         player_character.ranged_atck_mod = -1
         player_character.ac_mod = -1
@@ -66,6 +68,7 @@ def analyze_mod_dex(player_character: PlayerClass):
 
 def analyze_mod_con(player_character: PlayerClass):
     """Calculate constitution based modifiers."""
+    print("DEBUG analyze_mod_con: --------------------------------")
     if 3 <= player_character.stat_con <= 8:
         player_character.hp_mod = -1
         player_character.raise_dead_mod = 50
@@ -80,6 +83,7 @@ def analyze_mod_con(player_character: PlayerClass):
 
 def analyze_mod_int(player_character: PlayerClass):
     """Calculate intelligence based modifiers."""
+    print("DEBUG analyze_mod_int: --------------------------------")
     if 3 <= player_character.stat_int <= 7:
         player_character.max_add_langs = 0
         player_character.highest_spell_level = 4
@@ -157,12 +161,14 @@ def analyze_mod_int(player_character: PlayerClass):
     
 def analyze_mod_wis(player_character: PlayerClass):
     """Calculate wisdom based modifiers."""
+    print("DEBUG analyze_mod_wis: --------------------------------")
     if player_character.stat_wis <= 3:
         raise ValueError("DEBUG analyze_mod_wis: Wisdom stat out of bounds:", player_character.stat_wis)
 
     
 def analyze_mod_char(player_character: PlayerClass):
     """Calculate charisma based modifiers."""
+    print("DEBUG analyze_mod_char: --------------------------------")
     if 3 <= player_character.stat_char <= 4:
         player_character.cap_spec_hirelings = 1
     elif 5 <= player_character.stat_char <= 6:

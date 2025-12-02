@@ -1,5 +1,6 @@
 """Module defining the PlayerClass dataclass for character representation."""
 from dataclasses import dataclass, field
+from typing import Any
 
 
 @dataclass
@@ -104,9 +105,8 @@ class PlayerClass:
     parry: int = 0
     thief_user_class: bool = False
     magic_user_class: bool = False
-    spell_table: dict[int, list[int]] = field(default_factory=dict)
-    spell_table_2: dict[int, list[int]] = field(default_factory=dict)
- 
+    spell_table: dict[int, dict[int, int]] = field(default_factory=dict)
+    spell_table_2: dict[int, dict[int, int]] = field(default_factory=dict)
 
     # Property for total coins
     @property
@@ -142,16 +142,12 @@ class PlayerClass:
         """Combine all special abilities from race, class, and other sources."""
         return self.special_abilities_race | self.special_abilities_profession | self.special_abilities_other
 
-    def __post_init__(self):  # Initialize derived attributes after the main initialization.
-        """Initialize derived attributes after the main initialization."""
-        
-
 
     def __repr__(self):  # String representation of the PlayerClass instance.
         """Return a string representation of the PlayerClass instance."""
         return (
             f"Player Name={self.player_name}, Character Name={self.character_name}\n"
-            f"Profession={self.profession}, Thief Class={self.thief_class}, Magic User Class={self.magic_user_class}\n"
+            f"Profession={self.profession}, Thief Class={self.thief_user_class}, Magic User Class={self.magic_user_class}\n"
             f"Level={self.level}, HP Dice=d{self.hp_dice}, Main Stats={self.main_stats}\n"
             f"XP={self.xp}, XP Bonus={self.xp_bonus}%, HP={self.hp}, HP current={self.hp_current}\n"
             f"Coins: Platinum={self.coins_platinum}, Gold={self.coins_gold}, Electrum={self.coins_electrum}, Silver={self.coins_silver}, Copper={self.coins_copper}\n"
@@ -198,12 +194,14 @@ class PlayerClass:
             "god": self.god,
             "age": self.age,
             "xp_bonus": self.xp_bonus,
+            "xp_progress": self.xp_progress,
             "xp": self.xp,
             "hp": self.hp,
             "hp_current": self.hp_current,
             "hp_last_roll": self.hp_last_roll,
             "hp_all_rolls": self.hp_all_rolls,
             "save_throw": self.save_throw,
+            "save_throw_progression": self.save_throw_progression,
             "save_bonuses_race": list(self.save_bonuses_race),
             "save_bonuses_profession": list(self.save_bonuses_profession),
             "save_bonuses_other": list(self.save_bonuses_other),
@@ -214,6 +212,7 @@ class PlayerClass:
             "special_abilities_profession": list(self.special_abilities_profession),
             "special_abilities_other": list(self.special_abilities_other),
             "ac": self.ac,
+            "ac_temp": self.ac_temp,
             "languages": list(self.languages),
             "additional_languages": list(self.additional_languages),
 
@@ -272,14 +271,20 @@ class PlayerClass:
             "allowed_races": self.allowed_races,
             "allowed_armor": self.allowed_armor,
             "allowed_weapon": self.allowed_weapon,
+            "delicate_tasks": self.delicate_tasks,
             "delicate_tasks_profession": self.delicate_tasks_profession,
             "delicate_tasks_race": self.delicate_tasks_race,
+            "climb_walls": self.climb_walls,
             "climb_walls_profession": self.climb_walls_profession,
+            "hear_sounds": self.hear_sounds,
             "hear_sounds_profession": self.hear_sounds_profession,
+            "hide_in_shadows": self.hide_in_shadows,
             "hide_in_shadows_profession": self.hide_in_shadows_profession,
             "hide_in_shadows_race": self.hide_in_shadows_race,
+            "move_silently": self.move_silently,
             "move_silently_profession": self.move_silently_profession,
             "move_silently_race": self.move_silently_race,
+            "open_locks": self.open_locks,
             "open_locks_profession": self.open_locks_profession,
             "open_locks_race": self.open_locks_race,
 
@@ -292,8 +297,10 @@ class PlayerClass:
             "spell_table_2": self.spell_table_2,
         }
 
-    def from_dict(self, data: dict) -> "PlayerClass":  # Create a PlayerClass instance from a dictionary.
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "PlayerClass":  # Create a PlayerClass instance from a dictionary.
         """Create a PlayerClass instance from a dictionary."""
+        print("DEBUG PlayerClass.from_dict: --------------------------------")
         stats = data.get("stats", {})
         modifiers = data.get("modifiers", {})
         strength_mods = modifiers.get("strength", {})
@@ -302,93 +309,104 @@ class PlayerClass:
         intelligence_mods = modifiers.get("intelligence", {})
         charisma_mods = modifiers.get("charisma", {})
         
-        self.player_name = stats.get("player_name", self.player_name)
-        self.character_name = data.get("character_name", self.character_name)
-        self.character_created = data.get("character_created", self.character_created)
-        self.profession = data.get("profession", self.profession)
-        self.hp_dice = data.get("hp_dice", self.hp_dice)
-        self.main_stats = data.get("main_stats", self.main_stats)
-        self.player_state = data.get("player_state", self.player_state)
-        self.alignment = data.get("alignment", self.alignment)
-        self.level = data.get("level", self.level)
-        self.race = data.get("race", self.race)
-        self.gender = data.get("gender", self.gender)
-        self.god = data.get("god", self.god)
-        self.age = data.get("age", self.age)
-        self.xp_bonus = data.get("xp_bonus", self.xp_bonus)
-        self.xp = data.get("xp", self.xp)
-        self.hp = data.get("hp", self.hp)
-        self.hp_current = data.get("hp_current", self.hp_current)
-        self.hp_last_roll = data.get("hp_last_roll", self.hp_last_roll)
-        self.hp_all_rolls = data.get("hp_all_rolls", self.hp_all_rolls)
-        self.save_throw = data.get("save_throw", self.save_throw)
-        self.save_bonuses_race = set(data.get("save_bonuses_race", []))
-        self.save_bonuses_profession = set(data.get("save_bonuses_profession", []))
-        self.save_bonuses_other = set(data.get("save_bonuses_other", []))
-        self.immunities_race = set(data.get("immunities_race", []))
-        self.immunities_profession = set(data.get("immunities_profession", []))
-        self.immunities_other = set(data.get("immunities_other", []))
-        self.special_abilities_race = set(data.get("special_abilities_race", []))
-        self.special_abilities_profession = set(data.get("special_abilities_profession", []))
-        self.special_abilities_other = set(data.get("special_abilities_other", []))
-        self.ac = data.get("ac", self.ac)
-        self.languages = set(data.get("languages", []))
-        self.additional_languages = data.get("additional_languages", self.additional_languages)
-        self.stat_str = stats.get("str", self.stat_str)
-        self.stat_str_temp = stats.get("str_temp", self.stat_str_temp)
-        self.stat_dex = stats.get("dex", self.stat_dex)
-        self.stat_dex_temp = stats.get("dex_temp", self.stat_dex_temp)
-        self.stat_con = stats.get("con", self.stat_con)
-        self.stat_con_temp = stats.get("con_temp", self.stat_con_temp)
-        self.stat_wis = stats.get("wis", self.stat_wis)
-        self.stat_wis_temp = stats.get("wis_temp", self.stat_wis_temp)
-        self.stat_int = stats.get("int", self.stat_int)
-        self.stat_int_temp = stats.get("int_temp", self.stat_int_temp)
-        self.stat_char = stats.get("cha", self.stat_char)
-        self.stat_char_temp = stats.get("cha_temp", self.stat_char_temp)
-        self.inventory = data.get("inventory", self.inventory)
-        self.strength_atck_mod = strength_mods.get("attack", self.strength_atck_mod)
-        self.strength_atck_mod_temp = strength_mods.get("attack_temp", self.strength_atck_mod_temp)
-        self.strength_damage_mod = strength_mods.get("damage", self.strength_damage_mod)
-        self.strength_damage_mod_temp = strength_mods.get("damage_temp", self.strength_damage_mod_temp)
-        self.carry_capacity_mod = strength_mods.get("carry_capacity", self.carry_capacity_mod)
-        self.door_crack_mod = strength_mods.get("door_crack", self.door_crack_mod)
-        self.ranged_atck_mod = dexterity_mods.get("ranged_attack", self.ranged_atck_mod)
-        self.ranged_atck_mod_temp = dexterity_mods.get("ranged_attack_temp", self.ranged_atck_mod_temp)
-        self.ac_mod = dexterity_mods.get("ac_mod", self.ac_mod)
-        self.ac_mod_temp = dexterity_mods.get("ac_mod_temp", self.ac_mod_temp)
-        self.hp_mod = constitution_mods.get("hp_mod", self.hp_mod)
-        self.raise_dead_mod = constitution_mods.get("raise_dead_chance", self.raise_dead_mod)
-        self.max_add_langs = intelligence_mods.get("max_languages", self.max_add_langs)
-        self.highest_spell_level = intelligence_mods.get("spell_level", self.highest_spell_level)
-        self.understand_spell = intelligence_mods.get("understand_spell", self.understand_spell)
-        self.min_spells_per_level = intelligence_mods.get("min_spells_per_level", self.min_spells_per_level)
-        self.max_spells_per_level = intelligence_mods.get("max_spells_per_level", self.max_spells_per_level)
-        self.cap_spec_hirelings = charisma_mods.get("max_hirelings", self.cap_spec_hirelings)
-        self.treasure = data.get("treasure", self.treasure)
-        self.coins_platinum = data.get("coins_platinum", self.coins_platinum)
-        self.coins_gold = data.get("coins_gold", self.coins_gold)
-        self.coins_electrum = data.get("coins_electrum", self.coins_electrum)
-        self.coins_silver = data.get("coins_silver", self.coins_silver)
-        self.coins_copper = data.get("coins_copper", self.coins_copper)
-        self.allowed_alignment = data.get("allowed_alignment", self.allowed_alignment)
-        self.allowed_races = tuple(data.get("allowed_races", []))
-        self.allowed_armor = data.get("allowed_armor", self.allowed_armor)
-        self.allowed_weapon = data.get("allowed_weapon", self.allowed_weapon)
-        self.delicate_tasks_profession = data.get("delicate_tasks", self.delicate_tasks_profession)
-        self.delicate_tasks_race = data.get("delicate_tasks_race", self.delicate_tasks_race)
-        self.climb_walls_profession = data.get("climb_walls", self.climb_walls_profession)
-        self.hear_sounds_profession = data.get("hear_sounds", self.hear_sounds_profession)
-        self.hide_in_shadows_profession = data.get("hide_in_shadows", self.hide_in_shadows_profession)
-        self.hide_in_shadows_race = data.get("hide_in_shadows_race", self.hide_in_shadows_race)
-        self.move_silently_profession = data.get("move_silently", self.move_silently_profession)
-        self.move_silently_race = data.get("move_silently_race", self.move_silently_race)
-        self.open_locks_profession = data.get("open_locks", self.open_locks_profession)
-        self.open_locks_race = data.get("open_locks_race", self.open_locks_race)
-        self.surprised = data.get("surprised", self.surprised)
-        self.darkvision = data.get("darkvision", self.darkvision)
-        self.parry = data.get("parry", self.parry)
-        self.thief_user_class = data.get("thief_class", self.thief_user_class)
-        self.magic_user_class = data.get("magic_user_class", self.magic_user_class)
-        self.spell_table = data.get("spell_table", self.spell_table)
-        self.spell_table_2 = data.get("spell_table_2", self.spell_table_2)
+        return cls(
+            player_name=data.get("player_name", "Unknown"),
+            character_name=data.get("character_name", "Unnamed Hero"),
+            character_created=data.get("character_created", False),
+            profession=data.get("profession", "Undefined"),
+            hp_dice=data.get("hp_dice", 0),
+            main_stats=tuple(data.get("main_stats", [])),
+            player_state=data.get("player_state", "Undefined"),
+            alignment=data.get("alignment", "Undefined"),
+            level=data.get("level", 1),
+            race=data.get("race", "Undefined"),
+            gender=data.get("gender", "Undefined"),
+            god=data.get("god", "Undefined"),
+            age=data.get("age", 0),
+            xp_bonus=data.get("xp_bonus", 0),
+            xp=data.get("xp", 0),
+            xp_progress=data.get("xp_progress", {}),
+            hp=data.get("hp", 0),
+            hp_current=data.get("hp_current", 0),
+            hp_last_roll=data.get("hp_last_roll", 0),
+            hp_all_rolls=data.get("hp_all_rolls", {}),
+            save_throw=data.get("save_throw", 0),
+            save_throw_progression=data.get("save_throw_progression", {}),
+            save_bonuses_race=set(data.get("save_bonuses_race", [])),
+            save_bonuses_profession=set(data.get("save_bonuses_profession", [])),
+            save_bonuses_other=set(data.get("save_bonuses_other", [])),
+            immunities_race=set(data.get("immunities_race", [])),
+            immunities_profession=set(data.get("immunities_profession", [])),
+            immunities_other=set(data.get("immunities_other", [])),
+            special_abilities_race=set(data.get("special_abilities_race", [])),
+            special_abilities_profession=set(data.get("special_abilities_profession", [])),
+            special_abilities_other=set(data.get("special_abilities_other", [])),
+            ac=data.get("ac", 10),
+            ac_temp=data.get("ac_temp", 10),
+            languages=set(data.get("languages", [])),
+            additional_languages=data.get("additional_languages", []),
+            stat_str=stats.get("str", 0),
+            stat_str_temp=stats.get("str_temp", 0),
+            stat_dex=stats.get("dex", 0),
+            stat_dex_temp=stats.get("dex_temp", 0),
+            stat_con=stats.get("con", 0),
+            stat_con_temp=stats.get("con_temp", 0),
+            stat_wis=stats.get("wis", 0),
+            stat_wis_temp=stats.get("wis_temp", 0),
+            stat_int=stats.get("int", 0),
+            stat_int_temp=stats.get("int_temp", 0),
+            stat_char=stats.get("cha", 0),
+            stat_char_temp=stats.get("cha_temp", 0),
+            inventory=data.get("inventory", {}),
+            strength_atck_mod=strength_mods.get("attack", 0),
+            strength_atck_mod_temp=strength_mods.get("attack_temp", 0),
+            strength_damage_mod=strength_mods.get("damage", 0),
+            strength_damage_mod_temp=strength_mods.get("damage_temp", 0),
+            carry_capacity_mod=strength_mods.get("carry_capacity", 0),
+            door_crack_mod=strength_mods.get("door_crack", 0.0),
+            ranged_atck_mod=dexterity_mods.get("ranged_attack", 0),
+            ranged_atck_mod_temp=dexterity_mods.get("ranged_attack_temp", 0),
+            ac_mod=dexterity_mods.get("ac_mod", 0),
+            ac_mod_temp=dexterity_mods.get("ac_mod_temp", 0),
+            hp_mod=constitution_mods.get("hp_mod", 0),
+            raise_dead_mod=constitution_mods.get("raise_dead_chance", 0),
+            max_add_langs=intelligence_mods.get("max_languages", 0),
+            highest_spell_level=intelligence_mods.get("spell_level", 0),
+            understand_spell=intelligence_mods.get("understand_spell", 0),
+            min_spells_per_level=intelligence_mods.get("min_spells_per_level", 0),
+            max_spells_per_level=intelligence_mods.get("max_spells_per_level", 0),
+            cap_spec_hirelings=charisma_mods.get("max_hirelings", 0),
+            treasure=data.get("treasure", {}),
+            coins_platinum=data.get("coins_platinum", 0),
+            coins_gold=data.get("coins_gold", 0),
+            coins_electrum=data.get("coins_electrum", 0),
+            coins_silver=data.get("coins_silver", 0),
+            coins_copper=data.get("coins_copper", 0),
+            allowed_alignment=data.get("allowed_alignment", "Undefined"),
+            allowed_races=tuple(data.get("allowed_races", [])),
+            allowed_armor=data.get("allowed_armor", "Undefined"),
+            allowed_weapon=data.get("allowed_weapon", "Undefined"),
+            delicate_tasks_profession=data.get("delicate_tasks_profession", {}),
+            delicate_tasks_race=data.get("delicate_tasks_race", 0),
+            delicate_tasks=data.get("delicate_tasks", 0),
+            climb_walls_profession=data.get("climb_walls_profession", {}),
+            climb_walls=data.get("climb_walls", 0),
+            hear_sounds_profession=data.get("hear_sounds_profession", {}),
+            hear_sounds=data.get("hear_sounds", "0:6"),
+            hide_in_shadows_profession=data.get("hide_in_shadows_profession", {}),
+            hide_in_shadows_race=data.get("hide_in_shadows_race", 0),
+            hide_in_shadows=data.get("hide_in_shadows", 0),
+            move_silently_profession=data.get("move_silently_profession", {}),
+            move_silently_race=data.get("move_silently_race", 0),
+            move_silently=data.get("move_silently", 0),
+            open_locks_profession=data.get("open_locks_profession", {}),
+            open_locks_race=data.get("open_locks_race", 0),
+            open_locks=data.get("open_locks", 0),
+            surprised=data.get("surprised", 2),
+            darkvision=data.get("darkvision", False),
+            parry=data.get("parry", 0),
+            thief_user_class=data.get("thief_user_class", False),
+            magic_user_class=data.get("magic_user_class", False),
+            spell_table=data.get("spell_table", {}),
+            spell_table_2=data.get("spell_table_2", {}),
+        )
