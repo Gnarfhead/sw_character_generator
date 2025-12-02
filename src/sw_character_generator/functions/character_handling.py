@@ -1,6 +1,5 @@
 """Save character data to a JSON file with a timestamped filename."""
 import json
-import os
 import sys
 from datetime import datetime
 from pathlib import Path
