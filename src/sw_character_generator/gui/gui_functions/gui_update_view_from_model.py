@@ -4,7 +4,6 @@ from dataclasses import fields
 
 from sw_character_generator.gui.gui_functions.gui_immunities import on_immunities_changed
 from sw_character_generator.gui.gui_functions.gui_save_bonuses import on_save_bonuses_changed
-from sw_character_generator.gui.gui_functions.gui_special_abilities import on_special_abilities_changed
 from sw_character_generator.gui.gui_functions.gui_magic import update_spell_table_widget
 
 

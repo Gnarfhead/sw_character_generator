@@ -415,7 +415,6 @@ class App:
         state="disabled"
         )
         self.save_bonuses_txt.grid(row=8, column=1, columnspan=5, sticky="nsew", padx=PADX, pady=PADY)
-        self.save_bonuses_txt.bind("<<Modified>>", lambda event: on_save_bonuses_changed(self))
 
         # Immunities
         widget_label(self.stats_frame, "Immunities:", 9, 0, owner=self, name_label="lbl_immunities")
@@ -430,9 +429,6 @@ class App:
         state="disabled"
         )
         self.immunities_txt.grid(row=9, column=1, columnspan=5, sticky="nsew", padx=PADX, pady=PADY)
-        self.immunities_txt.bind("<<Modified>>", lambda event: on_immunities_changed(self))
-
-        
 
         ### Create a notebook for lower panels
         self.lower_notebook = ttk.Notebook(self.scrollable_frame)
@@ -543,9 +539,9 @@ class App:
         self.btn_new.grid(row=0, column=0, sticky="w", padx=PADX, pady=PADY)
         self.btn_apply = ttk.Button(self.footer_frame, text="Apply", command=lambda: apply_character(self, self.new_player))
         self.btn_apply.grid(row=0, column=1, sticky="w", padx=PADX, pady=PADY)
-        self.btn_save = ttk.Button(self.footer_frame, text="Save", command=lambda: save_character(self.new_player))
+        self.btn_save = ttk.Button(self.footer_frame, text="Save", command=self.on_save_click)
         self.btn_save.grid(row=0, column=2, sticky="w", padx=PADX, pady=PADY)
-        self.btn_load = ttk.Button(self.footer_frame, text="Load", command=lambda: load_character(self))
+        self.btn_load = ttk.Button(self.footer_frame, text="Load", command=self.on_load_click)
         self.btn_load.grid(row=0, column=3, sticky="w", padx=PADX, pady=PADY)
         self.btn_dice_roller = ttk.Button(self.footer_frame, text="Dice Roller", command=lambda: dice_roller(self))
         self.btn_dice_roller.grid(row=0, column=4, sticky="w", padx=PADX, pady=PADY)
@@ -590,6 +586,39 @@ class App:
             yield
         finally:
             self._updating = prev
+
+    def on_save_click(self):
+        """Handle Save Character button click."""
+        print("DEBUG on_save_click: --------------------------------")
+        try:
+            save_character(self.new_player, parent_window=self.root)
+            self.status_var.set("Character saved successfully.")
+        except Exception as e:
+            self.status_var.set(f"Error saving character: {e}")
+            print(f"ERROR on_save_click: {e}")
+
+    def on_load_click(self):
+        """Handle Load Character button click."""
+        print("DEBUG on_load_click: --------------------------------")
+        try:
+            # Ask user for file
+            loaded_character = load_character(parent_window=self.root)
+            
+            if loaded_character is None:
+                self.status_var.set("Load cancelled.")
+                return
+            
+            # Replace current character
+            self.new_player = loaded_character
+            
+            # Update GUI
+            with self.suppress_updates():
+                update_view_from_model(self)
+            
+            self.status_var.set("Character loaded successfully.")
+        except Exception as e:
+            self.status_var.set(f"Error loading character: {e}")
+            print(f"ERROR on_load_click: {e}")
 
     def rebuild_ui(self):
         """Zerstört alle Kinder der Root und baut UI neu auf."""
