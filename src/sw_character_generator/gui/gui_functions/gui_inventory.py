@@ -1,40 +1,33 @@
 """Handle changes to the inventory text widget."""
 
-def on_inventory_changed(app):
-    """Handle changes to the inventory text widget."""
-    print("DEBUG on_inventory_changed: --------------------------------")
-
+# Bind to track changes and sync back to model
+def on_inventory_text_changed(app, event):
+    """Callback for inventory text widget changes."""
+    print("DEBUG on_inventory_text_changed: --------------------------------")
     if getattr(app, "is_updating", False):
         return
-    content = app.inventory_txt.get("1.0", "end-1c").strip()
-    new: dict[str,int] = {}
-    if content:
-        lines = content.replace(",", "\n").splitlines()
-        for line in lines:
-            s = line.strip()
-            if not s:
-                continue
-            # parse "Name xN" or "Name XN" or "Name : N"
-            qty = 1
-            if " x" in s.lower():
-                parts = s.rsplit("x", 1)
-                name = parts[0].strip()
-                try:
-                    qty = int(parts[1].strip())
-                except Exception:
-                    qty = 1
-            elif ":" in s:
-                parts = s.rsplit(":", 1)
-                name = parts[0].strip()
-                try:
-                    qty = int(parts[1].strip())
-                except Exception:
-                    qty = 1
-            else:
-                name = s
-            new[name] = new.get(name, 0) + qty
-    app.new_player.inventory = new
-    app.inventory_txt.edit_modified(False)
+    # Parse text back to inventory dict
+    text = app.inventory_txt.get("1.0", "end-1c").strip()
+    if not text:
+        app.new_player.inventory = {}
+        return
 
-
-    print(f"DEBUG on_inventory_changed: Updated inventory to: {app.new_player.inventory}")
+    new_inventory = {}
+    for line in text.split("\n"):
+        line = line.strip()
+        if not line:
+            continue
+        # Parse "Item x5" or "Item"
+        if " x" in line:
+            parts = line.rsplit(" x", 1)
+            item_name = parts[0].strip()
+            try:
+                quantity = int(parts[1].strip())
+            except (ValueError, IndexError):
+                quantity = 1
+        else:
+            item_name = line
+            quantity = 1
+        new_inventory[item_name] = quantity
+            
+    app.new_player.inventory = new_inventory 

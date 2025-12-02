@@ -169,20 +169,8 @@ def update_view_from_model(app):
         
         if current_text != new_text:
             # print(f"DEBUG update_view_from_model: inventory_txt: '{current_text}' -> '{new_text}'")
-            app.inventory_txt.config(state="normal")  # FIX: Temporarily enable
-            app.inventory_txt.delete("1.0", "end")
-            app.inventory_txt.insert("1.0", new_text)
-            app.inventory_txt.config(state="disabled")  # FIX: Disable again
+            app.inventory_txt.delete("1.0", "end") # Clear existing text
+            app.inventory_txt.insert("1.0", new_text) # Insert new text
+
     
-    if hasattr(app, "treasure_txt"):
-        # print("DEBUG update_view_from_model: Updating treasure_txt widget.")
-        
-        current_text = app.treasure_txt.get("1.0", "end-1c")
-        new_text = _format_items_dict(model.treasure)
-        
-        if current_text != new_text:
-            # print(f"DEBUG update_view_from_model: treasure_txt: '{current_text}' -> '{new_text}'")
-            app.treasure_txt.config(state="normal")  # FIX: Temporarily enable
-            app.treasure_txt.delete("1.0", "end")
-            app.treasure_txt.insert("1.0", new_text)
-            app.treasure_txt.config(state="disabled")  # FIX: Disable again
+
