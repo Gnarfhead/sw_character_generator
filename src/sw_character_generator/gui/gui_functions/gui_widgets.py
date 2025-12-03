@@ -8,7 +8,7 @@ WIDTH_ENTRY_SHORT = 4
 WIDTH_ENTRY_LONG = 40
 WIDTH_LABEL_SHORT = 15
 WIDTH_LABEL_LONG = 40
-WIDTH_SPINBOX = 10
+WIDTH_SPINBOX = 5
 COLUMNSPAN_DEFAULT = 1
 
 def _assign(owner, mapping):
@@ -77,6 +77,13 @@ def widget_spinbox(parent, text, row, column, var=None, from_=-100000, to=100000
     spin.grid(row=row, column=column + 1, sticky="ew", padx=PADX, pady=PADY, **grid_opts)
     _assign(owner, {name_spinbox: spin, name_label: lbl})
     return lbl, spin
+
+def widget_spinbox_nolabel(parent, row, column, var=None, from_=-100000, to=100000, width=WIDTH_SPINBOX, *, owner=None, name_spinbox=None, **grid_opts):
+    """Create a Spinbox widget in a grid without a label."""
+    spin = ttk.Spinbox(parent, textvariable=var, from_=from_, to=to, width=width)
+    spin.grid(row=row, column=column, sticky="ew", padx=PADX, pady=PADY, **grid_opts)
+    _assign(owner, {name_spinbox: spin})
+    return spin
 
 def widget_button(parent, text, row, column, command=None, state=None, *, owner=None, name_button=None, **grid_opts):
     """Create a labeled Button widget in a grid."""

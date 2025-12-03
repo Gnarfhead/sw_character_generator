@@ -1,6 +1,7 @@
 """Callback when profession_var changes; update model profession accordingly."""
 
 from sw_character_generator.functions.choosen_profession import choosen_profession_modifiers
+from sw_character_generator.functions.gen_char_stat_mods import analyze_mod_char, analyze_mod_con, analyze_mod_dex, analyze_mod_int, analyze_mod_str, analyze_mod_wis
 from sw_character_generator.functions.manage_magic import manage_magic_tab
 from sw_character_generator.functions.manage_saving_throw import calculate_saving_throw
 from sw_character_generator.functions.manage_thief_skills import calculate_thief_skills, manage_thief_tab
@@ -38,25 +39,41 @@ def on_profession_change(app, *args):
         # Reset dependent selections and stats
         app.race_var.set("Undefined") # reset if profession gets changed
         app.alignment_var.set("Undefined") # reset if profession gets changed
+
+        # Highlight profession label and reset others
         app.lbl_profession.config(style="Standard.TLabel")
         app.lbl_race.config(style="Attention.TLabel")
         app.lbl_alignment.config(style="Attention.TLabel")
-        app.new_player.hp = 0 # reset HP values
-        app.new_player.hp_current = 0 # reset current HP
-        app.new_player.hp_last_roll = 0 # reset last rolled HP
-        app.btn_modify_hp.config(state="normal")
+        app.stats_frame.config(style="Attention.TFrame")
+
+        # Enable add XP button and highlight stats frame
         app.btn_add_xp.config(state="normal")
-        #app.stats_frame.config(style="Attention.TFrame")
         calculate_xp_bonus(app.new_player) # recalculate XP bonus
         calculate_next_level_xp(app, app.new_player) # recalculate next level XP
+        calculate_saving_throw(app.new_player) # recalculate saving throws
+
+        # Recalculate ability score bonuses
+        analyze_mod_str(app.new_player) # recalculate strength modifiers
+        analyze_mod_dex(app.new_player) # recalculate dexterity modifiers
+        analyze_mod_con(app.new_player) # recalculate constitution modifiers
+        analyze_mod_int(app.new_player) # recalculate intelligence modifiers
+        analyze_mod_wis(app.new_player) # recalculate wisdom modifiers
+        analyze_mod_char(app.new_player) # recalculate charisma modifiers
+
+        # Reset thief and magic tab values
         manage_thief_tab(app.new_player, app)  # recalculate thief class status
-        manage_magic_tab(app.new_player, app)  # recalculate magic class status
         calculate_thief_skills(app.new_player) # recalculate thief skills
-        calculate_saving_throw(app.new_player) # recalculate saving throw
+        manage_magic_tab(app.new_player, app)  # recalculate magic class status
+
+        # Refresh race and alignment values
         refresh_race_values(app) # update race combobox values
         refresh_alignment_values(app) # update alignment combobox values
 
         # Enable roll HP button if all selections are valid
+        app.new_player.hp = 0 # reset HP values
+        app.new_player.hp_current = 0 # reset current HP
+        app.new_player.hp_last_roll = 0 # reset last rolled HP
+        app.btn_modify_hp.config(state="normal")
         if app.race_var.get() != "Undefined" and app.profession_var.get() != "Undefined" and app.alignment_var.get() != "Undefined":
             app.btn_rollhp.config(state="normal")
             app.btn_rollhp.config(style="Attention.TButton")

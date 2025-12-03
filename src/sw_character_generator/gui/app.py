@@ -28,7 +28,7 @@ from .gui_functions.gui_role_stats import role_stats, switch_stats
 from .gui_functions.gui_profession_change import on_profession_change
 from .gui_functions.gui_update_view_from_model import update_view_from_model
 from .gui_functions.gui_persistence import bind_model_vars
-from .gui_functions.gui_widgets import widget_button, widget_entry_long, widget_entry_short, widget_extlabel_short, widget_label, widget_combobox, widget_spinbox, widget_checkbutton
+from .gui_functions.gui_widgets import widget_button, widget_entry_long, widget_entry_short, widget_extlabel_short, widget_label, widget_combobox, widget_spinbox, widget_checkbutton, widget_spinbox_nolabel
 from sw_character_generator.utility.linux_fullscreen import toggle_maximize
 
 # Layout / sizing constants
@@ -328,20 +328,20 @@ class App:
         self.attr_frame = ttk.LabelFrame(self.scrollable_frame, text="Attribute", borderwidth=5, padding=(6, 6), style="Attention.TFrame")
         self.attr_frame.grid(row=1, column=0, padx=10, pady=10, sticky="new")
         widget_label(self.attr_frame, "Attribute", 0, 0, owner=self, name_label="lbl_attribute_header")
-        widget_label(self.attr_frame, "Value", 0, 1, owner=self, name_label="lbl_value_header")
-        widget_label(self.attr_frame, "Temp", 0, 2, owner=self, name_label="lbl_temp_header")
+        widget_label(self.attr_frame, "Base Value", 0, 1, owner=self, name_label="lbl_value_header")
+        widget_label(self.attr_frame, "Temp Value", 0, 2, owner=self, name_label="lbl_temp_header")
         widget_extlabel_short(self.attr_frame, "Strength (STR):", 1, 0, var=self.stat_str_var, owner=self, name_label="lbl_str", name_value="entry_str")
-        widget_entry_short(self.attr_frame, row=1, column=2, var=self.stat_str_temp_var, owner=self, name_entry="entry_str_temp")
+        widget_spinbox_nolabel(self.attr_frame, 1, 2, var=self.stat_str_temp_var, owner=self, name_spinbox="spin_str_temp")
         widget_extlabel_short(self.attr_frame, "Dexterity (DEX):", 2, 0, var=self.stat_dex_var, owner=self, name_label="lbl_dex", name_value="entry_dex")
-        widget_entry_short(self.attr_frame, row=2, column=2, var=self.stat_dex_temp_var, owner=self, name_entry="entry_dex_temp")
+        widget_spinbox_nolabel(self.attr_frame, 2, 2, var=self.stat_dex_temp_var, owner=self, name_spinbox="spin_dex_temp")
         widget_extlabel_short(self.attr_frame, "Constitution (CON):", 3, 0, var=self.stat_con_var, owner=self, name_label="lbl_con", name_value="entry_con")
-        widget_entry_short(self.attr_frame, row=3, column=2, var=self.stat_con_temp_var, owner=self, name_entry="entry_con_temp")
+        widget_spinbox_nolabel(self.attr_frame, 3, 2, var=self.stat_con_temp_var, owner=self, name_spinbox="spin_con_temp")
         widget_extlabel_short(self.attr_frame, "Intelligence (INT):", 4, 0, var=self.stat_int_var, owner=self, name_label="lbl_int", name_value="entry_int")
-        widget_entry_short(self.attr_frame, row=4, column=2, var=self.stat_int_temp_var, owner=self, name_entry="entry_int_temp")
+        widget_spinbox_nolabel(self.attr_frame, 4, 2, var=self.stat_int_temp_var, owner=self, name_spinbox="spin_int_temp")
         widget_extlabel_short(self.attr_frame, "Wisdom (WIS):", 5, 0, var=self.stat_wis_var, owner=self, name_label="lbl_wis", name_value="entry_wis")
-        widget_entry_short(self.attr_frame, row=5, column=2, var=self.stat_wis_temp_var, owner=self, name_entry="entry_wis_temp")
+        widget_spinbox_nolabel(self.attr_frame, 5, 2, var=self.stat_wis_temp_var, owner=self, name_spinbox="spin_wis_temp")
         widget_extlabel_short(self.attr_frame, "Charisma (CHA):", 6, 0, var=self.stat_char_var, owner=self, name_label="lbl_cha", name_value="entry_cha")
-        widget_entry_short(self.attr_frame, row=6, column=2, var=self.stat_char_temp_var, owner=self, name_entry="entry_cha_temp")
+        widget_spinbox_nolabel(self.attr_frame, 6, 2, var=self.stat_char_temp_var, owner=self, name_spinbox="spin_cha_temp")
 
         # place Roll Stats button inside attr_frame
         self.btn_roll_stats = ttk.Button(self.attr_frame, text="Roll Stats", style="Attention.TButton", command=lambda: role_stats(self, self.new_player, self.chk_opt_4d6dl_var.get(), self.btn_roll_stats, self.btn_switch_stats))
@@ -370,16 +370,27 @@ class App:
 
         # Create bonus labels and values
         widget_label(self.bonus_frame, "Type", 0, 0, owner=self, name_label="lbl_bonus_type_header")
-        widget_label(self.bonus_frame, "Value", 0, 1, owner=self, name_label="lbl_bonus_value_header")
-        widget_label(self.bonus_frame, "Temp", 0, 2, owner=self, name_label="lbl_temp_bonus_header")
+        widget_label(self.bonus_frame, "Base Value", 0, 1, owner=self, name_label="lbl_bonus_value_header")
+        widget_label(self.bonus_frame, "Temp Value", 0, 2, owner=self, name_label="lbl_temp_bonus_header")
+
         widget_extlabel_short(self.bonus_frame, "Melee Attack Bonus:", 1, 0, var=self.strength_atck_mod_var, owner=self, name_label="lbl_strength_atck_bonus", name_value="entry_strength_atck_bonus")
-        widget_entry_short(self.bonus_frame, row=1, column=2, var=self.strength_atck_mod_temp_var, owner=self, name_entry="entry_strength_atck_temp_bonus")
+        widget_spinbox_nolabel(self.bonus_frame, 1, 2, var=self.strength_atck_mod_temp_var, owner=self, name_spinbox="spin_strength_atck_temp_bonus")
+        #widget_entry_short(self.bonus_frame, row=1, column=2, var=self.strength_atck_mod_temp_var, owner=self, name_entry="entry_strength_atck_temp_bonus")
+        
         widget_extlabel_short(self.bonus_frame, "Melee Damage Bonus:", 2, 0, var=self.strength_damage_mod_var, owner=self, name_label="lbl_strength_damage_bonus", name_value="entry_strength_damage_bonus")
-        widget_entry_short(self.bonus_frame, row=2, column=2, var=self.strength_damage_mod_temp_var, owner=self, name_entry="entry_strength_damage_temp_bonus")
+        widget_spinbox_nolabel(self.bonus_frame, 2, 2, var=self.strength_damage_mod_temp_var, owner=self, name_spinbox="spin_strength_damage_temp_bonus")
+        #widget_entry_short(self.bonus_frame, row=2, column=2, var=self.strength_damage_mod_temp_var, owner=self, name_entry="entry_strength_damage_temp_bonus")
+        
         widget_extlabel_short(self.bonus_frame, "Ranged Attack Bonus:", 3, 0, var=self.ranged_atck_mod_var, owner=self, name_label="lbl_ranged_atk_bonus", name_value="entry_ranged_atk_bonus")
-        widget_entry_short(self.bonus_frame, row=3, column=2, var=self.ranged_atck_mod_temp_var, owner=self, name_entry="entry_ranged_atk_temp_bonus")
+        widget_spinbox_nolabel(self.bonus_frame, 3, 2, var=self.ranged_atck_mod_temp_var, owner=self, name_spinbox="spin_ranged_atk_temp_bonus")
+        #widget_entry_short(self.bonus_frame, row=3, column=2, var=self.ranged_atck_mod_temp_var, owner=self, name_entry="entry_ranged_atk_temp_bonus")
+        
         widget_extlabel_short(self.bonus_frame, "Armor Class Bonus:", 4, 0, var=self.ac_mod_var, owner=self, name_label="lbl_ac_bonus", name_value="entry_ac_bonus")
-        widget_entry_short(self.bonus_frame, row=4, column=2, var=self.ac_mod_temp_var, owner=self, name_entry="entry_ac_temp_bonus")
+        widget_spinbox_nolabel(self.bonus_frame, 4, 2, var=self.ac_mod_temp_var, owner=self, name_spinbox="spin_ac_temp_bonus")
+        #widget_entry_short(self.bonus_frame, row=4, column=2, var=self.ac_mod_temp_var, owner=self, name_entry="entry_ac_temp_bonus")
+        
+        
+        
         widget_extlabel_short(self.bonus_frame, "Armor Class effective:", 5, 0, var=self.ac_var, owner=self, name_label="lbl_ac", name_value="entry_ac")
         widget_extlabel_short(self.bonus_frame, "Carry Capacity Bonus:", 6, 0, var=self.carry_capacity_mod_var, owner=self, name_label="lbl_carry_capacity_bonus", name_value="entry_carry_capacity_bonus")
         widget_extlabel_short(self.bonus_frame, "Crack Doors (x:6):", 7, 0, var=self.door_crack_mod_var, owner=self, name_label="lbl_door_crack_bonus", name_value="entry_door_crack_bonus")
@@ -404,7 +415,7 @@ class App:
         widget_extlabel_short(self.stats_frame, "Darkvision:", 5, 0, var=self.darkvision_var, owner=self, name_label="lbl_darkvision", name_value="entry_darkvision")
         widget_extlabel_short(self.stats_frame, "Languages:", 6, 0, var=self.languages_var, owner=self, name_label="lbl_languages", name_value="entry_languages")
         widget_extlabel_short(self.stats_frame, "Max. add. Languages:", 7, 0, var=self.max_add_langs_var, owner=self, name_label="lbl_max_additional_languages", name_value="entry_max_additional_languages")
-        widget_entry_long(self.stats_frame, "", 7, 1, var=self.additional_languages_var, owner=self, name_label="lbl_additional_languages", name_entry="entry_additional_languages")
+        widget_entry_long(self.stats_frame, "", 7, 1, columnspan=4, var=self.additional_languages_var, owner=self, name_label="lbl_additional_languages", name_entry="entry_additional_languages")
 
         # Save Bonuses
         widget_label(self.stats_frame, "Save Bonuses:", 8, 0, owner=self, name_label="lbl_save_bonuses")
