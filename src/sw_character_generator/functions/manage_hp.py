@@ -1,7 +1,6 @@
 """Functions to modify character HP and state based on changes."""
 import random
 from sw_character_generator.classes.playerclass import PlayerClass
-from sw_character_generator.gui import app
 from sw_character_generator.gui.gui_functions.gui_update_view_from_model import update_view_from_model
 
 
@@ -67,10 +66,10 @@ def modify_hp(delta: int, app, character=None):
         app.status_var.set(f"HP modified by {delta}. Current HP: {player.hp_current}/{player.hp} ({player.player_state})")
         update_view_from_model(app)
 
-def set_roll_hp_button(app, chk_starting_hp):
+def set_roll_hp_button(app):
     """Set the roll HP button text based on checkbox state."""
     print("DEBUG set_roll_hp_button: ----------------------------------------------------------------")
-    #print("DEBUG set_roll_hp_button: Called with chk_starting_hp =", chk_starting_hp.get())
+    #print("DEBUG set_roll_hp_button: Called with chk_starting_hp =", app.chk_opt_fullhplvl1_var.get())
     if app.chk_opt_fullhplvl1_var.get() is True:
         print("DEBUG set_roll_hp_button: Setting roll HP button to 'Set HP'")
         app.btn_rollhp.config(text="Set HP")
@@ -106,10 +105,20 @@ def set_starting_hp(app, character:PlayerClass):
         character.player_state = "Healthy"
         print(f"DEBUG set_starting_hp: Rolled starting HP: {starting_hp} (Hit Die: d{hit_die}, Rolled: {rolled_hp}, CON Mod: {character.hp_mod})")
 
+    # Update status and disable roll HP button
     app.status_var.set(f"Starting HP set to {starting_hp}")
-    app.btn_rollhp.config(state="disabled")
-    app.chk_opt_fullhplvl1.config(state="disabled")
+
+    # Set roll options back to normal/disabled state
+    app.btn_rollhp.config(state="disabled") # Disable the button
+    app.chk_opt_fullhplvl1.config(state="disabled") # Disable the checkbox
     app.stats_frame.config(style="Standard.TFrame") # Reset stats frame style in case it was highlighted before
+
+    # Manage Apply button state
+    if app.race_var.get() != "Undefined" and app.profession_var.get() != "Undefined" and app.alignment_var.get() != "Undefined":
+        app.btn_apply.config(style="Attention.TButton") # Highlight apply changes button
+        app.footer_frame.config(style="Attention.TFrame") # Highlight footer frame
+    
+    # Update the UI to reflect the new HP values
     update_view_from_model(app)
     return starting_hp
 

@@ -16,9 +16,17 @@ def on_alignment_change(app, *args):
         # Update the model with the new alignment
         print("DEBUG on_alignment_change: Changing alignment to", name)
         choosen_alignment_modifiers(app.new_player, name) # update alignment and related stats
-        app.status_var.set(f"Alignment changed to {name}")
-        app.lbl_alignment.config(style="Standard.TLabel")
-        update_view_from_model(app) # refresh GUI to reflect model changes
+        app.status_var.set(f"Alignment changed to {name}") # update status
+        app.lbl_alignment.config(style="Standard.TLabel") # reset label style
+
+        # Enable roll HP button if all selections are valid
+        if app.race_var.get() != "Undefined" and app.profession_var.get() != "Undefined" and app.alignment_var.get() != "Undefined":
+            app.btn_rollhp.config(state="normal")
+            app.btn_rollhp.config(style="Attention.TButton")
+            app.stats_frame.config(style="Attention.TFrame")
+
+        # Refresh the GUI to reflect model changes
+        update_view_from_model(app) 
 
         # Adjust top_frame style based on race and alignment selection
         #print("DEBUG on_alignment_change: Checking race and alignment for top_frame style adjustment.")

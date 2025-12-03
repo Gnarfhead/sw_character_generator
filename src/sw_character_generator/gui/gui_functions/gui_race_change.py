@@ -32,6 +32,12 @@ def on_race_change(app, *args):
         # Recalculate thief skills if applicable
         calculate_thief_skills(app.new_player) # recalculate thief skills based on new race
 
+        # Enable roll HP button if all selections are valid
+        if app.race_var.get() != "Undefined" and app.profession_var.get() != "Undefined" and app.alignment_var.get() != "Undefined":
+            app.btn_rollhp.config(state="normal")
+            app.btn_rollhp.config(style="Attention.TButton")
+            app.stats_frame.config(style="Attention.TFrame")
+
         # Refresh the GUI to reflect model changes
         with app.suppress_updates(): # prevent recursive updates
             update_view_from_model(app) # refresh GUI to reflect model changes

@@ -44,11 +44,9 @@ def on_profession_change(app, *args):
         app.new_player.hp = 0 # reset HP values
         app.new_player.hp_current = 0 # reset current HP
         app.new_player.hp_last_roll = 0 # reset last rolled HP
-        app.btn_rollhp.config(state="normal")
         app.btn_modify_hp.config(state="normal")
         app.btn_add_xp.config(state="normal")
-        app.btn_rollhp.config(style="Attention.TButton")
-        app.stats_frame.config(style="Attention.TFrame")
+        #app.stats_frame.config(style="Attention.TFrame")
         calculate_xp_bonus(app.new_player) # recalculate XP bonus
         calculate_next_level_xp(app, app.new_player) # recalculate next level XP
         manage_thief_tab(app.new_player, app)  # recalculate thief class status
@@ -58,6 +56,11 @@ def on_profession_change(app, *args):
         refresh_race_values(app) # update race combobox values
         refresh_alignment_values(app) # update alignment combobox values
 
+        # Enable roll HP button if all selections are valid
+        if app.race_var.get() != "Undefined" and app.profession_var.get() != "Undefined" and app.alignment_var.get() != "Undefined":
+            app.btn_rollhp.config(state="normal")
+            app.btn_rollhp.config(style="Attention.TButton")
+            app.stats_frame.config(style="Attention.TFrame")
 
         # Refresh the GUI to reflect model changes
         with app.suppress_updates(): # prevent recursive updates

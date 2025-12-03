@@ -18,6 +18,9 @@ from src.sw_character_generator.gui.gui_functions.gui_new_character import apply
 from sw_character_generator.functions.manage_xp import add_xp
 from sw_character_generator.gui.gui_functions.gui_inventory import on_inventory_text_changed
 from sw_character_generator.gui.gui_functions.gui_magic import create_spell_table_widget
+from sw_character_generator.gui.gui_functions.gui_immunities import on_immunities_changed
+from sw_character_generator.gui.gui_functions.gui_save_bonuses import on_save_bonuses_changed
+from sw_character_generator.gui.gui_functions.gui_special_abilities import on_special_abilities_changed
 from .gui_functions.gui_dice_roller import dice_roller
 from .gui_functions.gui_alignment_change import on_alignment_change
 from .gui_functions.gui_race_change import on_race_change
@@ -412,7 +415,7 @@ class App:
         height=5,        # visible row height (can be adjusted)
         width=40,        # visible column width (char-based)
         font=("TkDefaultFont", 10),
-        state="disabled"
+        state="normal"
         )
         self.save_bonuses_txt.grid(row=8, column=1, columnspan=5, sticky="nsew", padx=PADX, pady=PADY)
 
@@ -426,7 +429,7 @@ class App:
         height=3,        # visible row height (can be adjusted)
         width=40,        # visible column width (char-based)
         font=("TkDefaultFont", 10),
-        state="disabled"
+        state="normal"
         )
         self.immunities_txt.grid(row=9, column=1, columnspan=5, sticky="nsew", padx=PADX, pady=PADY)
 
@@ -526,7 +529,7 @@ class App:
         height=10,        # visible row height (can be adjusted)
         width=150,        # visible column width (char-based)
         font=("TkDefaultFont", 10),
-        state="disabled"
+        state="normal"
         )
         self.special_abilities_txt.grid(row=0, column=1, sticky="new", padx=PADX, pady=PADY)
 

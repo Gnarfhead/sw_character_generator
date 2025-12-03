@@ -13,11 +13,14 @@ def apply_character(app, character: PlayerClass):
     """Apply changes to the character object."""
     print("DEBUG apply_character: ----------------------------------------------------------------")
     print("DEBUG apply_character: Applying changes to character object.")
-    character.character_created = True
-    app.cb_profession.config(state="disabled")
-    app.cb_race.config(state="disabled")
-    app.cb_alignment.config(state="disabled")
-    app.btn_rollhp.config(state="disabled")
-    app.btn_roll_stats.config(state="disabled")
-    app.btn_switch_stats.config(state="disabled")
+    character.character_created = True # Mark character as created
+    app.cb_profession.config(state="disabled") # Disable profession selection
+    app.cb_race.config(state="disabled") # Disable race selection
+    app.cb_alignment.config(state="disabled") # Disable alignment selection
+    app.btn_rollhp.config(state="disabled") # Disable HP rolling
+    app.btn_roll_stats.config(state="disabled") # Disable stat rolling
+    app.btn_switch_stats.config(state="disabled") # Disable stat switching
+    app.btn_apply.config(state="disabled") # Disable apply button after applying
+    app.footer_frame.config(style="Standard.TFrame") # Reset footer frame style
+    app.status_var.set("Character applied and locked.") # Update status
     update_view_from_model(app)
