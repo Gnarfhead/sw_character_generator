@@ -18,9 +18,6 @@ from src.sw_character_generator.gui.gui_functions.gui_new_character import apply
 from sw_character_generator.functions.manage_xp import add_xp
 from sw_character_generator.gui.gui_functions.gui_inventory import on_inventory_text_changed
 from sw_character_generator.gui.gui_functions.gui_magic import create_spell_table_widget
-from sw_character_generator.gui.gui_functions.gui_immunities import on_immunities_changed
-from sw_character_generator.gui.gui_functions.gui_save_bonuses import on_save_bonuses_changed
-from sw_character_generator.gui.gui_functions.gui_special_abilities import on_special_abilities_changed
 from .gui_functions.gui_dice_roller import dice_roller
 from .gui_functions.gui_alignment_change import on_alignment_change
 from .gui_functions.gui_race_change import on_race_change
@@ -28,7 +25,7 @@ from .gui_functions.gui_role_stats import role_stats, switch_stats
 from .gui_functions.gui_profession_change import on_profession_change
 from .gui_functions.gui_update_view_from_model import update_view_from_model
 from .gui_functions.gui_persistence import bind_model_vars
-from .gui_functions.gui_widgets import widget_button, widget_entry_long, widget_entry_short, widget_extlabel_short, widget_label, widget_combobox, widget_spinbox, widget_checkbutton, widget_spinbox_nolabel
+from .gui_functions.gui_widgets import widget_button, widget_entry_long, widget_extlabel_short, widget_label, widget_combobox, widget_spinbox, widget_checkbutton, widget_spinbox_nolabel
 from sw_character_generator.utility.linux_fullscreen import toggle_maximize
 
 # Layout / sizing constants
@@ -120,7 +117,6 @@ class App:
         self.hp_last_roll_var = tk.IntVar(master=self.root, value=0)
         self.hp_modify_var = tk.IntVar(master=self.root, value=0)
         self.save_throw_var = tk.IntVar(master=self.root, value=0)
-        self.ac_var = tk.IntVar(master=self.root, value=0)
         self.darkvision_var = tk.StringVar(master=self.root, value="No")
         self.parry_var = tk.IntVar(master=self.root, value=0)
         self.languages_var = tk.StringVar(master=self.root, value="")
@@ -135,8 +131,10 @@ class App:
         self.door_crack_mod_var = tk.IntVar(master=self.root, value=0)
         self.ranged_atck_mod_var = tk.IntVar(master=self.root, value=0)
         self.ranged_atck_mod_temp_var = tk.IntVar(master=self.root, value=0)
+        self.ac_var = tk.IntVar(master=self.root, value=0)
         self.ac_mod_var = tk.IntVar(master=self.root, value=0)
         self.ac_mod_temp_var = tk.IntVar(master=self.root, value=0)
+        self.ac_total_var = tk.IntVar(master=self.root, value=0)
         self.hp_mod_var = tk.IntVar(master=self.root, value=0)
         self.raise_dead_mod_var = tk.IntVar(master=self.root, value=0)
         self.max_add_langs_var = tk.IntVar(master=self.root, value=0)
@@ -372,26 +370,15 @@ class App:
         widget_label(self.bonus_frame, "Type", 0, 0, owner=self, name_label="lbl_bonus_type_header")
         widget_label(self.bonus_frame, "Base Value", 0, 1, owner=self, name_label="lbl_bonus_value_header")
         widget_label(self.bonus_frame, "Temp Value", 0, 2, owner=self, name_label="lbl_temp_bonus_header")
-
         widget_extlabel_short(self.bonus_frame, "Melee Attack Bonus:", 1, 0, var=self.strength_atck_mod_var, owner=self, name_label="lbl_strength_atck_bonus", name_value="entry_strength_atck_bonus")
         widget_spinbox_nolabel(self.bonus_frame, 1, 2, var=self.strength_atck_mod_temp_var, owner=self, name_spinbox="spin_strength_atck_temp_bonus")
-        #widget_entry_short(self.bonus_frame, row=1, column=2, var=self.strength_atck_mod_temp_var, owner=self, name_entry="entry_strength_atck_temp_bonus")
-        
         widget_extlabel_short(self.bonus_frame, "Melee Damage Bonus:", 2, 0, var=self.strength_damage_mod_var, owner=self, name_label="lbl_strength_damage_bonus", name_value="entry_strength_damage_bonus")
         widget_spinbox_nolabel(self.bonus_frame, 2, 2, var=self.strength_damage_mod_temp_var, owner=self, name_spinbox="spin_strength_damage_temp_bonus")
-        #widget_entry_short(self.bonus_frame, row=2, column=2, var=self.strength_damage_mod_temp_var, owner=self, name_entry="entry_strength_damage_temp_bonus")
-        
         widget_extlabel_short(self.bonus_frame, "Ranged Attack Bonus:", 3, 0, var=self.ranged_atck_mod_var, owner=self, name_label="lbl_ranged_atk_bonus", name_value="entry_ranged_atk_bonus")
         widget_spinbox_nolabel(self.bonus_frame, 3, 2, var=self.ranged_atck_mod_temp_var, owner=self, name_spinbox="spin_ranged_atk_temp_bonus")
-        #widget_entry_short(self.bonus_frame, row=3, column=2, var=self.ranged_atck_mod_temp_var, owner=self, name_entry="entry_ranged_atk_temp_bonus")
-        
         widget_extlabel_short(self.bonus_frame, "Armor Class Bonus:", 4, 0, var=self.ac_mod_var, owner=self, name_label="lbl_ac_bonus", name_value="entry_ac_bonus")
         widget_spinbox_nolabel(self.bonus_frame, 4, 2, var=self.ac_mod_temp_var, owner=self, name_spinbox="spin_ac_temp_bonus")
-        #widget_entry_short(self.bonus_frame, row=4, column=2, var=self.ac_mod_temp_var, owner=self, name_entry="entry_ac_temp_bonus")
-        
-        
-        
-        widget_extlabel_short(self.bonus_frame, "Armor Class effective:", 5, 0, var=self.ac_var, owner=self, name_label="lbl_ac", name_value="entry_ac")
+        widget_extlabel_short(self.bonus_frame, "Armor Class effective:", 5, 0, var=self.ac_total_var, owner=self, name_label="lbl_ac_total", name_value="entry_ac_total")
         widget_extlabel_short(self.bonus_frame, "Carry Capacity Bonus:", 6, 0, var=self.carry_capacity_mod_var, owner=self, name_label="lbl_carry_capacity_bonus", name_value="entry_carry_capacity_bonus")
         widget_extlabel_short(self.bonus_frame, "Crack Doors (x:6):", 7, 0, var=self.door_crack_mod_var, owner=self, name_label="lbl_door_crack_bonus", name_value="entry_door_crack_bonus")
         widget_extlabel_short(self.bonus_frame, "HP Bonus:", 8, 0, var=self.hp_mod_var, owner=self, name_label="lbl_hp_bonus", name_value="entry_hp_bonus")

@@ -1,5 +1,6 @@
-from src.sw_character_generator.functions.role_dice import wuerfle_1d10
-from sw_character_generator.functions.gen_char_stat_mods import analyze_mod_str
+"""Fighter profession-specific modifiers and attributes."""
+from sw_character_generator.functions.update_derived_stats import update_derived_stats
+
 
 def apply_fighter_dependent_modifiers(character):
     """Apply fighter-specific modifiers to the character."""
@@ -14,7 +15,6 @@ def apply_fighter_dependent_modifiers(character):
     character.allowed_armor = ("heavy",)
     character.thief_user_class = False
     character.magic_user_class = False
-
 
     # Ensure save_bonuses is a set
     if not isinstance(character.save_bonuses_profession, set): # Ensure it's a set
@@ -282,7 +282,3 @@ def apply_fighter_dependent_modifiers(character):
         character.parry = -4
     elif character.stat_dex == 18:
         character.parry = -5
-
-
-    # Analyze stat modifiers and apply to character (fighter specific Bonus to STR)
-    analyze_mod_str(character)

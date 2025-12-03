@@ -1,11 +1,11 @@
 """Callback when profession_var changes; update model profession accordingly."""
 
 from sw_character_generator.functions.choosen_profession import choosen_profession_modifiers
-from sw_character_generator.functions.gen_char_stat_mods import analyze_mod_char, analyze_mod_con, analyze_mod_dex, analyze_mod_int, analyze_mod_str, analyze_mod_wis
 from sw_character_generator.functions.manage_magic import manage_magic_tab
 from sw_character_generator.functions.manage_saving_throw import calculate_saving_throw
 from sw_character_generator.functions.manage_thief_skills import calculate_thief_skills, manage_thief_tab
 from sw_character_generator.functions.manage_xp import calculate_next_level_xp, calculate_xp_bonus
+from sw_character_generator.functions.update_derived_stats import update_derived_stats
 from sw_character_generator.gui.gui_functions.gui_update_view_from_model import update_view_from_model
 
 def on_profession_change(app, *args):
@@ -53,12 +53,7 @@ def on_profession_change(app, *args):
         calculate_saving_throw(app.new_player) # recalculate saving throws
 
         # Recalculate ability score bonuses
-        analyze_mod_str(app.new_player) # recalculate strength modifiers
-        analyze_mod_dex(app.new_player) # recalculate dexterity modifiers
-        analyze_mod_con(app.new_player) # recalculate constitution modifiers
-        analyze_mod_int(app.new_player) # recalculate intelligence modifiers
-        analyze_mod_wis(app.new_player) # recalculate wisdom modifiers
-        analyze_mod_char(app.new_player) # recalculate charisma modifiers
+        update_derived_stats(app.new_player, app)  # recalculate derived stats
 
         # Reset thief and magic tab values
         manage_thief_tab(app.new_player, app)  # recalculate thief class status

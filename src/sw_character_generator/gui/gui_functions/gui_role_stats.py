@@ -1,13 +1,13 @@
 """"Module for rolling and assigning role stats to a character."""
 import tkinter as tk
 from tkinter import ttk
-from src.sw_character_generator.functions.gen_char_stat_mods import analyze_mod_char, analyze_mod_con, analyze_mod_dex, analyze_mod_int, analyze_mod_str, analyze_mod_wis
+
 from src.sw_character_generator.functions.role_dice import wuerfle_3d6
-#from src.sw_character_generator.gui import app
 from src.sw_character_generator.gui.gui_functions.gui_update_view_from_model import update_view_from_model
 from sw_character_generator.functions.manage_xp import calculate_xp_bonus
 from sw_character_generator.functions.manage_hp import recalculate_hp
-#from sw_character_generator.gui import app
+from sw_character_generator.functions.update_derived_stats import update_derived_stats
+
 
 
 def switch_stats(parent: tk.Tk, character, btn_switch_stats=None) -> str | None:
@@ -96,13 +96,8 @@ def switch_stats(parent: tk.Tk, character, btn_switch_stats=None) -> str | None:
         setattr(character, stat2_attr, temp_value)
 
         # Analyze stat modifiers and apply to character
-        analyze_mod_str(character)
-        analyze_mod_dex(character)
-        analyze_mod_con(character)
+        update_derived_stats(character)        
         recalculate_hp(character)
-        analyze_mod_wis(character)
-        analyze_mod_int(character)
-        analyze_mod_char(character)
         calculate_xp_bonus(character)
 
         # Update buttons if provided
@@ -172,12 +167,7 @@ def role_stats(app, character, chk_opt_4d6dl_var, btn_roll_stats=None, btn_switc
 
     # Analyze stat modifiers and apply to character
     print("DEBUG gui_role_stats: Analyzing stat modifiers and applying to character...")
-    analyze_mod_str(character) # Apply strength modifier
-    analyze_mod_dex(character) # Apply dexterity modifier
-    analyze_mod_con(character) # Apply constitution modifier
-    analyze_mod_int(character) # Apply intelligence modifier
-    analyze_mod_wis(character) # Apply wisdom modifier
-    analyze_mod_char(character) # Apply charisma modifier
+    update_derived_stats(character)
     calculate_xp_bonus(character)
 
     # Update status and GUI

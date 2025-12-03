@@ -1,6 +1,7 @@
 """Functions for character handling: save, load, and create new character."""
 from src.sw_character_generator.classes.playerclass import PlayerClass
 from src.sw_character_generator.gui.gui_functions.gui_update_view_from_model import update_view_from_model
+from sw_character_generator.functions.update_derived_stats import update_derived_stats
 
 def new_characterobj(app):
     """Create a new character object and update the view."""
@@ -22,5 +23,6 @@ def apply_character(app, character: PlayerClass):
     app.btn_switch_stats.config(state="disabled") # Disable stat switching
     app.btn_apply.config(state="disabled") # Disable apply button after applying
     app.footer_frame.config(style="Standard.TFrame") # Reset footer frame style
+    update_derived_stats(character, app)  # Ensure derived stats are up to date
     app.status_var.set("Character applied and locked.") # Update status
     update_view_from_model(app)

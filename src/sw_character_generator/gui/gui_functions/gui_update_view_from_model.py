@@ -2,11 +2,7 @@
 import tkinter as tk
 from dataclasses import fields
 
-from sw_character_generator.gui.gui_functions.gui_immunities import on_immunities_changed
-from sw_character_generator.gui.gui_functions.gui_save_bonuses import on_save_bonuses_changed
 from sw_character_generator.gui.gui_functions.gui_magic import update_spell_table_widget
-
-
 
 def _format_change_scrolledtext(value):
     """Format main_stats tuple into a readable string."""
@@ -117,8 +113,6 @@ def update_view_from_model(app):
             app.special_abilities_txt.delete("1.0", "end")
             app.special_abilities_txt.insert("1.0", new_text)
         
-
-    
     # Special handling for immunities_txt widget
     if hasattr(app, "immunities_txt"):
         # print("DEBUG update_view_from_model: Updating immunities_txt widget.")
@@ -154,6 +148,3 @@ def update_view_from_model(app):
             # print(f"DEBUG update_view_from_model: inventory_txt: '{current_text}' -> '{new_text}'")
             app.inventory_txt.delete("1.0", "end") # Clear existing text
             app.inventory_txt.insert("1.0", new_text) # Insert new text
-
-    
-

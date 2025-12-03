@@ -4,42 +4,46 @@ from src.sw_character_generator.classes.playerclass import PlayerClass
 def analyze_mod_str(player_character: PlayerClass):
     """Calculate strength-based modifiers. Positive bonuses only apply to fighters."""
     print("DEBUG analyze_mod_str: --------------------------------")
-    if 3 <= player_character.stat_str <= 4:
+
+    # Use temp value if set, otherwise use base value
+    effective_str = player_character.stat_str_temp if player_character.stat_str_temp > 0 else player_character.stat_str
+    
+    if 3 <= effective_str <= 4:
         player_character.strength_atck_mod = -2
         player_character.strength_damage_mod = -1
         player_character.carry_capacity_mod = -5
         player_character.door_crack_mod = 1
-    elif 5 <= player_character.stat_str <= 6:
+    elif 5 <= effective_str <= 6:
         player_character.strength_atck_mod = -1
         player_character.strength_damage_mod = 0
         player_character.carry_capacity_mod = -2.5
         player_character.door_crack_mod = 1
-    elif 7 <= player_character.stat_str <= 8:
+    elif 7 <= effective_str <= 8:
         player_character.strength_atck_mod = 0
         player_character.strength_damage_mod = 0
         player_character.carry_capacity_mod = 0
         player_character.door_crack_mod = 2
-    elif 9 <= player_character.stat_str <= 12:
+    elif 9 <= effective_str <= 12:
         player_character.strength_atck_mod = 0
         player_character.strength_damage_mod = 0
         player_character.carry_capacity_mod = 2.5
         player_character.door_crack_mod = 2
-    elif 13 <= player_character.stat_str <= 15:
+    elif 13 <= effective_str <= 15:
         player_character.strength_atck_mod = 1 if player_character.profession.lower() == "fighter" else 0
         player_character.strength_damage_mod = 0
         player_character.carry_capacity_mod = 5
         player_character.door_crack_mod = 2
-    elif player_character.stat_str == 16:
+    elif effective_str == 16:
         player_character.strength_atck_mod = 1 if player_character.profession.lower() == "fighter" else 0
         player_character.strength_damage_mod = 1 if player_character.profession.lower() == "fighter" else 0
         player_character.carry_capacity_mod = 7.5
         player_character.door_crack_mod = 3
-    elif player_character.stat_str == 17:
+    elif effective_str == 17:
         player_character.strength_atck_mod = 2 if player_character.profession.lower() == "fighter" else 0
         player_character.strength_damage_mod = 2 if player_character.profession.lower() == "fighter" else 0
         player_character.carry_capacity_mod = 15
         player_character.door_crack_mod = 4
-    elif player_character.stat_str == 18:
+    elif effective_str == 18:
         player_character.strength_atck_mod = 2 if player_character.profession.lower() == "fighter" else 0
         player_character.strength_damage_mod = 3 if player_character.profession.lower() == "fighter" else 0
         player_character.carry_capacity_mod = 25
@@ -50,32 +54,36 @@ def analyze_mod_str(player_character: PlayerClass):
 def analyze_mod_dex(player_character: PlayerClass):
     """Calculate dexterity based modifiers."""
     print("DEBUG analyze_mod_dex: --------------------------------")
-    if 3 <= player_character.stat_dex <= 8:
+
+    # Use temp value if set, otherwise use base value
+    effective_dex = player_character.stat_dex_temp if player_character.stat_dex_temp > 0 else player_character.stat_dex
+
+    if 3 <= effective_dex <= 8:
         player_character.ranged_atck_mod = -1
         player_character.ac_mod = -1
-    elif 9 <= player_character.stat_dex <= 12:
+    elif 9 <= effective_dex <= 12:
         player_character.ranged_atck_mod = 0
         player_character.ac_mod = 0
-    elif 13 <= player_character.stat_dex <= 18:
+    elif 13 <= effective_dex <= 18:
         player_character.ranged_atck_mod = 1
         player_character.ac_mod = 1
     else:
         raise ValueError("DEBUG analyze_mod_dex: Dexterity stat out of bounds:", player_character.stat_dex)
-
-    # Update AC with DEX modifier
-    player_character.ac = 10 # base AC
-    player_character.ac += player_character.ac_mod
-
+    
 def analyze_mod_con(player_character: PlayerClass):
     """Calculate constitution based modifiers."""
     print("DEBUG analyze_mod_con: --------------------------------")
-    if 3 <= player_character.stat_con <= 8:
+
+    # Use temp value if set, otherwise use base value
+    effective_con = player_character.stat_con_temp if player_character.stat_con_temp > 0 else player_character.stat_con
+
+    if 3 <= effective_con <= 8:
         player_character.hp_mod = -1
         player_character.raise_dead_mod = 50
-    elif 9 <= player_character.stat_con <= 12:
+    elif 9 <= effective_con <= 12:
         player_character.hp_mod = 0
         player_character.raise_dead_mod = 75
-    elif 13 <= player_character.stat_con <= 18:
+    elif 13 <= effective_con <= 18:
         player_character.hp_mod = 1
         player_character.raise_dead_mod = 100
     else:

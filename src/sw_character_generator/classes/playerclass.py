@@ -37,8 +37,10 @@ class PlayerClass:
     special_abilities_race: set[str] = field(default_factory=set)
     special_abilities_profession: set[str] = field(default_factory=set)
     special_abilities_other: set[str] = field(default_factory=set)
-    ac: int = 10
-    ac_temp: int = 10
+    ac: int = 10 # base armor class
+    ac_mod: int = 0 # calculated from dexterity
+    ac_mod_temp: int = 0 # Set by spinbox
+    ac_total: int = 10 # total AC after modifiers
     languages: set[str] = field(default_factory=set)
     additional_languages: list[str] = field(default_factory=list)
     stat_str: int = field(default=0)
@@ -61,9 +63,9 @@ class PlayerClass:
     carry_capacity_mod: int = 0
     door_crack_mod: float = 0
     ranged_atck_mod: int = 0
+    ranged_atck_mod_race: int = 0 # Bonus from race (e.g., Halfling +1)
     ranged_atck_mod_temp: int = 0
-    ac_mod: int = 0
-    ac_mod_temp: int = 0
+    ranged_atck_mod_total: int = 0
     hp_mod: int = 0
     raise_dead_mod: int = 0
     max_add_langs: int = 0
@@ -161,7 +163,8 @@ class PlayerClass:
             f"WIS: {self.stat_wis}, WIS_temp: {self.stat_wis_temp}\n"
             f"CHA: {self.stat_char}, CHA_temp: {self.stat_char_temp}, CHA_mod: Max Hirelings={self.cap_spec_hirelings}\n"
             f"State: {self.player_state}, Alignment: {self.alignment}, Race: {self.race}, Gender: {self.gender}, God: {self.god}, Age: {self.age}\n"
-            f"Save Throw: {self.save_throw}, Save Bonuses: {list(self.save_bonuses)}, Immunities: {list(self.immunities)}, AC: {self.ac}\n"
+            f"Save Throw: {self.save_throw}, Save Bonuses: {list(self.save_bonuses)}, Immunities: {list(self.immunities)}\n"
+            f"Base AC: {self.ac}, AC Bonus: {self.ac_mod}, AC Bonus_temp: {self.ac_mod_temp}\n"
             f"Special Abilities: {list(self.special_abilities)}\n"
             f"Languages: {list(self.languages)}, Additional Languages: {list(self.additional_languages)}\n"
             f"Inventory: {self.inventory}\n"
@@ -212,7 +215,9 @@ class PlayerClass:
             "special_abilities_profession": list(self.special_abilities_profession),
             "special_abilities_other": list(self.special_abilities_other),
             "ac": self.ac,
-            "ac_temp": self.ac_temp,
+            "ac_mod": self.ac_mod,
+            "ac_mod_temp": self.ac_mod_temp,
+            "ac_total": self.ac_total,
             "languages": list(self.languages),
             "additional_languages": list(self.additional_languages),
 
@@ -342,7 +347,8 @@ class PlayerClass:
             special_abilities_profession=set(data.get("special_abilities_profession", [])),
             special_abilities_other=set(data.get("special_abilities_other", [])),
             ac=data.get("ac", 10),
-            ac_temp=data.get("ac_temp", 10),
+            ac_mod_temp=data.get("ac_mod_temp", 0),
+            ac_total=data.get("ac_total", 10),
             languages=set(data.get("languages", [])),
             additional_languages=data.get("additional_languages", []),
             stat_str=stats.get("str", 0),
@@ -367,7 +373,6 @@ class PlayerClass:
             ranged_atck_mod=dexterity_mods.get("ranged_attack", 0),
             ranged_atck_mod_temp=dexterity_mods.get("ranged_attack_temp", 0),
             ac_mod=dexterity_mods.get("ac_mod", 0),
-            ac_mod_temp=dexterity_mods.get("ac_mod_temp", 0),
             hp_mod=constitution_mods.get("hp_mod", 0),
             raise_dead_mod=constitution_mods.get("raise_dead_chance", 0),
             max_add_langs=intelligence_mods.get("max_languages", 0),
