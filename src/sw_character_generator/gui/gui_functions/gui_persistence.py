@@ -65,8 +65,8 @@ def on_var_change(app, field, var):
     setattr(app.new_player, field, raw) # Update model field
 
     # Recalculate derived stats if stat fields changed
-    if field.startswith("stat_") or field in ("ac_mod_temp",):
-        print("DEBUG on_var_change: updating derived stats due to change in", field)
+    if field.startswith("stat_") or field.endswith("_temp"):
+        print("DEBUG on_var_change: recalculating derived stats due to change in", field)
         update_base_stats(app.new_player)  # Update base stats first
         update_derived_stats(app.new_player, app) # Then update derived stats
         
