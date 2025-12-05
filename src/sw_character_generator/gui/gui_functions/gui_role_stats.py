@@ -6,6 +6,7 @@ from src.sw_character_generator.functions.role_dice import wuerfle_3d6
 from src.sw_character_generator.gui.gui_functions.gui_update_view_from_model import update_view_from_model
 from sw_character_generator.functions.manage_xp import calculate_xp_bonus
 from sw_character_generator.functions.manage_hp import recalculate_hp
+from sw_character_generator.functions.update_base_stats import update_base_stats
 from sw_character_generator.functions.update_derived_stats import update_derived_stats
 
 
@@ -96,7 +97,8 @@ def switch_stats(parent: tk.Tk, character, btn_switch_stats=None) -> str | None:
         setattr(character, stat2_attr, temp_value)
 
         # Analyze stat modifiers and apply to character
-        update_derived_stats(character)        
+        update_derived_stats(character)
+        update_base_stats(character)
         recalculate_hp(character)
         calculate_xp_bonus(character)
 
@@ -167,6 +169,7 @@ def role_stats(app, character, chk_opt_4d6dl_var, btn_roll_stats=None, btn_switc
 
     # Analyze stat modifiers and apply to character
     print("DEBUG gui_role_stats: Analyzing stat modifiers and applying to character...")
+    update_base_stats(character)
     update_derived_stats(character)
     calculate_xp_bonus(character)
 

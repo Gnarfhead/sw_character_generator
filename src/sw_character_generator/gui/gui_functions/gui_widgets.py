@@ -26,6 +26,13 @@ def widget_label(parent, text, row, column, *, owner=None, name_label=None, **gr
     _assign(owner, {name_label: lbl})
     return lbl
 
+def widget_label_var(parent, row, column, var=None, width=WIDTH_LABEL_SHORT, *, owner=None, name_value=None, **grid_opts):
+    """Create a Label widget (with textvariable) in a grid without a label."""
+    lbl = ttk.Label(parent, textvariable=var, width=width)
+    lbl.grid(row=row, column=column, sticky="w", padx=PADX, pady=PADY, **grid_opts)
+    _assign(owner, {name_value: lbl})
+    return lbl
+
 def widget_extlabel_short(parent, text, row, column, var=None, width=WIDTH_LABEL_SHORT, columnspan=1, *, owner=None, name_label=None, name_value=None, **grid_opts):
     """Create a labeled Label widget (with textvariable) in a grid."""
     lbl = ttk.Label(parent, text=text)

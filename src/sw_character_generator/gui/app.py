@@ -25,7 +25,7 @@ from .gui_functions.gui_role_stats import role_stats, switch_stats
 from .gui_functions.gui_profession_change import on_profession_change
 from .gui_functions.gui_update_view_from_model import update_view_from_model
 from .gui_functions.gui_persistence import bind_model_vars
-from .gui_functions.gui_widgets import widget_button, widget_entry_long, widget_extlabel_short, widget_label, widget_combobox, widget_spinbox, widget_checkbutton, widget_spinbox_nolabel
+from .gui_functions.gui_widgets import widget_button, widget_entry_long, widget_extlabel_short, widget_label, widget_combobox, widget_label_var, widget_spinbox, widget_checkbutton, widget_spinbox_nolabel
 from sw_character_generator.utility.linux_fullscreen import toggle_maximize
 
 # Layout / sizing constants
@@ -85,16 +85,22 @@ class App:
         self.status_var = tk.StringVar(master=self.root, value="Ready")
         self.stat_str_var = tk.IntVar(master=self.root, value=0)
         self.stat_str_temp_var = tk.IntVar(master=self.root, value=0)
+        self.stat_str_total_var = tk.IntVar(master=self.root, value=0)
         self.stat_dex_var = tk.IntVar(master=self.root, value=0)
         self.stat_dex_temp_var = tk.IntVar(master=self.root, value=0)
+        self.stat_dex_total_var = tk.IntVar(master=self.root, value=0)
         self.stat_con_var = tk.IntVar(master=self.root, value=0)
         self.stat_con_temp_var = tk.IntVar(master=self.root, value=0)
+        self.stat_con_total_var = tk.IntVar(master=self.root, value=0)
         self.stat_int_var = tk.IntVar(master=self.root, value=0)
         self.stat_int_temp_var = tk.IntVar(master=self.root, value=0)
+        self.stat_int_total_var = tk.IntVar(master=self.root, value=0)
         self.stat_wis_var = tk.IntVar(master=self.root, value=0)
         self.stat_wis_temp_var = tk.IntVar(master=self.root, value=0)
+        self.stat_wis_total_var = tk.IntVar(master=self.root, value=0)
         self.stat_char_var = tk.IntVar(master=self.root, value=0)
         self.stat_char_temp_var = tk.IntVar(master=self.root, value=0)
+        self.stat_char_total_var = tk.IntVar(master=self.root, value=0)
         self.coins_platinum_var = tk.IntVar(master=self.root, value=0)
         self.coins_platinum_mod_var = tk.IntVar(master=self.root, value=0)
         self.coins_gold_var = tk.IntVar(master=self.root, value=0)
@@ -326,20 +332,27 @@ class App:
         self.attr_frame = ttk.LabelFrame(self.scrollable_frame, text="Attribute", borderwidth=5, padding=(6, 6), style="Attention.TFrame")
         self.attr_frame.grid(row=1, column=0, padx=10, pady=10, sticky="new")
         widget_label(self.attr_frame, "Attribute", 0, 0, owner=self, name_label="lbl_attribute_header")
-        widget_label(self.attr_frame, "Base Value", 0, 1, owner=self, name_label="lbl_value_header")
-        widget_label(self.attr_frame, "Temp Value", 0, 2, owner=self, name_label="lbl_temp_header")
+        widget_label(self.attr_frame, "Rolled", 0, 1, owner=self, name_label="lbl_rolled_stats_header")
+        widget_label(self.attr_frame, "Temp", 0, 2, owner=self, name_label="lbl_temp_statsheader")
+        widget_label(self.attr_frame, "Total", 0, 3, owner=self, name_label="lbl_total_stats_header")
         widget_extlabel_short(self.attr_frame, "Strength (STR):", 1, 0, var=self.stat_str_var, owner=self, name_label="lbl_str", name_value="entry_str")
         widget_spinbox_nolabel(self.attr_frame, 1, 2, var=self.stat_str_temp_var, owner=self, name_spinbox="spin_str_temp")
+        widget_label_var(self.attr_frame, 1, 3, var=self.stat_str_total_var, owner=self, name_value="lbl_str_total")
         widget_extlabel_short(self.attr_frame, "Dexterity (DEX):", 2, 0, var=self.stat_dex_var, owner=self, name_label="lbl_dex", name_value="entry_dex")
         widget_spinbox_nolabel(self.attr_frame, 2, 2, var=self.stat_dex_temp_var, owner=self, name_spinbox="spin_dex_temp")
+        widget_label_var(self.attr_frame, 2, 3, var=self.stat_dex_total_var, owner=self, name_value="lbl_dex_total")
         widget_extlabel_short(self.attr_frame, "Constitution (CON):", 3, 0, var=self.stat_con_var, owner=self, name_label="lbl_con", name_value="entry_con")
         widget_spinbox_nolabel(self.attr_frame, 3, 2, var=self.stat_con_temp_var, owner=self, name_spinbox="spin_con_temp")
+        widget_label_var(self.attr_frame, 3, 3, var=self.stat_con_total_var, owner=self, name_value="lbl_con_total")
         widget_extlabel_short(self.attr_frame, "Intelligence (INT):", 4, 0, var=self.stat_int_var, owner=self, name_label="lbl_int", name_value="entry_int")
         widget_spinbox_nolabel(self.attr_frame, 4, 2, var=self.stat_int_temp_var, owner=self, name_spinbox="spin_int_temp")
+        widget_label_var(self.attr_frame, 4, 3, var=self.stat_int_total_var, owner=self, name_value="lbl_int_total")
         widget_extlabel_short(self.attr_frame, "Wisdom (WIS):", 5, 0, var=self.stat_wis_var, owner=self, name_label="lbl_wis", name_value="entry_wis")
         widget_spinbox_nolabel(self.attr_frame, 5, 2, var=self.stat_wis_temp_var, owner=self, name_spinbox="spin_wis_temp")
+        widget_label_var(self.attr_frame, 5, 3, var=self.stat_wis_total_var, owner=self, name_value="lbl_wis_total")
         widget_extlabel_short(self.attr_frame, "Charisma (CHA):", 6, 0, var=self.stat_char_var, owner=self, name_label="lbl_cha", name_value="entry_cha")
         widget_spinbox_nolabel(self.attr_frame, 6, 2, var=self.stat_char_temp_var, owner=self, name_spinbox="spin_cha_temp")
+        widget_label_var(self.attr_frame, 6, 3, var=self.stat_char_total_var, owner=self, name_value="lbl_cha_total")
 
         # place Roll Stats button inside attr_frame
         self.btn_roll_stats = ttk.Button(self.attr_frame, text="Roll Stats", style="Attention.TButton", command=lambda: role_stats(self, self.new_player, self.chk_opt_4d6dl_var.get(), self.btn_roll_stats, self.btn_switch_stats))
@@ -368,8 +381,9 @@ class App:
 
         # Create bonus labels and values
         widget_label(self.bonus_frame, "Type", 0, 0, owner=self, name_label="lbl_bonus_type_header")
-        widget_label(self.bonus_frame, "Base Value", 0, 1, owner=self, name_label="lbl_bonus_value_header")
-        widget_label(self.bonus_frame, "Temp Value", 0, 2, owner=self, name_label="lbl_temp_bonus_header")
+        widget_label(self.bonus_frame, "Base", 0, 1, owner=self, name_label="lbl_bonus_base_header")
+        widget_label(self.bonus_frame, "Temp", 0, 2, owner=self, name_label="lbl_bonus_temp_bonus_header")
+        widget_label(self.bonus_frame, "Total", 0, 3, owner=self, name_label="lbl_bonus_total_header")
         widget_extlabel_short(self.bonus_frame, "Melee Attack Bonus:", 1, 0, var=self.strength_atck_mod_var, owner=self, name_label="lbl_strength_atck_bonus", name_value="entry_strength_atck_bonus")
         widget_spinbox_nolabel(self.bonus_frame, 1, 2, var=self.strength_atck_mod_temp_var, owner=self, name_spinbox="spin_strength_atck_temp_bonus")
         widget_extlabel_short(self.bonus_frame, "Melee Damage Bonus:", 2, 0, var=self.strength_damage_mod_var, owner=self, name_label="lbl_strength_damage_bonus", name_value="entry_strength_damage_bonus")

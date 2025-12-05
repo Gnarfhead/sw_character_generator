@@ -2,6 +2,7 @@
 from dataclasses import asdict
 import tkinter as tk
 
+from sw_character_generator.functions.update_base_stats import update_base_stats
 from sw_character_generator.functions.update_derived_stats import update_derived_stats
 from .gui_update_view_from_model import update_view_from_model
 
@@ -13,6 +14,7 @@ def on_var_change(app, field, var):
     
     # Ignore changes to derived/calculated fields
     if field in ("ac_total", "nextlevel", "hp", "hp_current", "save_throw", 
+                 "parry",
                  "delicate_tasks", "climb_walls", "hear_sounds", "hide_in_shadows",
                  "move_silently", "open_locks", "strength_atck_mod", "strength_damage_mod",
                  "ranged_atck_mod", "ac_mod", "hp_mod", "raise_dead_mod",
@@ -61,7 +63,9 @@ def on_var_change(app, field, var):
     # Recalculate derived stats if stat fields changed
     if field.startswith("stat_") or field in ("ac_mod_temp",):
         print("DEBUG on_var_change: updating derived stats due to change in", field)
-        update_derived_stats(app.new_player, app)
+        update_base_stats(app.new_player)  # Update base stats first
+        update_derived_stats(app.new_player, app) # Then update derived stats
+        
     else:
         print("DEBUG on_var_change: no derived stats update needed for change in", field)
         with app.suppress_updates(): # Prevent recursion

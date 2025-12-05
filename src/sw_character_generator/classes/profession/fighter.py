@@ -1,6 +1,4 @@
 """Fighter profession-specific modifiers and attributes."""
-from sw_character_generator.functions.update_derived_stats import update_derived_stats
-
 
 def apply_fighter_dependent_modifiers(character):
     """Apply fighter-specific modifiers to the character."""
@@ -268,17 +266,3 @@ def apply_fighter_dependent_modifiers(character):
         19: {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0},
         20: {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0},
     }
-
-
-    # Calculate parry based on DEX
-    character.parry = 0
-    if character.stat_dex == 14:
-        character.parry = -1
-    elif character.stat_dex == 15:
-        character.parry = -2
-    elif character.stat_dex == 16:
-        character.parry = -3
-    elif character.stat_dex == 17:
-        character.parry = -4
-    elif character.stat_dex == 18:
-        character.parry = -5

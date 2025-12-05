@@ -5,8 +5,8 @@ def analyze_mod_str(player_character: PlayerClass):
     """Calculate strength-based modifiers. Positive bonuses only apply to fighters."""
     print("DEBUG analyze_mod_str: --------------------------------")
 
-    # Use temp value if set, otherwise use base value
-    effective_str = player_character.stat_str_temp if player_character.stat_str_temp > 0 else player_character.stat_str
+    # Use Total value if set, otherwise use base value
+    effective_str = player_character.stat_str_total if player_character.stat_str_total > 0 else player_character.stat_str
     
     if 3 <= effective_str <= 4:
         player_character.strength_atck_mod = -2
@@ -55,8 +55,8 @@ def analyze_mod_dex(player_character: PlayerClass):
     """Calculate dexterity based modifiers."""
     print("DEBUG analyze_mod_dex: --------------------------------")
 
-    # Use temp value if set, otherwise use base value
-    effective_dex = player_character.stat_dex_temp if player_character.stat_dex_temp > 0 else player_character.stat_dex
+    # Use total value if set, otherwise use base value
+    effective_dex = player_character.stat_dex_total if player_character.stat_dex_total > 0 else player_character.stat_dex
 
     if 3 <= effective_dex <= 8:
         player_character.ranged_atck_mod = -1
@@ -74,8 +74,8 @@ def analyze_mod_con(player_character: PlayerClass):
     """Calculate constitution based modifiers."""
     print("DEBUG analyze_mod_con: --------------------------------")
 
-    # Use temp value if set, otherwise use base value
-    effective_con = player_character.stat_con_temp if player_character.stat_con_temp > 0 else player_character.stat_con
+    # Use total value if set, otherwise use base value
+    effective_con = player_character.stat_con_total if player_character.stat_con_total > 0 else player_character.stat_con
 
     if 3 <= effective_con <= 8:
         player_character.hp_mod = -1
@@ -92,73 +92,77 @@ def analyze_mod_con(player_character: PlayerClass):
 def analyze_mod_int(player_character: PlayerClass):
     """Calculate intelligence based modifiers."""
     print("DEBUG analyze_mod_int: --------------------------------")
-    if 3 <= player_character.stat_int <= 7:
+
+    # Use total value if set, otherwise use base value
+    effective_int = player_character.stat_int_total if player_character.stat_int_total > 0 else player_character.stat_int
+
+    if 3 <= effective_int <= 7:
         player_character.max_add_langs = 0
         player_character.highest_spell_level = 4
         player_character.understand_spell = 30
         player_character.min_spells_per_level = 2
         player_character.max_spells_per_level = 4
-    elif player_character.stat_int == 8:
+    elif effective_int == 8:
         player_character.max_add_langs = 1
         player_character.highest_spell_level = 5
         player_character.understand_spell = 40
         player_character.min_spells_per_level = 3
         player_character.max_spells_per_level = 5
-    elif player_character.stat_int == 9:
+    elif effective_int == 9:
         player_character.max_add_langs = 1
         player_character.highest_spell_level = 5
         player_character.understand_spell = 45
         player_character.min_spells_per_level = 3
         player_character.max_spells_per_level = 5
-    elif player_character.stat_int == 10:
+    elif effective_int == 10:
         player_character.max_add_langs = 2
         player_character.highest_spell_level = 5
         player_character.understand_spell = 50
         player_character.min_spells_per_level = 4
         player_character.max_spells_per_level = 6
-    elif player_character.stat_int == 11:
+    elif effective_int == 11:
         player_character.max_add_langs = 2
         player_character.highest_spell_level = 6
         player_character.understand_spell = 50
         player_character.min_spells_per_level = 4
         player_character.max_spells_per_level = 6
-    elif player_character.stat_int == 12:
+    elif effective_int == 12:
         player_character.max_add_langs = 3
         player_character.highest_spell_level = 6
         player_character.understand_spell = 55
         player_character.min_spells_per_level = 4
         player_character.max_spells_per_level = 6
-    elif player_character.stat_int == 13:
+    elif effective_int == 13:
         player_character.max_add_langs = 3
         player_character.highest_spell_level = 7
         player_character.understand_spell = 65
         player_character.min_spells_per_level = 5
         player_character.max_spells_per_level = 8
-    elif player_character.stat_int == 14:
+    elif effective_int == 14:
         player_character.max_add_langs = 4
         player_character.highest_spell_level = 7
         player_character.understand_spell = 65
         player_character.min_spells_per_level = 5
         player_character.max_spells_per_level = 8
-    elif player_character.stat_int == 15:
+    elif effective_int == 15:
         player_character.max_add_langs = 4
         player_character.highest_spell_level = 8
         player_character.understand_spell = 75
         player_character.min_spells_per_level = 6
         player_character.max_spells_per_level = 10
-    elif player_character.stat_int == 16:
+    elif effective_int == 16:
         player_character.max_add_langs = 5
         player_character.highest_spell_level = 8
         player_character.understand_spell = 75
         player_character.min_spells_per_level = 6
         player_character.max_spells_per_level = 10
-    elif player_character.stat_int == 17:
+    elif effective_int == 17:
         player_character.max_add_langs = 5
         player_character.highest_spell_level = 9
         player_character.understand_spell = 85
         player_character.min_spells_per_level = 7
         player_character.max_spells_per_level = 100
-    elif player_character.stat_int == 18:
+    elif effective_int == 18:
         player_character.max_add_langs = 6
         player_character.highest_spell_level = 9
         player_character.understand_spell = 95
@@ -170,27 +174,56 @@ def analyze_mod_int(player_character: PlayerClass):
 def analyze_mod_wis(player_character: PlayerClass):
     """Calculate wisdom based modifiers."""
     print("DEBUG analyze_mod_wis: --------------------------------")
-    if player_character.stat_wis <= 3:
-        raise ValueError("DEBUG analyze_mod_wis: Wisdom stat out of bounds:", player_character.stat_wis)
 
-    
+    effective_wis = player_character.stat_wis_total if player_character.stat_wis_total > 0 else player_character.stat_wis
+
+    if effective_wis <= 3:
+        raise ValueError("DEBUG analyze_mod_wis: Wisdom stat out of bounds:", effective_wis)
+
 def analyze_mod_char(player_character: PlayerClass):
     """Calculate charisma based modifiers."""
     print("DEBUG analyze_mod_char: --------------------------------")
-    if 3 <= player_character.stat_char <= 4:
+
+    effective_char = player_character.stat_char_total if player_character.stat_char_total > 0 else player_character.stat_char
+
+    if 3 <= effective_char <= 4:
         player_character.cap_spec_hirelings = 1
-    elif 5 <= player_character.stat_char <= 6:
+    elif 5 <= effective_char <= 6:
         player_character.cap_spec_hirelings = 2
-    elif 7 <= player_character.stat_char <= 8:
+    elif 7 <= effective_char <= 8:
         player_character.cap_spec_hirelings = 3
-    elif 9 <= player_character.stat_char <= 12:
+    elif 9 <= effective_char <= 12:
         player_character.cap_spec_hirelings = 4
-    elif 13 <= player_character.stat_char <= 15:
+    elif 13 <= effective_char <= 15:
         player_character.cap_spec_hirelings = 5
-    elif 16 <= player_character.stat_char <= 17:
+    elif 16 <= effective_char <= 17:
         player_character.cap_spec_hirelings = 6
-    elif player_character.stat_char == 18:
+    elif effective_char == 18:
         player_character.cap_spec_hirelings = 7
     else:
-        raise ValueError("DEBUG analyze_mod_char: Charisma stat out of bounds:", player_character.stat_char)
+        raise ValueError("DEBUG analyze_mod_char: Charisma stat out of bounds:", effective_char)
 
+def analyze_parry(player_character: PlayerClass):
+    """Calculate parry based on DEX (Fighter only)."""
+    print("DEBUG analyze_parry: --------------------------------")
+    
+    # Parry only applies to Fighters
+    if player_character.profession.lower() != "fighter":
+        player_character.parry = 0
+        return
+    
+    # Use total value (base + temp) if set, otherwise use base value
+    effective_dex = player_character.stat_dex_total if player_character.stat_dex_total > 0 else player_character.stat_dex
+    
+    if effective_dex >= 18:
+        player_character.parry = -5
+    elif effective_dex == 17:
+        player_character.parry = -4
+    elif effective_dex == 16:
+        player_character.parry = -3
+    elif effective_dex == 15:
+        player_character.parry = -2
+    elif effective_dex == 14:
+        player_character.parry = -1
+    else:
+        player_character.parry = 0

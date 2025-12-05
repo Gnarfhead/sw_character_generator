@@ -1,5 +1,6 @@
 """Callback when profession_var changes; update model profession accordingly."""
 
+from sw_character_generator.functions.update_base_stats import update_base_stats
 from sw_character_generator.functions.choosen_profession import choosen_profession_modifiers
 from sw_character_generator.functions.manage_magic import manage_magic_tab
 from sw_character_generator.functions.manage_saving_throw import calculate_saving_throw
@@ -53,7 +54,8 @@ def on_profession_change(app, *args):
         calculate_saving_throw(app.new_player) # recalculate saving throws
 
         # Recalculate ability score bonuses
-        update_derived_stats(app.new_player, app)  # recalculate derived stats
+        update_base_stats(app.new_player)  # recalculate base stats first
+        update_derived_stats(app.new_player, app)  # recalculate derived stats after base stats
 
         # Reset thief and magic tab values
         manage_thief_tab(app.new_player, app)  # recalculate thief class status

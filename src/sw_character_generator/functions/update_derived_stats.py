@@ -1,6 +1,6 @@
 """Centralized function to update all derived character statistics."""
 from sw_character_generator.functions.manage_ac import calculate_ac
-from sw_character_generator.functions.gen_char_stat_mods import analyze_mod_char, analyze_mod_con, analyze_mod_dex, analyze_mod_int, analyze_mod_str, analyze_mod_wis
+from sw_character_generator.functions.gen_char_stat_mods import analyze_mod_char, analyze_mod_con, analyze_mod_dex, analyze_mod_int, analyze_mod_str, analyze_mod_wis, analyze_parry
 from sw_character_generator.gui.gui_functions.gui_update_view_from_model import update_view_from_model
 
 def update_derived_stats(character, app=None):
@@ -20,6 +20,9 @@ def update_derived_stats(character, app=None):
     analyze_mod_dex(character)
     analyze_mod_int(character)
     analyze_mod_wis(character)
+
+    # Recalculate parry (depends on strength and dexterity)
+    analyze_parry(character)
 
     # Recalculate AC (depends on dexterity)
     calculate_ac(character)

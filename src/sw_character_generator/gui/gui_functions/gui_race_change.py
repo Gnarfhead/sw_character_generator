@@ -1,7 +1,7 @@
 """Handle changes to the race selection."""
 from sw_character_generator.functions.choosen_race import choosen_race_modifiers
-from sw_character_generator.functions.manage_ac import calculate_ac
 from sw_character_generator.functions.manage_thief_skills import calculate_thief_skills, reset_thief_skills
+from sw_character_generator.functions.update_base_stats import update_base_stats
 from sw_character_generator.functions.update_derived_stats import update_derived_stats
 from sw_character_generator.gui.gui_functions.gui_update_view_from_model import update_view_from_model
 
@@ -32,6 +32,7 @@ def on_race_change(app, *args):
         app.lbl_race.config(style="Standard.TLabel") # reset label style
         
         # Recalculate thief skills and ac if applicable
+        update_base_stats(app.new_player)  # recalculate base stats
         update_derived_stats(app.new_player, app)  # recalculate derived stats based on new race
         calculate_thief_skills(app.new_player) # recalculate thief skills based on new race
 
