@@ -6,7 +6,7 @@ def apply_halfling_dependent_modifiers(character):
     print("DEBUG apply_halfling_dependent_modifiers: Applying Halfling dependent modifiers.")
     character.race = "Halfling"
     character.darkvision = False
-    character.ranged_atck_mod += 1
+    character.ranged_atck_mod_race += 1
     character.delicate_tasks_race = 5
     character.hide_in_shadows_race = 10
     character.move_silently_race = 10

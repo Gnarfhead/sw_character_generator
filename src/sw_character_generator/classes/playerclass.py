@@ -64,8 +64,10 @@ class PlayerClass:
     inventory: dict[str, int] = field(default_factory=dict)
     strength_atck_mod: int = 0
     strength_atck_mod_temp: int = 0
+    strength_atck_mod_total: int = 0
     strength_damage_mod: int = 0
     strength_damage_mod_temp: int = 0
+    strength_damage_mod_total: int = 0
     carry_capacity_mod: int = 0
     door_crack_mod: float = 0
     ranged_atck_mod: int = 0
@@ -159,15 +161,15 @@ class PlayerClass:
             f"Level={self.level}, HP Dice=d{self.hp_dice}, Main Stats={self.main_stats}\n"
             f"XP={self.xp}, XP Bonus={self.xp_bonus}%, HP={self.hp}, HP current={self.hp_current}\n"
             f"Coins: Platinum={self.coins_platinum}, Gold={self.coins_gold}, Electrum={self.coins_electrum}, Silver={self.coins_silver}, Copper={self.coins_copper}\n"
-            f"STR: {self.stat_str}, STR_temp: {self.stat_str_temp}, STR_mod: Attack={self.strength_atck_mod}, Attack_temp={self.strength_atck_mod_temp}, Damage={self.strength_damage_mod}, Damage_temp={self.strength_damage_mod_temp}, "
+            f"STR: {self.stat_str}, STR_temp: {self.stat_str_temp}, STR_total: {self.stat_str_total}, STR_mod: Attack={self.strength_atck_mod}, Attack_temp={self.strength_atck_mod_temp}, Attack_total={self.strength_atck_total}, Damage={self.strength_damage_mod}, Damage_temp={self.strength_damage_mod_temp}, Damage_total={self.strength_damage_total}, "
             f"Carry Capacity={self.carry_capacity_mod}, Door Crack={self.door_crack_mod}\n"
-            f"DEX: {self.stat_dex}, DEX_temp: {self.stat_dex_temp}, DEX_mod: Ranged Attack={self.ranged_atck_mod}, Ranged Attack_temp={self.ranged_atck_mod_temp}, AC Bonus={self.ac_mod}, AC Bonus_temp={self.ac_mod_temp}\n"
-            f"CON: {self.stat_con}, CON_temp: {self.stat_con_temp}, CON_mod: HP Bonus={self.hp_mod}, Raise Dead Chance={self.raise_dead_mod}%\n"
-            f"INT: {self.stat_int}, INT_temp: {self.stat_int_temp}, INT_mod: max. additional languages={self.max_add_langs}, Spell Level={self.highest_spell_level}, "
+            f"DEX: {self.stat_dex}, DEX_temp: {self.stat_dex_temp}, DEX_total: {self.stat_dex_total}, DEX_mod: Ranged Attack={self.ranged_atck_mod}, Ranged Attack_temp={self.ranged_atck_mod_temp}, Ranged Attack_total={self.ranged_atck_total}, AC Bonus={self.ac_mod}, AC Bonus_temp={self.ac_mod_temp}\n"
+            f"CON: {self.stat_con}, CON_temp: {self.stat_con_temp}, CON_total: {self.stat_con_total}, CON_mod: HP Bonus={self.hp_mod}, Raise Dead Chance={self.raise_dead_mod}%\n"
+            f"INT: {self.stat_int}, INT_temp: {self.stat_int_temp}, INT_total: {self.stat_int_total}, INT_mod: max. additional languages={self.max_add_langs}, Spell Level={self.highest_spell_level}, "
             f"Understands Spell={self.understand_spell}%, "
             f"min/max Spells per Level={self.min_spells_per_level}/{self.max_spells_per_level}\n"
-            f"WIS: {self.stat_wis}, WIS_temp: {self.stat_wis_temp}\n"
-            f"CHA: {self.stat_char}, CHA_temp: {self.stat_char_temp}, CHA_mod: Max Hirelings={self.cap_spec_hirelings}\n"
+            f"WIS: {self.stat_wis}, WIS_temp: {self.stat_wis_temp}, WIS_total: {self.stat_wis_total}\n"
+            f"CHA: {self.stat_char}, CHA_temp: {self.stat_char_temp}, CHA_total: {self.stat_char_total}, CHA_mod: Max Hirelings={self.cap_spec_hirelings}\n"
             f"State: {self.player_state}, Alignment: {self.alignment}, Race: {self.race}, Gender: {self.gender}, God: {self.god}, Age: {self.age}\n"
             f"Save Throw: {self.save_throw}, Save Bonuses: {list(self.save_bonuses)}, Immunities: {list(self.immunities)}\n"
             f"Base AC: {self.ac}, AC Bonus: {self.ac_mod}, AC Bonus_temp: {self.ac_mod_temp}\n"
@@ -230,32 +232,43 @@ class PlayerClass:
             "stats": {
                 "str": self.stat_str,
                 "str_temp": self.stat_str_temp,
+                "str_total": self.stat_str_total,
                 "dex": self.stat_dex,
                 "dex_temp": self.stat_dex_temp,
+                "dex_total": self.stat_dex_total,
                 "con": self.stat_con,
                 "con_temp": self.stat_con_temp,
+                "con_total": self.stat_con_total,
                 "wis": self.stat_wis,
                 "wis_temp": self.stat_wis_temp,
+                "wis_total": self.stat_wis_total,
                 "int": self.stat_int,
                 "int_temp": self.stat_int_temp,
+                "int_total": self.stat_int_total,   
                 "cha": self.stat_char,
                 "cha_temp": self.stat_char_temp,
+                "cha_total": self.stat_char_total,
             },
             "inventory": self.inventory,
             "modifiers": {
                 "strength": {
-                    "attack": self.strength_atck_mod,
-                    "attack_temp": self.strength_atck_mod_temp,
-                    "damage": self.strength_damage_mod,
-                    "damage_temp": self.strength_damage_mod_temp,
+                    "atck_mod": self.strength_atck_mod,
+                    "atck_mod_temp": self.strength_atck_mod_temp,
+                    "atck_mod_total": self.strength_atck_mod_total,
+                    "damage_mod": self.strength_damage_mod,
+                    "damage_mod_temp": self.strength_damage_mod_temp,
+                    "damage_mod_total": self.strength_damage_mod_total,
                     "carry_capacity": self.carry_capacity_mod,
                     "door_crack": self.door_crack_mod
                 },
                 "dexterity": {
-                    "ranged_attack": self.ranged_atck_mod,
-                    "ranged_attack_temp": self.ranged_atck_mod_temp,
+                    "ranged_atck_mod": self.ranged_atck_mod,
+                    "ranged_atck_mod_temp": self.ranged_atck_mod_temp,
+                    "ranged_atck_mod_race": self.ranged_atck_mod_race,
+                    "ranged_atck_mod_total": self.ranged_atck_mod_total,
                     "ac_mod": self.ac_mod,
-                    "ac_mod_temp": self.ac_mod_temp
+                    "ac_mod_temp": self.ac_mod_temp,
+                    "ac_total": self.ac_total
                 },
                 "constitution": {
                     "hp_mod": self.hp_mod,
@@ -359,25 +372,35 @@ class PlayerClass:
             additional_languages=data.get("additional_languages", []),
             stat_str=stats.get("str", 0),
             stat_str_temp=stats.get("str_temp", 0),
+            stat_str_total=stats.get("str_total", 0),
             stat_dex=stats.get("dex", 0),
             stat_dex_temp=stats.get("dex_temp", 0),
+            stat_dex_total=stats.get("dex_total", 0),
             stat_con=stats.get("con", 0),
             stat_con_temp=stats.get("con_temp", 0),
+            stat_con_total=stats.get("con_total", 0),
             stat_wis=stats.get("wis", 0),
             stat_wis_temp=stats.get("wis_temp", 0),
+            stat_wis_total=stats.get("wis_total", 0),
             stat_int=stats.get("int", 0),
             stat_int_temp=stats.get("int_temp", 0),
+            stat_int_total=stats.get("int_total", 0),
             stat_char=stats.get("cha", 0),
             stat_char_temp=stats.get("cha_temp", 0),
+            stat_char_total=stats.get("cha_total", 0),
             inventory=data.get("inventory", {}),
-            strength_atck_mod=strength_mods.get("attack", 0),
-            strength_atck_mod_temp=strength_mods.get("attack_temp", 0),
-            strength_damage_mod=strength_mods.get("damage", 0),
-            strength_damage_mod_temp=strength_mods.get("damage_temp", 0),
+            strength_atck_mod=strength_mods.get("atck_mod", 0),
+            strength_atck_mod_temp=strength_mods.get("atck_mod_temp", 0),
+            strength_atck_mod_total=strength_mods.get("atck_total", 0),
+            strength_damage_mod=strength_mods.get("damage_mod", 0),
+            strength_damage_mod_temp=strength_mods.get("damage_mod_temp", 0),
+            strength_damage_mod_total=strength_mods.get("damage_total", 0),
             carry_capacity_mod=strength_mods.get("carry_capacity", 0),
             door_crack_mod=strength_mods.get("door_crack", 0.0),
-            ranged_atck_mod=dexterity_mods.get("ranged_attack", 0),
-            ranged_atck_mod_temp=dexterity_mods.get("ranged_attack_temp", 0),
+            ranged_atck_mod=dexterity_mods.get("ranged_atck_mod", 0),
+            ranged_atck_mod_temp=dexterity_mods.get("ranged_atck_mod_temp", 0),
+            ranged_atck_mod_race=dexterity_mods.get("ranged_atck_mod_race", 0),
+            ranged_atck_mod_total=dexterity_mods.get("ranged_atck_mod_total", 0),
             ac_mod=dexterity_mods.get("ac_mod", 0),
             hp_mod=constitution_mods.get("hp_mod", 0),
             raise_dead_mod=constitution_mods.get("raise_dead_chance", 0),

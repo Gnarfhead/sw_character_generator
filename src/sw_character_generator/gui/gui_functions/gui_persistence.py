@@ -13,8 +13,12 @@ def on_var_change(app, field, var):
         return
     
     # Ignore changes to derived/calculated fields
-    if field in ("ac_total", "nextlevel", "hp", "hp_current", "save_throw", 
+    if field in ("ac_total", "nextlevel", "hp", "hp_current", "save_throw",
                  "parry",
+                 "stat_str_total", "stat_dex_total", "stat_con_total",
+                 "stat_int_total", "stat_wis_total", "stat_char_total",
+                 "strength_atck_total", "strength_damage_total",
+                 "ranged_atck_total",
                  "delicate_tasks", "climb_walls", "hear_sounds", "hide_in_shadows",
                  "move_silently", "open_locks", "strength_atck_mod", "strength_damage_mod",
                  "ranged_atck_mod", "ac_mod", "hp_mod", "raise_dead_mod",
