@@ -1,4 +1,4 @@
-
+"""Apply ranger-specific modifiers to the character."""
 
 def apply_ranger_dependent_modifiers(character):
     """Apply ranger-specific modifiers to the character."""

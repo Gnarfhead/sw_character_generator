@@ -10,22 +10,22 @@ import tkinter.ttk as ttk
 import tkinter.scrolledtext as scrolledtext
 from tkinter import messagebox
 
-from src.sw_character_generator.classes.playerclass import PlayerClass
+from sw_character_generator.classes.playerclass import PlayerClass
 from sw_character_generator.functions.manage_coins import modify_coins
 from sw_character_generator.functions.manage_hp import modify_hp, set_starting_hp, set_roll_hp_button
-from src.sw_character_generator.functions.character_handling import save_character, load_character
-from src.sw_character_generator.gui.gui_functions.gui_new_character import apply_character, new_characterobj
+from sw_character_generator.functions.character_handling import save_character, load_character
+from sw_character_generator.gui.gui_functions.gui_new_character import apply_character, new_characterobj
 from sw_character_generator.functions.manage_xp import add_xp
 from sw_character_generator.gui.gui_functions.gui_inventory import on_inventory_text_changed
 from sw_character_generator.gui.gui_functions.gui_magic import create_spell_table_widget
-from .gui_functions.gui_dice_roller import dice_roller
-from .gui_functions.gui_alignment_change import on_alignment_change
-from .gui_functions.gui_race_change import on_race_change
-from .gui_functions.gui_role_stats import role_stats, switch_stats
-from .gui_functions.gui_profession_change import on_profession_change
-from .gui_functions.gui_update_view_from_model import update_view_from_model
-from .gui_functions.gui_persistence import bind_model_vars
-from .gui_functions.gui_widgets import widget_button, widget_entry_long, widget_extlabel_short, widget_label, widget_combobox, widget_label_var, widget_spinbox, widget_checkbutton, widget_spinbox_nolabel
+from sw_character_generator.gui.gui_functions.gui_dice_roller import dice_roller
+from sw_character_generator.gui.gui_functions.gui_alignment_change import on_alignment_change
+from sw_character_generator.gui.gui_functions.gui_race_change import on_race_change
+from sw_character_generator.gui.gui_functions.gui_role_stats import role_stats, switch_stats
+from sw_character_generator.gui.gui_functions.gui_profession_change import on_profession_change
+from sw_character_generator.gui.gui_functions.gui_update_view_from_model import update_view_from_model
+from sw_character_generator.gui.gui_functions.gui_persistence import bind_model_vars
+from sw_character_generator.gui.gui_functions.gui_widgets import widget_button, widget_entry_long, widget_extlabel_short, widget_label, widget_combobox, widget_label_var, widget_spinbox, widget_checkbutton, widget_spinbox_nolabel
 from sw_character_generator.utility.linux_fullscreen import toggle_maximize
 
 # Layout / sizing constants

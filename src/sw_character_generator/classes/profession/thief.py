@@ -1,4 +1,4 @@
-
+"""Apply thief-specific modifiers to the character."""
 
 def apply_thief_dependent_modifiers(character):
     """Apply thief-specific modifiers to the character."""

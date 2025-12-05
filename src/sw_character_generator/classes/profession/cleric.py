@@ -1,4 +1,4 @@
-
+"""Apply cleric-specific modifiers to the character."""
 
 def apply_cleric_dependent_modifiers(character):
     """Apply cleric-specific modifiers to the character."""

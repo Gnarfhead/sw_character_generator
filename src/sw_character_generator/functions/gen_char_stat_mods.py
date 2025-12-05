@@ -1,5 +1,5 @@
 """Functions to analyze character stats and return corresponding modifiers."""
-from src.sw_character_generator.classes.playerclass import PlayerClass
+from sw_character_generator.classes.playerclass import PlayerClass
 
 def analyze_mod_str(player_character: PlayerClass):
     """Calculate strength-based modifiers. Positive bonuses only apply to fighters."""

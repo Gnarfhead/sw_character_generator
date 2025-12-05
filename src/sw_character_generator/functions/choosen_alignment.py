@@ -1,5 +1,5 @@
 """Apply alignment-specific modifiers to the character based on chosen alignment."""
-from src.sw_character_generator.classes.playerclass import PlayerClass
+from sw_character_generator.classes.playerclass import PlayerClass
 
 def choosen_alignment_modifiers(player_class: PlayerClass, alignment: str):
     """Apply alignment-specific modifiers to the character."""

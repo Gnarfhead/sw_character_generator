@@ -1,4 +1,4 @@
-
+"""Apply druid-specific modifiers to the character."""
 
 def apply_druid_dependent_modifiers(character):
     """Apply druid-specific modifiers to the character."""

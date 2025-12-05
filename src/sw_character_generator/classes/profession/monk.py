@@ -1,4 +1,4 @@
-
+"""Apply monk-specific modifiers to the character."""
 
 def apply_monk_dependent_modifiers(character):
     """Apply monk-specific modifiers to the character."""

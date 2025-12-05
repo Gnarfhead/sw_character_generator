@@ -2,8 +2,8 @@
 import tkinter as tk
 from tkinter import ttk
 
-from src.sw_character_generator.functions.role_dice import wuerfle_3d6
-from src.sw_character_generator.gui.gui_functions.gui_update_view_from_model import update_view_from_model
+from sw_character_generator.functions.role_dice import wuerfle_3d6
+from sw_character_generator.gui.gui_functions.gui_update_view_from_model import update_view_from_model
 from sw_character_generator.functions.manage_xp import calculate_xp_bonus
 from sw_character_generator.functions.manage_hp import recalculate_hp
 from sw_character_generator.functions.update_base_stats import update_base_stats

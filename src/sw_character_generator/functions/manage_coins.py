@@ -1,4 +1,4 @@
-
+"""Functions to manage player's coins."""
 
 def modify_coins(app):
     """Modify the player's coins based on the GUI input."""

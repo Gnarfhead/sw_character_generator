@@ -1,4 +1,4 @@
-
+"""Apply wizard-specific modifiers to the character."""
 
 def apply_wizard_dependent_modifiers(character):
     """Apply wizard-specific modifiers to the character."""

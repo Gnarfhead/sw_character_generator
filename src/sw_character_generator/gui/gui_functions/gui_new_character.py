@@ -1,6 +1,6 @@
 """Functions for character handling: save, load, and create new character."""
-from src.sw_character_generator.classes.playerclass import PlayerClass
-from src.sw_character_generator.gui.gui_functions.gui_update_view_from_model import update_view_from_model
+from sw_character_generator.classes.playerclass import PlayerClass
+from sw_character_generator.gui.gui_functions.gui_update_view_from_model import update_view_from_model
 from sw_character_generator.functions.update_base_stats import update_base_stats
 from sw_character_generator.functions.update_derived_stats import update_derived_stats
 

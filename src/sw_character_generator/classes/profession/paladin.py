@@ -1,4 +1,4 @@
-
+"""Apply paladin-specific modifiers to the character."""
 
 def apply_paladin_dependent_modifiers(character):
     """Apply paladin-specific modifiers to the character."""

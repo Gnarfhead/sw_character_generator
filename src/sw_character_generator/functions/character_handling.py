@@ -4,7 +4,7 @@ import sys
 from datetime import datetime
 from pathlib import Path
 from tkinter import filedialog
-from src.sw_character_generator.classes.playerclass import PlayerClass
+from sw_character_generator.classes.playerclass import PlayerClass
 
 def get_default_save_directory() -> str:
     """Get OS-specific default save directory for character files."""

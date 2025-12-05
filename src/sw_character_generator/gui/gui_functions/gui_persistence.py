@@ -4,7 +4,7 @@ import tkinter as tk
 
 from sw_character_generator.functions.update_base_stats import update_base_stats
 from sw_character_generator.functions.update_derived_stats import update_derived_stats
-from .gui_update_view_from_model import update_view_from_model
+from sw_character_generator.gui.gui_functions.gui_update_view_from_model import update_view_from_model
 
 
 def on_var_change(app, field, var):
