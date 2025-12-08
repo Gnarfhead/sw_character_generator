@@ -1,4 +1,4 @@
-def manage_items(item_list, action, item=None):
+def manage_items(item_list: list[Item], action: str, item: Item | None = None) -> list[Item]:
     """
     Manage a list of items by adding or removing items.
 

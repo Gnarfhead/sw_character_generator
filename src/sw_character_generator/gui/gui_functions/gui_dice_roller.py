@@ -1,6 +1,6 @@
 """GUI functions for the dice roller window."""
 import tkinter as tk
-from sw_character_generator.gui.gui_functions.gui_widgets import widget_button, widget_checkbutton, widget_entry_long, widget_entry_short, widget_label, widget_spinbox, widget_spinbox_nolabel
+from sw_character_generator.gui.gui_functions.gui_widgets import widget_button, widget_checkbutton, widget_entry_short, widget_label, widget_spinbox_nolabel
 
 
 def dice_roller(app):
