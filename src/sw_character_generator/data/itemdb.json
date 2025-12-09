@@ -1425,7 +1425,7 @@
     "tags": ["standard"]
   },
   {
-    "name": "Bolzen, leicht",
+    "name": "Bolzen, leicht, Bündel-, 20 Stück",
     "type": "Weapon",
     "value": "2 GM",
     "weight": 1,
@@ -1444,7 +1444,7 @@
     "tags": ["standard"]
   },
   {
-    "name": "Bolzen, schwer",
+    "name": "Bolzen, schwer, Bündel-, 20 Stück",
     "type": "Weapon",
     "value": "2 GM",
     "weight": 1,
@@ -1482,7 +1482,7 @@
     "tags": ["standard"]
   },
   {
-    "name": "Pfeile",
+    "name": "Pfeile, Bündel-, 20 Stück",
     "type": "Weapon",
     "value": "2 GM",
     "weight": 1,

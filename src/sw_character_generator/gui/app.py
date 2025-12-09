@@ -16,7 +16,7 @@ from sw_character_generator.functions.manage_hp import modify_hp, set_starting_h
 from sw_character_generator.functions.character_handling import save_character, load_character
 from sw_character_generator.gui.gui_functions.gui_new_character import apply_character, new_characterobj
 from sw_character_generator.functions.manage_xp import add_xp
-from sw_character_generator.gui.gui_functions.gui_inventory_dialog import open_add_item_dialog
+from sw_character_generator.gui.gui_functions.gui_inventory_dialog import on_edit_item_click, open_add_item_dialog
 from sw_character_generator.gui.gui_functions.gui_magic import create_spell_table_widget
 from sw_character_generator.gui.gui_functions.gui_dice_roller import dice_roller
 from sw_character_generator.gui.gui_functions.gui_alignment_change import on_alignment_change
@@ -630,7 +630,7 @@ class App:
 
         ttk.Button(btn_frame, text="Add Item", command=lambda: open_add_item_dialog(self)).pack(side="left", padx=5)
         ttk.Button(btn_frame, text="Remove Item", command=self.remove_selected_item).pack(side="left", padx=5)
-        ttk.Button(btn_frame, text="Edit Item", command=self.edit_selected_item).pack(side="left", padx=5)
+        ttk.Button(btn_frame, text="Edit Item", command=lambda: on_edit_item_click(self, self.inventory_tree)).pack(side="left", padx=5)
         ttk.Button(btn_frame, text="Refresh", command=self.refresh_inventory_display).pack(side="left", padx=5)
 
         # Weight/Value Summary
@@ -861,16 +861,6 @@ class App:
 
 
 
-    def edit_selected_item(self):
-        """Edit quantity or remove equipped items."""
-        print("DEBUG edit_selected_item called: --------------------------------")
-        selection = self.inventory_tree.selection()
-        if not selection:
-            messagebox.showwarning("No Selection", "Please select an item to edit.")
-            return
-        
-        # TODO: Implement edit dialog
-        messagebox.showinfo("Coming Soon", "Edit functionality will be added soon.")
 
     # ----------------- run -----------------
     def run(self):
