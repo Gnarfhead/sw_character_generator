@@ -7,7 +7,7 @@ def open_add_item_dialog(app):
     """Open dialog to add an item from the database with ALL properties displayed."""
     dialog = tk.Toplevel(app.root)
     dialog.title("Add Item to Inventory")
-    dialog.geometry("900x600")
+    dialog.geometry("1550x600")
     
     # Frame für Scrollbar
     main_frame = ttk.Frame(dialog)
@@ -22,17 +22,17 @@ def open_add_item_dialog(app):
         "Name",
         "Type",
         "Value",
-        "Weight",
+        "Weight (pound)",
         "Damage",
         "AC Bonus",
-        "Atck Bonus",
-        "Dmg Bonus",
+        "Attack Bonus",
+        "Damage Bonus",
         "Two-Handed",
         "Versatile",
         "Weapon Type",
         "Armor Type",
         "Fire Rate",
-        "Range",
+        "Range (m)",
         "Count"
     )
     
@@ -48,21 +48,21 @@ def open_add_item_dialog(app):
     scrollbar.config(command=tree.yview)
     
     # Definiere Spalten-Breiten und Header
-    tree.column("Name", anchor="w", width=150)
-    tree.column("Type", anchor="center", width=80)
-    tree.column("Value", anchor="center", width=80)
-    tree.column("Weight", anchor="center", width=60)
-    tree.column("Damage", anchor="center", width=70)
-    tree.column("AC Bonus", anchor="center", width=70)
-    tree.column("Atck Bonus", anchor="center", width=70)
-    tree.column("Dmg Bonus", anchor="center", width=70)
-    tree.column("Two-Handed", anchor="center", width=80)
-    tree.column("Versatile", anchor="center", width=70)
+    tree.column("Name", anchor="w", width=250)
+    tree.column("Type", anchor="center", width=100)
+    tree.column("Value", anchor="center", width=100)
+    tree.column("Weight (pound)", anchor="center", width=100)
+    tree.column("Damage", anchor="center", width=100)
+    tree.column("AC Bonus", anchor="center", width=100)
+    tree.column("Attack Bonus", anchor="center", width=100)
+    tree.column("Damage Bonus", anchor="center", width=100)
+    tree.column("Two-Handed", anchor="center", width=100)
+    tree.column("Versatile", anchor="center", width=100)
     tree.column("Weapon Type", anchor="center", width=100)
-    tree.column("Armor Type", anchor="center", width=90)
-    tree.column("Fire Rate", anchor="center", width=70)
-    tree.column("Range", anchor="center", width=60)
-    tree.column("Count", anchor="center", width=60)
+    tree.column("Armor Type", anchor="center", width=100)
+    tree.column("Fire Rate", anchor="center", width=100)
+    tree.column("Range (m)", anchor="center", width=100)
+    tree.column("Count", anchor="center", width=100)
     
     # Sortier-Funktion für Spalten
     def sort_treeview(col, reverse):
