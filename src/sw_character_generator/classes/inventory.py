@@ -14,6 +14,7 @@ class Inventory:
 
     def add_item(self, item: Item, location: str = "items"):
         """Add an item to the specified location in the inventory."""
+        print("DEBUG add_item called: --------------------------------")
         if location == "main_hand":
             self.main_hand.append(item)
         elif location == "off_hand":
@@ -25,6 +26,7 @@ class Inventory:
 
     def remove_item(self, item: Item, location: str = "items"):
         """Remove an item from the specified location in the inventory."""
+        print("DEBUG remove_item called: --------------------------------")
         if location == "main_hand":
             self.main_hand.remove(item)
         elif location == "off_hand":
@@ -36,6 +38,7 @@ class Inventory:
 
     def list_items(self, location: str = "items") -> List[Item]:
         """Return a list of all items in the specified location."""
+        print("DEBUG list_items called: --------------------------------")
         if location == "main_hand":
             return self.main_hand
         elif location == "off_hand":
@@ -47,6 +50,7 @@ class Inventory:
         
     def total_weight(self) -> float:
         """Calculate the total weight of all items in the inventory."""
+        print("DEBUG total_weight called: --------------------------------")
         total = 0.0
         for item in self.main_hand + self.off_hand + self.armor + self.items:
             total += item.weight

@@ -22,7 +22,7 @@ class Item:
     tags: List[str] = field(default_factory=list) 
 
     def to_dict(self) -> dict[str, Any]:
-        """Konvertiere das Item in ein Dictionary."""
+        """Convert the item to a dictionary."""
         return {
             "name": self.name,
             "type": self.type,
@@ -43,7 +43,7 @@ class Item:
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "Item":
-        """Erstelle ein Item aus einem Dictionary."""
+        """Create an item from a dictionary."""
         return cls(
             name=data.get("name", ""),
             type=data.get("type", ""),
