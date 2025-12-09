@@ -14,6 +14,7 @@ from sw_character_generator.classes.playerclass import PlayerClass
 from sw_character_generator.functions.manage_coins import modify_coins
 from sw_character_generator.functions.manage_hp import modify_hp, set_starting_hp, set_roll_hp_button
 from sw_character_generator.functions.character_handling import save_character, load_character
+from sw_character_generator.functions.manage_items import equip_item, load_item_database
 from sw_character_generator.gui.gui_functions.gui_new_character import apply_character, new_characterobj
 from sw_character_generator.functions.manage_xp import add_xp
 from sw_character_generator.gui.gui_functions.gui_inventory import on_inventory_text_changed
@@ -157,6 +158,18 @@ class App:
         self.understand_spell_var = tk.IntVar(master=self.root, value=0)
         self.min_spells_per_level_var = tk.IntVar(master=self.root, value=0)
         self.max_spells_per_level_var = tk.IntVar(master=self.root, value=0)
+
+    # ----------------- load data -----------------
+
+        # Lade die Item-Datenbank
+        try:
+            self.item_database = load_item_database()
+            print("DEBUG - Item-Datenbank geladen:", len(self.item_database), "Einträge")
+            for item in self.item_database:
+                print(f"  - {item.name} ({item.type})")  # ← Debug: Zeige alle Items
+        except Exception as e:
+            self.item_database = []
+            print("DEBUG - Fehler beim Laden der Item-Datenbank:", e)
 
     # ----------------- setup UI -----------------
 
@@ -488,7 +501,7 @@ class App:
         self.coins_frame = ttk.Frame(self.lower_notebook)
         # Add tabs to the notebook
         self.lower_notebook.add(self.thief_frame, text="Thief Skills", state="disabled")
-        self.lower_notebook.add(self.weapons_frame, text="Weapons & Armor", state="disabled")
+        self.lower_notebook.add(self.weapons_frame, text="Weapons & Armor", state="normal")
         self.lower_notebook.add(self.inventory_frame, text="Inventory", state="normal")
         self.lower_notebook.add(self.coins_frame, text="Coins", state="normal")
         self.lower_notebook.add(self.magic_frame, text="Magic", state="disabled")
@@ -509,6 +522,70 @@ class App:
         ### Weapons & Armor Tab/Frame
         self.weapons_content_frame = ttk.LabelFrame(self.weapons_frame, text="Weapons & Armor", borderwidth=5, padding=(6,6), style="Standard.TFrame")
         self.weapons_content_frame.grid(row=0, column=0, padx=PADX, pady=PADY, sticky="new")
+
+        # Row 1: Weapons & Armor
+        # Combobox für Armor
+        self.armor_var = tk.StringVar(self.root)
+        self.armor_var.set("Select Armor")
+        armor_items = [item.name for item in self.item_database if item.type.lower() == "armor"]
+        self.armor_combobox = ttk.Combobox(
+            self.weapons_content_frame,
+            textvariable=self.armor_var,
+            values=armor_items,
+            state="readonly",
+            width=30
+        )
+        self.armor_combobox.grid(row=1, column=0, padx=10, pady=10, sticky="w")
+
+        # Combobox für Main Hand
+        self.main_hand_var = tk.StringVar(self.root)
+        self.main_hand_var.set("Select Main Hand")
+        main_hand_items = [item.name for item in self.item_database if item.type.lower() == "weapon"]
+        self.main_hand_combobox = ttk.Combobox(
+            self.weapons_content_frame,
+            textvariable=self.main_hand_var,
+            values=main_hand_items,
+            state="readonly",
+            width=30
+        )
+        self.main_hand_combobox.grid(row=2, column=0, padx=10, pady=10, sticky="w")
+
+        # Combobox für Off Hand
+        self.off_hand_var = tk.StringVar(self.root)
+        self.off_hand_var.set("Select Off Hand")
+        off_hand_items = [item.name for item in self.item_database if item.type.lower() in ["shield", "weapon"]]
+        self.off_hand_combobox = ttk.Combobox(
+            self.weapons_content_frame,
+            textvariable=self.off_hand_var,
+            values=off_hand_items,
+            state="readonly",
+            width=30
+        )
+        self.off_hand_combobox.grid(row=3, column=0, padx=10, pady=10, sticky="w")
+
+        # Button für Armor
+        self.armor_button = ttk.Button(
+            self.weapons_content_frame,
+            text="Equip Armor",
+            command=lambda: equip_item(self, "armor", self.armor_var.get())
+        )
+        self.armor_button.grid(row=1, column=1, padx=10, pady=10, sticky="w")
+
+        # Button für Main Hand
+        self.main_hand_button = ttk.Button(
+            self.weapons_content_frame,
+            text="Equip Main Hand",
+            command=lambda: equip_item(self, "main_hand", self.main_hand_var.get())
+        )
+        self.main_hand_button.grid(row=2, column=1, padx=10, pady=10, sticky="w")
+
+        # Button für Off Hand
+        self.off_hand_button = ttk.Button(
+            self.weapons_content_frame,
+            text="Equip Off Hand",
+            command=lambda: equip_item(self, "off_hand", self.off_hand_var.get())
+        )
+        self.off_hand_button.grid(row=3, column=1, padx=10, pady=10, sticky="w")
 
         ### Inventory Tab/Frame
         self.inventory_content_frame = ttk.LabelFrame(self.inventory_frame, text="Inventory", borderwidth=5, padding=(6,6), style="Standard.TFrame")
@@ -680,6 +757,8 @@ class App:
         # Update view from model
         with self.suppress_updates():
             update_view_from_model(self)
+
+
     # ----------------- run -----------------
     def run(self):
         """Run the main Tk event loop."""

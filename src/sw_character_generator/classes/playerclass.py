@@ -2,6 +2,8 @@
 from dataclasses import dataclass, field
 from typing import Any
 
+from sw_character_generator.classes.item import Item
+
 
 @dataclass
 class PlayerClass:
@@ -117,6 +119,10 @@ class PlayerClass:
     magic_user_class: bool = False
     spell_table: dict[int, dict[int, int]] = field(default_factory=dict)
     spell_table_2: dict[int, dict[int, int]] = field(default_factory=dict)
+    inventory_items: list[Item] = field(default_factory=list)
+    armor: Item = None
+    main_hand: Item = None
+    off_hand: Item = None
 
     # Property for total coins
     @property
@@ -311,7 +317,6 @@ class PlayerClass:
             "open_locks": self.open_locks,
             "open_locks_profession": self.open_locks_profession,
             "open_locks_race": self.open_locks_race,
-
             "surprised": self.surprised,
             "darkvision": self.darkvision,
             "parry": self.parry,
@@ -319,6 +324,10 @@ class PlayerClass:
             "magic_user_class": self.magic_user_class,
             "spell_table": self.spell_table,
             "spell_table_2": self.spell_table_2,
+            "inventory_items": [item.to_dict() for item in self.inventory_items],
+            "armor": self.armor.to_dict() if self.armor and isinstance(self.armor, Item) else None,
+            "main_hand": self.main_hand.to_dict() if self.main_hand and isinstance(self.main_hand, Item) else None,
+            "off_hand": self.off_hand.to_dict() if self.off_hand and isinstance(self.off_hand, Item) else None,
         }
 
     @classmethod
@@ -443,4 +452,8 @@ class PlayerClass:
             magic_user_class=data.get("magic_user_class", False),
             spell_table=data.get("spell_table", {}),
             spell_table_2=data.get("spell_table_2", {}),
+            inventory_items=[Item.from_dict(item_data) for item_data in data.get("inventory_items", [])],
+            armor=Item.from_dict(data["armor"]) if data.get("armor") else None,
+            main_hand=Item.from_dict(data["main_hand"]) if data.get("main_hand") else None,
+            off_hand=Item.from_dict(data["off_hand"]) if data.get("off_hand") else None,
         )

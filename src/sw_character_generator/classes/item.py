@@ -1,19 +1,63 @@
 """Docstring for sw_character_generator.classes.item module."""
 
 from dataclasses import dataclass, field
-from typing import Optional, List
+from typing import Any, Optional, List
 
 @dataclass
 class Item:
     name: str
-    damage: Optional[int] = None        # Schadenswert, falls Waffe
-    ac_bonus: Optional[int] = None      # Rüstungsbonus, falls Rüstung
-    two_handed: bool = False
-    weapon_type: Optional[str] = None  # z.B. "melee", "ranged"
-    fire_rate: Optional[int] = None  # Feuerrate, falls Fernkampfwaffe
-    range: Optional[int] = None     # Reichweite, falls Fernkampfwaffe
-    armor_type: Optional[str] = None  # z.B. "light", "medium", "heavy"
-    weight: float = 0.0              # Pfund o.ä.
-    value: int = 0                   # in Münzen
+    type: str                     # z.B. "weapon", "armor", "consumable", etc.
+    value: str                   # z.B. "10 GM"
+    weight: float                # Gewicht des Items
+    damage: Optional[str] = None  # z.B. "1d6", nur für Waffen
+    acbonus: Optional[int] = None # Rüstungsbonus, nur für Rüstungen
+    twohanded: bool = False        # Nur für Waffen
+    versatile: bool = False       # Nur für Waffen
+    weapontype: Optional[str] = None # z.B. "melee", "ranged", nur für Waffen
+    firerate: Optional[int] = None   # 
+    count: Optional[int] = None      # Nur für Verbrauchsgegenstände
+    range: Optional[int] = None     # Nur für Fernkampfwaffen
+    armortype: Optional[str] = None  # z.B. "light", "medium", "heavy", nur für Rüstungen
     description: str = ""
-    tags: List[str] = field(default_factory=list) # z.B. "melee", "ranged", "light armor", etc.
+    tags: List[str] = field(default_factory=list) 
+
+    def to_dict(self) -> dict[str, Any]:
+        """Konvertiere das Item in ein Dictionary."""
+        return {
+            "name": self.name,
+            "type": self.type,
+            "value": self.value,
+            "weight": self.weight,
+            "damage": self.damage,
+            "acbonus": self.acbonus,
+            "twohanded": self.twohanded,
+            "versatile": self.versatile,
+            "weapontype": self.weapontype,
+            "firerate": self.firerate,
+            "count": self.count,
+            "range": self.range,
+            "armortype": self.armortype,
+            "description": self.description,
+            "tags": self.tags
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "Item":
+        """Erstelle ein Item aus einem Dictionary."""
+        return cls(
+            name=data.get("name", ""),
+            type=data.get("type", ""),
+            value=data.get("value", "0 GM"),
+            weight=float(data.get("weight", 0)),
+            damage=data.get("damage"),
+            acbonus=data.get("acbonus"),
+            twohanded=data.get("twohanded", False),
+            versatile=data.get("versatile", False),
+            weapontype=data.get("weapontype"),
+            firerate=data.get("firerate"),
+            count=data.get("count"),
+            range=data.get("range"),
+            armortype=data.get("armortype"),
+            description=data.get("description", ""),
+            tags=data.get("tags", [])
+        )
