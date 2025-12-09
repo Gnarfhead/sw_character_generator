@@ -14,6 +14,7 @@ from sw_character_generator.classes.playerclass import PlayerClass
 from sw_character_generator.functions.manage_coins import modify_coins
 from sw_character_generator.functions.manage_hp import modify_hp, set_starting_hp, set_roll_hp_button
 from sw_character_generator.functions.character_handling import save_character, load_character
+from sw_character_generator.gui.gui_functions.gui_inventory import update_equipment_comboboxes
 from sw_character_generator.gui.gui_functions.gui_new_character import apply_character, new_characterobj
 from sw_character_generator.functions.manage_xp import add_xp
 from sw_character_generator.gui.gui_functions.gui_inventory_dialog import on_edit_item_click, open_add_item_dialog
@@ -27,7 +28,7 @@ from sw_character_generator.gui.gui_functions.gui_update_view_from_model import 
 from sw_character_generator.gui.gui_functions.gui_persistence import bind_model_vars
 from sw_character_generator.gui.gui_functions.gui_widgets import widget_button, widget_entry_long, widget_extlabel_short, widget_label, widget_combobox, widget_label_var, widget_spinbox, widget_checkbutton, widget_spinbox_nolabel
 from sw_character_generator.utility.linux_fullscreen import toggle_maximize
-from sw_character_generator.functions.manage_items import equip_item, load_item_database
+from sw_character_generator.functions.manage_items import equip_item, load_item_database, on_armor_selected, on_main_hand_selected, on_off_hand_selected
 from sw_character_generator.gui.gui_functions.gui_inventory_dialog import open_add_item_dialog
 
 # Layout / sizing constants
@@ -159,6 +160,9 @@ class App:
         self.understand_spell_var = tk.IntVar(master=self.root, value=0)
         self.min_spells_per_level_var = tk.IntVar(master=self.root, value=0)
         self.max_spells_per_level_var = tk.IntVar(master=self.root, value=0)
+        self.main_hand_var = tk.StringVar(master=self.root, value="Select Main Hand")
+        self.off_hand_var = tk.StringVar(master=self.root, value="Select Off Hand")
+        self.armor_var = tk.StringVar(master=self.root, value="Select Armor")
 
     # ----------------- load data -----------------
 
@@ -526,73 +530,24 @@ class App:
         self.weapons_content_frame = ttk.LabelFrame(self.weapons_frame, text="Weapons & Armor", borderwidth=5, padding=(6,6), style="Standard.TFrame")
         self.weapons_content_frame.grid(row=0, column=0, padx=PADX, pady=PADY, sticky="new")
 
-        # Row 1: Weapons & Armor
-        # Combobox für Armor
-        self.armor_var = tk.StringVar(self.root)
-        self.armor_var.set("Select Armor")
-        armor_items = [item.name for item in self.item_database if item.type.lower() == "armor"]
-        self.armor_combobox = ttk.Combobox(
-            self.weapons_content_frame,
-            textvariable=self.armor_var,
-            values=armor_items,
-            state="readonly",
-            width=30
-        )
-        self.armor_combobox.grid(row=1, column=0, padx=10, pady=10, sticky="w")
+        # Row 0: Combobox for Armor
+        widget_combobox(self.weapons_content_frame, "Select Armor:", 0, 0, self.armor_var, [], state="readonly", owner=self, name_label="lbl_select_armor", name_combo="cb_armor", width=40)
+        self.armor_var.trace_add("write", lambda *args: on_armor_selected(self))
 
-        # Combobox für Main Hand
-        self.main_hand_var = tk.StringVar(self.root)
-        self.main_hand_var.set("Select Main Hand")
-        main_hand_items = [item.name for item in self.item_database if item.type.lower() == "weapon"]
-        self.main_hand_combobox = ttk.Combobox(
-            self.weapons_content_frame,
-            textvariable=self.main_hand_var,
-            values=main_hand_items,
-            state="readonly",
-            width=30
-        )
-        self.main_hand_combobox.grid(row=2, column=0, padx=10, pady=10, sticky="w")
+        # Row 1: Combobox for Main Hand
+        widget_combobox(self.weapons_content_frame, "Select Main Hand Weapon:", 1, 0, self.main_hand_var, [], state="readonly", owner=self, name_label="lbl_select_main_hand", name_combo="cb_main_hand", width=40)
+        self.main_hand_var.trace_add("write", lambda *args: on_main_hand_selected())
 
-        # Combobox für Off Hand
-        self.off_hand_var = tk.StringVar(self.root)
-        self.off_hand_var.set("Select Off Hand")
-        off_hand_items = [item.name for item in self.item_database if item.type.lower() in ["shield", "weapon"]]
-        self.off_hand_combobox = ttk.Combobox(
-            self.weapons_content_frame,
-            textvariable=self.off_hand_var,
-            values=off_hand_items,
-            state="readonly",
-            width=30
-        )
-        self.off_hand_combobox.grid(row=3, column=0, padx=10, pady=10, sticky="w")
-
-        # Button für Armor
-        self.armor_button = ttk.Button(
-            self.weapons_content_frame,
-            text="Equip Armor",
-            command=lambda: equip_item(self, "armor", self.armor_var.get())
-        )
-        self.armor_button.grid(row=1, column=1, padx=10, pady=10, sticky="w")
-
-        # Button für Main Hand
-        self.main_hand_button = ttk.Button(
-            self.weapons_content_frame,
-            text="Equip Main Hand",
-            command=lambda: equip_item(self, "main_hand", self.main_hand_var.get())
-        )
-        self.main_hand_button.grid(row=2, column=1, padx=10, pady=10, sticky="w")
-
-        # Button für Off Hand
-        self.off_hand_button = ttk.Button(
-            self.weapons_content_frame,
-            text="Equip Off Hand",
-            command=lambda: equip_item(self, "off_hand", self.off_hand_var.get())
-        )
-        self.off_hand_button.grid(row=3, column=1, padx=10, pady=10, sticky="w")
+        # Row 2: Combobox for Off Hand
+        widget_combobox(self.weapons_content_frame, "Select Off Hand Item:", 2, 0, self.off_hand_var, [], state="readonly", owner=self, name_label="lbl_select_off_hand", name_combo="cb_off_hand", width=40)
+        self.off_hand_var.trace_add("write", lambda *args: on_off_hand_selected(self))
 
         ### Inventory Tab/Frame
         self.inventory_content_frame = ttk.LabelFrame(self.inventory_frame, text="Inventory", borderwidth=5, padding=(6,6), style="Standard.TFrame")
         self.inventory_content_frame.grid(row=0, column=0, padx=PADX, pady=PADY, sticky="new")
+
+        # Initialisiere Comboboxen nach UI-Aufbau
+        self.root.after(100, lambda: update_equipment_comboboxes(self))
 
        # Treeview für Item-Liste
         self.inventory_tree = ttk.Treeview(
@@ -838,6 +793,9 @@ class App:
         self.inventory_summary_label.config(
             text=f"Total Weight: {total_weight:.1f} | Total Value: {total_value} GM | Items: {len(self.new_player.inventory_items)}"
         )
+
+        # Update Equipment Comboboxen
+        update_equipment_comboboxes(self)
 
     def remove_selected_item(self):
         """Remove the selected item from inventory."""

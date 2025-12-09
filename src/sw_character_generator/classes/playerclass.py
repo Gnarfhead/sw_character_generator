@@ -43,6 +43,8 @@ class PlayerClass:
     ac: int = 10 # base armor class
     ac_mod: int = 0 # calculated from dexterity
     ac_mod_temp: int = 0 # Set by spinbox
+    ac_armor: int = 0 # from worn armor
+    ac_shield: int = 0 # from shield
     ac_total: int = 10 # total AC after modifiers
     languages: set[str] = field(default_factory=set)
     additional_languages: list[str] = field(default_factory=list)
@@ -237,8 +239,10 @@ class PlayerClass:
             "special_abilities_other": list(self.special_abilities_other),
             "ac": self.ac,
             "ac_mod": self.ac_mod,
-            "ac_mod_temp": self.ac_mod_temp,
+            "ac_mod_temp": self.ac_mod_temp,  
             "ac_total": self.ac_total,
+            "ac_armor": self.ac_armor,
+            "ac_shield": self.ac_shield,    
             "languages": list(self.languages),
             "additional_languages": list(self.additional_languages),
 
@@ -350,6 +354,33 @@ class PlayerClass:
     def from_dict(cls, data: dict[str, Any]) -> "PlayerClass":  # Create a PlayerClass instance from a dictionary.
         """Create a PlayerClass instance from a dictionary."""
         print("DEBUG PlayerClass.from_dict: --------------------------------")
+        
+        def safe_item_conversion(item_data):
+            """Safely convert item data to Item object."""
+            if not item_data:
+                return None
+            if isinstance(item_data, Item):
+                return item_data
+            if isinstance(item_data, dict):
+                return Item.from_dict(item_data)
+            if isinstance(item_data, str):
+                # String → Versuche, Item aus Inventar zu finden
+                return None  # Oder suche im Inventar
+            return None
+
+
+        armor = safe_item_conversion(data["armor"])
+        main_hand = safe_item_conversion(data["main_hand"])
+        off_hand = safe_item_conversion(data["off_hand"])
+        helmet = safe_item_conversion(data["helmet"])
+        gloves = safe_item_conversion(data["gloves"])
+        boots = safe_item_conversion(data["boots"])
+        cloak = safe_item_conversion(data["cloak"])
+        ring_left = safe_item_conversion(data["ring_left"])
+        ring_right = safe_item_conversion(data["ring_right"])
+        amulet = safe_item_conversion(data["amulet"])
+        belt = safe_item_conversion(data["belt"])
+
         stats = data.get("stats", {})
         modifiers = data.get("modifiers", {})
         strength_mods = modifiers.get("strength", {})
@@ -357,7 +388,6 @@ class PlayerClass:
         constitution_mods = modifiers.get("constitution", {})
         intelligence_mods = modifiers.get("intelligence", {})
         charisma_mods = modifiers.get("charisma", {})
-        equipment = data.get("equipment", {})
         
         return cls(
             player_name=data.get("player_name", "Unknown"),
@@ -393,6 +423,8 @@ class PlayerClass:
             special_abilities_other=set(data.get("special_abilities_other", [])),
             ac=data.get("ac", 10),
             ac_mod_temp=data.get("ac_mod_temp", 0),
+            ac_armor=data.get("ac_armor", 0),
+            ac_shield=data.get("ac_shield", 0),
             ac_total=data.get("ac_total", 10),
             languages=set(data.get("languages", [])),
             additional_languages=data.get("additional_languages", []),
@@ -469,15 +501,15 @@ class PlayerClass:
             spell_table=data.get("spell_table", {}),
             spell_table_2=data.get("spell_table_2", {}),
             inventory_items=[Item.from_dict(item_data) for item_data in data.get("inventory_items", [])],
-            armor=Item.from_dict(equipment["armor"]) if equipment.get("armor") else None,
-            main_hand=Item.from_dict(equipment["main_hand"]) if equipment.get("main_hand") else None,
-            off_hand=Item.from_dict(equipment["off_hand"]) if equipment.get("off_hand") else None,
-            helmet=Item.from_dict(equipment["helmet"]) if equipment.get("helmet") else None,
-            gloves=Item.from_dict(equipment["gloves"]) if equipment.get("gloves") else None,
-            boots=Item.from_dict(equipment["boots"]) if equipment.get("boots") else None,
-            cloak=Item.from_dict(equipment["cloak"]) if equipment.get("cloak") else None,
-            ring_left=Item.from_dict(equipment["ring_left"]) if equipment.get("ring_left") else None,
-            ring_right=Item.from_dict(equipment["ring_right"]) if equipment.get("ring_right") else None,
-            amulet=Item.from_dict(equipment["amulet"]) if equipment.get("amulet") else None,
-            belt=Item.from_dict(equipment["belt"]) if equipment.get("belt") else None,
+            armor=armor,
+            main_hand=main_hand,
+            off_hand=off_hand,
+            helmet=helmet,
+            gloves=gloves,
+            boots=boots,
+            cloak=cloak,
+            ring_left=ring_left,
+            ring_right=ring_right,
+            amulet=amulet,
+            belt=belt,
         )

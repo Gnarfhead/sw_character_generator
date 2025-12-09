@@ -2,6 +2,7 @@
 import tkinter as tk
 from dataclasses import fields
 from sw_character_generator.classes.item import Item
+from sw_character_generator.functions.manage_ac import update_armor_ac
 from sw_character_generator.gui.gui_functions.gui_magic import update_spell_table_widget
 
 def _format_change_scrolledtext(value):
@@ -171,3 +172,6 @@ def update_view_from_model(app):
     # Refresh inventory display
     if hasattr(app, 'refresh_inventory_display'):
         app.refresh_inventory_display()
+
+    # Update armor class based on equipped items
+    update_armor_ac(app.new_player)
