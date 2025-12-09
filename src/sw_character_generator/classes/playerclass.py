@@ -2,6 +2,7 @@
 from dataclasses import dataclass, field
 from typing import Any
 
+from sw_character_generator.classes.inventory import Inventory
 from sw_character_generator.classes.item import Item
 
 
@@ -63,7 +64,6 @@ class PlayerClass:
     stat_char: int = field(default=0)
     stat_char_temp: int = field(default=0)
     stat_char_total: int = field(default=0)
-    inventory: dict[str, int] = field(default_factory=dict)
     strength_atck_mod: int = 0
     strength_atck_mod_temp: int = 0
     strength_atck_mod_total: int = 0
@@ -123,6 +123,14 @@ class PlayerClass:
     armor: Item = None
     main_hand: Item = None
     off_hand: Item = None
+    helmet: Item = None
+    gloves: Item = None
+    boots: Item = None
+    cloak: Item = None
+    ring_left: Item = None
+    ring_right: Item = None
+    amulet: Item = None
+    belt: Item = None
 
     # Property for total coins
     @property
@@ -181,7 +189,6 @@ class PlayerClass:
             f"Base AC: {self.ac}, AC Bonus: {self.ac_mod}, AC Bonus_temp: {self.ac_mod_temp}\n"
             f"Special Abilities: {list(self.special_abilities)}\n"
             f"Languages: {list(self.languages)}, Additional Languages: {list(self.additional_languages)}\n"
-            f"Inventory: {self.inventory}\n"
             f"Treasure: {self.treasure}\n"
             f"Darkvision: {self.darkvision}, Parry: {self.parry}\n"
             f"Delicate Tasks: {self.delicate_tasks_profession}%, Delicate Tasks Race Bonus: {self.delicate_tasks_race}%, Climb Walls: {self.climb_walls_profession}%, Hear Sounds: {self.hear_sounds_profession}%\n"
@@ -255,7 +262,6 @@ class PlayerClass:
                 "cha_temp": self.stat_char_temp,
                 "cha_total": self.stat_char_total,
             },
-            "inventory": self.inventory,
             "modifiers": {
                 "strength": {
                     "atck_mod": self.strength_atck_mod,
@@ -325,9 +331,19 @@ class PlayerClass:
             "spell_table": self.spell_table,
             "spell_table_2": self.spell_table_2,
             "inventory_items": [item.to_dict() for item in self.inventory_items],
-            "armor": self.armor.to_dict() if self.armor and isinstance(self.armor, Item) else None,
-            "main_hand": self.main_hand.to_dict() if self.main_hand and isinstance(self.main_hand, Item) else None,
-            "off_hand": self.off_hand.to_dict() if self.off_hand and isinstance(self.off_hand, Item) else None,
+            "equipment": {
+                "armor": self.armor.to_dict() if self.armor and isinstance(self.armor, Item) else None,
+                "main_hand": self.main_hand.to_dict() if self.main_hand and isinstance(self.main_hand, Item) else None,
+                "off_hand": self.off_hand.to_dict() if self.off_hand and isinstance(self.off_hand, Item) else None,
+                "helmet": self.helmet.to_dict() if self.helmet and isinstance(self.helmet, Item) else None,
+                "gloves": self.gloves.to_dict() if self.gloves and isinstance(self.gloves, Item) else None,
+                "boots": self.boots.to_dict() if self.boots and isinstance(self.boots, Item) else None,
+                "cloak": self.cloak.to_dict() if self.cloak and isinstance(self.cloak, Item) else None,
+                "ring_left": self.ring_left.to_dict() if self.ring_left and isinstance(self.ring_left, Item) else None,
+                "ring_right": self.ring_right.to_dict() if self.ring_right and isinstance(self.ring_right, Item) else None,
+                "amulet": self.amulet.to_dict() if self.amulet and isinstance(self.amulet, Item) else None,
+                "belt": self.belt.to_dict() if self.belt and isinstance(self.belt, Item) else None, 
+            }
         }
 
     @classmethod
@@ -341,6 +357,7 @@ class PlayerClass:
         constitution_mods = modifiers.get("constitution", {})
         intelligence_mods = modifiers.get("intelligence", {})
         charisma_mods = modifiers.get("charisma", {})
+        equipment = data.get("equipment", {})
         
         return cls(
             player_name=data.get("player_name", "Unknown"),
@@ -397,7 +414,6 @@ class PlayerClass:
             stat_char=stats.get("cha", 0),
             stat_char_temp=stats.get("cha_temp", 0),
             stat_char_total=stats.get("cha_total", 0),
-            inventory=data.get("inventory", {}),
             strength_atck_mod=strength_mods.get("atck_mod", 0),
             strength_atck_mod_temp=strength_mods.get("atck_mod_temp", 0),
             strength_atck_mod_total=strength_mods.get("atck_total", 0),
@@ -453,7 +469,15 @@ class PlayerClass:
             spell_table=data.get("spell_table", {}),
             spell_table_2=data.get("spell_table_2", {}),
             inventory_items=[Item.from_dict(item_data) for item_data in data.get("inventory_items", [])],
-            armor=Item.from_dict(data["armor"]) if data.get("armor") else None,
-            main_hand=Item.from_dict(data["main_hand"]) if data.get("main_hand") else None,
-            off_hand=Item.from_dict(data["off_hand"]) if data.get("off_hand") else None,
+            armor=Item.from_dict(equipment["armor"]) if equipment.get("armor") else None,
+            main_hand=Item.from_dict(equipment["main_hand"]) if equipment.get("main_hand") else None,
+            off_hand=Item.from_dict(equipment["off_hand"]) if equipment.get("off_hand") else None,
+            helmet=Item.from_dict(equipment["helmet"]) if equipment.get("helmet") else None,
+            gloves=Item.from_dict(equipment["gloves"]) if equipment.get("gloves") else None,
+            boots=Item.from_dict(equipment["boots"]) if equipment.get("boots") else None,
+            cloak=Item.from_dict(equipment["cloak"]) if equipment.get("cloak") else None,
+            ring_left=Item.from_dict(equipment["ring_left"]) if equipment.get("ring_left") else None,
+            ring_right=Item.from_dict(equipment["ring_right"]) if equipment.get("ring_right") else None,
+            amulet=Item.from_dict(equipment["amulet"]) if equipment.get("amulet") else None,
+            belt=Item.from_dict(equipment["belt"]) if equipment.get("belt") else None,
         )

@@ -14,10 +14,9 @@ from sw_character_generator.classes.playerclass import PlayerClass
 from sw_character_generator.functions.manage_coins import modify_coins
 from sw_character_generator.functions.manage_hp import modify_hp, set_starting_hp, set_roll_hp_button
 from sw_character_generator.functions.character_handling import save_character, load_character
-from sw_character_generator.functions.manage_items import equip_item, load_item_database
 from sw_character_generator.gui.gui_functions.gui_new_character import apply_character, new_characterobj
 from sw_character_generator.functions.manage_xp import add_xp
-from sw_character_generator.gui.gui_functions.gui_inventory import on_inventory_text_changed
+from sw_character_generator.gui.gui_functions.gui_inventory_dialog import open_add_item_dialog
 from sw_character_generator.gui.gui_functions.gui_magic import create_spell_table_widget
 from sw_character_generator.gui.gui_functions.gui_dice_roller import dice_roller
 from sw_character_generator.gui.gui_functions.gui_alignment_change import on_alignment_change
@@ -28,6 +27,8 @@ from sw_character_generator.gui.gui_functions.gui_update_view_from_model import 
 from sw_character_generator.gui.gui_functions.gui_persistence import bind_model_vars
 from sw_character_generator.gui.gui_functions.gui_widgets import widget_button, widget_entry_long, widget_extlabel_short, widget_label, widget_combobox, widget_label_var, widget_spinbox, widget_checkbutton, widget_spinbox_nolabel
 from sw_character_generator.utility.linux_fullscreen import toggle_maximize
+from sw_character_generator.functions.manage_items import equip_item, load_item_database
+from sw_character_generator.gui.gui_functions.gui_inventory_dialog import open_add_item_dialog
 
 # Layout / sizing constants
 ROOT_MIN_W = 900
@@ -164,9 +165,11 @@ class App:
         # Lade die Item-Datenbank
         try:
             self.item_database = load_item_database()
-            print("DEBUG - Item-Datenbank geladen:", len(self.item_database), "Einträge")
-            for item in self.item_database:
-                print(f"  - {item.name} ({item.type})")  # ← Debug: Zeige alle Items
+            if not self.item_database:
+                messagebox.showwarning(
+                    "Item Database Empty",
+                    "No items loaded. Check itemdb.json for valid entries."
+                )
         except Exception as e:
             self.item_database = []
             print("DEBUG - Fehler beim Laden der Item-Datenbank:", e)
@@ -591,20 +594,51 @@ class App:
         self.inventory_content_frame = ttk.LabelFrame(self.inventory_frame, text="Inventory", borderwidth=5, padding=(6,6), style="Standard.TFrame")
         self.inventory_content_frame.grid(row=0, column=0, padx=PADX, pady=PADY, sticky="new")
 
-       # Row 1: Inventory
-        widget_label(self.inventory_content_frame, "Inventory:", 1, 0, owner=self, name_label="lbl_inventory")
-        # Use scrolledtext for inventory
-        self.inventory_txt = scrolledtext.ScrolledText(
-        self.inventory_content_frame,
-        wrap="word",
-        height=20,        # visible row height (can be adjusted)
-        width=80,        # visible column width (char-based)
-        font=("TkDefaultFont", 10),
-        state="normal"
+       # Treeview für Item-Liste
+        self.inventory_tree = ttk.Treeview(
+            self.inventory_frame,
+            columns=("Name", "Type", "Weight", "Value", "Quantity"),
+            show="headings",
+            height=15
         )
-        self.inventory_txt.grid(row=1, column=1, columnspan=8, sticky="new", padx=PADX, pady=PADY)
-        self.inventory_txt.bind("<FocusOut>", lambda event: on_inventory_text_changed(self, event))
-        self.inventory_txt.bind("<KeyRelease>", lambda event: on_inventory_text_changed(self, event))  # Optional: Live-Update
+        self.inventory_tree.heading("Name", text="Item Name")
+        self.inventory_tree.heading("Type", text="Type")
+        self.inventory_tree.heading("Weight", text="Weight")
+        self.inventory_tree.heading("Value", text="Value")
+        self.inventory_tree.heading("Quantity", text="Qty")
+
+        self.inventory_tree.column("Name", width=200)
+        self.inventory_tree.column("Type", width=100)
+        self.inventory_tree.column("Weight", width=80)
+        self.inventory_tree.column("Value", width=80)
+        self.inventory_tree.column("Quantity", width=60)
+
+        self.inventory_tree.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+
+        # Scrollbar
+        inventory_scrollbar = ttk.Scrollbar(
+            self.inventory_frame,
+            orient="vertical",
+            command=self.inventory_tree.yview
+        )
+        inventory_scrollbar.grid(row=0, column=1, sticky="ns")
+        self.inventory_tree.configure(yscrollcommand=inventory_scrollbar.set)
+
+        # Buttons
+        btn_frame = ttk.Frame(self.inventory_frame)
+        btn_frame.grid(row=1, column=0, columnspan=2, pady=10)
+
+        ttk.Button(btn_frame, text="Add Item", command=lambda: open_add_item_dialog(self)).pack(side="left", padx=5)
+        ttk.Button(btn_frame, text="Remove Item", command=self.remove_selected_item).pack(side="left", padx=5)
+        ttk.Button(btn_frame, text="Edit Item", command=self.edit_selected_item).pack(side="left", padx=5)
+        ttk.Button(btn_frame, text="Refresh", command=self.refresh_inventory_display).pack(side="left", padx=5)
+
+        # Weight/Value Summary
+        self.inventory_summary_label = ttk.Label(
+            self.inventory_frame,
+            text="Total Weight: 0.0 | Total Value: 0 GM"
+        )
+        self.inventory_summary_label.grid(row=2, column=0, columnspan=2, pady=5)
 
         ### Coins Frame Tab/Frame
         self.coins_content_frame = ttk.LabelFrame(self.coins_frame, text="Coins", borderwidth=5, padding=(6,6), style="Standard.TFrame")
@@ -758,6 +792,85 @@ class App:
         with self.suppress_updates():
             update_view_from_model(self)
 
+    def refresh_inventory_display(self):
+        """Refresh the inventory treeview."""
+        print("DEBUG refresh_inventory_display called: --------------------------------")
+        # Clear current display
+        for item in self.inventory_tree.get_children():
+            self.inventory_tree.delete(item)
+        
+        # Count items
+        item_counts = {}
+        for item in self.new_player.inventory_items:
+            if item.name in item_counts:
+                item_counts[item.name]["count"] += 1
+            else:
+                item_counts[item.name] = {
+                    "item": item,
+                    "count": 1
+                }
+        
+        # Display items
+        total_weight = 0.0
+        total_value = 0
+        
+        for item_name, data in item_counts.items():
+            item = data["item"]
+            count = data["count"]
+            
+            self.inventory_tree.insert("", "end", values=(
+                item.name,
+                item.type,
+                f"{item.weight * count:.1f}",
+                item.value,
+                count
+            ))
+            
+            total_weight += item.weight * count
+            # Parse value (assuming format "X GM")
+            try:
+                value_num = int(item.value.split()[0])
+                total_value += value_num * count
+            except:
+                pass
+        
+        # Update summary
+        self.inventory_summary_label.config(
+            text=f"Total Weight: {total_weight:.1f} | Total Value: {total_value} GM | Items: {len(self.new_player.inventory_items)}"
+        )
+
+    def remove_selected_item(self):
+        """Remove the selected item from inventory."""
+        print("DEBUG remove_selected_item called: --------------------------------")
+        selection = self.inventory_tree.selection()
+        if not selection:
+            messagebox.showwarning("No Selection", "Please select an item to remove.")
+            return
+        
+        item_data = self.inventory_tree.item(selection[0])
+        item_name = item_data["values"][0]
+        
+        # Find and remove the first matching item
+        for item in self.new_player.inventory_items:
+            if item.name == item_name:
+                self.new_player.inventory_items.remove(item)
+                break
+        
+        self.refresh_inventory_display()
+        messagebox.showinfo("Success", f"Removed {item_name}")
+
+
+
+    def edit_selected_item(self):
+        """Edit quantity or remove equipped items."""
+        print("DEBUG edit_selected_item called: --------------------------------")
+        selection = self.inventory_tree.selection()
+        if not selection:
+            messagebox.showwarning("No Selection", "Please select an item to edit.")
+            return
+        
+        # TODO: Implement edit dialog
+        messagebox.showinfo("Coming Soon", "Edit functionality will be added soon.")
 
     # ----------------- run -----------------
     def run(self):

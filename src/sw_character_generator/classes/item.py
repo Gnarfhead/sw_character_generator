@@ -11,6 +11,8 @@ class Item:
     weight: float                # Gewicht des Items
     damage: Optional[str] = None  # z.B. "1d6", nur für Waffen
     acbonus: Optional[int] = None # Rüstungsbonus, nur für Rüstungen
+    atckbonus: Optional[int] = None # Angriffsbonus, nur für Waffen
+    dmgbonus: Optional[int] = None  # Schadensbonus, nur für Waffen
     twohanded: bool = False        # Nur für Waffen
     versatile: bool = False       # Nur für Waffen
     weapontype: Optional[str] = None # z.B. "melee", "ranged", nur für Waffen
@@ -30,6 +32,8 @@ class Item:
             "weight": self.weight,
             "damage": self.damage,
             "acbonus": self.acbonus,
+            "atcktype": self.type,
+            "dmgbonus": self.dmgbonus,
             "twohanded": self.twohanded,
             "versatile": self.versatile,
             "weapontype": self.weapontype,
@@ -51,6 +55,8 @@ class Item:
             weight=float(data.get("weight", 0)),
             damage=data.get("damage"),
             acbonus=data.get("acbonus"),
+            atckbonus=data.get("atckbonus"),
+            dmgbonus=data.get("dmgbonus"),
             twohanded=data.get("twohanded", False),
             versatile=data.get("versatile", False),
             weapontype=data.get("weapontype"),

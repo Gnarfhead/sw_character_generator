@@ -1,7 +1,7 @@
 """Update view from model function."""
 import tkinter as tk
 from dataclasses import fields
-
+from sw_character_generator.classes.item import Item
 from sw_character_generator.gui.gui_functions.gui_magic import update_spell_table_widget
 
 def _format_change_scrolledtext(value):
@@ -148,3 +148,26 @@ def update_view_from_model(app):
             # print(f"DEBUG update_view_from_model: inventory_txt: '{current_text}' -> '{new_text}'")
             app.inventory_txt.delete("1.0", "end") # Clear existing text
             app.inventory_txt.insert("1.0", new_text) # Insert new text
+
+    # Update equipment comboboxes
+    if hasattr(app, 'armor_var'):
+        if app.new_player.armor and isinstance(app.new_player.armor, Item):
+            app.armor_var.set(app.new_player.armor.name)
+        else:
+            app.armor_var.set("Select Armor")
+
+    if hasattr(app, 'main_hand_var'):
+        if app.new_player.main_hand and isinstance(app.new_player.main_hand, Item):
+            app.main_hand_var.set(app.new_player.main_hand.name)
+        else:
+            app.main_hand_var.set("Select Main Hand")
+
+    if hasattr(app, 'off_hand_var'):
+        if app.new_player.off_hand and isinstance(app.new_player.off_hand, Item):
+            app.off_hand_var.set(app.new_player.off_hand.name)
+        else:
+            app.off_hand_var.set("Select Off Hand")
+
+    # Refresh inventory display
+    if hasattr(app, 'refresh_inventory_display'):
+        app.refresh_inventory_display()
