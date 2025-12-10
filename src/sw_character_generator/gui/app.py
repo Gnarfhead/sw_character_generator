@@ -536,7 +536,7 @@ class App:
 
         # Row 1: Combobox for Main Hand
         widget_combobox(self.weapons_content_frame, "Select Main Hand Weapon:", 1, 0, self.main_hand_var, [], state="readonly", owner=self, name_label="lbl_select_main_hand", name_combo="cb_main_hand", width=40)
-        self.main_hand_var.trace_add("write", lambda *args: on_main_hand_selected())
+        self.main_hand_var.trace_add("write", lambda *args: on_main_hand_selected(self))
 
         # Row 2: Combobox for Off Hand
         widget_combobox(self.weapons_content_frame, "Select Off Hand Item:", 2, 0, self.off_hand_var, [], state="readonly", owner=self, name_label="lbl_select_off_hand", name_combo="cb_off_hand", width=40)
