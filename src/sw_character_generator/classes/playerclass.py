@@ -368,18 +368,19 @@ class PlayerClass:
                 return None  # Oder suche im Inventar
             return None
 
+        equipment_data = data.get("equipment", {})
 
-        armor = safe_item_conversion(data["armor"])
-        main_hand = safe_item_conversion(data["main_hand"])
-        off_hand = safe_item_conversion(data["off_hand"])
-        helmet = safe_item_conversion(data["helmet"])
-        gloves = safe_item_conversion(data["gloves"])
-        boots = safe_item_conversion(data["boots"])
-        cloak = safe_item_conversion(data["cloak"])
-        ring_left = safe_item_conversion(data["ring_left"])
-        ring_right = safe_item_conversion(data["ring_right"])
-        amulet = safe_item_conversion(data["amulet"])
-        belt = safe_item_conversion(data["belt"])
+        armor = safe_item_conversion(equipment_data.get("armor"))
+        main_hand = safe_item_conversion(equipment_data.get("main_hand"))
+        off_hand = safe_item_conversion(equipment_data.get("off_hand"))
+        helmet = safe_item_conversion(equipment_data.get("helmet"))
+        gloves = safe_item_conversion(equipment_data.get("gloves"))
+        boots = safe_item_conversion(equipment_data.get("boots"))
+        cloak = safe_item_conversion(equipment_data.get("cloak"))
+        ring_left = safe_item_conversion(equipment_data.get("ring_left"))
+        ring_right = safe_item_conversion(equipment_data.get("ring_right"))
+        amulet = safe_item_conversion(equipment_data.get("amulet"))
+        belt = safe_item_conversion(equipment_data.get("belt"))
 
         stats = data.get("stats", {})
         modifiers = data.get("modifiers", {})

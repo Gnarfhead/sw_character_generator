@@ -9,6 +9,7 @@ import tkinter as tk
 import tkinter.ttk as ttk
 import tkinter.scrolledtext as scrolledtext
 from tkinter import messagebox
+import traceback
 
 from sw_character_generator.classes.playerclass import PlayerClass
 from sw_character_generator.functions.manage_coins import modify_coins
@@ -48,7 +49,7 @@ class App:
 
     def __init__(self):
         # Create root first, then StringVars etc.
-        self._updating = False  # flag to prevent recursive updates
+        self._updating = True  # flag to prevent recursive updates
         self.root = tk.Tk()
         self.root.title("Swords & Wizardry Charactergenerator")
         self.root.minsize(900, 600)
@@ -164,6 +165,7 @@ class App:
         self.off_hand_var = tk.StringVar(master=self.root, value="Select Off Hand")
         self.armor_var = tk.StringVar(master=self.root, value="Select Armor")
 
+
     # ----------------- load data -----------------
 
         # Lade die Item-Datenbank
@@ -193,7 +195,6 @@ class App:
                 padding=8)
         style.map("Standard.TButton",
                 background=[("active", "#bebfc2"), ("pressed", "#e2e3e5"), ("disabled", "#e2e3e5")],)
-                #foreground=[("disabled", "#d9d9d9")])
 
         style.configure("Attention.TButton",
                         background="#dc3545",
@@ -227,12 +228,32 @@ class App:
     # ----------------- build UI -----------------
         # Build UI
         self._build_ui()
+        print("DEBUG: _build_ui() completed")
 
         # Bind GUI variables/widgets back to model
         bind_model_vars(self)
+        print("DEBUG: bind_model_vars() completed")
 
         # Populate the view initially from the model
         update_view_from_model(self)
+        print("DEBUG: update_view_from_model() completed") 
+
+        # ← HINZUGEFÜGT: Registriere Equipment-Callbacks NACH update_view_from_model
+        print("DEBUG: Registering trace_add callbacks for equipment")
+        self.armor_var.trace_add("write", lambda *args: on_armor_selected(self))
+        self.main_hand_var.trace_add("write", lambda *args: on_main_hand_selected(self))
+        self.off_hand_var.trace_add("write", lambda *args: on_off_hand_selected(self))
+        print("DEBUG: trace_add callbacks registered")
+        
+        # ← HINZUGEFÜGT: Setze Flag auf False
+        self._updating = False
+        print("DEBUG: Set _updating = False")
+        
+        # ← HINZUGEFÜGT: Update Equipment-Comboboxen NACH Initialisierung
+        print("DEBUG: Scheduling equipment combobox update")
+        self.root.after(200, lambda: self._safe_update_equipment())
+        print("DEBUG: __init__ END")
+
     # ----------------- UI building -----------------
 
     def _build_ui(self):
@@ -532,22 +553,21 @@ class App:
 
         # Row 0: Combobox for Armor
         widget_combobox(self.weapons_content_frame, "Select Armor:", 0, 0, self.armor_var, [], state="readonly", owner=self, name_label="lbl_select_armor", name_combo="cb_armor", width=40)
-        self.armor_var.trace_add("write", lambda *args: on_armor_selected(self))
+        
 
         # Row 1: Combobox for Main Hand
         widget_combobox(self.weapons_content_frame, "Select Main Hand Weapon:", 1, 0, self.main_hand_var, [], state="readonly", owner=self, name_label="lbl_select_main_hand", name_combo="cb_main_hand", width=40)
-        self.main_hand_var.trace_add("write", lambda *args: on_main_hand_selected(self))
+
 
         # Row 2: Combobox for Off Hand
         widget_combobox(self.weapons_content_frame, "Select Off Hand Item:", 2, 0, self.off_hand_var, [], state="readonly", owner=self, name_label="lbl_select_off_hand", name_combo="cb_off_hand", width=40)
-        self.off_hand_var.trace_add("write", lambda *args: on_off_hand_selected(self))
+
 
         ### Inventory Tab/Frame
         self.inventory_content_frame = ttk.LabelFrame(self.inventory_frame, text="Inventory", borderwidth=5, padding=(6,6), style="Standard.TFrame")
         self.inventory_content_frame.grid(row=0, column=0, padx=PADX, pady=PADY, sticky="new")
 
-        # Initialisiere Comboboxen nach UI-Aufbau
-        self.root.after(100, lambda: update_equipment_comboboxes(self))
+
 
        # Treeview für Item-Liste
         self.inventory_tree = ttk.Treeview(
@@ -621,7 +641,6 @@ class App:
         widget_extlabel_short(self.magic_content_frame, "Max. Spells to Memorize:", 3, 0, var=self.max_spells_per_level_var, owner=self, name_label="lbl_max_spell_level", name_value="entry_max_spell_level")
 
         # Create spell table widget
-        #widget_label(self.magic_content_frame, "Spells Known for profession " + self.new_player.profession + ":", 4, 0, owner=self, name_label="lbl_spells_known")
         create_spell_table_widget(self)
 
         ### Special Abilities Tab/Frame
@@ -738,15 +757,20 @@ class App:
             child.destroy()
 
         # Build UI again
+        print("DEBUG rebuild_ui: Re-building UI")
         self._build_ui()
 
-        # Re-bind model vars and update view
-        bind_model_vars(self)
 
-        # Update view from model
-        with self.suppress_updates():
-            update_view_from_model(self)
-
+    def _safe_update_equipment(self):
+        """Safely update equipment comboboxes."""
+        print("DEBUG: _safe_update_equipment called")
+        try:
+            update_equipment_comboboxes(self)
+            print("DEBUG: Equipment comboboxes updated")
+        except Exception as e:
+            print(f"ERROR: Failed to update equipment comboboxes: {e}")
+            traceback.print_exc()
+    
     def refresh_inventory_display(self):
         """Refresh the inventory treeview."""
         print("DEBUG refresh_inventory_display called: --------------------------------")
@@ -816,9 +840,6 @@ class App:
         
         self.refresh_inventory_display()
         messagebox.showinfo("Success", f"Removed {item_name}")
-
-
-
 
     # ----------------- run -----------------
     def run(self):

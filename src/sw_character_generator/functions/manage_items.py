@@ -5,7 +5,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from sw_character_generator.classes.item import Item
 from sw_character_generator.classes.playerclass import PlayerClass
-from sw_character_generator.functions.manage_ac import update_armor_ac
+from sw_character_generator.functions.manage_ac import calculate_ac, update_armor_ac
 from sw_character_generator.gui.gui_functions.gui_update_view_from_model import update_view_from_model
 
 
@@ -72,11 +72,40 @@ def remove_item_from_inventory(player: PlayerClass, item: Item):
 def equip_item(app, slot: str, item_name: str):
     """Equip an item to a specific slot."""
     print("DEBUG equip_item called: --------------------------------")
-    print(f"DEBUG equip_item called: slot={slot}, item_name={item_name}")
+    print(f"DEBUG equip_item: slot={slot}, item_name='{item_name}', type={type(item_name)}")
     
-    # Validierung
-    if item_name in ["No armor in inventory", "No weapons in inventory", "No items in inventory", ""]:
-        messagebox.showwarning("Cannot Equip", "No items available in inventory.")
+    # Verhindere Update während bereits am Updaten
+    if app.is_updating:
+        print("DEBUG: Skipping equip_item (is_updating=True)")
+        return
+    
+    # KORRIGIERT: Behandle leere Auswahl OHNE Warnung
+    if not item_name or item_name == "" or item_name is None:
+        print(f"DEBUG: Empty selection for {slot}, unequipping silently")
+        setattr(app.new_player, slot, None)
+        
+        # ← HINZUGEFÜGT: Update AC nach Unequip
+        if slot in ["armor", "off_hand"]:
+            update_armor_ac(app.new_player)
+            calculate_ac(app.new_player)  # ← WICHTIG!
+            
+            # Update GUI
+            with app.suppress_updates():
+                update_view_from_model(app)
+        return
+    
+    # Ignoriere Platzhalter OHNE Warnung
+    placeholder_values = [
+        "No armor in inventory",
+        "No weapons in inventory", 
+        "No items in inventory",
+        "Select Armor",
+        "Select Main Hand",
+        "Select Off Hand"
+    ]
+    
+    if item_name in placeholder_values:
+        print(f"DEBUG: Placeholder '{item_name}' selected, ignoring")
         return
     
     # Finde Item in Inventar
@@ -87,8 +116,12 @@ def equip_item(app, slot: str, item_name: str):
             break
     
     if not item_to_equip:
+        print(f"ERROR: Item '{item_name}' not found in inventory")
+        print(f"DEBUG: Available items: {[item.name for item in app.new_player.inventory_items]}")
         messagebox.showerror("Error", f"Item '{item_name}' not found in inventory!")
         return
+    
+    print(f"DEBUG: Found item: {item_to_equip.name}, Type: {item_to_equip.type}")
     
     # Slot-spezifische Validierung
     valid_types = {
@@ -108,25 +141,33 @@ def equip_item(app, slot: str, item_name: str):
     # Prüfe Item-Typ
     if slot in valid_types:
         if item_to_equip.type.lower() not in valid_types[slot]:
-            messagebox.showerror("Error", f"'{item_name}' cannot be equipped in {slot}!")
+            messagebox.showerror("Error", f"'{item_name}' (type: {item_to_equip.type}) cannot be equipped in {slot}!")
             return
     
     # Spezielle Two-Handed Check
     if slot == "off_hand":
         main_hand = app.new_player.main_hand
-
-        # Prüfe, ob main_hand ein Item-Objekt ist und twohanded-Attribut hat
+        print(f"DEBUG: Checking two-handed restriction. Main hand: {main_hand}")
+        
         if main_hand and isinstance(main_hand, Item) and hasattr(main_hand, 'twohanded') and main_hand.twohanded:
+            print(f"DEBUG: Main hand weapon '{main_hand.name}' is two-handed, blocking off-hand")
             messagebox.showerror("Error", "Cannot equip off-hand with two-handed weapon!")
-            return   
+            return
     
     # Equip Item
+    print(f"DEBUG: Successfully equipping {item_to_equip.name} to {slot}")
     setattr(app.new_player, slot, item_to_equip)
-    messagebox.showinfo("Success", f"Equipped {item_name} in {slot.replace('_', ' ').title()}")
     
-    # Update GUI und AC
-    update_view_from_model(app)
-    update_armor_ac(app.new_player)
+    # ← WICHTIG: Update AC nach Equip!
+    if slot in ["armor", "off_hand"]:
+        print(f"DEBUG: Updating AC after equipping {item_name}")
+        update_armor_ac(app.new_player)
+        calculate_ac(app.new_player) 
+        print(f"DEBUG: New AC values - Base: {app.new_player.ac}, Armor: {app.new_player.ac_armor}, Shield: {app.new_player.ac_shield}, Total: {app.new_player.ac_total}")
+        
+        # Update GUI
+        with app.suppress_updates():
+            update_view_from_model(app)
     
 def unequip_item(app, slot: str):
     """Unequip an item and return it to inventory."""
@@ -144,63 +185,38 @@ def unequip_item(app, slot: str):
 
 def on_armor_selected(app):
     """Callback when armor is selected in combobox."""
+    print(f"DEBUG on_armor_selected: is_updating={app.is_updating}, value='{app.armor_var.get()}'")
+    
     if app.is_updating:
+        print("DEBUG: Skipping on_armor_selected (is_updating=True)")
         return
     
     item_name = app.armor_var.get()
+    print(f"DEBUG on_armor_selected: Calling equip_item with '{item_name}'")
     
-    # Unequip wenn leer
-    if item_name == "":
-        app.new_player.armor = None
-        update_view_from_model(app)
-        update_armor_ac(app.new_player)
-        return
-    
-    # Ignoriere Platzhalter
-    if item_name in ["Select Armor", "No armor in inventory"]:
-        return
-    
-    # Equip
+    # equip_item() behandelt jetzt ALLE Fälle (leer, Platzhalter, echtes Item)
     equip_item(app, "armor", item_name)
 
 def on_main_hand_selected(app):
     """Callback when main hand weapon is selected in combobox."""
+    print(f"DEBUG on_main_hand_selected: is_updating={app.is_updating}, value='{app.main_hand_var.get()}'")
+    
     if app.is_updating:
+        print("DEBUG: Skipping on_main_hand_selected (is_updating=True)")
         return
     
     item_name = app.main_hand_var.get()
-    
-    # Unequip wenn leer
-    if item_name == "":
-        app.new_player.main_hand = None
-        update_view_from_model(app)
-        return
-    
-    # Ignoriere Platzhalter
-    if item_name in ["Select Main Hand", "No weapons in inventory"]:
-        return
-    
-    # Equip
+    print(f"DEBUG on_main_hand_selected: Calling equip_item with '{item_name}'")
     equip_item(app, "main_hand", item_name)
 
 def on_off_hand_selected(app):
     """Callback when off hand item is selected in combobox."""
+    print(f"DEBUG on_off_hand_selected: is_updating={app.is_updating}, value='{app.off_hand_var.get()}'")
+    
     if app.is_updating:
+        print("DEBUG: Skipping on_off_hand_selected (is_updating=True)")
         return
     
     item_name = app.off_hand_var.get()
-    
-    # Unequip wenn leer
-    if item_name == "":
-        app.new_player.off_hand = None
-        update_view_from_model(app)
-        from sw_character_generator.functions.manage_ac import update_armor_ac
-        update_armor_ac(app.new_player)
-        return
-    
-    # Ignoriere Platzhalter
-    if item_name in ["Select Off Hand", "No items in inventory"]:
-        return
-    
-    # Equip
+    print(f"DEBUG on_off_hand_selected: Calling equip_item with '{item_name}'")
     equip_item(app, "off_hand", item_name)
