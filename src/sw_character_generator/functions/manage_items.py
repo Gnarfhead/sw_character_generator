@@ -73,25 +73,12 @@ def equip_item(app, slot: str, item_name: str):
     """Equip an item to a specific slot."""
     print("DEBUG equip_item called: --------------------------------")
     print(f"DEBUG equip_item: slot={slot}, item_name='{item_name}', type={type(item_name)}")
-    
-    # Verhindere Update während bereits am Updaten
-    if app.is_updating:
-        print("DEBUG: Skipping equip_item (is_updating=True)")
-        return
-    
-    # KORRIGIERT: Behandle leere Auswahl OHNE Warnung
-    if not item_name or item_name == "" or item_name is None:
-        print(f"DEBUG: Empty selection for {slot}, unequipping silently")
-        setattr(app.new_player, slot, None)
         
-        # ← HINZUGEFÜGT: Update AC nach Unequip
-        if slot in ["armor", "off_hand"]:
-            update_armor_ac(app.new_player)
-            calculate_ac(app.new_player)  # ← WICHTIG!
-            
-            # Update GUI
-            with app.suppress_updates():
-                update_view_from_model(app)
+    # KORRIGIERT: Behandle leere Auswahl 
+    if not item_name or item_name == "":
+        print(f"DEBUG: Empty selection for {slot}, unequipping")
+        setattr(app.new_player, slot, None)
+        # ← ENTFERNT: AC-Update und GUI-Update (wird in on_equip_click gemacht)
         return
     
     # Ignoriere Platzhalter OHNE Warnung
@@ -158,16 +145,6 @@ def equip_item(app, slot: str, item_name: str):
     print(f"DEBUG: Successfully equipping {item_to_equip.name} to {slot}")
     setattr(app.new_player, slot, item_to_equip)
     
-    # ← WICHTIG: Update AC nach Equip!
-    if slot in ["armor", "off_hand"]:
-        print(f"DEBUG: Updating AC after equipping {item_name}")
-        update_armor_ac(app.new_player)
-        calculate_ac(app.new_player) 
-        print(f"DEBUG: New AC values - Base: {app.new_player.ac}, Armor: {app.new_player.ac_armor}, Shield: {app.new_player.ac_shield}, Total: {app.new_player.ac_total}")
-        
-        # Update GUI
-        with app.suppress_updates():
-            update_view_from_model(app)
     
 def unequip_item(app, slot: str):
     """Unequip an item and return it to inventory."""
@@ -183,40 +160,3 @@ def unequip_item(app, slot: str):
 
     messagebox.showinfo("Item unequipped", f"'{current_item.name}' returned to inventory.")
 
-def on_armor_selected(app):
-    """Callback when armor is selected in combobox."""
-    print(f"DEBUG on_armor_selected: is_updating={app.is_updating}, value='{app.armor_var.get()}'")
-    
-    if app.is_updating:
-        print("DEBUG: Skipping on_armor_selected (is_updating=True)")
-        return
-    
-    item_name = app.armor_var.get()
-    print(f"DEBUG on_armor_selected: Calling equip_item with '{item_name}'")
-    
-    # equip_item() behandelt jetzt ALLE Fälle (leer, Platzhalter, echtes Item)
-    equip_item(app, "armor", item_name)
-
-def on_main_hand_selected(app):
-    """Callback when main hand weapon is selected in combobox."""
-    print(f"DEBUG on_main_hand_selected: is_updating={app.is_updating}, value='{app.main_hand_var.get()}'")
-    
-    if app.is_updating:
-        print("DEBUG: Skipping on_main_hand_selected (is_updating=True)")
-        return
-    
-    item_name = app.main_hand_var.get()
-    print(f"DEBUG on_main_hand_selected: Calling equip_item with '{item_name}'")
-    equip_item(app, "main_hand", item_name)
-
-def on_off_hand_selected(app):
-    """Callback when off hand item is selected in combobox."""
-    print(f"DEBUG on_off_hand_selected: is_updating={app.is_updating}, value='{app.off_hand_var.get()}'")
-    
-    if app.is_updating:
-        print("DEBUG: Skipping on_off_hand_selected (is_updating=True)")
-        return
-    
-    item_name = app.off_hand_var.get()
-    print(f"DEBUG on_off_hand_selected: Calling equip_item with '{item_name}'")
-    equip_item(app, "off_hand", item_name)

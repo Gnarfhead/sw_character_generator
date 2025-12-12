@@ -12,6 +12,7 @@ from tkinter import messagebox
 import traceback
 
 from sw_character_generator.classes.playerclass import PlayerClass
+from sw_character_generator.functions.manage_ac import calculate_ac, update_armor_ac
 from sw_character_generator.functions.manage_coins import modify_coins
 from sw_character_generator.functions.manage_hp import modify_hp, set_starting_hp, set_roll_hp_button
 from sw_character_generator.functions.character_handling import save_character, load_character
@@ -29,7 +30,7 @@ from sw_character_generator.gui.gui_functions.gui_update_view_from_model import 
 from sw_character_generator.gui.gui_functions.gui_persistence import bind_model_vars
 from sw_character_generator.gui.gui_functions.gui_widgets import widget_button, widget_entry_long, widget_extlabel_short, widget_label, widget_combobox, widget_label_var, widget_spinbox, widget_checkbutton, widget_spinbox_nolabel
 from sw_character_generator.utility.linux_fullscreen import toggle_maximize
-from sw_character_generator.functions.manage_items import equip_item, load_item_database, on_armor_selected, on_main_hand_selected, on_off_hand_selected
+from sw_character_generator.functions.manage_items import equip_item, load_item_database
 from sw_character_generator.gui.gui_functions.gui_inventory_dialog import open_add_item_dialog
 
 # Layout / sizing constants
@@ -161,9 +162,9 @@ class App:
         self.understand_spell_var = tk.IntVar(master=self.root, value=0)
         self.min_spells_per_level_var = tk.IntVar(master=self.root, value=0)
         self.max_spells_per_level_var = tk.IntVar(master=self.root, value=0)
-        self.main_hand_var = tk.StringVar(master=self.root, value="Select Main Hand")
-        self.off_hand_var = tk.StringVar(master=self.root, value="Select Off Hand")
-        self.armor_var = tk.StringVar(master=self.root, value="Select Armor")
+        self.main_hand_var = tk.StringVar(master=self.root, value="")
+        self.off_hand_var = tk.StringVar(master=self.root, value="")
+        self.armor_var = tk.StringVar(master=self.root, value="")
 
 
     # ----------------- load data -----------------
@@ -238,12 +239,6 @@ class App:
         update_view_from_model(self)
         print("DEBUG: update_view_from_model() completed") 
 
-        # ← HINZUGEFÜGT: Registriere Equipment-Callbacks NACH update_view_from_model
-        print("DEBUG: Registering trace_add callbacks for equipment")
-        self.armor_var.trace_add("write", lambda *args: on_armor_selected(self))
-        self.main_hand_var.trace_add("write", lambda *args: on_main_hand_selected(self))
-        self.off_hand_var.trace_add("write", lambda *args: on_off_hand_selected(self))
-        print("DEBUG: trace_add callbacks registered")
         
         # ← HINZUGEFÜGT: Setze Flag auf False
         self._updating = False
@@ -562,7 +557,9 @@ class App:
         # Row 2: Combobox for Off Hand
         widget_combobox(self.weapons_content_frame, "Select Off Hand Item:", 2, 0, self.off_hand_var, [], state="readonly", owner=self, name_label="lbl_select_off_hand", name_combo="cb_off_hand", width=40)
 
-
+        # ← HINZUGEFÜGT: Row 3: Equip Button
+        widget_button(self.weapons_content_frame, "Equip Selected Items", 3, 0, command=lambda: self.on_equip_click(), owner=self, name_button="btn_equip")
+    
         ### Inventory Tab/Frame
         self.inventory_content_frame = ttk.LabelFrame(self.inventory_frame, text="Inventory", borderwidth=5, padding=(6,6), style="Standard.TFrame")
         self.inventory_content_frame.grid(row=0, column=0, padx=PADX, pady=PADY, sticky="new")
@@ -770,6 +767,45 @@ class App:
         except Exception as e:
             print(f"ERROR: Failed to update equipment comboboxes: {e}")
             traceback.print_exc()
+
+    # ← HINZUGEFÜGT: Neue Methode für Equip-Button
+    def on_equip_click(self):
+        """Handle Equip Button click."""
+        print("DEBUG on_equip_click: ------------------------------------------------")
+        # Hole ausgewählte Items
+        armor_name = self.armor_var.get()
+        main_hand_name = self.main_hand_var.get()
+        off_hand_name = self.off_hand_var.get()
+        
+        print(f"DEBUG: Selected - Armor: '{armor_name}', Main: '{main_hand_name}', Off: '{off_hand_name}'")
+        
+        # Equip Armor
+        if armor_name and armor_name != "":
+            print(f"DEBUG: Equipping armor: {armor_name}")
+            equip_item(self, "armor", armor_name)
+        
+        # Equip Main Hand
+        if main_hand_name and main_hand_name != "":
+            print(f"DEBUG: Equipping main hand: {main_hand_name}")
+            equip_item(self, "main_hand", main_hand_name)
+        
+        # Equip Off Hand
+        if off_hand_name and off_hand_name != "":
+            print(f"DEBUG: Equipping off hand: {off_hand_name}")
+            equip_item(self, "off_hand", off_hand_name)
+        
+        # Update AC
+        print("DEBUG: Updating AC after equipping")
+        update_armor_ac(self.new_player)
+        calculate_ac(self.new_player)
+        
+        # Update GUI
+        with self.suppress_updates():
+            update_view_from_model(self)
+        
+        self.status_var.set("Equipment updated successfully")
+        print("DEBUG on_equip_click: DONE ------------------------------------------------")
+
     
     def refresh_inventory_display(self):
         """Refresh the inventory treeview."""

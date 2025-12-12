@@ -153,6 +153,3 @@ def update_view_from_model(app):
     # Refresh inventory display
     if hasattr(app, 'refresh_inventory_display'):
         app.refresh_inventory_display()
-
-    # Update armor class based on equipped items
-    update_armor_ac(app.new_player)

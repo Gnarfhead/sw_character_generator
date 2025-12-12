@@ -168,6 +168,27 @@ class PlayerClass:
         """Combine all special abilities from race, class, and other sources."""
         return self.special_abilities_race | self.special_abilities_profession | self.special_abilities_other
 
+    def __post_init__(self):
+        """Validate and convert equipment strings to Item objects."""
+        
+        equipment_slots = ['armor', 'main_hand', 'off_hand', 'helmet', 'gloves', 
+                          'boots', 'cloak', 'ring_left', 'ring_right', 'amulet', 'belt']
+        
+        for slot in equipment_slots:
+            value = getattr(self, slot)
+            if isinstance(value, str) and value != "":
+                print(f"WARNING: {slot} is string '{value}', should be Item object")
+                # Optional: Suche Item in inventory_items
+                for item in self.inventory_items:
+                    if item.name == value:
+                        setattr(self, slot, item)
+                        print(f"  -> Converted {slot} to Item object")
+                        break
+                else:
+                    # Item nicht gefunden, setze auf None
+                    print(f"  -> Item '{value}' not found in inventory, setting {slot} to None")
+                    setattr(self, slot, None)
+
 
     def __repr__(self):  # String representation of the PlayerClass instance.
         """Return a string representation of the PlayerClass instance."""

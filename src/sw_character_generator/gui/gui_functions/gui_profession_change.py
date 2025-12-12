@@ -81,10 +81,6 @@ def on_profession_change(app, *args):
         with app.suppress_updates(): # prevent recursive updates
             update_view_from_model(app) # refresh GUI to reflect model changes
 
-        # HINZUGEFÜGT: Update Equipment-Comboboxen
-        print("DEBUG on_profession_change: Updating equipment comboboxes")
-        update_equipment_comboboxes(app)
-
     except Exception as e:
         print(f"DEBUG on_profession_change: Profession change error: {e}")
 

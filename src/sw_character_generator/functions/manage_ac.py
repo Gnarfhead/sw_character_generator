@@ -18,23 +18,42 @@ def update_armor_ac(character):
     armor = character.armor
     shield = character.off_hand
 
-    if armor and hasattr(armor, 'acbonus') and armor.acbonus is not None:
-        character.ac_armor = armor.acbonus
-        print("DEBUG update_armor_ac: Equipped armor", armor.name, "with AC bonus", armor.acbonus)
-        print("DEBUG update_armor_ac: character.ac_armor set to", character.ac_armor)
+    # ← KORRIGIERT: Prüfe auf Item-Objekt
+    if armor:
+        if hasattr(armor, 'acbonus') and armor.acbonus is not None:
+            character.ac_armor = armor.acbonus
+            print(f"DEBUG update_armor_ac: Equipped armor '{armor.name if hasattr(armor, 'name') else armor}' with AC bonus {armor.acbonus}")
+        elif isinstance(armor, str):
+            print(f"WARNING: armor is string '{armor}', cannot get AC bonus")
+            character.ac_armor = 0
+        else:
+            character.ac_armor = 0
+            print("DEBUG update_armor_ac: No armor equipped or no AC bonus")
     else:
         character.ac_armor = 0
-        print("DEBUG update_armor_ac: No armor equipped or no AC bonus")
-        print("DEBUG update_armor_ac: character.ac_armor set to", character.ac_armor)
+        print("DEBUG update_armor_ac: No armor equipped")
 
-    if shield and hasattr(shield, 'type') and shield.type.lower() == "shield" and hasattr(shield, 'acbonus') and shield.acbonus is not None:
-        character.ac_shield = shield.acbonus
-        print("DEBUG update_armor_ac: Equipped shield", shield.name, "with AC bonus", shield.acbonus)
-        print("DEBUG update_armor_ac: character.ac_shield set to", character.ac_shield)
+    # ← KORRIGIERT: Prüfe Shield
+    if shield:
+        if hasattr(shield, 'type') and shield.type.lower() == "shield":
+            if hasattr(shield, 'acbonus') and shield.acbonus is not None:
+                character.ac_shield = shield.acbonus
+                print(f"DEBUG update_armor_ac: Equipped shield '{shield.name if hasattr(shield, 'name') else shield}' with AC bonus {shield.acbonus}")
+            else:
+                character.ac_shield = 0
+                print("DEBUG update_armor_ac: Shield has no AC bonus")
+        elif isinstance(shield, str):
+            print(f"WARNING: off_hand is string '{shield}', cannot get AC bonus")
+            character.ac_shield = 0
+        else:
+            character.ac_shield = 0
+            print("DEBUG update_armor_ac: Off-hand is not a shield")
     else:
         character.ac_shield = 0
-        print("DEBUG update_armor_ac: No shield equipped or no AC bonus")
-        print("DEBUG update_armor_ac: character.ac_shield set to", character.ac_shield)
+        print("DEBUG update_armor_ac: No shield equipped")
 
+    # Berechne AC
     calculate_ac(character)
+    print(f"DEBUG update_armor_ac: Final AC Total = {character.ac_total}")
+
     
