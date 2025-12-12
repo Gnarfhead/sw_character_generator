@@ -10,7 +10,10 @@ def calculate_thief_skills(character):
         raise ValueError("ERROR calculate_thief_skills: No character provided for thief skills calculation.")
 
     # Only calculate for thief, assassin, or monk professions
-    if character.profession.lower() == "thief" or character.profession.lower() == "assassin" or character.profession.lower() == "monk":
+
+    profession_lower = character.profession.lower()
+
+    if profession_lower in ["thief", "assassin", "monk"]:
         print("DEBUG calculate_thief_skills: Calculating thief skills for profession", character.profession)
 
         # Convert level to int if it's a string

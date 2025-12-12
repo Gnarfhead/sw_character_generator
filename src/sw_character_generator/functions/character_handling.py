@@ -86,7 +86,7 @@ def load_character(parent_window=None) -> PlayerClass | None:
     try:
         character = PlayerClass.from_dict(data)
     except KeyError as e:
-        raise ValueError(f"Missing key in character data: {e}")
+        raise ValueError("Missing key in character data: {e}") from e
 
     print("DEBUG load_character: Character loaded from", {file_path})
     return character

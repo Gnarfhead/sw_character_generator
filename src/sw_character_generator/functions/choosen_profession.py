@@ -14,39 +14,42 @@ from sw_character_generator.classes.profession.wizard import apply_wizard_depend
 def choosen_profession_modifiers(player_class: PlayerClass, profession: str):
     """Apply profession-specific modifiers to the character."""
     print("DEBUG choosen_profession_modifiers: ----------------------------------------------------------------")
-    if profession.lower() == "assassin":
+
+    profession_lower = profession.lower()
+
+    if profession_lower == "assassin":
         print("DEBUG choosen_profession_modifiers: Choosing Assassin profession - profession parameter:", profession)
         apply_assassin_dependent_modifiers(player_class)
         player_class.profession = "Assassin"
-    elif profession.lower() == "paladin":
+    elif profession_lower == "paladin":
         print("DEBUG choosen_profession_modifiers: Choosing Paladin profession - profession parameter:", profession)
         apply_paladin_dependent_modifiers(player_class)
         player_class.profession = "Paladin"
-    elif profession.lower() == "fighter":
+    elif profession_lower == "fighter":
         print("DEBUG choosen_profession_modifiers: Choosing Fighter profession - profession parameter:", profession)
         apply_fighter_dependent_modifiers(player_class)
         player_class.profession = "Fighter"
-    elif profession.lower() == "wizard":
+    elif profession_lower == "wizard":
         print("DEBUG choosen_profession_modifiers: Choosing Wizard profession - profession parameter:", profession)
         apply_wizard_dependent_modifiers(player_class)
         player_class.profession = "Wizard"
-    elif profession.lower() == "thief":
+    elif profession_lower == "thief":
         print("DEBUG choosen_profession_modifiers: Choosing Thief profession - profession parameter:", profession)
         apply_thief_dependent_modifiers(player_class)
         player_class.profession = "Thief"
-    elif profession.lower() == "ranger":
+    elif profession_lower == "ranger":
         print("DEBUG choosen_profession_modifiers: Choosing Ranger profession - profession parameter:", profession)
         apply_ranger_dependent_modifiers(player_class)
         player_class.profession = "Ranger"
-    elif profession.lower() == "monk":
+    elif profession_lower == "monk":
         print("DEBUG choosen_profession_modifiers: Choosing Monk profession - profession parameter:", profession)
         apply_monk_dependent_modifiers(player_class)
         player_class.profession = "Monk"
-    elif profession.lower() == "druid":
+    elif profession_lower == "druid":
         print("DEBUG choosen_profession_modifiers: Choosing Druid profession - profession parameter:", profession)
         apply_druid_dependent_modifiers(player_class)
         player_class.profession = "Druid"
-    elif profession.lower() == "cleric":
+    elif profession_lower == "cleric":
         print("DEBUG choosen_profession_modifiers: Choosing Cleric profession - profession parameter:", profession)
         apply_cleric_dependent_modifiers(player_class)
         player_class.profession = "Cleric"

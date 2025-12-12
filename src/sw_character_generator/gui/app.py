@@ -31,7 +31,6 @@ from sw_character_generator.gui.gui_functions.gui_persistence import bind_model_
 from sw_character_generator.gui.gui_functions.gui_widgets import widget_button, widget_entry_long, widget_extlabel_short, widget_label, widget_combobox, widget_label_var, widget_spinbox, widget_checkbutton, widget_spinbox_nolabel
 from sw_character_generator.utility.linux_fullscreen import toggle_maximize
 from sw_character_generator.functions.manage_items import equip_item, load_item_database
-from sw_character_generator.gui.gui_functions.gui_inventory_dialog import open_add_item_dialog
 
 # Layout / sizing constants
 ROOT_MIN_W = 900

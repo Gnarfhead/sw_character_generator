@@ -4,8 +4,8 @@ def on_special_abilities_changed(app, event=None):
     """Callback when user edits special_abilities_txt."""
     print("DEBUG on_special_abilities_changed: --------------------------------")
 
-    if getattr(app, "is_updating", False):
-        print("DEBUG on_special_abilities_changed: Change ignored due to is_updating flag.")
+    if app.is_updating:
+        print("DEBUG on_special_abilities_changed: Currently updating, exiting function to avoid conflicts.")
         return
 
     # Read the content of the special_abilities_txt widget

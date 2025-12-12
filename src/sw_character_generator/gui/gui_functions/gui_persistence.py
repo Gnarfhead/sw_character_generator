@@ -7,27 +7,41 @@ from sw_character_generator.functions.update_derived_stats import update_derived
 from sw_character_generator.gui.gui_functions.gui_update_view_from_model import update_view_from_model
 
 
+READONLY_FIELDS = {
+    # Derived/calculated fields
+    "ac_total", "nextlevel", "hp", "hp_current", "save_throw", "parry",
+    "xp_bonus", "main_stats", "languages", "darkvision",
+    
+    # Total stat fields
+    "stat_str_total", "stat_dex_total", "stat_con_total",
+    "stat_int_total", "stat_wis_total", "stat_char_total",
+    
+    # Combat modifiers
+    "strength_atck_total", "strength_damage_total", "ranged_atck_total",
+    "strength_atck_mod", "strength_damage_mod", "ranged_atck_mod",
+    
+    # Other modifiers
+    "ac_mod", "hp_mod", "raise_dead_mod", "carry_capacity_mod", "door_crack_mod",
+    "max_add_langs", "cap_spec_hirelings",
+    
+    # Magic stats
+    "highest_spell_level", "understand_spell", "min_spells_per_level", "max_spells_per_level",
+    
+    # Thief skills
+    "delicate_tasks", "climb_walls", "hear_sounds", "hide_in_shadows",
+    "move_silently", "open_locks"
+}
+
 def on_var_change(app, field, var):
     """Callback when a GUI variable changes; update the model accordingly."""
-    if getattr(app, "is_updating", False): # Prevent recursion
+    if app.is_updating:
+        print("DEBUG on_var_change: Currently updating, exiting function to avoid conflicts.")
         return
     
-    # Ignore changes to derived/calculated fields
-    if field in ("ac_total", "nextlevel", "hp", "hp_current", "save_throw",
-                 "parry",
-                 "stat_str_total", "stat_dex_total", "stat_con_total",
-                 "stat_int_total", "stat_wis_total", "stat_char_total",
-                 "strength_atck_total", "strength_damage_total",
-                 "ranged_atck_total",
-                 "delicate_tasks", "climb_walls", "hear_sounds", "hide_in_shadows",
-                 "move_silently", "open_locks", "strength_atck_mod", "strength_damage_mod",
-                 "ranged_atck_mod", "ac_mod", "hp_mod", "raise_dead_mod",
-                 "max_add_langs", "cap_spec_hirelings", "carry_capacity_mod", "door_crack_mod",
-                 "highest_spell_level", "understand_spell", "min_spells_per_level", "max_spells_per_level",
-                 "parry", "xp_bonus", "main_stats", "languages", "darkvision"):
-        print("DEBUG on_var_change: Ignoring change to derived field", {field})
-        return
-    
+    # ← GEÄNDERT: Verwende Konstante
+    if field in READONLY_FIELDS:
+        print(f"DEBUG on_var_change: Ignoring change to derived field {field}")
+        return    
     
     try:
         raw = var.get() # Get raw value from Tk variable

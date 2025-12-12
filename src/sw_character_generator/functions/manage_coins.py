@@ -3,8 +3,9 @@
 def modify_coins(app):
     """Modify the player's coins based on the GUI input."""
     print("DEBUG modify_coins: --------------------------------")
-
-    if getattr(app, "is_updating", False):
+ 
+    if app.is_updating:
+        print("DEBUG modify_coins: Currently updating, exiting function to avoid conflicts.")
         return
 
     # Get current coin values

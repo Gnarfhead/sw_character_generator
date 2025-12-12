@@ -15,6 +15,8 @@ def apply_character(app, character: PlayerClass):
     """Apply changes to the character object."""
     print("DEBUG apply_character: ----------------------------------------------------------------")
     print("DEBUG apply_character: Applying changes to character object.")
+    
+    # Mark character as created and disable further modifications
     character.character_created = True # Mark character as created
     app.cb_profession.config(state="disabled") # Disable profession selection
     app.cb_race.config(state="disabled") # Disable race selection
@@ -24,7 +26,11 @@ def apply_character(app, character: PlayerClass):
     app.btn_switch_stats.config(state="disabled") # Disable stat switching
     app.btn_apply.config(state="disabled") # Disable apply button after applying
     app.footer_frame.config(style="Standard.TFrame") # Reset footer frame style
+    
+    # Update derived and base stats
     update_derived_stats(character, app)  # Ensure derived stats are up to date
     update_base_stats(character)  # Update total base stats
+    
+    # Update the GUI to reflect the applied character
     app.status_var.set("Character applied and locked.") # Update status
     update_view_from_model(app)
