@@ -811,29 +811,34 @@ class App:
         """Handle Equip Button click."""
         print("DEBUG on_equip_click: ------------------------------------------------")
         # Hole ausgewählte Items
-        armor_name = self.armor_var.get()
-        main_hand_name = self.main_hand_var.get()
-        off_hand_name = self.off_hand_var.get()
+        equipment_selections = {
+            "armor_name": self.armor_var.get(),
+            "main_hand_name": self.main_hand_var.get(),
+            "off_hand_name": self.off_hand_var.get(),
+            "helmet_name": self.helmet_var.get(),
+            "gloves_name": self.gloves_var.get(),
+            "boots_name": self.boots_var.get(),
+            "cloak_name": self.cloak_var.get(),
+            "ring_left_name": self.ring_left_var.get(),
+            "ring_right_name": self.ring_right_var.get(),
+            "amulet_name": self.amulet_var.get(),
+            "belt_name": self.belt_var.get()
+        }
         
-        print(f"DEBUG: Selected - Armor: '{armor_name}', Main: '{main_hand_name}', Off: '{off_hand_name}'")
+        print("DEBUG on_equip_click: Equipment selections:")
+        for slot, item_name in equipment_selections.items():
+            print(f"  {slot}: '{item_name}'")
         
-        # Equip Armor
-        if armor_name and armor_name != "":
-            print(f"DEBUG: Equipping armor: {armor_name}")
-            equip_item(self, "armor", armor_name)
+        # ← GEÄNDERT: Equip alle ausgewählten Items
+        equipped_count = 0
+        for slot, item_name in equipment_selections.items():
+            if item_name and item_name != "":
+                print(f"DEBUG on_equip_click: Equipping {slot}: {item_name}")
+                equip_item(self, slot, item_name)
+                equipped_count += 1
         
-        # Equip Main Hand
-        if main_hand_name and main_hand_name != "":
-            print(f"DEBUG: Equipping main hand: {main_hand_name}")
-            equip_item(self, "main_hand", main_hand_name)
-        
-        # Equip Off Hand
-        if off_hand_name and off_hand_name != "":
-            print(f"DEBUG: Equipping off hand: {off_hand_name}")
-            equip_item(self, "off_hand", off_hand_name)
-        
-        # Update AC
-        print("DEBUG: Updating AC after equipping")
+        # ← GEÄNDERT: Update AC IMMER (da alle Items AC beeinflussen können)
+        print("DEBUG on_equip_click: Updating AC after equipping")
         update_armor_ac(self.new_player)
         calculate_ac(self.new_player)
         
@@ -841,8 +846,13 @@ class App:
         with self.suppress_updates():
             update_view_from_model(self)
         
-        self.status_var.set("Equipment updated successfully")
-        print("DEBUG on_equip_click: DONE ------------------------------------------------")
+        # Status-Nachricht
+        if equipped_count > 0:
+            self.status_var.set(f"{equipped_count} item(s) equipped successfully")
+        else:
+            self.status_var.set("No items selected to equip")
+        
+        print(f"DEBUG on_equip_click: Equipped {equipped_count} items.")
 
     
     def refresh_inventory_display(self):

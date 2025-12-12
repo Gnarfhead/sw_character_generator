@@ -1690,4 +1690,23 @@
     "description": "",
     "tags": ["standard"]
   }
+  ,{
+    "name": "Belt of Testing",
+    "type": "Belt",
+    "value": 100,
+    "weight": 35,
+    "damage": null,
+    "acbonus": 1,
+    "atckbonus": 0,
+    "dmgbonus": 0,
+    "twohanded": false,
+    "versatile": false,
+    "weapontype": null,
+    "firerate": 0,
+    "count": 1,
+    "range": 0,
+    "armortype": "belt",
+    "description": "",
+    "tags": ["standard"]
+  }
 ]

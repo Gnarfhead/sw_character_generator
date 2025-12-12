@@ -1,69 +1,109 @@
 """Handle changes to the inventory text widget."""
 
-# Bind to track changes and sync back to model
-
 def update_equipment_comboboxes(app):
     """Update equipment comboboxes to show only items in inventory."""
-    print("DEBUG update_equipment_comboboxes called: --------------------------------")
+    print("DEBUG update_equipment_comboboxes: ------------------------------------------------")
     
-    # ← KORRIGIERT: Prüfe auf Item-Objekt mit hasattr
-    equipped_armor = ""
-    if app.new_player.armor:
-        if hasattr(app.new_player.armor, 'name'):
-            equipped_armor = app.new_player.armor.name
-        elif isinstance(app.new_player.armor, str):
-            equipped_armor = app.new_player.armor
-            print(f"WARNING: armor is string '{equipped_armor}', converting to Item")
-            # Optional: Finde Item-Objekt
-            for item in app.new_player.inventory_items:
-                if item.name == equipped_armor:
-                    app.new_player.armor = item
-                    break
+    # ← HELPER-FUNKTION: Hole Item-Name von Equipment-Slot
+    def get_equipped_name(item):
+        """Get name from equipped item (handles both Item objects and strings)."""
+        if item is None:
+            return ""
+        if hasattr(item, 'name'):
+            return item.name
+        if isinstance(item, str):
+            return item
+        return ""
     
-    equipped_main = ""
-    if app.new_player.main_hand:
-        if hasattr(app.new_player.main_hand, 'name'):
-            equipped_main = app.new_player.main_hand.name
-        elif isinstance(app.new_player.main_hand, str):
-            equipped_main = app.new_player.main_hand
-            print(f"WARNING: main_hand is string '{equipped_main}', converting to Item")
-            for item in app.new_player.inventory_items:
-                if item.name == equipped_main:
-                    app.new_player.main_hand = item
-                    break
+    # ← GEÄNDERT: Hole alle ausgerüsteten Items
+    equipped_items = {
+        "armor": get_equipped_name(app.new_player.armor),
+        "main_hand": get_equipped_name(app.new_player.main_hand),
+        "off_hand": get_equipped_name(app.new_player.off_hand),
+        "helmet": get_equipped_name(app.new_player.helmet),
+        "gloves": get_equipped_name(app.new_player.gloves),
+        "boots": get_equipped_name(app.new_player.boots),
+        "cloak": get_equipped_name(app.new_player.cloak),
+        "ring_left": get_equipped_name(app.new_player.ring_left),
+        "ring_right": get_equipped_name(app.new_player.ring_right),
+        "amulet": get_equipped_name(app.new_player.amulet),
+        "belt": get_equipped_name(app.new_player.belt)
+    }
     
-    equipped_off = ""
-    if app.new_player.off_hand:
-        if hasattr(app.new_player.off_hand, 'name'):
-            equipped_off = app.new_player.off_hand.name
-        elif isinstance(app.new_player.off_hand, str):
-            equipped_off = app.new_player.off_hand
-            print(f"WARNING: off_hand is string '{equipped_off}', converting to Item")
-            for item in app.new_player.inventory_items:
-                if item.name == equipped_off:
-                    app.new_player.off_hand = item
-                    break
+    print("DEBUG: Currently equipped items:")
+    for slot, name in equipped_items.items():
+        if name:
+            print("DEBUG get_equipped_name", slot, name)
     
-    print(f"DEBUG: Currently equipped - Armor: '{equipped_armor}', Main: '{equipped_main}', Off: '{equipped_off}'")
+    # ← GEÄNDERT: Filter Items nach Typ (case-insensitive!)
+    items_by_type = {
+        "armor": [""],
+        "weapon": [""],
+        "shield": [""],
+        "helmet": [""],
+        "gloves": [""],
+        "boots": [""],
+        "cloak": [""],
+        "ring": [""],
+        "amulet": [""],
+        "belt": [""]
+    }
     
-    # Filter items by type
-    armor_items = [""] + [item.name for item in app.new_player.inventory_items if item.type.lower() == "armor"]
-    weapon_items = [""] + [item.name for item in app.new_player.inventory_items if item.type.lower() == "weapon"]
-    shield_items = [""] + [item.name for item in app.new_player.inventory_items if item.type.lower() == "shield"]
-    off_hand_items = [""] + weapon_items[1:] + shield_items[1:]  # Combine weapons and shields
+    for item in app.new_player.inventory_items:
+        item_type = item.type.lower()  # ← WICHTIG: case-insensitive!
+        if item_type in items_by_type:
+            items_by_type[item_type].append(item.name)
     
-    print(f"DEBUG: Armor items: {armor_items}")
-    print(f"DEBUG: Weapon items: {weapon_items}")
-    print(f"DEBUG: Shield items: {shield_items}")
+    print("DEBUG get_equipped_name: Items by type:")
+    for type_name, items in items_by_type.items():
+        if len(items) > 1:  # Mehr als nur ""
+            print("DEBUG items_by_type", type_name, items[1:])  # Zeige ohne ""
     
-    # Update combobox values
-    app.cb_armor["values"] = armor_items if armor_items != [""] else ["No armor in inventory"]
-    app.cb_main_hand["values"] = weapon_items if weapon_items != [""] else ["No weapons in inventory"]
-    app.cb_off_hand["values"] = off_hand_items if off_hand_items != [""] else ["No items in inventory"]
+    # ← GEÄNDERT: Update Combobox-Werte für alle Slots
+    # Armor
+    app.cb_armor["values"] = items_by_type["armor"] if len(items_by_type["armor"]) > 1 else ["No armor in inventory"]
+    app.armor_var.set(equipped_items["armor"])
     
-    # Set current selection
-    app.armor_var.set(equipped_armor)
-    app.main_hand_var.set(equipped_main)
-    app.off_hand_var.set(equipped_off)
+    # Main Hand (nur Waffen)
+    app.cb_main_hand["values"] = items_by_type["weapon"] if len(items_by_type["weapon"]) > 1 else ["No weapons in inventory"]
+    app.main_hand_var.set(equipped_items["main_hand"])
     
-    print(f"DEBUG: Final selections - Armor: '{app.armor_var.get()}', Main: '{app.main_hand_var.get()}', Off: '{app.off_hand_var.get()}'")
+    # Off Hand (Waffen ODER Schilde)
+    off_hand_items = [""] + items_by_type["weapon"][1:] + items_by_type["shield"][1:]
+    app.cb_off_hand["values"] = off_hand_items if len(off_hand_items) > 1 else ["No items in inventory"]
+    app.off_hand_var.set(equipped_items["off_hand"])
+    
+    # Helmet
+    app.cb_helmet["values"] = items_by_type["helmet"] if len(items_by_type["helmet"]) > 1 else ["No helmets in inventory"]
+    app.helmet_var.set(equipped_items["helmet"])
+    
+    # Gloves
+    app.cb_gloves["values"] = items_by_type["gloves"] if len(items_by_type["gloves"]) > 1 else ["No gloves in inventory"]
+    app.gloves_var.set(equipped_items["gloves"])
+    
+    # Boots
+    app.cb_boots["values"] = items_by_type["boots"] if len(items_by_type["boots"]) > 1 else ["No boots in inventory"]
+    app.boots_var.set(equipped_items["boots"])
+    
+    # Cloak
+    app.cb_cloak["values"] = items_by_type["cloak"] if len(items_by_type["cloak"]) > 1 else ["No cloaks in inventory"]
+    app.cloak_var.set(equipped_items["cloak"])
+    
+    # Ring Left
+    app.cb_ring_left["values"] = items_by_type["ring"] if len(items_by_type["ring"]) > 1 else ["No rings in inventory"]
+    app.ring_left_var.set(equipped_items["ring_left"])
+    
+    # Ring Right
+    app.cb_ring_right["values"] = items_by_type["ring"] if len(items_by_type["ring"]) > 1 else ["No rings in inventory"]
+    app.ring_right_var.set(equipped_items["ring_right"])
+    
+    # Amulet
+    app.cb_amulet["values"] = items_by_type["amulet"] if len(items_by_type["amulet"]) > 1 else ["No amulets in inventory"]
+    app.amulet_var.set(equipped_items["amulet"])
+    
+    # ← HINZUGEFÜGT: Belt
+    app.cb_belt["values"] = items_by_type["belt"] if len(items_by_type["belt"]) > 1 else ["No belts in inventory"]
+    app.belt_var.set(equipped_items["belt"])
+    
+    print(f"DEBUG: Final combobox values set")
+    print("DEBUG update_equipment_comboboxes: DONE ==================================")
