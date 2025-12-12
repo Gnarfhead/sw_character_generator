@@ -164,7 +164,14 @@ class App:
         self.main_hand_var = tk.StringVar(master=self.root, value="")
         self.off_hand_var = tk.StringVar(master=self.root, value="")
         self.armor_var = tk.StringVar(master=self.root, value="")
-
+        self.helmet_var = tk.StringVar(master=self.root, value="")
+        self.gloves_var = tk.StringVar(master=self.root, value="")
+        self.boots_var = tk.StringVar(master=self.root, value="")
+        self.cloak_var = tk.StringVar(master=self.root, value="")
+        self.ring_left_var = tk.StringVar(master=self.root, value="")
+        self.ring_right_var = tk.StringVar(master=self.root, value="")
+        self.amulet_var = tk.StringVar(master=self.root, value="")
+        self.belt_var = tk.StringVar(master=self.root, value="")
 
     # ----------------- load data -----------------
 
@@ -545,24 +552,56 @@ class App:
         self.weapons_content_frame = ttk.LabelFrame(self.weapons_frame, text="Weapons & Armor", borderwidth=5, padding=(6,6), style="Standard.TFrame")
         self.weapons_content_frame.grid(row=0, column=0, padx=PADX, pady=PADY, sticky="new")
 
-        # Row 0: Combobox for Armor
-        widget_combobox(self.weapons_content_frame, "Select Armor:", 0, 0, self.armor_var, [], state="readonly", owner=self, name_label="lbl_select_armor", name_combo="cb_armor", width=40)
-        
+        # ← GEÄNDERT: Übersichtlichere Grid-Struktur mit 2 Spalten
+        # Linke Spalte: Waffen & Rüstung
+        ttk.Label(self.weapons_content_frame, text="Combat Equipment", font=("Helvetica", 10, "bold")).grid(row=0, column=0, columnspan=2, sticky="w", padx=PADX, pady=(PADY, 0))
 
-        # Row 1: Combobox for Main Hand
-        widget_combobox(self.weapons_content_frame, "Select Main Hand Weapon:", 1, 0, self.main_hand_var, [], state="readonly", owner=self, name_label="lbl_select_main_hand", name_combo="cb_main_hand", width=40)
+        # Row 1: Armor
+        widget_combobox(self.weapons_content_frame, "Armor:", 1, 0, self.armor_var, [], state="readonly", owner=self, name_label="lbl_select_armor", name_combo="cb_armor", width=30)
 
+        # Row 2: Main Hand
+        widget_combobox(self.weapons_content_frame, "Main Hand:", 2, 0, self.main_hand_var, [], state="readonly", owner=self, name_label="lbl_select_main_hand", name_combo="cb_main_hand", width=30)
 
-        # Row 2: Combobox for Off Hand
-        widget_combobox(self.weapons_content_frame, "Select Off Hand Item:", 2, 0, self.off_hand_var, [], state="readonly", owner=self, name_label="lbl_select_off_hand", name_combo="cb_off_hand", width=40)
+        # Row 3: Off Hand
+        widget_combobox(self.weapons_content_frame, "Off Hand:", 3, 0, self.off_hand_var, [], state="readonly", owner=self, name_label="lbl_select_off_hand", name_combo="cb_off_hand", width=30)
 
-        # ← HINZUGEFÜGT: Row 3: Equip Button
-        widget_button(self.weapons_content_frame, "Equip Selected Items", 3, 0, command=lambda: self.on_equip_click(), owner=self, name_button="btn_equip")
-    
-        ### Inventory Tab/Frame
-        self.inventory_content_frame = ttk.LabelFrame(self.inventory_frame, text="Inventory", borderwidth=5, padding=(6,6), style="Standard.TFrame")
-        self.inventory_content_frame.grid(row=0, column=0, padx=PADX, pady=PADY, sticky="new")
+        # Rechte Spalte: Accessoires
+        ttk.Label(self.weapons_content_frame, text="Accessories", font=("Helvetica", 10, "bold")).grid(row=0, column=2, columnspan=2, sticky="w", padx=(30, PADX), pady=(PADY, 0))
 
+        # Row 1: Helmet
+        widget_combobox(self.weapons_content_frame, "Helmet:", 1, 2, self.helmet_var, [], state="readonly", owner=self, name_label="lbl_select_helmet", name_combo="cb_helmet", width=30)
+
+        # Row 2: Gloves
+        widget_combobox(self.weapons_content_frame, "Gloves:", 2, 2, self.gloves_var, [], state="readonly", owner=self, name_label="lbl_select_gloves", name_combo="cb_gloves", width=30)
+
+        # Row 3: Boots
+        widget_combobox(self.weapons_content_frame, "Boots:", 3, 2, self.boots_var, [], state="readonly", owner=self, name_label="lbl_select_boots", name_combo="cb_boots", width=30)
+
+        # Row 4: Cloak (linke Spalte)
+        widget_combobox(self.weapons_content_frame, "Cloak:", 4, 0, self.cloak_var, [], state="readonly", owner=self, name_label="lbl_select_cloak", name_combo="cb_cloak", width=30)
+
+        # Row 4: Belt (rechte Spalte)
+        widget_combobox(self.weapons_content_frame, "Belt:", 4, 2, self.belt_var, [], state="readonly", owner=self, name_label="lbl_select_belt", name_combo="cb_belt", width=30)
+
+        # Row 5: Ring Left (linke Spalte)
+        widget_combobox(self.weapons_content_frame, "Ring (Left):", 5, 0, self.ring_left_var, [], state="readonly", owner=self, name_label="lbl_select_ring_left", name_combo="cb_ring_left", width=30)
+
+        # Row 5: Ring Right (rechte Spalte)
+        widget_combobox(self.weapons_content_frame, "Ring (Right):", 5, 2, self.ring_right_var, [], state="readonly", owner=self, name_label="lbl_select_ring_right", name_combo="cb_ring_right", width=30)
+
+        # Row 6: Amulet (linke Spalte)
+        widget_combobox(self.weapons_content_frame, "Amulet:", 6, 0, self.amulet_var, [], state="readonly", owner=self, name_label="lbl_select_amulet", name_combo="cb_amulet", width=30)
+
+        # ← HINZUGEFÜGT: Row 7: Equip Button (über beide Spalten)
+        ttk.Separator(self.weapons_content_frame, orient="horizontal").grid(row=7, column=0, columnspan=4, sticky="ew", pady=PADY)
+
+        self.btn_equip = ttk.Button(
+            self.weapons_content_frame,
+            text="⚔️ Equip All Selected Items",
+            style="Attention.TButton",
+            command=lambda: self.on_equip_click()
+        )
+        self.btn_equip.grid(row=8, column=0, columnspan=4, sticky="ew", padx=PADX, pady=PADY)
 
 
        # Treeview für Item-Liste

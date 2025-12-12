@@ -2,7 +2,6 @@
 from dataclasses import dataclass, field
 from typing import Any
 
-from sw_character_generator.classes.inventory import Inventory
 from sw_character_generator.classes.item import Item
 
 
