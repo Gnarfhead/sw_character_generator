@@ -1,7 +1,7 @@
 [
   {
     "name": "Karren, Hand-",
-    "type": "Transport",
+    "type": "transport",
     "value": "10 GM",
     "weight": 0.0,
     "damage": null,
@@ -20,7 +20,7 @@
   },
   {
     "name": "Maultier",
-    "type": "Transport",
+    "type": "transport",
     "value": "20 GM",
     "weight": 0.0,
     "damage": null,
@@ -39,7 +39,7 @@
   },
   {
     "name": "Pferd, Reit-",
-    "type": "Transport",
+    "type": "transport",
     "value": "40 GM",
     "weight": 0.0,
     "damage": null,
@@ -58,7 +58,7 @@
   },
   {
     "name": "Pferd, Streitross",
-    "type": "Transport",
+    "type": "transport",
     "value": "200 GM",
     "weight": 0.0,
     "damage": null,
@@ -77,7 +77,7 @@
   },
   {
     "name": "Ruderboot",
-    "type": "Transport",
+    "type": "transport",
     "value": "20 GM",
     "weight": 0.0,
     "damage": null,
@@ -96,7 +96,7 @@
   },
   {
     "name": "Wagen",
-    "type": "Transport",
+    "type": "transport",
     "value": "50 GM",
     "weight": 0.0,
     "damage": null,
@@ -115,7 +115,7 @@
   },
   {
     "name": "Brechstange",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "0,2 GM",
     "weight": 0.2,
     "damage": null,
@@ -134,7 +134,7 @@
   },
   {
     "name": "Fackel",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "0,01 GM",
     "weight": 0.1,
     "damage": null,
@@ -153,7 +153,7 @@
   },
   {
     "name": "Fass",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "2 GM",
     "weight": 0.0,
     "damage": null,
@@ -172,7 +172,7 @@
   },
   {
     "name": "Feldflasche",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "0,03 GM",
     "weight": 0.0,
     "damage": null,
@@ -191,7 +191,7 @@
   },
   {
     "name": "Feuerstein und Stahl",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "1 GM",
     "weight": 0.0,
     "damage": null,
@@ -210,7 +210,7 @@
   },
   {
     "name": "Fischernetz (2,5 m2)",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "4 GM",
     "weight": 0.0,
     "damage": null,
@@ -229,7 +229,7 @@
   },
   {
     "name": "Flaschenzug",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "5 GM",
     "weight": 0.0,
     "damage": null,
@@ -248,7 +248,7 @@
   },
   {
     "name": "Glocke",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "1 GM",
     "weight": 0.0,
     "damage": null,
@@ -267,7 +267,7 @@
   },
   {
     "name": "Hammer",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "0,5 GM",
     "weight": 0.5,
     "damage": null,
@@ -286,7 +286,7 @@
   },
   {
     "name": "Handschellen",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "15 GM",
     "weight": 0.5,
     "damage": null,
@@ -305,7 +305,7 @@
   },
   {
     "name": "Heiliges Symbol, Holz",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "1 GM",
     "weight": 0.0,
     "damage": null,
@@ -324,7 +324,7 @@
   },
   {
     "name": "Heiliges Symbol, Silber",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "25 GM",
     "weight": 0.0,
     "damage": null,
@@ -343,7 +343,7 @@
   },
   {
     "name": "Kerze",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "0,01 GM",
     "weight": 0.0,
     "damage": null,
@@ -362,7 +362,7 @@
   },
   {
     "name": "Kette (3 m)",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "30 GM",
     "weight": 0.0,
     "damage": null,
@@ -381,7 +381,7 @@
   },
   {
     "name": "Kletterhaken",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "1 GM",
     "weight": 0.5,
     "damage": null,
@@ -400,7 +400,7 @@
   },
   {
     "name": "Knoblauch, verzauberter",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "10 GM",
     "weight": 0.1,
     "damage": null,
@@ -419,7 +419,7 @@
   },
   {
     "name": "Kreide, pro Stück",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "0,05 GM",
     "weight": 0.1,
     "damage": null,
@@ -438,7 +438,7 @@
   },
   {
     "name": "Lampe, Bronze",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "0,1 GM",
     "weight": 0.5,
     "damage": null,
@@ -457,7 +457,7 @@
   },
   {
     "name": "Laterne, Blend-",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "12 GM",
     "weight": 0.5,
     "damage": null,
@@ -476,7 +476,7 @@
   },
   {
     "name": "Laterne, einfach",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "7 GM",
     "weight": 0.5,
     "damage": null,
@@ -495,7 +495,7 @@
   },
   {
     "name": "Leiter (3 m)",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "0,05 GM",
     "weight": 0.5,
     "damage": null,
@@ -514,7 +514,7 @@
   },
   {
     "name": "Mauerhaken, Eisen",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "0,05 GM",
     "weight": 0.5,
     "damage": null,
@@ -533,7 +533,7 @@
   },
   {
     "name": "Musikinstrument",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "5 GM",
     "weight": 1.0,
     "damage": null,
@@ -552,7 +552,7 @@
   },
   {
     "name": "Öl, Lampen- (0,5 l)",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "0,1 GM",
     "weight": 0.5,
     "damage": null,
@@ -571,7 +571,7 @@
   },
   {
     "name": "Pergament (Blatt)",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "0,2 GM",
     "weight": 0.1,
     "damage": null,
@@ -590,7 +590,7 @@
   },
   {
     "name": "Rationen, Trocken- (pro Tag)",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "1 GM",
     "weight": 0.5,
     "damage": null,
@@ -609,7 +609,7 @@
   },
   {
     "name": "Rationen, Weg- (pro Tag)",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "0,5 GM",
     "weight": 0.5,
     "damage": null,
@@ -628,7 +628,7 @@
   },
   {
     "name": "Rucksack (15 kg Kapazität)",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "5 GM",
     "weight": 0.5,
     "damage": null,
@@ -647,7 +647,7 @@
   },
   {
     "name": "Sack (7,5 kg Kapazität)",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "1 GM",
     "weight": 0.5,
     "damage": null,
@@ -666,7 +666,7 @@
   },
   {
     "name": "Sack (15 kg Kapazität)",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "2 GM",
     "weight": 0.5,
     "damage": null,
@@ -685,7 +685,7 @@
   },
   {
     "name": "Schaufel",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "2 GM",
     "weight": 2.0,
     "damage": null,
@@ -704,7 +704,7 @@
   },
   {
     "name": "Schlafsack",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "0,2 GM",
     "weight": 0.5,
     "damage": null,
@@ -723,7 +723,7 @@
   },
   {
     "name": "Schloss",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "20 GM oder mehr",
     "weight": 0.5,
     "damage": null,
@@ -742,7 +742,7 @@
   },
   {
     "name": "Schriftrollenbehälter",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "1 GM",
     "weight": 0.5,
     "damage": null,
@@ -761,7 +761,7 @@
   },
   {
     "name": "Segeltuch (pro m2)",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "0,1 GM",
     "weight": 0.1,
     "damage": null,
@@ -780,7 +780,7 @@
   },
   {
     "name": "Seil, Hanf- (15 m)",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "1 GM",
     "weight": 0.5,
     "damage": null,
@@ -799,7 +799,7 @@
   },
   {
     "name": "Seil, Seiden- (15 m)",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "10 GM",
     "weight": 0.5,
     "damage": null,
@@ -818,7 +818,7 @@
   },
   {
     "name": "Signalpfeife",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "0,5 GM",
     "weight": 0.5,
     "damage": null,
@@ -837,7 +837,7 @@
   },
   {
     "name": "Spiegel, kleiner, Stahl-",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "20 GM",
     "weight": 0.5,
     "damage": null,
@@ -856,7 +856,7 @@
   },
   {
     "name": "Stange (3 m)",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "0,2 GM",
     "weight": 0.5,
     "damage": null,
@@ -875,7 +875,7 @@
   },
   {
     "name": "Tinte (Fläschchen mit 30 g)",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "1 GM",
     "weight": 0.5,
     "damage": null,
@@ -894,7 +894,7 @@
   },
   {
     "name": "Topf, Eisen-",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "0,5 GM",
     "weight": 1.0,
     "damage": null,
@@ -913,7 +913,7 @@
   },
   {
     "name": "Truhe",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "2 GM",
     "weight": 1.0,
     "damage": null,
@@ -932,7 +932,7 @@
   },
   {
     "name": "Wasserschlauch",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "1 GM",
     "weight": 0.5,
     "damage": null,
@@ -951,7 +951,7 @@
   },
   {
     "name": "Weihwasser (Fläschchen)",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "25 GM",
     "weight": 0.5,
     "damage": null,
@@ -989,7 +989,7 @@
   },
   {
     "name": "Wolfsbann",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "0,1 GM",
     "weight": 0.1,
     "damage": null,
@@ -1008,7 +1008,7 @@
   },
   {
     "name": "Zauberbuch, leer",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "25 GM",
     "weight": 0.5,
     "damage": null,
@@ -1027,7 +1027,7 @@
   },
   {
     "name": "Zelt",
-    "type": "Equipment",
+    "type": "equipment",
     "value": "10 GM",
     "weight": 5.0,
     "damage": null,
@@ -1046,7 +1046,7 @@
   },
   {
     "name": "Axt, Hand-",
-    "type": "Weapon",
+    "type": "weapon",
     "value": "1 GM",
     "weight": 5,
     "damage": "1d6",
@@ -1065,7 +1065,7 @@
   },
   {
     "name": "Axt, Streit-",
-    "type": "Weapon",
+    "type": "weapon",
     "value": "5 GM",
     "weight": 15,
     "damage": "1d8",
@@ -1084,7 +1084,7 @@
   },
   {
     "name": "Dolch",
-    "type": "Weapon",
+    "type": "weapon",
     "value": "2 GM",
     "weight": 2,
     "damage": "1d4",
@@ -1103,7 +1103,7 @@
   },
   {
     "name": "Hammer, Kriegs-",
-    "type": "Weapon",
+    "type": "weapon",
     "value": "1 GM",
     "weight": 10,
     "damage": "1d4+1",
@@ -1122,7 +1122,7 @@
   },
   {
     "name": "Keule",
-    "type": "Weapon",
+    "type": "weapon",
     "value": "0 GM",
     "weight": 10,
     "damage": "1d4+1",
@@ -1141,7 +1141,7 @@
   },
   {
     "name": "Lanze",
-    "type": "Weapon",
+    "type": "weapon",
     "value": "6 GM",
     "weight": 15,
     "damage": "2d4+1",
@@ -1160,7 +1160,7 @@
   },
   {
     "name": "Schwert, Bastard-",
-    "type": "Weapon",
+    "type": "weapon",
     "value": "20 GM",
     "weight": 10,
     "damage": "1d8",
@@ -1179,7 +1179,7 @@
   },
   {
     "name": "Schwert, Kurz-",
-    "type": "Weapon",
+    "type": "weapon",
     "value": "8 GM",
     "weight": 5,
     "damage": "1d6",
@@ -1198,7 +1198,7 @@
   },
   {
     "name": "Schwert, Lang-",
-    "type": "Weapon",
+    "type": "weapon",
     "value": "15 GM",
     "weight": 10,
     "damage": "1d8",
@@ -1217,7 +1217,7 @@
   },
   {
     "name": "Schwert, Zweihänder-",
-    "type": "Weapon",
+    "type": "weapon",
     "value": "30 GM",
     "weight": 15,
     "damage": "1d10",
@@ -1236,7 +1236,7 @@
   },
   {
     "name": "Speer",
-    "type": "Weapon",
+    "type": "weapon",
     "value": "1 GM",
     "weight": 10,
     "damage": "1d6",
@@ -1255,7 +1255,7 @@
   },
   {
     "name": "Stab, Kampf- (zweihändig)",
-    "type": "Weapon",
+    "type": "weapon",
     "value": "0 GM",
     "weight": 10,
     "damage": "1d6",
@@ -1274,7 +1274,7 @@
   },
   {
     "name": "Stangenwaffe (zweihändig)",
-    "type": "Weapon",
+    "type": "weapon",
     "value": "10 GM",
     "weight": 15,
     "damage": "1d8+1",
@@ -1293,7 +1293,7 @@
   },
   {
     "name": "Streitflegel (zweihändig)",
-    "type": "Weapon",
+    "type": "weapon",
     "value": "8 GM",
     "weight": 10,
     "damage": "1d8",
@@ -1312,7 +1312,7 @@
   },
   {
     "name": "Streitkolben, schwer",
-    "type": "Weapon",
+    "type": "weapon",
     "value": "10 GM",
     "weight": 10,
     "damage": "1d6",
@@ -1331,7 +1331,7 @@
   },
   {
     "name": "Armbrust, leicht",
-    "type": "Weapon",
+    "type": "weapon",
     "value": "12 GM",
     "weight": 5,
     "damage": "1d6",
@@ -1350,7 +1350,7 @@
   },
   {
     "name": "Armbrust, schwer",
-    "type": "Weapon",
+    "type": "weapon",
     "value": "20 GM oder mehr",
     "weight": 5,
     "damage": "1d8",
@@ -1369,7 +1369,7 @@
   },
   {
     "name": "Axt, Hand-",
-    "type": "Weapon",
+    "type": "weapon",
     "value": "1 GM",
     "weight": 5,
     "damage": "1d6",
@@ -1388,7 +1388,7 @@
   },
   {
     "name": "Bogen, Kurz-",
-    "type": "Weapon",
+    "type": "weapon",
     "value": "15 GM",
     "weight": 5,
     "damage": "1d6",
@@ -1407,7 +1407,7 @@
   },
   {
     "name": "Bogen, Lang-",
-    "type": "Weapon",
+    "type": "weapon",
     "value": "60 GM",
     "weight": 5,
     "damage": "1d8",
@@ -1426,7 +1426,7 @@
   },
   {
     "name": "Bolzen, leicht, Bündel-, 20 Stück",
-    "type": "Weapon",
+    "type": "weapon",
     "value": "2 GM",
     "weight": 1,
     "damage": "1d4+1",
@@ -1445,7 +1445,7 @@
   },
   {
     "name": "Bolzen, schwer, Bündel-, 20 Stück",
-    "type": "Weapon",
+    "type": "weapon",
     "value": "2 GM",
     "weight": 1,
     "damage": "1d6+1",
@@ -1464,7 +1464,7 @@
   },
   {
     "name": "Dolch",
-    "type": "Weapon",
+    "type": "weapon",
     "value": "2 GM",
     "weight": 2,
     "damage": "1d4",
@@ -1483,7 +1483,7 @@
   },
   {
     "name": "Pfeile, Bündel-, 20 Stück",
-    "type": "Weapon",
+    "type": "weapon",
     "value": "2 GM",
     "weight": 1,
     "damage": "1d6",
@@ -1502,7 +1502,7 @@
   },
   {
     "name": "Schleuder",
-    "type": "Weapon",
+    "type": "weapon",
     "value": "0,2 GM",
     "weight": 1,
     "damage": "1d4",
@@ -1521,7 +1521,7 @@
   },
   {
     "name": "Speer",
-    "type": "Weapon",
+    "type": "weapon",
     "value": "1 GM",
     "weight": 10,
     "damage": "1d6",
@@ -1540,7 +1540,7 @@
   },
   {
     "name": "Steine, Schleuder-",
-    "type": "Weapon",
+    "type": "weapon",
     "value": "0 GM",
     "weight": 5,
     "damage": "1d4",
@@ -1559,7 +1559,7 @@
   },
   {
     "name": "Wurfpfeil",
-    "type": "Weapon",
+    "type": "weapon",
     "value": "0,2 GM",
     "weight": 1,
     "damage": "1d3",
@@ -1578,7 +1578,7 @@
   },
   {
     "name": "Wurfspieß",
-    "type": "Weapon",
+    "type": "weapon",
     "value": "0,5 GM",
     "weight": 5,
     "damage": "1d6",
@@ -1616,7 +1616,7 @@
   },
   {
     "name": "Lederpanzer",
-    "type": "Armor",
+    "type": "armor",
     "value": 5,
     "weight": 25,
     "damage": null,
@@ -1635,7 +1635,7 @@
   },
   {
     "name": "Brünne",
-    "type": "Armor",
+    "type": "armor",
     "value": 30,
     "weight": 40,
     "damage": null,
@@ -1654,7 +1654,7 @@
   },
   {
     "name": "Kettenhemd",
-    "type": "Armor",
+    "type": "armor",
     "value": 75,
     "weight": 25,
     "damage": null,
@@ -1673,7 +1673,7 @@
   },
   {
     "name": "Plattenpanzer",
-    "type": "Armor",
+    "type": "armor",
     "value": 100,
     "weight": 35,
     "damage": null,
@@ -1692,7 +1692,7 @@
   }
   ,{
     "name": "Belt of Testing",
-    "type": "Belt",
+    "type": "belt",
     "value": 100,
     "weight": 35,
     "damage": null,
@@ -1706,6 +1706,120 @@
     "count": 1,
     "range": 0,
     "armortype": "belt",
+    "description": "",
+    "tags": ["standard"]
+  }
+  ,{
+    "name": "Ring of Testing",
+    "type": "ring",
+    "value": 100,
+    "weight": 35,
+    "damage": null,
+    "acbonus": 1,
+    "atckbonus": 0,
+    "dmgbonus": 0,
+    "twohanded": false,
+    "versatile": false,
+    "weapontype": null,
+    "firerate": 0,
+    "count": 1,
+    "range": 0,
+    "armortype": "ring",
+    "description": "",
+    "tags": ["standard"]
+  }
+  ,{
+    "name": "Helmet of Testing",
+    "type": "helmet",
+    "value": 100,
+    "weight": 35,
+    "damage": null,
+    "acbonus": 1,
+    "atckbonus": 0,
+    "dmgbonus": 0,
+    "twohanded": false,
+    "versatile": false,
+    "weapontype": null,
+    "firerate": 0,
+    "count": 1,
+    "range": 0,
+    "armortype": "helmet",
+    "description": "",
+    "tags": ["standard"]
+  }
+  ,{
+    "name": "Gloves of Testing",
+    "type": "gloves",
+    "value": 100,
+    "weight": 35,
+    "damage": null,
+    "acbonus": 1,
+    "atckbonus": 0,
+    "dmgbonus": 0,
+    "twohanded": false,
+    "versatile": false,
+    "weapontype": null,
+    "firerate": 0,
+    "count": 1,
+    "range": 0,
+    "armortype": "gloves",
+    "description": "",
+    "tags": ["standard"]
+  }
+  ,{
+    "name": "Amulet of Testing",
+    "type": "amulet",
+    "value": 100,
+    "weight": 35,
+    "damage": null,
+    "acbonus": 1,
+    "atckbonus": 0,
+    "dmgbonus": 0,
+    "twohanded": false,
+    "versatile": false,
+    "weapontype": null,
+    "firerate": 0,
+    "count": 1,
+    "range": 0,
+    "armortype": "amulet",
+    "description": "",
+    "tags": ["standard"]
+  }
+  ,{
+    "name": "Boots of Testing",
+    "type": "boots",
+    "value": 100,
+    "weight": 35,
+    "damage": null,
+    "acbonus": 1,
+    "atckbonus": 0,
+    "dmgbonus": 0,
+    "twohanded": false,
+    "versatile": false,
+    "weapontype": null,
+    "firerate": 0,
+    "count": 1,
+    "range": 0,
+    "armortype": "boots",
+    "description": "",
+    "tags": ["standard"]
+  }
+  ,{
+    "name": "Cloak of Testing",
+    "type": "cloak",
+    "value": 100,
+    "weight": 35,
+    "damage": null,
+    "acbonus": 1,
+    "atckbonus": 0,
+    "dmgbonus": 0,
+    "twohanded": false,
+    "versatile": false,
+    "weapontype": null,
+    "firerate": 0,
+    "count": 1,
+    "range": 0,
+    "armortype": "cloak",
     "description": "",
     "tags": ["standard"]
   }

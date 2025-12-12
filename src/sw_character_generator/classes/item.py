@@ -32,7 +32,7 @@ class Item:
             "weight": self.weight,
             "damage": self.damage,
             "acbonus": self.acbonus,
-            "atcktype": self.type,
+            "atckbonus": self.atckbonus,
             "dmgbonus": self.dmgbonus,
             "twohanded": self.twohanded,
             "versatile": self.versatile,

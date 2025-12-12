@@ -61,48 +61,48 @@ def update_equipment_comboboxes(app):
     
     # ← GEÄNDERT: Update Combobox-Werte für alle Slots
     # Armor
-    app.cb_armor["values"] = items_by_type["armor"] if len(items_by_type["armor"]) > 1 else ["No armor in inventory"]
+    app.cb_armor["values"] = items_by_type["armor"] if len(items_by_type["armor"]) > 1 else [""]
     app.armor_var.set(equipped_items["armor"])
     
     # Main Hand (nur Waffen)
-    app.cb_main_hand["values"] = items_by_type["weapon"] if len(items_by_type["weapon"]) > 1 else ["No weapons in inventory"]
+    app.cb_main_hand["values"] = items_by_type["weapon"] if len(items_by_type["weapon"]) > 1 else [""]
     app.main_hand_var.set(equipped_items["main_hand"])
     
     # Off Hand (Waffen ODER Schilde)
     off_hand_items = [""] + items_by_type["weapon"][1:] + items_by_type["shield"][1:]
-    app.cb_off_hand["values"] = off_hand_items if len(off_hand_items) > 1 else ["No items in inventory"]
+    app.cb_off_hand["values"] = off_hand_items if len(off_hand_items) > 1 else [""]
     app.off_hand_var.set(equipped_items["off_hand"])
     
     # Helmet
-    app.cb_helmet["values"] = items_by_type["helmet"] if len(items_by_type["helmet"]) > 1 else ["No helmets in inventory"]
+    app.cb_helmet["values"] = items_by_type["helmet"] if len(items_by_type["helmet"]) > 1 else [""]
     app.helmet_var.set(equipped_items["helmet"])
     
     # Gloves
-    app.cb_gloves["values"] = items_by_type["gloves"] if len(items_by_type["gloves"]) > 1 else ["No gloves in inventory"]
+    app.cb_gloves["values"] = items_by_type["gloves"] if len(items_by_type["gloves"]) > 1 else [""]
     app.gloves_var.set(equipped_items["gloves"])
     
     # Boots
-    app.cb_boots["values"] = items_by_type["boots"] if len(items_by_type["boots"]) > 1 else ["No boots in inventory"]
+    app.cb_boots["values"] = items_by_type["boots"] if len(items_by_type["boots"]) > 1 else [""]
     app.boots_var.set(equipped_items["boots"])
     
     # Cloak
-    app.cb_cloak["values"] = items_by_type["cloak"] if len(items_by_type["cloak"]) > 1 else ["No cloaks in inventory"]
+    app.cb_cloak["values"] = items_by_type["cloak"] if len(items_by_type["cloak"]) > 1 else [""]
     app.cloak_var.set(equipped_items["cloak"])
     
     # Ring Left
-    app.cb_ring_left["values"] = items_by_type["ring"] if len(items_by_type["ring"]) > 1 else ["No rings in inventory"]
+    app.cb_ring_left["values"] = items_by_type["ring"] if len(items_by_type["ring"]) > 1 else [""]
     app.ring_left_var.set(equipped_items["ring_left"])
     
     # Ring Right
-    app.cb_ring_right["values"] = items_by_type["ring"] if len(items_by_type["ring"]) > 1 else ["No rings in inventory"]
+    app.cb_ring_right["values"] = items_by_type["ring"] if len(items_by_type["ring"]) > 1 else [""]
     app.ring_right_var.set(equipped_items["ring_right"])
     
     # Amulet
-    app.cb_amulet["values"] = items_by_type["amulet"] if len(items_by_type["amulet"]) > 1 else ["No amulets in inventory"]
+    app.cb_amulet["values"] = items_by_type["amulet"] if len(items_by_type["amulet"]) > 1 else [""]
     app.amulet_var.set(equipped_items["amulet"])
     
-    # ← HINZUGEFÜGT: Belt
-    app.cb_belt["values"] = items_by_type["belt"] if len(items_by_type["belt"]) > 1 else ["No belts in inventory"]
+    # Belt
+    app.cb_belt["values"] = items_by_type["belt"] if len(items_by_type["belt"]) > 1 else [""]
     app.belt_var.set(equipped_items["belt"])
     
     print(f"DEBUG: Final combobox values set")

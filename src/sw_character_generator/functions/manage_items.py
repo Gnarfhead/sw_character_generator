@@ -81,19 +81,7 @@ def equip_item(app, slot: str, item_name: str):
         # ← ENTFERNT: AC-Update und GUI-Update (wird in on_equip_click gemacht)
         return
     
-    # Ignoriere Platzhalter OHNE Warnung
-    placeholder_values = [
-        "No armor in inventory",
-        "No weapons in inventory", 
-        "No items in inventory",
-        "Select Armor",
-        "Select Main Hand",
-        "Select Off Hand"
-    ]
-    
-    if item_name in placeholder_values:
-        print(f"DEBUG: Placeholder '{item_name}' selected, ignoring")
-        return
+    # Keine Platzhalter-Prüfung mehr nötig (verwenden nur noch leere Strings)
     
     # Finde Item in Inventar
     item_to_equip = None

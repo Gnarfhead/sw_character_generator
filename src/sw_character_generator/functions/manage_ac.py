@@ -18,6 +18,7 @@ def calculate_ac(character):
 def update_armor_ac(character):
     """Update character's AC based on ALL equipped items with AC bonus."""
     print("DEBUG update_armor_ac: ================================================")
+    print(f"DEBUG: Checking equipment for AC bonuses...")
     
     # ← NEUE LISTE: Alle Equipment-Slots die AC-Bonus haben können
     equipment_slots = {
@@ -40,6 +41,7 @@ def update_armor_ac(character):
     # ← DURCHLAUFE ALLE EQUIPMENT-SLOTS
     for slot_name, item in equipment_slots.items():
         if not item:
+            print(f"DEBUG: {slot_name} is empty")
             continue  # Slot ist leer
         
         # Prüfe ob Item ein AC-Bonus hat

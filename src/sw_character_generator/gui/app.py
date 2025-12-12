@@ -812,17 +812,17 @@ class App:
         print("DEBUG on_equip_click: ------------------------------------------------")
         # Hole ausgewählte Items
         equipment_selections = {
-            "armor_name": self.armor_var.get(),
-            "main_hand_name": self.main_hand_var.get(),
-            "off_hand_name": self.off_hand_var.get(),
-            "helmet_name": self.helmet_var.get(),
-            "gloves_name": self.gloves_var.get(),
-            "boots_name": self.boots_var.get(),
-            "cloak_name": self.cloak_var.get(),
-            "ring_left_name": self.ring_left_var.get(),
-            "ring_right_name": self.ring_right_var.get(),
-            "amulet_name": self.amulet_var.get(),
-            "belt_name": self.belt_var.get()
+            "armor": self.armor_var.get(),
+            "main_hand": self.main_hand_var.get(),
+            "off_hand": self.off_hand_var.get(),
+            "helmet": self.helmet_var.get(),
+            "gloves": self.gloves_var.get(),
+            "boots": self.boots_var.get(),
+            "cloak": self.cloak_var.get(),
+            "ring_left": self.ring_left_var.get(),
+            "ring_right": self.ring_right_var.get(),
+            "amulet": self.amulet_var.get(),
+            "belt": self.belt_var.get()
         }
         
         print("DEBUG on_equip_click: Equipment selections:")
