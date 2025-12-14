@@ -9,14 +9,12 @@ import tkinter as tk
 import tkinter.ttk as ttk
 import tkinter.scrolledtext as scrolledtext
 from tkinter import messagebox
-import traceback
 
 from sw_character_generator.classes.playerclass import PlayerClass
-from sw_character_generator.functions.manage_ac import calculate_ac, update_armor_ac
 from sw_character_generator.functions.manage_coins import modify_coins
 from sw_character_generator.functions.manage_hp import modify_hp, set_starting_hp, set_roll_hp_button
-from sw_character_generator.functions.character_handling import save_character, load_character
-from sw_character_generator.gui.gui_functions.gui_inventory import update_equipment_comboboxes
+from sw_character_generator.functions.character_handling import on_load_click, on_save_click
+from sw_character_generator.gui.gui_functions.gui_inventory import on_equip_click, refresh_inventory_display, remove_selected_item, safe_update_equipment
 from sw_character_generator.gui.gui_functions.gui_new_character import apply_character, new_characterobj
 from sw_character_generator.functions.manage_xp import add_xp
 from sw_character_generator.gui.gui_functions.gui_inventory_dialog import on_edit_item_click, open_add_item_dialog
@@ -30,7 +28,7 @@ from sw_character_generator.gui.gui_functions.gui_update_view_from_model import 
 from sw_character_generator.gui.gui_functions.gui_persistence import bind_model_vars
 from sw_character_generator.gui.gui_functions.gui_widgets import widget_button, widget_entry_long, widget_extlabel_short, widget_label, widget_combobox, widget_label_var, widget_spinbox, widget_checkbutton, widget_spinbox_nolabel
 from sw_character_generator.utility.linux_fullscreen import toggle_maximize
-from sw_character_generator.functions.manage_items import equip_item, load_item_database
+from sw_character_generator.functions.manage_items import load_item_database
 
 # Layout / sizing constants
 ROOT_MIN_W = 900
@@ -246,13 +244,13 @@ class App:
         print("DEBUG: update_view_from_model() completed") 
 
         
-        # ← HINZUGEFÜGT: Setze Flag auf False
+        # Setze Flag auf False
         self._updating = False
         print("DEBUG: Set _updating = False")
         
-        # ← HINZUGEFÜGT: Update Equipment-Comboboxen NACH Initialisierung
+        # Update Equipment-Comboboxen NACH Initialisierung
         print("DEBUG: Scheduling equipment combobox update")
-        self.root.after(200, lambda: self._safe_update_equipment())
+        self.root.after(200, lambda: safe_update_equipment(self))
         print("DEBUG: __init__ END")
 
     # ----------------- UI building -----------------
@@ -599,7 +597,7 @@ class App:
             self.weapons_content_frame,
             text="⚔️ Equip All Selected Items",
             style="Attention.TButton",
-            command=lambda: self.on_equip_click()
+            command=lambda: on_equip_click(self)
         )
         self.btn_equip.grid(row=8, column=0, columnspan=4, sticky="ew", padx=PADX, pady=PADY)
 
@@ -639,9 +637,9 @@ class App:
         btn_frame.grid(row=1, column=0, columnspan=2, pady=10)
 
         ttk.Button(btn_frame, text="Add Item", command=lambda: open_add_item_dialog(self)).pack(side="left", padx=5)
-        ttk.Button(btn_frame, text="Remove Item", command=self.remove_selected_item).pack(side="left", padx=5)
+        ttk.Button(btn_frame, text="Remove Item", command=lambda: remove_selected_item(self)).pack(side="left", padx=5)
         ttk.Button(btn_frame, text="Edit Item", command=lambda: on_edit_item_click(self, self.inventory_tree)).pack(side="left", padx=5)
-        ttk.Button(btn_frame, text="Refresh", command=self.refresh_inventory_display).pack(side="left", padx=5)
+        ttk.Button(btn_frame, text="Refresh", command=lambda: refresh_inventory_display(self)).pack(side="left", padx=5)
 
         # Weight/Value Summary
         self.inventory_summary_label = ttk.Label(
@@ -705,9 +703,9 @@ class App:
         self.btn_new.grid(row=0, column=0, sticky="w", padx=PADX, pady=PADY)
         self.btn_apply = ttk.Button(self.footer_frame, text="Apply", command=lambda: apply_character(self, self.new_player))
         self.btn_apply.grid(row=0, column=1, sticky="w", padx=PADX, pady=PADY)
-        self.btn_save = ttk.Button(self.footer_frame, text="Save", command=self.on_save_click)
+        self.btn_save = ttk.Button(self.footer_frame, text="Save", command=lambda: on_save_click(self))
         self.btn_save.grid(row=0, column=2, sticky="w", padx=PADX, pady=PADY)
-        self.btn_load = ttk.Button(self.footer_frame, text="Load", command=self.on_load_click)
+        self.btn_load = ttk.Button(self.footer_frame, text="Load", command=lambda: on_load_click(self))
         self.btn_load.grid(row=0, column=3, sticky="w", padx=PADX, pady=PADY)
         self.btn_dice_roller = ttk.Button(self.footer_frame, text="Dice Roller", command=lambda: dice_roller(self))
         self.btn_dice_roller.grid(row=0, column=4, sticky="w", padx=PADX, pady=PADY)
@@ -753,39 +751,6 @@ class App:
         finally:
             self._updating = prev
 
-    def on_save_click(self):
-        """Handle Save Character button click."""
-        print("DEBUG on_save_click: --------------------------------")
-        try:
-            save_character(self.new_player, parent_window=self.root)
-            self.status_var.set("Character saved successfully.")
-        except Exception as e:
-            self.status_var.set(f"Error saving character: {e}")
-            print(f"ERROR on_save_click: {e}")
-
-    def on_load_click(self):
-        """Handle Load Character button click."""
-        print("DEBUG on_load_click: --------------------------------")
-        try:
-            # Ask user for file
-            loaded_character = load_character(parent_window=self.root)
-            
-            if loaded_character is None:
-                self.status_var.set("Load cancelled.")
-                return
-            
-            # Replace current character
-            self.new_player = loaded_character
-            
-            # Update GUI
-            with self.suppress_updates():
-                update_view_from_model(self)
-            
-            self.status_var.set("Character loaded successfully.")
-        except Exception as e:
-            self.status_var.set(f"Error loading character: {e}")
-            print(f"ERROR on_load_click: {e}")
-
     def rebuild_ui(self):
         """Zerstört alle Kinder der Root und baut UI neu auf."""
         for child in self.root.winfo_children():
@@ -796,142 +761,10 @@ class App:
         self._build_ui()
 
 
-    def _safe_update_equipment(self):
-        """Safely update equipment comboboxes."""
-        print("DEBUG: _safe_update_equipment called")
-        try:
-            update_equipment_comboboxes(self)
-            print("DEBUG: Equipment comboboxes updated")
-        except Exception as e:
-            print(f"ERROR: Failed to update equipment comboboxes: {e}")
-            traceback.print_exc()
-
-    # ← HINZUGEFÜGT: Neue Methode für Equip-Button
-    def on_equip_click(self):
-        """Handle Equip Button click."""
-        print("DEBUG on_equip_click: ------------------------------------------------")
-        # Hole ausgewählte Items
-        equipment_selections = {
-            "armor": self.armor_var.get(),
-            "main_hand": self.main_hand_var.get(),
-            "off_hand": self.off_hand_var.get(),
-            "helmet": self.helmet_var.get(),
-            "gloves": self.gloves_var.get(),
-            "boots": self.boots_var.get(),
-            "cloak": self.cloak_var.get(),
-            "ring_left": self.ring_left_var.get(),
-            "ring_right": self.ring_right_var.get(),
-            "amulet": self.amulet_var.get(),
-            "belt": self.belt_var.get()
-        }
-        
-        print("DEBUG on_equip_click: Equipment selections:")
-        for slot, item_name in equipment_selections.items():
-            print(f"  {slot}: '{item_name}'")
-        
-        # ← GEÄNDERT: Equip alle ausgewählten Items
-        equipped_count = 0
-        for slot, item_name in equipment_selections.items():
-            if item_name and item_name != "":
-                print(f"DEBUG on_equip_click: Equipping {slot}: {item_name}")
-                equip_item(self, slot, item_name)
-                equipped_count += 1
-        
-        # ← GEÄNDERT: Update AC IMMER (da alle Items AC beeinflussen können)
-        print("DEBUG on_equip_click: Updating AC after equipping")
-        update_armor_ac(self.new_player)
-        calculate_ac(self.new_player)
-        
-        # Update GUI
-        with self.suppress_updates():
-            update_view_from_model(self)
-        
-        # Status-Nachricht
-        if equipped_count > 0:
-            self.status_var.set(f"{equipped_count} item(s) equipped successfully")
-        else:
-            self.status_var.set("No items selected to equip")
-        
-        print(f"DEBUG on_equip_click: Equipped {equipped_count} items.")
-
-    
-    def refresh_inventory_display(self):
-        """Refresh the inventory treeview."""
-        print("DEBUG refresh_inventory_display called: --------------------------------")
-        # Clear current display
-        for item in self.inventory_tree.get_children():
-            self.inventory_tree.delete(item)
-        
-        # Count items
-        item_counts = {}
-        for item in self.new_player.inventory_items:
-            if item.name in item_counts:
-                item_counts[item.name]["count"] += 1
-            else:
-                item_counts[item.name] = {
-                    "item": item,
-                    "count": 1
-                }
-        
-        # Display items
-        total_weight = 0.0
-        total_value = 0
-        
-        for item_name, data in item_counts.items():
-            item = data["item"]
-            count = data["count"]
-            
-            self.inventory_tree.insert("", "end", values=(
-                item.name,
-                item.type,
-                f"{item.weight * count:.1f}",
-                item.value,
-                count
-            ))
-            
-            total_weight += item.weight * count
-            # Parse value (assuming format "X GM")
-            try:
-                value_num = int(item.value.split()[0])
-                total_value += value_num * count
-            except:
-                pass
-        
-        # Update summary
-        self.inventory_summary_label.config(
-            text=f"Total Weight: {total_weight:.1f} | Total Value: {total_value} GM | Items: {len(self.new_player.inventory_items)}"
-        )
-
-        # Update Equipment Comboboxen
-        update_equipment_comboboxes(self)
-
-    def remove_selected_item(self):
-        """Remove the selected item from inventory."""
-        print("DEBUG remove_selected_item called: --------------------------------")
-        selection = self.inventory_tree.selection()
-        if not selection:
-            messagebox.showwarning("No Selection", "Please select an item to remove.")
-            return
-        
-        item_data = self.inventory_tree.item(selection[0])
-        item_name = item_data["values"][0]
-        
-        # Find and remove the first matching item
-        for item in self.new_player.inventory_items:
-            if item.name == item_name:
-                self.new_player.inventory_items.remove(item)
-                break
-        
-        self.refresh_inventory_display()
-        messagebox.showinfo("Success", f"Removed {item_name}")
-
-    # ----------------- run -----------------
-    def run(self):
-        """Run the main Tk event loop."""
-        self.root.mainloop()
-
 
 # Backwards-compatibility helper used by main.py
 def start_gui():
-    """Start the GUI application (for backwards compatibility)."""
-    App().run()
+    """Starts the GUI application."""
+    app = App()
+    app.root.mainloop()
+

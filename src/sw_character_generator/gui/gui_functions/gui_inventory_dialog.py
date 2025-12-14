@@ -1,3 +1,5 @@
+"""GUI functions for inventory dialog in the Swords & Wizardry character generator."""
+
 from tkinter import ttk, messagebox
 import tkinter as tk
 

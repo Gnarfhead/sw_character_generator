@@ -1,4 +1,4 @@
-"""Docstring for sw_character_generator.classes.item module."""
+"""Definition of the Item class for the Swords & Wizardry character generator."""
 
 from dataclasses import dataclass, field
 from typing import Any, Optional, List

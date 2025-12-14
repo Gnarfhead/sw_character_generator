@@ -5,6 +5,7 @@ from datetime import datetime
 from pathlib import Path
 from tkinter import filedialog
 from sw_character_generator.classes.playerclass import PlayerClass
+from sw_character_generator.gui.gui_functions.gui_update_view_from_model import update_view_from_model
 
 def get_default_save_directory() -> str:
     """Get OS-specific default save directory for character files."""
@@ -90,3 +91,38 @@ def load_character(parent_window=None) -> PlayerClass | None:
 
     print("DEBUG load_character: Character loaded from", {file_path})
     return character
+
+
+def on_save_click(app):
+    """Handle Save Character button click."""
+    print("DEBUG on_save_click: --------------------------------")
+    try:
+        save_character(app.new_player, parent_window=app.root)
+        app.status_var.set("Character saved successfully.")
+    except Exception as e:
+        app.status_var.set(f"Error saving character: {e}")
+        print(f"ERROR on_save_click: {e}")
+
+
+def on_load_click(app):
+    """Handle Load Character button click."""
+    print("DEBUG on_load_click: --------------------------------")
+    try:
+        # Ask user for file
+        loaded_character = load_character(parent_window=app.root)
+            
+        if loaded_character is None:
+            app.status_var.set("Load cancelled.")
+            return
+                
+        # Replace current character
+        app.new_player = loaded_character
+                
+        # Update GUI
+        with app.suppress_updates():
+            update_view_from_model(app)
+                
+            app.status_var.set("Character loaded successfully.")
+    except Exception as e:
+        app.status_var.set(f"Error loading character: {e}")
+        print(f"ERROR on_load_click: {e}")

@@ -1,12 +1,10 @@
+"""Functions to manage items in the character generator."""
+
 import json
 from pathlib import Path
 from tkinter import messagebox
-import tkinter as tk
-from tkinter import ttk, messagebox
 from sw_character_generator.classes.item import Item
 from sw_character_generator.classes.playerclass import PlayerClass
-from sw_character_generator.functions.manage_ac import calculate_ac, update_armor_ac
-from sw_character_generator.gui.gui_functions.gui_update_view_from_model import update_view_from_model
 
 
 DATA_FILE = Path(__file__).resolve().parent.parent / "data" / "itemdb.json"

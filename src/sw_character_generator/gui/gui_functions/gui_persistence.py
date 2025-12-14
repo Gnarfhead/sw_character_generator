@@ -1,4 +1,5 @@
 """GUI persistence functions: binding GUI variables/widgets to the model."""
+
 from dataclasses import asdict
 import tkinter as tk
 

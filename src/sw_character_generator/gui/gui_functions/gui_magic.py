@@ -1,6 +1,5 @@
 import tkinter.ttk as ttk
 
-from sw_character_generator.gui.gui_functions.gui_widgets import widget_label
 
 def create_spell_table_widget(app):
     """Create a Treeview under magic_content_frame to display character.spell_table."""
