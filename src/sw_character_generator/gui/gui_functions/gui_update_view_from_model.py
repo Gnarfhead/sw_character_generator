@@ -1,8 +1,6 @@
 """Update view from model function."""
 import tkinter as tk
 from dataclasses import fields
-from sw_character_generator.classes.item import Item
-from sw_character_generator.functions.manage_ac import update_armor_ac
 from sw_character_generator.gui.gui_functions.gui_magic import update_spell_table_widget
 
 def _format_change_scrolledtext(value):

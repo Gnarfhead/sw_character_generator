@@ -7,7 +7,6 @@ from sw_character_generator.functions.manage_saving_throw import calculate_savin
 from sw_character_generator.functions.manage_thief_skills import calculate_thief_skills, manage_thief_tab
 from sw_character_generator.functions.manage_xp import calculate_next_level_xp, calculate_xp_bonus
 from sw_character_generator.functions.update_derived_stats import update_derived_stats
-from sw_character_generator.gui.gui_functions.gui_inventory import update_equipment_comboboxes
 from sw_character_generator.gui.gui_functions.gui_update_view_from_model import update_view_from_model
 
 def on_profession_change(app, *args):

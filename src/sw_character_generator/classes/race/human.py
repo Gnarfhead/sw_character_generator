@@ -1,3 +1,5 @@
+"""Human race class and related functions."""
+
 def apply_human_dependent_modifiers(character):
     """Apply Human-specific modifiers to the character."""
     print("DEBUG apply_human_dependent_modifiers: ----------------------------------------------------------------")

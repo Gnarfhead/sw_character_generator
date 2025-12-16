@@ -1,3 +1,5 @@
+"""elf race class and related functions."""
+
 def apply_elf_dependent_modifiers(character):
     """Apply Elf-specific modifiers to the character."""
     print("DEBUG apply_elf_dependent_modifiers: ----------------------------------------------------------------")

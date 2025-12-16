@@ -1,3 +1,5 @@
+"""Halfelf race class and related functions."""
+
 def apply_halfelf_dependent_modifiers(character):
     """Apply Halfelf-specific modifiers to the character."""
     print("DEBUG apply_halfelf_dependent_modifiers: ----------------------------------------------------------------")

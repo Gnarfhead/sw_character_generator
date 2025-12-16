@@ -1,3 +1,5 @@
+"""Assassin profession class and related functions."""
+
 def apply_assassin_dependent_modifiers(character):
     """Apply assassin-specific modifiers to the character."""
 

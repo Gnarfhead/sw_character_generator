@@ -1,3 +1,5 @@
+"""GUI functions for magic spell table widget."""
+
 import tkinter.ttk as ttk
 
 
